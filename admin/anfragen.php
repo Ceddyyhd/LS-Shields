@@ -43,6 +43,42 @@ $query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, st
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Status ändern oder Anfrage verschieben
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int) $_POST['id'];
+
+    if (isset($_POST['change_status'])) {
+        // Status ändern auf "in Bearbeitung"
+        $stmt = $conn->prepare("UPDATE anfragen SET status = 'in Bearbeitung' WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+    } elseif (isset($_POST['move_to_eventplanung'])) {
+        // Anfrage in Tabelle eventplanung verschieben
+        $stmt = $conn->prepare("SELECT * FROM anfragen WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        $anfrage = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($anfrage) {
+            // In Tabelle eventplanung einfügen
+            $stmt = $conn->prepare("INSERT INTO eventplanung (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status)
+                                    VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Planung')");
+            $stmt->execute([
+                ':vorname_nachname' => $anfrage['vorname_nachname'],
+                ':telefonnummer' => $anfrage['telefonnummer'],
+                ':anfrage' => $anfrage['anfrage'],
+                ':datum_uhrzeit' => $anfrage['datum_uhrzeit'],
+            ]);
+
+            // Aus Tabelle anfragen löschen
+            $stmt = $conn->prepare("DELETE FROM anfragen WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+        }
+    }
+
+    // Seite neu laden, um Änderungen anzuzeigen
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
 ?>
 
 <div class="row">
@@ -69,7 +105,21 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($anfrage['id']) ?></td>
                 <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
                 <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
-                <td><?= htmlspecialchars($anfrage['status']) ?></td>
+                <td>
+                  <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
+                    <form method="POST" style="display:inline;">
+                      <input type="hidden" name="id" value="<?= $anfrage['id'] ?>">
+                      <button type="submit" name="change_status" class="btn btn-block btn-outline-warning">in Bearbeitung</button>
+                    </form>
+                  <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
+                    <form method="POST" style="display:inline;">
+                      <input type="hidden" name="id" value="<?= $anfrage['id'] ?>">
+                      <button type="submit" name="move_to_eventplanung" class="btn btn-block btn-outline-info btn-lg">in Planung</button>
+                    </form>
+                  <?php else: ?>
+                    <?= htmlspecialchars($anfrage['status']) ?>
+                  <?php endif; ?>
+                </td>
                 <td>Details einblenden</td>
               </tr>
               <tr class="expandable-body">

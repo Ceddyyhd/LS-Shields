@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
   }
 
-  // Verhindere weiße Seite: Leite zurück zur aktuellen Seite
+  // Verhindere weiße Seite: Seite neu laden
   header("Location: " . $_SERVER['PHP_SELF']);
   exit;
 }
@@ -106,16 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
                 <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
                 <td><?= htmlspecialchars($anfrage['status']) ?></td>
-                <td>
-                  <form method="POST" style="display:inline;">
-                    <input type="hidden" name="id" value="<?= $anfrage['id'] ?>">
-                    <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
-                      <button type="submit" name="change_status" class="btn btn-block btn-outline-warning">in Bearbeitung</button>
-                    <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
-                      <button type="submit" name="move_to_eventplanung" class="btn btn-block btn-outline-info btn-lg">in Planung</button>
-                    <?php endif; ?>
-                  </form>
-                </td>
+                <td>Details einblenden</td>
               </tr>
               <tr class="expandable-body">
                 <td colspan="5">
@@ -131,6 +122,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-3">
                       <strong>Status:</strong>
                       <div><?= htmlspecialchars($anfrage['status']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                      <!-- Buttons für Statusänderung -->
+                      <form method="POST" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $anfrage['id'] ?>">
+                        <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
+                          <button type="submit" name="change_status" class="btn btn-block btn-outline-warning">in Bearbeitung</button>
+                        <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
+                          <button type="submit" name="move_to_eventplanung" class="btn btn-block btn-outline-info btn-lg">in Planung</button>
+                        <?php endif; ?>
+                      </form>
                     </div>
                   </div>
                 </td>

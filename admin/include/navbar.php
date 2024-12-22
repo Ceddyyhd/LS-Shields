@@ -106,12 +106,6 @@
                                 <p>Rang Verwaltung</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="training.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'training.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Trainings Kalender</p>
-                            </a>
-                        </li>
                     </ul>
                 </li>
             </ul>

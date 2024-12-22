@@ -4,18 +4,8 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Starter</title>
+<?php include 'include/header.php'; ?>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-</head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -128,71 +118,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Responsive Hover Table</h3>
-
-            <div class="card-tools">
-              <div class="input-group input-group-sm" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-default">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Rang</th>
-                  <th>Ebene</th>
-                  <th>Bearbeiten</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>CEO</td>
-                  <td>Inhaber</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>CFO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>COO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>CTO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">DataTable with default features</h3>
       </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>Mitarbeiter</th>
+            <th>Rang</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Urlaub</th>
+            <th>Bearbeiten</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Cedric Schmidt</td>
+            <td>Trainee 1</td>
+            <td>555 - 974 33 67</td>
+            <td>15.12.2024</td>
+            <td>N/A</td>
+            <td>
+              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
+            </td>
+          </tr>
+          </tbody>
+          <tfoot>
+          <tr>
+            <th>Mitarbeiter</th>
+            <th>Rang</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Urlaub</th>
+            <th>Bearbeiten</th>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
+      <!-- /.card-body -->
     </div>
     <!-- /.card -->
   </div>

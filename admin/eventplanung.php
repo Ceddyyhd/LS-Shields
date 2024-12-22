@@ -4,18 +4,8 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Starter</title>
+<?php include 'include/header.php'; ?>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-</head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -128,57 +118,71 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">DataTable with default features</h3>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Expandable Table</h3>
+          </div>
+          <!-- ./card-header -->
+          <div class="card-body">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Ansprechpartner</th>
+                  <th>Event</th>
+                  <th>Status</th>
+                  <th>Info</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <td>1</td>
+                  <td>Tom Meyer</td>
+                  <td>SSC Offroad Rennen</td>
+                  <td>geplant</td>
+                  <td>ggf. Absicherung von Strecken. Planung bis 16.12</td>
+                </tr>
+                <tr class="expandable-body">
+                  <td colspan="5">
+                    <div class="p-3">
+                      <div class="mb-3">
+                        <strong>Ansprechpartner:</strong>
+                        <div>Name: Tom Meyer</div>
+                        <div>Tel. Nr.: 123456789</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong>Eventlead:</strong>
+                        <div>Name: Sarah Müller</div>
+                        <div>Tel. Nr.: 987654321</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong>Eingetragene Mitarbeiter:</strong>
+                        <ul class="mb-0">
+                          <li>Cedric Schmidt</li>
+                          <li>Falco Hunter</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <strong>Details:</strong>
+                        <p>
+                          Ggf. Absicherung der Strecke. Hauptsächlich Absicherung des Events, 
+                          wo mindestens 10 Firmen (Catering, VR, Bühne ...) stehen. Zuschauertribüne.
+                          Genauere Planung sollte bis zum 16.12 fertiggestellt sein.
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
       </div>
-      <!-- /.card-header -->
-      <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-          <thead>
-          <tr>
-            <th>Mitarbeiter</th>
-            <th>Rang</th>
-            <th>Telefonnummer</th>
-            <th>Beitritt</th>
-            <th>Urlaub</th>
-            <th>Bearbeiten</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Cedric Schmidt</td>
-            <td>Trainee 1</td>
-            <td>555 - 974 33 67</td>
-            <td>15.12.2024</td>
-            <td>N/A</td>
-            <td>
-              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-            </td>
-          </tr>
-          </tbody>
-          <tfoot>
-          <tr>
-            <th>Mitarbeiter</th>
-            <th>Rang</th>
-            <th>Telefonnummer</th>
-            <th>Beitritt</th>
-            <th>Urlaub</th>
-            <th>Bearbeiten</th>
-          </tr>
-          </tfoot>
-        </table>
-      </div>
-      <!-- /.card-body -->
     </div>
-    <!-- /.card -->
-  </div>
-  <!-- /.col -->
-</div>
-<!-- /.row -->
-</div>
-<!-- /.container-fluid -->
-</section>
     
     
     

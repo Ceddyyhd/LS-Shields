@@ -4,18 +4,8 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Starter</title>
+<?php include 'include/header.php'; ?>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-</head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -132,57 +122,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Expandable Table</h3>
+            <h3 class="card-title">Responsive Hover Table</h3>
+
+            <div class="card-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <!-- ./card-header -->
-          <div class="card-body">
-            <table class="table table-bordered table-hover">
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Ansprechpartner</th>
-                  <th>Event</th>
-                  <th>Status</th>
-                  <th>Info</th>
+                  <th>ID</th>
+                  <th>Rang</th>
+                  <th>Ebene</th>
+                  <th>Bearbeiten</th>
                 </tr>
               </thead>
               <tbody>
-                <tr data-widget="expandable-table" aria-expanded="false">
+                <tr>
                   <td>1</td>
-                  <td>Tom Meyer</td>
-                  <td>SSC Offroad Rennen</td>
-                  <td>geplant</td>
-                  <td>ggf. Absicherung von Strecken. Planung bis 16.12</td>
+                  <td>CEO</td>
+                  <td>Inhaber</td>
+                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
+                  </td>
                 </tr>
-                <tr class="expandable-body">
-                  <td colspan="5">
-                    <div class="p-3">
-                      <div class="mb-3">
-                        <strong>Ansprechpartner:</strong>
-                        <div>Name: Tom Meyer</div>
-                        <div>Tel. Nr.: 123456789</div>
-                      </div>
-                      <div class="mb-3">
-                        <strong>Eventlead:</strong>
-                        <div>Name: Sarah Müller</div>
-                        <div>Tel. Nr.: 987654321</div>
-                      </div>
-                      <div class="mb-3">
-                        <strong>Eingetragene Mitarbeiter:</strong>
-                        <ul class="mb-0">
-                          <li>Cedric Schmidt</li>
-                          <li>Falco Hunter</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <strong>Details:</strong>
-                        <p>
-                          Ggf. Absicherung der Strecke. Hauptsächlich Absicherung des Events, 
-                          wo mindestens 10 Firmen (Catering, VR, Bühne ...) stehen. Zuschauertribüne.
-                          Genauere Planung sollte bis zum 16.12 fertiggestellt sein.
-                        </p>
-                      </div>
-                    </div>
+                <tr>
+                  <td>2</td>
+                  <td>CFO</td>
+                  <td>Geschäftsführung</td>
+                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>COO</td>
+                  <td>Geschäftsführung</td>
+                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>CTO</td>
+                  <td>Geschäftsführung</td>
+                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
                   </td>
                 </tr>
               </tbody>
@@ -193,6 +184,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.card -->
       </div>
     </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+</section>
     
     
     

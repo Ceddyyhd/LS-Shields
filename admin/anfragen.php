@@ -33,14 +33,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-header -->
 
     <!-- Main content -->
-    
-    <div class="row">
+    <?php
+// Datenbankverbindung einbinden
+include 'include/db.php';
+
+// Anfragen aus der Datenbank abrufen
+$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status FROM anfragen ORDER BY datum_uhrzeit DESC";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
+<div class="row">
   <div class="col-12">
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Anfragen Tabelle</h3>
       </div>
-      <!-- ./card-header -->
       <div class="card-body">
         <table class="table table-bordered table-hover">
           <thead>
@@ -54,14 +64,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </thead>
           <tbody>
             <?php foreach ($anfragen as $anfrage): ?>
-              <tr data-widget="expandable-table" aria-expanded="false">
+              <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
                 <td><?= htmlspecialchars($anfrage['id']) ?></td>
                 <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
                 <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
                 <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
                 <td>Details einblenden</td>
               </tr>
-              <tr class="expandable-body">
+              <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
                 <td colspan="5">
                   <div class="p-3">
                     <div class="mb-3">
@@ -90,15 +100,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </tbody>
         </table>
       </div>
-      <!-- /.card-body -->
     </div>
-    <!-- /.card -->
   </div>
 </div>
 
 <script>
 function changeStatus(id, action) {
-  // AJAX-Request senden
   fetch('include/update_status.php', {
     method: 'POST',
     headers: {
@@ -110,15 +117,10 @@ function changeStatus(id, action) {
     .then((data) => {
       if (data.success) {
         if (action === 'change_status') {
-          // Status aktualisieren
           document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
-          // Button aktualisieren
           document.getElementById(`buttons-${id}`).innerHTML =
-            '<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(' +
-            id +
-            ', \'move_to_eventplanung\')">in Planung</button>';
+            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
         } else if (action === 'move_to_eventplanung' && data.removed) {
-          // Anfrage aus der Tabelle entfernen
           document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
           document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
         }

@@ -61,24 +61,25 @@ $(document).ready(function () {
     e.preventDefault();
     const email = $('#email').val();
     const password = $('#password').val();
+    const remember = $('#remember').is(':checked');
 
     $.ajax({
-      url: 'include/ajax_login.php',
-      type: 'POST',
-      data: { email, password },
-      dataType: 'json',
-      success: function (response) {
-        if (response.success) {
-          window.location.href = 'index.php';
-        } else {
-          $('#loginMessage').text(response.message);
+        url: 'ajax_login.php',
+        type: 'POST',
+        data: { email, password, remember },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                window.location.href = 'index.php';
+            } else {
+                $('#loginMessage').text(response.message);
+            }
+        },
+        error: function () {
+            $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
         }
-      },
-      error: function () {
-        $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-      }
     });
-  });
+});
 });
 </script>
 </body>

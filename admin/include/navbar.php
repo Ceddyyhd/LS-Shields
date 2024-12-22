@@ -56,7 +56,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link active">
+            <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'index.php' ? 'active' : '' ?>">">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Mitarbeiter Bereich
@@ -71,14 +71,14 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="eventplanung.php" class="nav-link">
+                <a href="eventplanung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'eventplanung.php' ? 'active' : '' ?>">">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Eventplanung</p>
                 </a>
               </li>
               
               <li class="nav-item">
-                <a href="training.php" class="nav-link">
+                <a href="training.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'training.php' ? 'active' : '' ?>">">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Trainings Kalender</p>
                 </a>
@@ -96,20 +96,20 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="mitarbeiterverwaltung.php" class="nav-link">
+                <a href="mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'mitarbeiterverwaltung.php' ? 'active' : '' ?>">">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Mitarbeiter Verwaltung</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="rangverwaltung.php" class="nav-link">
+                <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Rang Verwaltung</p>
                 </a>
               </li>
               
               <li class="nav-item">
-                <a href="training.php" class="nav-link">
+                <a href="training.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'training.php' ? 'active' : '' ?>">">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Trainings Kalender</p>
                 </a>

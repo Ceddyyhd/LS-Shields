@@ -476,7 +476,7 @@
       <div class="">
         <div class="row">
           <div class="col-md-7 mx-auto">
-            <form action="submit_form.php" method="POST">
+            <form action="include/submit_form.php" method="POST">
               <div class="contact_form-container">
                 <div>
                   <div>

@@ -1,4 +1,6 @@
 <?php
+session_start(); // Starten der Session, um Cooldown-Daten zu speichern
+
 // Verbindung zur Datenbank herstellen
 $servername = "localhost";
 $username = "LS-Shields";

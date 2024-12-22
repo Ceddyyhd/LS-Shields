@@ -34,54 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     
-    <?php
-// Datenbankverbindung einbinden
-include 'include/db.php';
-
-// Anfragen aus der Datenbank abrufen
-$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status FROM anfragen ORDER BY datum_uhrzeit DESC";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Status ändern oder Anfrage verschieben
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $id = (int) $_POST['id'];
-
-  if (isset($_POST['change_status'])) {
-      // Status ändern auf "in Bearbeitung"
-      $stmt = $conn->prepare("UPDATE anfragen SET status = 'in Bearbeitung' WHERE id = :id");
-      $stmt->execute([':id' => $id]);
-  } elseif (isset($_POST['move_to_eventplanung'])) {
-      // Anfrage in Tabelle eventplanung verschieben
-      $stmt = $conn->prepare("SELECT * FROM anfragen WHERE id = :id");
-      $stmt->execute([':id' => $id]);
-      $anfrage = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      if ($anfrage) {
-          // In Tabelle eventplanung einfügen
-          $stmt = $conn->prepare("INSERT INTO eventplanung (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status)
-                                  VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Planung')");
-          $stmt->execute([
-              ':vorname_nachname' => $anfrage['vorname_nachname'],
-              ':telefonnummer' => $anfrage['telefonnummer'],
-              ':anfrage' => $anfrage['anfrage'],
-              ':datum_uhrzeit' => $anfrage['datum_uhrzeit'],
-          ]);
-
-          // Aus Tabelle anfragen löschen
-          $stmt = $conn->prepare("DELETE FROM anfragen WHERE id = :id");
-          $stmt->execute([':id' => $id]);
-      }
-  }
-
-  // Verhindere weiße Seite: Seite neu laden
-  header("Location: " . $_SERVER['PHP_SELF']);
-  exit;
-}
-?>
-
-<div class="row">
+    <div class="row">
   <div class="col-12">
     <div class="card">
       <div class="card-header">
@@ -105,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <td><?= htmlspecialchars($anfrage['id']) ?></td>
                 <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
                 <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
-                <td><?= htmlspecialchars($anfrage['status']) ?></td>
+                <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
                 <td>Details einblenden</td>
               </tr>
               <tr class="expandable-body">
@@ -123,16 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       <strong>Status:</strong>
                       <div><?= htmlspecialchars($anfrage['status']) ?></div>
                     </div>
-                    <div class="mb-3">
-                      <!-- Buttons für Statusänderung -->
-                      <form method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $anfrage['id'] ?>">
-                        <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
-                          <button type="submit" name="change_status" class="btn btn-block btn-outline-warning">in Bearbeitung</button>
-                        <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
-                          <button type="submit" name="move_to_eventplanung" class="btn btn-block btn-outline-info btn-lg">in Planung</button>
-                        <?php endif; ?>
-                      </form>
+                    <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
+                      <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
+                        <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
+                      <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
+                        <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
+                      <?php endif; ?>
                     </div>
                   </div>
                 </td>
@@ -146,6 +95,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- /.card -->
   </div>
 </div>
+
+<script>
+function changeStatus(id, action) {
+  // AJAX-Request senden
+  fetch('include/update_status.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `id=${id}&action=${action}`,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        if (action === 'change_status') {
+          // Status aktualisieren
+          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
+          // Button aktualisieren
+          document.getElementById(`buttons-${id}`).innerHTML =
+            '<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(' +
+            id +
+            ', \'move_to_eventplanung\')">in Planung</button>';
+        } else if (action === 'move_to_eventplanung' && data.removed) {
+          // Anfrage aus der Tabelle entfernen
+          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
+          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
+        }
+      } else {
+        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+      }
+    })
+    .catch((error) => {
+      alert('Ein Fehler ist aufgetreten: ' + error.message);
+    });
+}
+</script>
+
 
     
     

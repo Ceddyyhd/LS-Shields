@@ -506,25 +506,30 @@
 <script>
   // Füge Event-Listener für Formular hinzu
   document.getElementById('contactForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Verhindere das Standard-Absenden
+    e.preventDefault(); // Verhindert das Standard-Absenden
 
-    const formData = new FormData(this); // Formulardaten erfassen
+    const form = this; // Referenz zum Formular
+    const formData = new FormData(form);
 
-    // Daten an PHP-Datei senden
     fetch('include/submit_form.php', {
-      method: 'POST',
-      body: formData
+        method: 'POST',
+        body: formData
     })
     .then(response => response.text())
     .then(data => {
-      // Rückmeldung anzeigen
-      document.getElementById('responseMessage').innerHTML = `<p>${data}</p>`;
+        // Rückmeldung anzeigen
+        document.getElementById('responseMessage').innerHTML = `<p>${data}</p>`;
+        
+        // Formular zurücksetzen
+        if (data.includes('erfolgreich gesendet')) {
+            form.reset();
+        }
     })
     .catch(error => {
-      // Fehler anzeigen
-      document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Fehler: ${error.message}</p>`;
+        // Fehler anzeigen
+        document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Fehler: ${error.message}</p>`;
     });
-  });
+});
 </script>
 
 

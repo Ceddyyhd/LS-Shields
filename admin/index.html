@@ -64,7 +64,7 @@ $(document).ready(function () {
     const remember = $('#remember').is(':checked');
 
     $.ajax({
-        url: 'ajax_login.php',
+        url: 'include/ajax_login.php',
         type: 'POST',
         data: { email, password, remember },
         dataType: 'json',

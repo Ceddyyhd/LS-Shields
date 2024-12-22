@@ -34,71 +34,72 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Expandable Table</h3>
-          </div>
-          <!-- ./card-header -->
-          <div class="card-body">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Ansprechpartner</th>
-                  <th>Event</th>
-                  <th>Status</th>
-                  <th>Info</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <td>1</td>
-                  <td>Tom Meyer</td>
-                  <td>SSC Offroad Rennen</td>
-                  <td>geplant</td>
-                  <td>ggf. Absicherung von Strecken. Planung bis 16.12</td>
-                </tr>
-                <tr class="expandable-body">
-                  <td colspan="5">
-                    <div class="p-3">
-                      <div class="mb-3">
-                        <strong>Ansprechpartner:</strong>
-                        <div>Name: Tom Meyer</div>
-                        <div>Tel. Nr.: 123456789</div>
-                      </div>
-                      <div class="mb-3">
-                        <strong>Eventlead:</strong>
-                        <div>Name: Sarah Müller</div>
-                        <div>Tel. Nr.: 987654321</div>
-                      </div>
-                      <div class="mb-3">
-                        <strong>Eingetragene Mitarbeiter:</strong>
-                        <ul class="mb-0">
-                          <li>Cedric Schmidt</li>
-                          <li>Falco Hunter</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <strong>Details:</strong>
-                        <p>
-                          Ggf. Absicherung der Strecke. Hauptsächlich Absicherung des Events, 
-                          wo mindestens 10 Firmen (Catering, VR, Bühne ...) stehen. Zuschauertribüne.
-                          Genauere Planung sollte bis zum 16.12 fertiggestellt sein.
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+    <?php
+// Datenbankverbindung einbinden
+include 'include/db.php';
+
+// Anfragen aus der Datenbank abrufen
+$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status FROM anfragen ORDER BY datum_uhrzeit DESC";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Anfragen Tabelle</h3>
       </div>
+      <!-- ./card-header -->
+      <div class="card-body">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Ansprechpartner</th>
+              <th>Anfrage</th>
+              <th>Status</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($anfragen as $anfrage): ?>
+              <tr data-widget="expandable-table" aria-expanded="false">
+                <td><?= htmlspecialchars($anfrage['id']) ?></td>
+                <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
+                <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
+                <td><?= htmlspecialchars($anfrage['status']) ?></td>
+                <td>Details einblenden</td>
+              </tr>
+              <tr class="expandable-body">
+                <td colspan="5">
+                  <div class="p-3">
+                    <div class="mb-3">
+                      <strong>Datum & Uhrzeit:</strong>
+                      <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Telefonnummer:</strong>
+                      <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                      <strong>Status:</strong>
+                      <div><?= htmlspecialchars($anfrage['status']) ?></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
     </div>
+    <!-- /.card -->
+  </div>
+</div>
+
     
     
     

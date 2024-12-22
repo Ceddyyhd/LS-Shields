@@ -9,7 +9,6 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Eingaben validieren
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $vornameNachname = htmlspecialchars($_POST['vorname_nachname']);
         $telefonnummer = htmlspecialchars($_POST['telefonnummer']);
@@ -25,10 +24,11 @@ try {
             ':anfrage' => $anfrage,
         ]);
 
-        // Erfolgsnachricht anzeigen
-        echo "<script>alert('Ihre Anfrage wurde erfolgreich gesendet!'); window.location.href='index.php';</script>";
+        // Erfolgsnachricht senden
+        echo 'Ihre Anfrage wurde erfolgreich gesendet!';
     }
 } catch (PDOException $e) {
-    echo "Fehler: " . $e->getMessage();
+    // Fehlermeldung senden
+    echo 'Fehler: ' . $e->getMessage();
 }
 ?>

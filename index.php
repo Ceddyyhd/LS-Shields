@@ -476,7 +476,8 @@
       <div class="">
         <div class="row">
           <div class="col-md-7 mx-auto">
-            <form action="include/submit_form.php" method="POST">
+            <!-- Formular mit ID für das AJAX-Skript -->
+            <form id="contactForm">
               <div class="contact_form-container">
                 <div>
                   <div>
@@ -489,18 +490,42 @@
                     <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
                   </div>
                   <div class="btn-box ">
-                    <button type="submit">
-                      Senden
-                    </button>
+                    <button type="submit">Senden</button>
                   </div>
                 </div>
               </div>
             </form>
+            <!-- Bereich für Rückmeldung -->
+            <div id="responseMessage" style="margin-top: 20px; color: green;"></div>
           </div>
         </div>
       </div>
     </div>
 </section>
+
+<script>
+  // Füge Event-Listener für Formular hinzu
+  document.getElementById('contactForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Verhindere das Standard-Absenden
+
+    const formData = new FormData(this); // Formulardaten erfassen
+
+    // Daten an PHP-Datei senden
+    fetch('include/submit_form.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Rückmeldung anzeigen
+      document.getElementById('responseMessage').innerHTML = `<p>${data}</p>`;
+    })
+    .catch(error => {
+      // Fehler anzeigen
+      document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Fehler: ${error.message}</p>`;
+    });
+  });
+</script>
 
 
   <!-- end contact section -->

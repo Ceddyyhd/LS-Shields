@@ -81,6 +81,13 @@
                                 <p>Trainings Kalender</p>
                             </a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a href="anfragen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'anfragen.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Anfragen</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

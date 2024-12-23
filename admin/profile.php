@@ -174,9 +174,18 @@ $fuehrerscheine = json_decode($result['fuehrerscheine'] ?? '[]', true);
 if (!is_array($fuehrerscheine)) {
     $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
 }
+
+// Waffenschein aus der Datenbank abrufen
+$sql = "SELECT waffenschein_type FROM employee_info WHERE user_id = :user_id";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['user_id' => $user_id]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$waffenschein_type = $result['waffenschein_type'] ?? 'none'; // Standardwert 'none', falls nicht gesetzt
+
 ?>
     <!-- Waffenschein -->
-<div class="form-group row">
+    <div class="form-group row">
     <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
     <div class="col-sm-10">
         <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">

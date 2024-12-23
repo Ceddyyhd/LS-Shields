@@ -106,11 +106,11 @@ $(document).ready(function () {
                 <td><?= htmlspecialchars($role['level']) ?></td>
                 <td>
                 <button type="button" class="btn btn-block btn-outline-secondary" 
-                      data-toggle="modal" 
-                      data-target="#modal-default" 
-                      data-id="<?= $role['id'] ?>">
-                  Bearbeiten
-              </button>
+                        data-toggle="modal" 
+                        data-target="#modal-default" 
+                        data-id="<?= $role['id'] ?>">
+                    Bearbeiten
+                </button>
                 </td>
               </tr>
             <?php endforeach; ?>

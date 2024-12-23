@@ -136,7 +136,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
             <p class="text-muted">Kane</p>
           </div>
-          <button type="button" class="btn btn-block btn-primary">Primary</button>
+          <button type="button" class="btn btn-block btn-primary">Speichern</button>
 
         </div>
       </div>
@@ -169,19 +169,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         <option value="big_small">Großer & Kleiner Waffenschein</option>
                     </select>
                 </div>
-
-                <div style="flex-grow: 1;">
-                    <label for="waffenscheinFile">Datei hochladen</label>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="waffenscheinFile" name="waffenschein_file" >
-                            <label class="custom-file-label" for="waffenscheinFile">Choose file</label>
-                        </div>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Upload</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -197,55 +184,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         <option value="PTL">PTL</option>
                     </select>
                 </div>
-
-                <div style="flex-grow: 1;">
-                    <label for="fuehrerscheinFile">Datei hochladen</label>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="fuehrerscheinFile" name="fuehrerschein_file">
-                            <label class="custom-file-label" for="fuehrerscheinFile">Choose file</label>
-                        </div>
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-primary">Upload</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- Weitere Dokumente -->
-        <div class="form-group row">
-            <label for="arbeitsvertragFile" class="col-sm-2 col-form-label">Arbeitsvertrag</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="arbeitsvertragFile" name="arbeitsvertrag_file">
-                        <label class="custom-file-label" for="arbeitsvertragFile">Choose file</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="form-group row">
-            <label for="fuehrungszeugnisFile" class="col-sm-2 col-form-label">Führungszeugnis</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="fuehrungszeugnisFile" name="fuehrungszeugnis_file">
-                        <label class="custom-file-label" for="fuehrungszeugnisFile">Choose file</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group row">
-        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Erstehilfeschein</label>
+        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
         <div class="col-sm-10">
             <div class="input-group">
                 <div class="custom-file">

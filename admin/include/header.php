@@ -2,7 +2,9 @@
 session_start();
 include 'include/db.php';
 
+// Prüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['user_id'])) {
+    // Prüfen, ob ein "Remember Me"-Cookie existiert
     if (isset($_COOKIE['remember_me'])) {
         $token = $_COOKIE['remember_me'];
 
@@ -14,6 +16,22 @@ if (!isset($_SESSION['user_id'])) {
         if ($user) {
             // Benutzer automatisch einloggen
             $_SESSION['user_id'] = $user['id'];
+
+            // Berechtigungen laden
+            $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
+            $stmt->execute([':id' => $user['id']]);
+            $userRole = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($userRole) {
+                $roleId = $userRole['role_id'];
+                $stmt = $conn->prepare("SELECT permissions FROM roles WHERE id = :role_id");
+                $stmt->execute([':role_id' => $roleId]);
+                $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($role) {
+                    $_SESSION['permissions'] = json_decode($role['permissions'], true);
+                }
+            }
         } else {
             // Ungültiges Token -> Cookie löschen
             setcookie('remember_me', '', time() - 3600, '/');
@@ -25,7 +43,33 @@ if (!isset($_SESSION['user_id'])) {
         header('Location: index.html');
         exit;
     }
+} else {
+    // Berechtigungen laden, falls noch nicht gesetzt
+    if (!isset($_SESSION['permissions'])) {
+        $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
+        $stmt->execute([':id' => $_SESSION['user_id']]);
+        $userRole = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($userRole) {
+            $roleId = $userRole['role_id'];
+            $stmt = $conn->prepare("SELECT permissions FROM roles WHERE id = :role_id");
+            $stmt->execute([':role_id' => $roleId]);
+            $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($role) {
+                $_SESSION['permissions'] = json_decode($role['permissions'], true);
+            }
+        }
+    }
 }
+
+// Debugging (entfernen in der Produktion)
+if (isset($_SESSION['permissions'])) {
+    error_log("Permissions: " . print_r($_SESSION['permissions'], true));
+} else {
+    error_log("Permissions not set.");
+}
+
 ?>
 
 <head>

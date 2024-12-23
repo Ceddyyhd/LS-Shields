@@ -1,6 +1,8 @@
 <?php
 // Datenbankverbindung einbinden
 include 'db.php';
+session_start();
+
 
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

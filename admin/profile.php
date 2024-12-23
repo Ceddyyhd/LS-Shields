@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'include/db.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,8 +7,9 @@ error_reporting(E_ALL);
 $user_id = $_GET['id'] ?? 1;
 
 // Benutzerinformationen abrufen
-$stmt = $conn->prepare("SELECT u.email, u.created_at, r.name as role_name FROM users u 
-        JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id");
+$sql = "SELECT u.email, u.created_at, r.name as role_name FROM users u 
+        JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id";
+$stmt = $conn->prepare($sql);
 $stmt->execute(['user_id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

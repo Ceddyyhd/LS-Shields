@@ -803,10 +803,14 @@ $(document).ready(function () {
         data: formData,
         success: function (response) {
             if (response.success) {
+                alert("Änderungen gespeichert.");
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
             } else {
+                alert("Fehler: " + response.message);
             }
         },
         error: function (xhr, status, error) {
+            alert("Fehler: " + error);
         },
     });
 });

@@ -85,15 +85,15 @@
         <div class="card">
           <div class="card-header p-2">
             <ul class="nav nav-pills">
-              <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
-              <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
-              <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+              <li class="nav-item"><a class="nav-link active" href="#dokumente" data-toggle="tab">Dokumente</a></li>
+              <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
+              <li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>
               <li class="nav-item"><a class="nav-link" href="#ausrüstung" data-toggle="tab">ausrüstung</a></li>
             </ul>
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="active tab-pane" id="activity">
+              <div class="active tab-pane" id="dokumente">
                 <form class="form-horizontal">
                   <div class="form-group row">
                     <label for="inputName" class="col-sm-2 col-form-label">Waffenschein</label>
@@ -204,7 +204,7 @@
                 </form>
               </div>
 
-              <div class="tab-pane" id="timeline">
+              <div class="tab-pane" id="notizen">
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Launch Default Modal</button>
                 <div class="timeline timeline-inverse">
                   <div class="time-label">
@@ -337,7 +337,7 @@
                   </div>
                 </form>
               </div>
-              <div class="tab-pane" id="settings">
+              <div class="tab-pane" id="ausbildungen">
                 <form class="form-horizontal">
                   <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Bewertungen</label>
@@ -379,11 +379,6 @@
                       </div>
 
                       <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
-                        <label class="form-check-label" for="ausbilderschein">Ausbilderschein</label>
-                      </div>
-
-                      <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="fasi_baller">
                         <label class="form-check-label" for="fasi_baller">Fasi Baller</label>
                         <div class="stars ml-3" data-rating="2">
@@ -405,6 +400,82 @@
                           <i class="far fa-star" data-value="4"></i>
                           <i class="far fa-star" data-value="5"></i>
                         </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Rechtsschulungen</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Personen Schutz</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Fasi BF-400</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Waffenkunde</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Taktischesvorgehen</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Fasi PerSchutz Limo</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
+                        <label class="form-check-label" for="ausbilderschein">Ausbilderschein</label>
                       </div>
                     </div>
                   </div>

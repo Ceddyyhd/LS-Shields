@@ -116,8 +116,8 @@
                     <form class="form-horizontal">
                     <div class="form-group row">
                       <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                      <div class="form-group d-flex align-items-center gap-4" style="flex-wrap: nowrap;">
-                          <div>
+                      <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                          <div style="margin-right: 20px;">
                               <label for="waffenscheinSelect">Waffenschein</label>
                               <select id="waffenscheinSelect" class="form-control" style="height: 38px;">
                                   <option>Keiner Vorhanden</option>
@@ -126,7 +126,7 @@
                               </select>
                           </div>
 
-                          <div style="flex-grow: 2;">
+                          <div style="flex-grow: 1;">
                               <label for="exampleInputFile">Datei hochladen</label>
                               <div class="input-group">
                                   <div class="custom-file">

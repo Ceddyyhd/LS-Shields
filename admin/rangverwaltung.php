@@ -101,6 +101,10 @@ $(document).ready(function () {
             </tr>
           </thead>
           <tbody>
+          <?php 
+var_dump($role['id']);
+var_dump((int)$role['id'] !== 1);
+if ((int)$role['id'] !== 1 && ($_SESSION['permissions']['role_change'] ?? false)): ?>
             <?php foreach ($roles as $role): ?>
               <tr>
                 <td><?= htmlspecialchars($role['id']) ?></td>

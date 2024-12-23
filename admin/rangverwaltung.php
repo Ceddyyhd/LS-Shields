@@ -258,18 +258,18 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
                 const permissionsContainer = $('#modal-default #permissionsContainer');
                 permissionsContainer.empty();
 
-                response.all_permissions.forEach(permission => {
-                    const sectionLabel = permission.bereich === 1 ? 'Mitarbeiter Bereich' : 'Leitungs Bereich';
-                    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    if (!sectionDiv.length) {
-                        // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-                        permissionsContainer.append(
-                            `<div class="permissions-section section-${permission.bereich}">
-                                <h5>${sectionLabel}</h5>
-                            </div>`
-                        );
-                        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    }
+                permissions.forEach(permission => {
+        const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Fix Bereich Abgleich als String
+        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+        if (!sectionDiv.length) {
+            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+            permissionsContainer.append(
+                `<div class="permissions-section section-${permission.bereich}">
+                    <h5>${sectionLabel}</h5>
+                </div>`
+            );
+            sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+        }
 
                     const checked = role.permissions.includes(permission.id) ? 'checked' : '';
                     sectionDiv.append(`

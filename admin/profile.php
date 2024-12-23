@@ -301,48 +301,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-                  <!-- Notizen -->
-                  <div class="tab-pane" id="notizen">
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
-    <div id="timeline" class="timeline timeline-inverse">
-        <!-- Timeline-Notizen werden hier dynamisch eingefügt -->
-    </div>
-</div>
-
-<!-- Modal für Notizerstellung -->
-<div class="modal fade" id="modal-default">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Notiz erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="noteForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Typ</label>
-                        <select id="noteType" name="note_type" class="form-control" required>
-                            <option value="notiz">Notiz</option>
-                            <option value="verwarnung">Verwarnung</option>
-                            <option value="kuendigung">Kündigung</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Inhalt</label>
-                        <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary">Speichern</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                 
 
 
 

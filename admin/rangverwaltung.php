@@ -106,9 +106,11 @@ $(document).ready(function () {
                 <td><?= htmlspecialchars($role['level']) ?></td>
                 <td>
                 <button type="button" class="btn btn-block btn-outline-secondary" 
-        data-toggle="modal" 
-        data-target="#modal-default" 
-        data-id="<?= $role['id'] ?>">Bearbeiten</button>
+                      data-toggle="modal" 
+                      data-target="#modal-default" 
+                      data-id="<?= $role['id'] ?>">
+                  Bearbeiten
+              </button>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -241,21 +243,21 @@ $('#saveRoleButton').click(function () {
 });
 
 $('#modal-default .btn-primary').click(function () {
-    const roleId = $('#modal-default').data('id'); // ID der Rolle
+    const roleId = $('#modal-default').data('id'); // Hole die ID der Rolle
     const name = $('#modal-default #roleName').val();
     const level = $('#modal-default #roleLevel').val();
     const permissions = [];
 
-    // Alle markierten Berechtigungen sammeln
+    // Sammle die Berechtigungen
     $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
         permissions.push($(this).val());
     });
 
     console.log({ id: roleId, name, level, permissions }); // Debug-Ausgabe
 
-    // AJAX-Anfrage, um die Änderungen zu speichern
+    // AJAX-Anfrage senden
     $.ajax({
-        url: ' include/update_role.php',
+        url: 'include/update_role.php',
         type: 'POST',
         data: {
             id: roleId,

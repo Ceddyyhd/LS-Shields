@@ -29,15 +29,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
     }
 
-    // Passwort ändern, wenn Berechtigung vorhanden und ein neues Passwort übergeben wurde
-    if ($_SESSION['permissions']['edit_password'] ?? false) {
-        $password = $_POST['password'] ?? null;
-        if (!empty($password)) {
-            // Passwort hashen
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $updates['password'] = $hashedPassword;
-        }
+    // Passwort verarbeiten, falls erlaubt und übergeben
+if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
+    $password = $_POST['password'];
+
+    // Überprüfen, ob das Passwort leer ist, obwohl die Checkbox aktiviert wurde
+    if (empty($password)) {
+        echo json_encode(['success' => false, 'message' => 'Passwort darf nicht leer sein.']);
+        exit;
     }
+
+    // Passwort hashen und hinzufügen
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    $updates['password'] = $hashedPassword;
+}
 
     // Daten aktualisieren
     if (!empty($updates)) {

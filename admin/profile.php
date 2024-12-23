@@ -218,7 +218,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
                                 <strong><i class="fas fa-lock mr-1"></i> Passwort ändern</strong>
                                 <?php if ($_SESSION['permissions']['edit_password'] ?? false): ?>
-                                    <input type="password" class="form-control" name="password" placeholder="Neues Passwort eingeben">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="changePasswordCheckbox">
+                                        <label class="form-check-label" for="changePasswordCheckbox">Passwort ändern aktivieren</label>
+                                    </div>
+                                    <input type="password" class="form-control mt-2" id="passwordField" name="password" placeholder="Neues Passwort eingeben" disabled>
                                 <?php else: ?>
                                     <input type="password" class="form-control" placeholder="Keine Berechtigung" disabled>
                                 <?php endif; ?>
@@ -239,6 +243,15 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
+        $("#changePasswordCheckbox").on("change", function () {
+            if ($(this).is(":checked")) {
+                $("#passwordField").prop("disabled", false); // Passwortfeld aktivieren
+            } else {
+                $("#passwordField").prop("disabled", true); // Passwortfeld deaktivieren
+                $("#passwordField").val(""); // Passwortfeld zurücksetzen
+            }
+        });
+
         $("#saveChanges").on("click", function (e) {
             e.preventDefault();
 

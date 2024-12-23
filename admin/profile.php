@@ -105,7 +105,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </h3>
                 <p class="text-muted text-center">
                   <?php echo htmlspecialchars($user['role_name']); ?>
-                  <ion-icon name="pencil-outline"></ion-icon>
+                  <button type="button" class="btn btn-block btn-default">Default</button>
+
                 </a>
                 </p>
 

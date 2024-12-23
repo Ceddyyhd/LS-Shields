@@ -108,19 +108,21 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="modal-body">
         <form id="addRoleForm">
           <div class="card-body">
-            <div class="form-group">
-              <label for="roleName">Rangname</label>
-              <input type="text" id="roleName" class="form-control" placeholder="Rangname" required>
-            </div>
-            <div class="form-group">
-              <label for="roleLevel">Ebene</label>
-              <select id="roleLevel" class="custom-select form-control-border" required>
-                <option value="Inhaber">Inhaber</option>
-                <option value="Geschäftsführung">Geschäftsführung</option>
-                <option value="Ausbildung">Ausbildung</option>
-                <option value="Mitarbeiter">Mitarbeiter</option>
-              </select>
-            </div>
+          <div class="form-group">
+  <label for="roleName">Rangname</label>
+  <input type="text" id="roleName" class="form-control">
+</div>
+<div class="form-group">
+  <label for="roleLevel">Rang Ebene</label>
+  <select id="roleLevel" class="custom-select">
+    <option value="Inhaber">Inhaber</option>
+    <option value="Geschäftsführung">Geschäftsführung</option>
+    <option value="Mitarbeiter">Mitarbeiter</option>
+  </select>
+</div>
+<div class="form-group" id="permissionsContainer">
+  <!-- Dynamische Rechte erscheinen hier -->
+</div>
           </div>
         </form>
       </div>
@@ -133,24 +135,39 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
-  $('#saveRoleButton').click(function () {
-    const name = $('#roleName').val();
-    const level = $('#roleLevel').val();
+ $('#saveRoleButton').click(function () {
+    const roleId = $('#modal-default').data('role-id');
+    const name = $('#modal-default #roleName').val();
+    const level = $('#modal-default #roleLevel').val();
 
+    // Alle Checkboxen auslesen
+    const permissions = {};
+    $('#permissionsContainer input[type="checkbox"]').each(function () {
+        const key = $(this).attr('id');
+        const value = $(this).is(':checked');
+        permissions[key] = value;
+    });
+
+    // AJAX-Anfrage, um die Änderungen zu speichern
     $.ajax({
-        url: 'include/add_role.php',
+        url: 'update_role.php',
         type: 'POST',
-        data: { name: name, level: level },
+        data: {
+            id: roleId,
+            name: name,
+            level: level,
+            permissions: JSON.stringify(permissions)
+        },
         success: function (response) {
             if (response.success) {
-                alert('Rolle erfolgreich hinzugefügt.');
+                alert('Rolle erfolgreich aktualisiert.');
                 location.reload();
             } else {
                 alert('Fehler: ' + response.message);
             }
         },
         error: function () {
-            alert('Fehler beim Hinzufügen der Rolle.');
+            alert('Fehler beim Speichern der Rolle.');
         }
     });
 });
@@ -202,6 +219,10 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <label class="form-check-label" for="exampleCheck2">Recht 2</label>
                     </div>
                   </div>
+                  <div class="form-group" id="permissionsContainer">
+  <!-- Dynamisch eingefügte Checkboxen erscheinen hier -->
+</div>
+
                 </div>
                 <!-- /.card-body -->
               </form>
@@ -221,34 +242,42 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
       
 
     <script>$(document).on('click', '[data-target="#modal-default"]', function () {
-    const roleId = $(this).data('id');
-    const roleName = $(this).data('name'); // Rangname aus dem Button
+    const roleId = $(this).data('id'); // ID der Rolle
 
-    // Rangname im Modal-Titel setzen
-    $('#modalRoleName').text(roleName);
-
-    // AJAX-Anfrage, um die Rang-Daten zu laden (siehe vorherige Schritte)
-
-    // AJAX-Anfrage, um die Rang-Daten abzurufen
+    // AJAX-Anfrage, um die Rollendaten zu laden
     $.ajax({
-        url: 'include/get_role.php', // PHP-Datei, die die Rangdaten liefert
+        url: 'get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',
         success: function (response) {
-            // Fülle die Modal-Felder mit den Daten
-            $('#modal-default input[placeholder="CEO"]').val(response.name);
-            $('#modal-default select#exampleSelectBorder').val(response.level);
-            
-            // Rechte markieren
-            $('#modal-default input[type="checkbox"]').each(function () {
-                const checkbox = $(this);
-                const right = checkbox.attr('id'); // Checkbox-ID entspricht dem Recht
-                checkbox.prop('checked', response.permissions.includes(right));
-            });
+            if (response.success) {
+                const role = response.role;
+
+                // Felder mit Rollendaten füllen
+                $('#modal-default #roleName').val(role.name);
+                $('#modal-default #roleLevel').val(role.level);
+
+                // Checkboxen für Permissions dynamisch erstellen
+                const permissions = JSON.parse(role.permissions);
+                const permissionsContainer = $('#modal-default #permissionsContainer');
+                permissionsContainer.empty();
+
+                for (const [key, value] of Object.entries(permissions)) {
+                    const checked = value ? 'checked' : '';
+                    permissionsContainer.append(`
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="${key}" ${checked}>
+                            <label class="form-check-label" for="${key}">${key}</label>
+                        </div>
+                    `);
+                }
+            } else {
+                alert('Fehler: ' + response.message);
+            }
         },
         error: function () {
-            alert('Fehler beim Laden der Rangdaten.');
+            alert('Fehler beim Laden der Rollendaten.');
         }
     });
 });

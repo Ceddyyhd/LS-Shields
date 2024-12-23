@@ -265,16 +265,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         }, 500);
                     } else {
                         // Zeige die Fehlermeldung im Modal an
-                        alert("Fehler: " + response.message);
                     }
                 } catch (error) {
                     console.error("Fehler beim Parsen der Antwort:", error);
-                    alert("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
                 }
             },
             error: function (xhr, status, error) {
                 console.error("AJAX-Fehler:", error);
-                alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
             },
         });
     });
@@ -360,18 +357,14 @@ $(document).ready(function () {
             try {
                 var res = JSON.parse(response); // JSON-Antwort parsen
                 if (res.success) {
-                    alert(res.message); // Erfolgsmeldung anzeigen
                 } else {
-                    alert("Fehler: " + res.message); // Fehler vom Server anzeigen
                 }
             } catch (e) {
                 console.error("Fehler beim Verarbeiten der Antwort:", e);
-                alert("Ein unerwarteter Fehler ist aufgetreten.");
             }
         },
         error: function (xhr, status, error) {
             console.error("Fehler:", error);
-            alert("Fehler: " + error);
         },
     });
 });
@@ -627,12 +620,10 @@ $(document).ready(function () {
                   </div>`;
               $("#timeline").prepend(newNote);
             } else {
-                alert(response.message);
             }
         },
         error: function (xhr, status, error) {
             console.error("Fehler:", error);
-            alert("Fehler: " + error);
         },
     });
 });
@@ -704,7 +695,6 @@ $(document).ready(function () {
                 ?>
             </div>
         </div>
-        <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
     </form>
 </div>
 
@@ -740,19 +730,15 @@ $(document).ready(function () {
                                 try {
                                     response = JSON.parse(response);
                                     if (response.success) {
-                                        alert("Änderungen erfolgreich gespeichert.");
                                         location.reload();
                                     } else {
-                                        alert("Fehler: " + response.message);
                                     }
                                 } catch (error) {
                                     console.error("Fehler beim Parsen der Antwort:", error);
-                                    alert("Ein unerwarteter Fehler ist aufgetreten.");
                                 }
                             },
                             error: function (xhr, status, error) {
                                 console.error("Fehler:", error);
-                                alert("Fehler: " + error);
                             }
                         });
                     });

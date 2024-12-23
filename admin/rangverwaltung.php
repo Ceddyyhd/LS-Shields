@@ -49,7 +49,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="card-header">
                     <h3 class="card-title">Rollenverwaltung</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
                     </div>
                 </div>
                 <div class="card-body table-responsive p-0">
@@ -69,13 +69,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <td><?= htmlspecialchars($role['name']) ?></td>
                                     <td><?= htmlspecialchars($role['level']) ?></td>
                                     <td>
-                                    <button type="button" class="btn btn-block btn-outline-secondary" 
-                                        data-toggle="modal" 
-                                        data-target="#modal-default" 
-                                        data-id="<?= $role['id'] ?>" 
-                                        data-name="<?= htmlspecialchars($role['name']) ?>">
-                                  Bearbeiten
-                                </button>
+                                    <<button type="button" class="btn btn-block btn-outline-secondary" 
+                                          data-toggle="modal" 
+                                          data-target="#modal-default" 
+                                          data-id="<?= $role['id'] ?>" 
+                                          data-name="<?= htmlspecialchars($role['name']) ?>">
+                                    Bearbeiten
+                                  </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -96,70 +96,83 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-            </div>
-            <div class="modal-body">
-                <form id="addRoleForm">
-                    <div class="form-group">
-                        <label for="roleName">Rangname</label>
-                        <input type="text" id="addRoleName" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="roleLevel">Rang Ebene</label>
-                        <select id="addRoleLevel" class="custom-select">
-                            <option value="Inhaber">Inhaber</option>
-                            <option value="Geschäftsführung">Geschäftsführung</option>
-                            <option value="Mitarbeiter">Mitarbeiter</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="addPermissionsContainer">
-                        <!-- Dynamische Rechte erscheinen hier -->
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveAddRoleButton">Speichern</button>
-            </div>
-        </div>
+      </div>
+      <div class="modal-body">
+        <form id="addRoleForm">
+          <div class="card-body">
+          <div class="form-group">
+  <label for="roleName">Rangname</label>
+  <input type="text" id="roleName" class="form-control">
+</div>
+<div class="form-group">
+  <label for="roleLevel">Rang Ebene</label>
+  <select id="roleLevel" class="custom-select">
+    <option value="Inhaber">Inhaber</option>
+    <option value="Geschäftsführung">Geschäftsführung</option>
+    <option value="Mitarbeiter">Mitarbeiter</option>
+  </select>
+</div>
+<div class="form-group" id="permissionsContainer">
+  <!-- Dynamische Rechte erscheinen hier -->
+</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+        <button type="button" class="btn btn-primary" id="saveRoleButton">Speichern</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal für Bearbeiten -->
 <div class="modal fade" id="modal-default">
-    <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Rolle bearbeiten</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <h4 class="modal-title">Rang bearbeiten: <span id="modalRoleName"></span></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
             <div class="modal-body">
-                <form id="editRoleForm">
-                    <div class="form-group">
-                        <label for="editRoleName">Rangname</label>
-                        <input type="text" id="editRoleName" class="form-control">
+              
+            <form>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Rang</label>
+                    <input class="form-control" type="Rang" placeholder="CEO">                  
+                  </div>
+                <div class="form-group">
+                  <label for="exampleSelectBorder">Rang Ebene </label>
+                  <select class="custom-select form-control-border" id="exampleSelectBorder">
+                    <option>Inhaber</option>
+                    <option>Geschäftsführung</option>
+                    <option>Ausbildung</option>
+                    <option>Mitarbeiter</option>
+                  </select>
+                </div>
+                <label for="exampleInputEmail1">Mitarbeiter Bereich</label>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Recht 1</label>
+                    <div>
+                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                    <label class="form-check-label" for="exampleCheck2">Recht 2</label>
                     </div>
-                    <div class="form-group">
-                        <label for="editRoleLevel">Rang Ebene</label>
-                        <select id="editRoleLevel" class="custom-select">
-                            <option value="Inhaber">Inhaber</option>
-                            <option value="Geschäftsführung">Geschäftsführung</option>
-                            <option value="Mitarbeiter">Mitarbeiter</option>
-                        </select>
+                  </div>
+                  <label for="exampleInputEmail1">Leitungs Bereich</label>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Recht 1</label>
+                    <div>
+                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                    <label class="form-check-label" for="exampleCheck2">Recht 2</label>
                     </div>
-                    <div class="form-group" id="editPermissionsContainer">
-                        <!-- Dynamische Rechte erscheinen hier -->
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveEditRoleButton">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
+                  </div>
+                  <div class="form-group" id="permissionsContainer">
+  <!-- Dynamisch eingefügte Checkboxen erscheinen hier -->
 
 <script>
 // Rechte dynamisch laden für "Neue Rolle hinzufügen"

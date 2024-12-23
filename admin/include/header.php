@@ -29,7 +29,8 @@ if (!isset($_SESSION['user_id'])) {
                 $role = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($role) {
-                    $_SESSION['permissions'] = json_decode($role['permissions'], true);
+                    $permissionsArray = json_decode($role['permissions'], true);
+                    $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
                 }
             }
         } else {

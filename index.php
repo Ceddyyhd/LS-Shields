@@ -484,16 +484,14 @@
                     <input type="text" name="vorname_nachname" placeholder="Vor- & Nachname" required />
                   </div>
                   <div>
-                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" />
+                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" required/>
                   </div>
                   
                   <div class="">
-                    <input type="text" placeholder="Ihre Anfrage" class="message_input" />
+                    <input type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
                   </div>
 
-                  <div class="">
-                    <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
-                  </div>
+                  
 
                   <div class="btn-box ">
                     <button type="submit">Senden</button>

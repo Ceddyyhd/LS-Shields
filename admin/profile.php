@@ -144,7 +144,7 @@
                       <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
                           <div style="margin-right: 20px; width: 200px;">
                               <label for="fuehrerscheinSelect">Führerscheine</label>
-                              <select id="fuehrerscheinSelect" multiple class="form-control" style="height: 120px; width: 100%;">
+                              <select id="fuehrerscheinSelect" multiple class="form-control" style="height: 100px; width: 100%;">
                                   <option>C</option>
                                   <option>A</option>
                                   <option>M2</option>

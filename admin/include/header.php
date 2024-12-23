@@ -29,6 +29,7 @@ if (!isset($_SESSION['user_id'])) {
                 $role = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($role) {
+                    // Berechtigungen in ein assoziatives Array umwandeln
                     $permissionsArray = json_decode($role['permissions'], true);
                     if (is_array($permissionsArray)) {
                         $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
@@ -62,7 +63,12 @@ if (!isset($_SESSION['user_id'])) {
             $role = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($role) {
-                $_SESSION['permissions'] = json_decode($role['permissions'], true);
+                $permissionsArray = json_decode($role['permissions'], true);
+                if (is_array($permissionsArray)) {
+                    $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+                } else {
+                    $_SESSION['permissions'] = [];
+                }
             }
         }
     }

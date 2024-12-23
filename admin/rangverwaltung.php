@@ -201,13 +201,16 @@ $(document).ready(function () {
 
 $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
+    console.log('Bearbeiten-Button geklickt, ID:', roleId); // Debug-Ausgabe
 
     $.ajax({
-        url: 'include/get_role.php',
+        url: 'get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',
         success: function (response) {
+            console.log('Daten erhalten:', response); // Debug-Ausgabe
+
             if (response.success) {
                 const role = response.role;
 
@@ -231,7 +234,8 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
                 alert('Fehler: ' + response.error);
             }
         },
-        error: function () {
+        error: function (xhr, status, error) {
+            console.error('Fehler beim Laden der Rollendaten:', error);
             alert('Fehler beim Laden der Rollendaten.');
         }
     });

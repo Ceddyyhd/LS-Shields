@@ -148,67 +148,81 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </div>
       <div class="modal fade" id="user-bearbeiten">
-        <div class="modal-dialog">
-          <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h4 class="modal-title">Benutzer bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Information</h3>
+                    </div>
+                    <div class="card-body">
 
-            <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Information</h3>
-          </div>
-          <div class="card-body">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-user mr-1"></i> Name</strong>
+                            <?php if ($_SESSION['permissions']['edit_name'] ?? false): ?>
+                                <input type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
+                            <?php else: ?>
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['name']); ?>" disabled>
+                            <?php endif; ?>
+                        </div>
 
+                        <!-- Nummer -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-phone mr-1"></i> Nummer</strong>
+                            <?php if ($_SESSION['permissions']['edit_nummer'] ?? false): ?>
+                                <input type="text" class="form-control" name="nummer" value="<?php echo htmlspecialchars($user['nummer']); ?>">
+                            <?php else: ?>
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['nummer']); ?>" disabled>
+                            <?php endif; ?>
+                        </div>
 
-             <div class="form-group">
-             <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
-             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['name']); ?>">
-            </div>     
-            
-            <div class="form-group">
-             <strong><i class="fas fa-envelope mr-1"></i> Nummer</strong>
-             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['nummer']); ?>">
-            </div>   
+                        <!-- Email -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+                            <?php if ($_SESSION['permissions']['edit_email'] ?? false): ?>
+                                <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
+                            <?php else: ?>
+                                <input type="email" class="form-control" placeholder="<?php echo htmlspecialchars($user['email']); ?>" disabled>
+                            <?php endif; ?>
+                        </div>
 
+                        <!-- UMail -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
+                            <?php if ($_SESSION['permissions']['edit_umail'] ?? false): ?>
+                                <input type="text" class="form-control" name="umail" value="<?php echo htmlspecialchars($user['umail']); ?>">
+                            <?php else: ?>
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['umail']); ?>" disabled>
+                            <?php endif; ?>
+                        </div>
 
-            <div class="form-group">
-             <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>">
-            </div>   
+                        <!-- Kontonummer -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
+                            <?php if ($_SESSION['permissions']['edit_kontonummer'] ?? false): ?>
+                                <input type="text" class="form-control" name="kontonummer" value="<?php echo htmlspecialchars($user['kontonummer']); ?>">
+                            <?php else: ?>
+                                <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['kontonummer']); ?>" disabled>
+                            <?php endif; ?>
+                        </div>
 
-            <div class="form-group">
-             <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
-             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['umail']); ?>">
-            </div>  
-
-            <div class="form-group">
-             <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
-             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['kontonummer']); ?>">
-            </div> 
-
-            <div class="form-group">
-            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
-            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['kontonummer']); ?>" disabled>
+                    </div>
+                </div>
             </div>
-
-          </div>
-        </div>
-
-          </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="submit" class="btn btn-primary" id="saveChanges">Speichern</button>
             </div>
-          </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
-      </div>
+    </div>
+</div>
           <div class="col-md-9">
             <div class="card">
               <div class="card-header p-2">

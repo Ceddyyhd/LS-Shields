@@ -162,58 +162,33 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <div class="active tab-pane" id="dokumente">
     <form class="form-horizontal" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-    <form id="employeeForm">
-    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-
-    <!-- Waffenschein -->
-    <div class="form-group row">
-        <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
-        <div class="col-sm-10">
-            <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">
-                <option value="none" <?= $employee['waffenschein_type'] === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
-                <option value="small" <?= $employee['waffenschein_type'] === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
-                <option value="big_small" <?= $employee['waffenschein_type'] === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
-            </select>
+        <!-- Waffenschein -->
+        <div class="form-group row">
+            <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
+            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                <div style="margin-right: 20px; width: 200px;">
+                    <select id="waffenscheinSelect" class="form-control" style="height: 38px; width: 100%;" name="waffenschein_type">
+                        <option value="none">Keiner Vorhanden</option>
+                        <option value="small">Kleiner Waffenschein</option>
+                        <option value="big_small">Großer & Kleiner Waffenschein</option>
+                    </select>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Führerscheine -->
-    <div class="form-group row">
-        <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
-        <div class="col-sm-10">
-            <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-                <option value="C" <?= in_array('C', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>C</option>
-                <option value="A" <?= in_array('A', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>A</option>
-                <option value="M2" <?= in_array('M2', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>M2</option>
-                <option value="PTL" <?= in_array('PTL', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>PTL</option>
-            </select>
-        </div>
-    </div>
-
-    <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
-</form>
-
-<script>
-$("#saveButton").on("click", function () {
-    var formData = $("#employeeForm").serialize();
-
-    $.ajax({
-        url: "include/save_employee_info.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert("Fehler: " + response.message);
-            }
-        },
-        error: function (xhr, status, error) {
-            alert("Fehler: " + error);
-        }
-    });
-});
-</script>
+        <!-- Führerscheine -->
+        <div class="form-group row">
+            <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                <div style="margin-right: 20px; width: 200px;">
+                    <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]" style="height: 100px; width: 100%;">
+                        <option value="C">C</option>
+                        <option value="A">A</option>
+                        <option value="M2">M2</option>
+                        <option value="PTL">PTL</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <!-- Weitere Dokumente -->

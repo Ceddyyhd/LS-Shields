@@ -198,27 +198,37 @@ if (!is_array($fuehrerscheine)) {
 
         <!-- Weitere Dokumente -->
         <script>
-$("#saveButton").on("click", function () {
-    var formData = $("#employeeForm").serialize();
+$(document).ready(function () {
+    // Speichern-Button
+    $("#saveButton").on("click", function () {
+        var formData = $("#employeeForm").serialize();
 
-    $.ajax({
-        url: "include/save_employee_info.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert("Fehler: " + response.message);
+        $.ajax({
+            url: "include/save_employee_info.php",
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                console.log("Antwort:", response);
+                if (response.success) {
+                    alert(response.message);
+                } else {
+                    alert("Fehler: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler:", error);
+                alert("Fehler: " + error);
             }
-        },
-        error: function (xhr, status, error) {
-            alert("Fehler: " + error);
-        }
+        });
+    });
+
+    // Datei-Auswahl anzeigen
+    $("#documentFile").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).next(".custom-file-label").text(fileName);
     });
 });
-</script>
-        <!-- Button für das Modal -->
+</script>        <!-- Button für das Modal -->
           <div class="form-group row">
               <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
               <div class="col-sm-10">

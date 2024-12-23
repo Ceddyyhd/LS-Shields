@@ -256,29 +256,33 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     });
 </script>
 <script>
-    $(document).ready(function() {
-    $("#uploadForm").on("submit", function(e) {
-        e.preventDefault();
+    $(document).ready(function () {
+        $("#uploadForm").on("submit", function (e) {
+            e.preventDefault(); // Verhindert, dass das Formular standardmäßig abgeschickt wird
 
-        var formData = new FormData(this);
+            var formData = new FormData(this); // Erstellt ein FormData-Objekt mit den Formulardaten
 
-        $.ajax({
-            url: $(this).attr("action"),
-            type: $(this).attr("method"),
-            data: formData,
-            processData: false, // Wichtig für FormData
-            contentType: false, // Wichtig für FormData
-            success: function(response) {
-                alert(response); // Erfolgsmeldung anzeigen
-                $("#modal-primary").modal("hide"); // Modal schließen
-                location.reload(); // Seite neu laden, um Änderungen zu sehen
-            },
-            error: function(xhr, status, error) {
-                alert("Fehler: " + error); // Fehlermeldung anzeigen
-            }
+            $.ajax({
+                url: $(this).attr("action"), // URL aus dem `action`-Attribut des Formulars
+                type: $(this).attr("method"), // Methode aus dem `method`-Attribut des Formulars
+                data: formData, // FormData-Objekt
+                processData: false, // Verhindert, dass jQuery die Daten verarbeitet
+                contentType: false, // Setzt den richtigen Content-Type für FormData
+                success: function (response) {
+                    if (response.success) { // Prüfen, ob die Antwort erfolgreich ist
+                        alert("Datei erfolgreich hochgeladen!"); // Erfolgsmeldung
+                        $("#modal-primary").modal("hide"); // Modal schließen
+                        location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+                    } else {
+                        alert("Fehler: " + (response.message || "Unbekannter Fehler")); // Fehlernachricht
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Fehler: " + xhr.responseText || error); // Fehlernachricht
+                }
+            });
         });
     });
-});
 </script>
 
 

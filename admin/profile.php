@@ -301,9 +301,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-                 
-
-
+                  <!-- Notizen -->
+                  <div class="tab-pane" id="notizen">
+                    <ul>
+                      <?php while ($note = $notes->fetch_assoc()): ?>
+                        <li>
+                          <strong><?php echo htmlspecialchars($note['created_at']); ?>:</strong>
+                          <?php echo htmlspecialchars($note['note']); ?>
+                        </li>
+                      <?php endwhile; ?>
+                    </ul>
+                  </div>
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">

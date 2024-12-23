@@ -224,7 +224,7 @@
                     <!-- The timeline -->
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
                   Launch Default Modal
-                </button> </br>
+                </button>
                     <div class="timeline timeline-inverse">
                       <!-- timeline time label -->
                       <div class="time-label">
@@ -248,10 +248,6 @@
                             jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
                             quora plaxo ideeli hulu weebly balihoo...
                           </div>
-                          <div class="timeline-footer">
-                            <a href="#" class="btn btn-primary btn-sm">Read more</a>
-                            <a href="#" class="btn btn-danger btn-sm">Delete</a>
-                          </div>
                         </div>
                       </div>
                       <!-- END timeline item -->
@@ -260,9 +256,9 @@
                         <i class="fas fa-user bg-info"></i>
 
                         <div class="timeline-item">
-                          <span class="time"><i class="far fa-clock"></i> 5 mins ago</span>
+                          <span class="time"><i class="far fa-clock"></i> 16:45</span>
 
-                          <h3 class="timeline-header border-0"><a href="#">Sarah Young</a> accepted your friend request
+                          <h3 class="timeline-header border-0"><a>Sarah Young</a> wurde von <a>Cedric Schmidt</a> zu Senior Officer befördert
                           </h3>
                         </div>
                       </div>

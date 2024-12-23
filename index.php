@@ -480,11 +480,13 @@
             <form id="contactForm">
               <div class="contact_form-container">
                 <div>
+                  <h5> Ihr Name</h5>
                   <div>
                     <input type="text" name="vorname_nachname" placeholder="Vor- & Nachname" required />
                   </div>
+                  <h5> Ihre Telefonnummer</h5>
                   <div>
-                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" value="555-" required/>
+                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" value="555- " required/>
                   </div>
                   
                   <div class="">

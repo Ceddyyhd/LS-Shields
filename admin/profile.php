@@ -105,10 +105,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </h3>
                 <p class="text-muted text-center">
                   <?php echo htmlspecialchars($user['role_name']); ?>
-                </p>
-                <a class="btn btn-app">
+                  <a class="btn btn-app">
                   <i class="fas fa-edit"></i> Edit
                 </a>
+                </p>
+                
 
                 <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">

@@ -70,7 +70,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Gmail</strong>
+                <strong><i class="fas fa-envelope mr-1"></i> Gmail</strong>
 
                 <p class="text-muted">
                  Ceddyyhd@gmail.com
@@ -78,7 +78,7 @@
 
                 <hr>
 
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> UMail</strong>
+                <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
 
                 <p class="text-muted">fal.hunter@umail.com</p>
 

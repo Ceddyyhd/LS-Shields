@@ -163,10 +163,16 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <form id="employeeForm" class="form-horizontal" method="POST">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
     <?php
-// Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
-$fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
+// Führerscheine aus der Datenbank abrufen
+$sql = "SELECT fuehrerscheine FROM employee_info WHERE user_id = :user_id";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['user_id' => $user_id]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$fuehrerscheine = json_decode($result['fuehrerscheine'] ?? '[]', true);
+
 if (!is_array($fuehrerscheine)) {
-    $fuehrerscheine = []; // Standardwert setzen, falls JSON fehlerhaft ist
+    $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
 }
 ?>
     <!-- Waffenschein -->
@@ -187,12 +193,12 @@ if (!is_array($fuehrerscheine)) {
 <div class="form-group row">
     <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
     <div class="col-sm-10">
-        <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-            <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
-            <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
-            <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
-            <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
-        </select>
+    <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
+    <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
+    <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
+    <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
+    <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
+</select>
     </div>
 </div>
 

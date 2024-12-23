@@ -214,6 +214,15 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                                     <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['kontonummer']); ?>" disabled>
                                 <?php endif; ?>
                             </div>
+                            <!-- Passwort ändern -->
+                            <div class="form-group">
+                                <strong><i class="fas fa-lock mr-1"></i> Passwort ändern</strong>
+                                <?php if ($_SESSION['permissions']['edit_password'] ?? false): ?>
+                                    <input type="password" class="form-control" name="password" placeholder="Neues Passwort eingeben">
+                                <?php else: ?>
+                                    <input type="password" class="form-control" placeholder="Keine Berechtigung" disabled>
+                                <?php endif; ?>
+                            </div>
 
                         </div>
                     </div>

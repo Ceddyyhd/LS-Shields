@@ -1,58 +1,65 @@
 <?php
+// Verbindung und Sitzung starten
 include 'db.php';
 session_start();
 
-header('Content-Type: application/json');
-
-// Prüfen, ob die Anfrage per POST erfolgt ist
+// Überprüfen, ob die Anfrage korrekt ist
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
-
     if (!$user_id) {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);
         exit;
     }
 
-    // Felder, die bearbeitet werden können
-    $fields = ['name', 'nummer', 'email', 'umail', 'kontonummer'];
+    // Berechtigungen überprüfen und Updates vorbereiten
     $updates = [];
+    if ($_SESSION['permissions']['edit_name'] ?? false) {
+        $updates['name'] = $_POST['name'] ?? '';
+    }
+    if ($_SESSION['permissions']['edit_nummer'] ?? false) {
+        $updates['nummer'] = $_POST['nummer'] ?? '';
+    }
+    if ($_SESSION['permissions']['edit_email'] ?? false) {
+        $updates['email'] = $_POST['email'] ?? '';
+    }
+    if ($_SESSION['permissions']['edit_umail'] ?? false) {
+        $updates['umail'] = $_POST['umail'] ?? '';
+    }
+    if ($_SESSION['permissions']['edit_kontonummer'] ?? false) {
+        $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
+    }
 
-    // Berechtigungen prüfen und Felder sammeln
-    foreach ($fields as $field) {
-        if (isset($_POST[$field]) && ($_SESSION['permissions']["edit_$field"] ?? false)) {
-            $updates[$field] = $_POST[$field];
+    // Passwort ändern, wenn Berechtigung vorhanden und ein neues Passwort übergeben wurde
+    if ($_SESSION['permissions']['edit_password'] ?? false) {
+        $password = $_POST['password'] ?? null;
+        if (!empty($password)) {
+            // Passwort hashen
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            $updates['password'] = $hashedPassword;
         }
     }
 
-    if (empty($updates)) {
-        echo json_encode(['success' => false, 'message' => 'Keine Änderungen oder keine Berechtigung.']);
-        exit;
-    }
+    // Daten aktualisieren
+    if (!empty($updates)) {
+        $sql = "UPDATE users SET ";
+        $params = [];
+        foreach ($updates as $key => $value) {
+            $sql .= "$key = :$key, ";
+            $params[":$key"] = $value;
+        }
+        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
+        $params[':user_id'] = $user_id;
 
-    // Update SQL erstellen
-    $setClause = [];
-    foreach ($updates as $field => $value) {
-        $setClause[] = "$field = :$field";
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
     }
-
-    $sql = "UPDATE users SET " . implode(', ', $setClause) . " WHERE id = :user_id";
-    $stmt = $conn->prepare($sql);
-
-    // Bind-Werte vorbereiten
-    foreach ($updates as $field => $value) {
-        $stmt->bindValue(":$field", $value);
-    }
-    $stmt->bindValue(":user_id", $user_id);
-
-    // Ausführen
-    try {
-        $stmt->execute();
-        echo json_encode(['success' => true, 'message' => 'Änderungen erfolgreich gespeichert.']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
-    }
-    exit;
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
-    exit;
 }

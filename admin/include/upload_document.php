@@ -2,14 +2,6 @@
 // Datenbankverbindung einbinden
 include 'db.php';
 
-// Debugging: POST- und FILES-Daten ausgeben (optional)
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "<pre>";
-    print_r($_POST);
-    print_r($_FILES);
-    echo "</pre>";
-    // Entferne das `die()` nach dem Debugging!
-}
 
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -208,44 +208,58 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 <div class="modal fade" id="modal-primary">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-                <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
-                    <h4 class="modal-title">Datei hochladen</h4>
-                <?php else: ?>
-                    <h4 class="modal-title">Keine Berechtigung</h4>
-                <?php endif; ?>
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                        Datei hochladen
+                    <?php else: ?>
+                        Keine Berechtigung
+                    <?php endif; ?>
+                </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
-    <!-- Benutzer-ID -->
-    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-    <!-- Dokumenttyp -->
-    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
-    <div class="modal-body">
-        <!-- Eingabe für den benutzerdefinierten Namen -->
-        <div class="form-group">
-            <label for="documentName">Dokumentname</label>
-            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
-        </div>
+            <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
+                <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
+                    <!-- Benutzer-ID -->
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+                    <!-- Dokumenttyp -->
+                    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
-        <!-- Dateiupload -->
-        <div class="form-group">
-            <label for="documentFile">Datei auswählen</label>
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
-                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
-            </div>
-        </div>
-    </div>
+                    <div class="modal-body">
+                        <!-- Eingabe für den benutzerdefinierten Namen -->
+                        <div class="form-group">
+                            <label for="documentName">Dokumentname</label>
+                            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
+                        </div>
 
-    <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-        <button type="submit" class="btn btn-primary">Hochladen</button>
-    </div>
-</form>
+                        <!-- Dateiupload -->
+                        <div class="form-group">
+                            <label for="documentFile">Datei auswählen</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="submit" class="btn btn-primary">Hochladen</button>
+                    </div>
+                </form>
+            <?php else: ?>
+                <!-- Nachricht für Benutzer ohne Berechtigung -->
+                <div class="modal-body">
+                    <p>Sie haben keine Berechtigung, Dateien hochzuladen.</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            <?php endif; ?>
         </div>
         <!-- /.modal-content -->
     </div>

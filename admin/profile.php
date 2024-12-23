@@ -355,8 +355,10 @@
                       </div>
                     </div>
                   </div>
+                  <label class="col-sm-2 col-form-label">Ausrüstung</label>
+
                   <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Bewertungen</label>
+                    <label class="col-sm-2 col-form-label">Ausrüstung</label>
                     <div class="col-sm-10">
                       <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="leitstelle">

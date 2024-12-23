@@ -213,16 +213,16 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="form-group row">
-            <label for="erstehilfeFile" class="col-sm-2 col-form-label">Erstehilfeschein</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <div class="custom-file">
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-                        <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
+        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Erstehilfeschein</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
+                    <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
                 </div>
             </div>
         </div>

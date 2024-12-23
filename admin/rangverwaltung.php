@@ -43,15 +43,15 @@ $stmt = $conn->prepare("SELECT * FROM roles");
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen aus der Datenbank abrufen // HINZUGEFÜGT
+// Berechtigungen aus der Datenbank abrufen
 $stmtPerm = $conn->prepare("SELECT * FROM permissions");
 $stmtPerm->execute();
-$permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC); // HINZUGEFÜGT
+$permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <script>
 $(document).ready(function () {
-    // Berechtigungen dynamisch laden // HINZUGEFÜGT
+    // Berechtigungen dynamisch laden
     const permissions = <?= json_encode($permissions) ?>;
     const permissionsContainer = $('#permissionsContainer');
 
@@ -171,31 +171,26 @@ $(document).ready(function () {
 
 <script>
  $('#saveRoleButton').click(function () {
-    const roleId = $('#modal-default').data('role-id');
-    const name = $('#modal-default #roleName').val();
-    const level = $('#modal-default #roleLevel').val();
-
-    // Alle Checkboxen auslesen
-    const permissions = {};
-    $('#permissionsContainer input[type="checkbox"]').each(function () {
-        const key = $(this).attr('id');
-        const value = $(this).is(':checked');
-        permissions[key] = value;
+    const name = $('#roleName').val();
+    const level = $('#roleLevel').val();
+    const permissions = [];
+    $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
+        permissions.push($(this).val());
     });
 
-    // AJAX-Anfrage, um die Änderungen zu speichern
+    // AJAX-Anfrage, um die neue Rolle zu speichern
     $.ajax({
-        url: 'include/update_role.php',
+        url: 'add_role.php',
         type: 'POST',
         data: {
-            id: roleId,
             name: name,
             level: level,
             permissions: JSON.stringify(permissions)
         },
         success: function (response) {
+            console.log(response); // Debug-Ausgabe
             if (response.success) {
-                alert('Rolle erfolgreich aktualisiert.');
+                alert('Rolle erfolgreich hinzugefügt.');
                 location.reload();
             } else {
                 alert('Fehler: ' + response.message);
@@ -207,6 +202,43 @@ $(document).ready(function () {
     });
 });
 
+$(document).on('click', '[data-target="#modal-default"]', function () {
+    const roleId = $(this).data('id'); // ID der Rolle
+
+    $.ajax({
+        url: 'get_role.php',
+        type: 'GET',
+        data: { id: roleId },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                const role = response.role;
+
+                // Felder mit Rollendaten füllen
+                $('#modal-default #roleName').val(role.name);
+                $('#modal-default #roleLevel').val(role.level);
+
+                // Checkboxen für Permissions dynamisch erstellen
+                const permissionsContainer = $('#modal-default #permissionsContainer');
+                permissionsContainer.empty();
+                response.all_permissions.forEach(permission => {
+                    const checked = role.permissions.includes(permission.id) ? 'checked' : '';
+                    permissionsContainer.append(`
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.id}" ${checked}>
+                            <label class="form-check-label" for="perm_${permission.id}">${permission.name}</label>
+                        </div>
+                    `);
+                });
+            } else {
+                alert('Fehler: ' + response.error);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Laden der Rollendaten.');
+        }
+    });
+});
 </script>
 
     <!-- /.content -->

@@ -272,6 +272,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- /.modal-dialog -->
 </div>
+
 <script>
 $(document).ready(function () {
     // Speichern-Button
@@ -304,6 +305,7 @@ $(document).ready(function () {
     });
 });
 </script>
+
 <script>
     document.getElementById("documentFile").addEventListener("change", function() {
         var fileName = this.files[0].name;

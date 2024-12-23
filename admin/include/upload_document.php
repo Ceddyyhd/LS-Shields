@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "Ungültiger Dateityp für $file_name.";
                 return;
             }
-            $upload_dir_db = 'admin/uploads/';
+            $upload_dir_db = '/admin/uploads/';
             // Eindeutigen Dateinamen erstellen
             $unique_name = uniqid('doc_', true) . '.' . $file_extension;
             $file_path = $upload_dir_db . $unique_name;

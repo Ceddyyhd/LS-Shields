@@ -29,14 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Benutzername für das Log
-        if (!isset($_SESSION['username'])) {
-            $stmt = $conn->prepare("SELECT username FROM users WHERE id = :user_id");
-            $stmt->execute([':user_id' => $_SESSION['user_id']]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $editor_name = $user['username'] ?? 'Unbekannt';
-        } else {
-            $editor_name = $_SESSION['username'];
-        }
+        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
 
         // Logs und Updates vorbereiten
         $logData = [];
@@ -53,14 +46,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
 
                 // Update oder Entfernen in der Datenbank
-                $stmt = $conn->prepare("UPDATE benutzer_ausruestung 
-                                        SET status = :status 
-                                        WHERE user_id = :user_id AND key_name = :key_name");
-                $stmt->execute([
-                    ':status' => $newStatus,
-                    ':user_id' => $user_id,
-                    ':key_name' => $key_name,
-                ]);
+                if ($newStatus) {
+                    $stmt = $conn->prepare("UPDATE benutzer_ausruestung 
+                                            SET status = :status 
+                                            WHERE user_id = :user_id AND key_name = :key_name");
+                    $stmt->execute([
+                        ':status' => $newStatus,
+                        ':user_id' => $user_id,
+                        ':key_name' => $key_name,
+                    ]);
+                } else {
+                    $stmt = $conn->prepare("DELETE FROM benutzer_ausruestung 
+                                            WHERE user_id = :user_id AND key_name = :key_name");
+                    $stmt->execute([
+                        ':user_id' => $user_id,
+                        ':key_name' => $key_name,
+                    ]);
+                }
             }
         }
 

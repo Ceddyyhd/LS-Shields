@@ -641,42 +641,72 @@ $(document).ready(function () {
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">
-                    <form id="ausbildungForm">
-                        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Bewertungen</label>
-                            <div class="col-sm-10">
-                                <?php 
-                                // Beispiel für die Liste der Ausbildungen (kann dynamisch aus der DB kommen)
-                                $ausbildungen = [
-                                    ['id' => 'leitstelle', 'name' => 'Leitstelle', 'rating' => 3, 'status' => 1],
-                                    ['id' => 'ortskentnisse', 'name' => 'Ortskenntnisse', 'rating' => 4, 'status' => 1],
-                                    ['id' => 'eventlead', 'name' => 'Eventlead', 'rating' => 5, 'status' => 0],
-                                ];
+    <form id="ausbildungForm">
+        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Bewertungen</label>
+            <div class="col-sm-10">
+                <?php
+                // Ausbildungen aus der Datenbank abrufen
+                $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE user_id = :user_id");
+                $stmt->execute([':user_id' => $user_id]);
+                $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                                foreach ($ausbildungen as $ausbildung): ?>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" 
-                                        id="<?= $ausbildung['id']; ?>" 
-                                        name="ausbildungen[<?= $ausbildung['id']; ?>][status]" 
-                                        value="1" <?= $ausbildung['status'] ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="<?= $ausbildung['id']; ?>">
-                                        <?= htmlspecialchars($ausbildung['name']); ?>
-                                    </label>
-                                    <div class="stars ml-3" data-rating="<?= $ausbildung['rating']; ?>" data-id="<?= $ausbildung['id']; ?>">
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <i class="<?= $i <= $ausbildung['rating'] ? 'fas' : 'far'; ?> fa-star" 
-                                          data-value="<?= $i; ?>" 
-                                          data-ausbildung="<?= $ausbildung['id']; ?>"></i>
-                                        <?php endfor; ?>
-                                        <input type="hidden" name="ausbildungen[<?= $ausbildung['id']; ?>][rating]" value="<?= $ausbildung['rating']; ?>">
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
+                // Standardausbildungen, falls keine Daten vorhanden sind
+                $defaultAusbildungen = [
+                    'leitstelle' => 'Leitstelle',
+                    'ortskentnisse' => 'Ortskenntnisse',
+                    'eventlead' => 'Eventlead',
+                    'fasi_baller' => 'Fasi Baller',
+                    'eh_schulung' => 'EH-Schulung',
+                    'rechtsschulungen' => 'Rechtsschulungen',
+                    'personenschutz' => 'Personen Schutz',
+                    'fasi_bf400' => 'Fasi BF-400',
+                    'waffenkunde' => 'Waffenkunde',
+                    'taktischesvorgehen' => 'Taktisches Vorgehen',
+                    'fasi_limo' => 'Fasi PerSchutz Limo',
+                    'ausbilderschein' => 'Ausbilderschein',
+                ];
+
+                // Datenbankdaten in ein assoziatives Array umwandeln
+                $dbAusbildungen = [];
+                foreach ($ausbildungen as $ausbildung) {
+                    $dbAusbildungen[$ausbildung['ausbildung']] = [
+                        'status' => (int) $ausbildung['status'],
+                        'bewertung' => (int) $ausbildung['bewertung']
+                    ];
+                }
+
+                // HTML-Ausgabe für jede Ausbildung
+                foreach ($defaultAusbildungen as $id => $name) {
+                    $status = $dbAusbildungen[$id]['status'] ?? 0;
+                    $rating = $dbAusbildungen[$id]['bewertung'] ?? 0;
+                    ?>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" 
+                               id="<?= $id; ?>" 
+                               name="ausbildungen[<?= $id; ?>][status]" 
+                               value="1" <?= $status ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="<?= $id; ?>">
+                            <?= htmlspecialchars($name); ?>
+                        </label>
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $id; ?>">
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
+                                   data-value="<?= $i; ?>" 
+                                   data-ausbildung="<?= $id; ?>"></i>
+                            <?php endfor; ?>
+                            <input type="hidden" name="ausbildungen[<?= $id; ?>][rating]" value="<?= $rating; ?>">
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
+        <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
+    </form>
+</div>
 
                 <script>
                 $(document).ready(function () {

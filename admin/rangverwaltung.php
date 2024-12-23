@@ -101,23 +101,23 @@ $(document).ready(function () {
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($roles as $role): ?>
-              <tr>
-                <td><?= htmlspecialchars($role['id']) ?></td>
-                <td><?= htmlspecialchars($role['name']) ?></td>
-                <td><?= htmlspecialchars($role['level']) ?></td>
-                <td>
-                <?php if ($role['id'] !== 1 && ($_SESSION['permissions']['role_change'] ?? false)): ?>
-                <button type="button" class="btn btn-block btn-outline-secondary" 
-                        data-toggle="modal" 
-                        data-target="#modal-default" 
-                        data-id="<?= $role['id'] ?>">
-                    Bearbeiten
-                </button>
-              <?php endif; ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
+          <?php foreach ($roles as $role): ?>
+            <tr>
+              <td><?= htmlspecialchars($role['id']) ?></td>
+              <td><?= htmlspecialchars($role['name']) ?></td>
+              <td><?= htmlspecialchars($role['level']) ?></td>
+              <td>
+                <?php if ((int)$role['id'] !== 1 && ($_SESSION['permissions']['role_change'] ?? false)): ?>
+                  <button type="button" class="btn btn-block btn-outline-secondary" 
+                          data-toggle="modal" 
+                          data-target="#modal-default" 
+                          data-id="<?= $role['id'] ?>">
+                      Bearbeiten
+                  </button>
+                <?php endif; ?>
+              </td>
+            </tr>
+          <?php endforeach; ?>
           </tbody>
         </table>
       </div>

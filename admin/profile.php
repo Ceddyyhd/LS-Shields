@@ -132,7 +132,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
                     <ul>
-                      <?php while ($doc = $documents->fetch_assoc()): ?>
+                      <?php foreach ($documents as $doc): ?>
                         <li>
                           <a href="<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank">
                             <?php echo htmlspecialchars($doc['file_name']); ?>

@@ -243,43 +243,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-        $("#changePasswordCheckbox").on("change", function () {
-            if ($(this).is(":checked")) {
-                $("#passwordField").prop("disabled", false); // Passwortfeld aktivieren
-            } else {
-                $("#passwordField").prop("disabled", true); // Passwortfeld deaktivieren
-                $("#passwordField").val(""); // Passwortfeld zurücksetzen
-            }
-        });
+    $("#saveChanges").on("click", function (e) {
+        e.preventDefault();
 
-        $("#saveChanges").on("click", function (e) {
-            e.preventDefault();
+        // Sammle die Daten aus dem Formular
+        var formData = $("#userEditForm").serialize();
 
-            // Sammle die Daten aus dem Formular
-            var formData = $("#userEditForm").serialize();
+        // Sende die Daten per AJAX
+        $.ajax({
+            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                console.log("Antwort:", response);
 
-            // Sende die Daten per AJAX
-            $.ajax({
-                url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
-                type: "POST",
-                data: formData,
-                success: function (response) {
-                    console.log("Antwort:", response);
+                // Modal schließen und Seite neu laden
+                $("#user-bearbeiten").modal("hide");
+                location.reload(); // Seite neu laden, um die Änderungen zu sehen
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler:", error);
 
-                    if (response.success) {
-                        alert("Änderungen erfolgreich gespeichert.");
-                        location.reload(); // Seite neu laden, um Änderungen zu sehen
-                    } else {
-                        alert("Fehler: " + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Fehler:", error);
-                    alert("Fehler: " + error);
-                }
-            });
+                // Modal schließen und Seite neu laden, auch bei Fehlern
+                $("#user-bearbeiten").modal("hide");
+                location.reload(); // Seite neu laden
+            },
         });
     });
+});
 </script>
           <div class="col-md-9">
             <div class="card">

@@ -44,6 +44,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'key_name' => $key_name,
                     'action' => $action,
                 ];
+
+                // Update oder Entfernen in der Datenbank
+                $stmt = $conn->prepare("UPDATE benutzer_ausruestung 
+                                        SET status = :status 
+                                        WHERE user_id = :user_id AND key_name = :key_name");
+                $stmt->execute([
+                    ':status' => $newStatus,
+                    ':user_id' => $user_id,
+                    ':key_name' => $key_name,
+                ]);
+            }
+        }
+
+        // Neue Einträge hinzufügen, die vorher nicht existierten
+        foreach ($ausruestung as $key_name => $status) {
+            if (!array_key_exists($key_name, $existingStatus)) {
+                $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) 
+                                        VALUES (:user_id, :key_name, :status)");
+                $stmt->execute([
+                    ':user_id' => $user_id,
+                    ':key_name' => $key_name,
+                    ':status' => (int)$status,
+                ]);
+
+                $logData[] = [
+                    'user_id' => $user_id,
+                    'editor_name' => $editor_name,
+                    'key_name' => $key_name,
+                    'action' => 'hinzugefügt',
+                ];
             }
         }
 
@@ -56,20 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':editor_name' => $log['editor_name'],
                 ':key_name' => $log['key_name'],
                 ':action' => $log['action'],
-            ]);
-        }
-
-        // Vorhandene Einträge aktualisieren oder neue hinzufügen
-        foreach ($ausruestung as $key_name => $status) {
-            $status = (int)$status;
-
-            $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status)
-                                    VALUES (:user_id, :key_name, :status)
-                                    ON DUPLICATE KEY UPDATE status = :status");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':key_name' => $key_name,
-                ':status' => $status,
             ]);
         }
 

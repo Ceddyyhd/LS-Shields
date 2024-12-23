@@ -1,8 +1,9 @@
 <?php
 // Datenbankverbindung einbinden
-include 'db.php';
-var_dump($_POST);
-var_dump($_FILES);
+echo "<pre>";
+print_r($_POST);
+print_r($_FILES);
+echo "</pre>";
 die();
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

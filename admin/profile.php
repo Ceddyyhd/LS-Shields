@@ -10,7 +10,9 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  
+  <script src="../../plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+  <link rel="stylesheet" href="../../plugins/ion-rangeslider/css/ion.rangeSlider.min.css">
+
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -412,9 +414,6 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-  <script src="../../plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
-  <link rel="stylesheet" href="../../plugins/ion-rangeslider/css/ion.rangeSlider.min.css">
-
 <script>$(document).ready(function () {
     // Initialisierung des Ion Slider für range_6
     $('#range_6').ionRangeSlider({

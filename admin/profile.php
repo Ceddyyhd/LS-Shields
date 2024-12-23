@@ -167,6 +167,10 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
 
             <hr>
+            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
+
+            <hr>
             <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
             <p class="text-muted"><?php echo htmlspecialchars($user['umail']); ?></p>
 

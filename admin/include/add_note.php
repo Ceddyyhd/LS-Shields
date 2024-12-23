@@ -1,6 +1,8 @@
 <?php
 include 'db.php';
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
@@ -12,16 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Autor aus der Session holen
-    $author = $_SESSION['username'] ?? null;
-    if (!$author) {
-        // Wenn kein Benutzername in der Session ist
-        echo json_encode(['success' => false, 'message' => 'Fehler: Benutzername nicht in der Session vorhanden.']);
-        exit;
+    // Autor aus der Session holen oder aus der Datenbank abrufen
+    if (!isset($_SESSION['username'])) {
+        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['username'] = $user['name'] ?? 'Unbekannt';
     }
 
+    $author = $_SESSION['username'];
+
     try {
-        // Notiz in die Datenbank einfügen
         $stmt = $conn->prepare("INSERT INTO notes (user_id, type, content, created_at, author) 
                                 VALUES (:user_id, :type, :content, NOW(), :author)");
         $stmt->execute([
@@ -31,7 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':author' => $author,
         ]);
 
-        // Daten für die Antwort abrufen
         $note_id = $conn->lastInsertId();
         $stmt = $conn->prepare("SELECT * FROM notes WHERE id = :id");
         $stmt->execute([':id' => $note_id]);

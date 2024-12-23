@@ -25,7 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
-
+        $_SESSION['username'] = $user['name']; // Benutzername in die Session speichern
+    
         if ($remember) {
             // Erstelle ein zufälliges Token
             $token = bin2hex(random_bytes(32));
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
             $stmt->execute([':token' => $token, ':id' => $user['id']]);
         }
-
+    
         echo json_encode(['success' => true]);
     } else {
         echo json_encode(['success' => false, 'message' => 'Ungültige Anmeldedaten.']);

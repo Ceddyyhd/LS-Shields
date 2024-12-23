@@ -342,9 +342,34 @@
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox">
                           <label class="form-check-label">Checkbox</label>
-                          <div class="col-sm-6">
-                          <input id="range_6" type="text" name="range_6" value="">
-                        </div>
+                        
+
+                          <div class="card-body">
+                <div class="row margin">
+                  <div class="col-sm-6">
+                    <input id="range_1" type="text" name="range_1" value="">
+                  </div>
+
+                  <div class="col-sm-6">
+                    <input id="range_2" type="text" name="range_2" value="1000;100000" data-type="double"
+                           data-step="500" data-postfix=" &euro;" data-from="30000" data-to="90000" data-hasgrid="true">
+                  </div>
+                </div>
+                <div class="row margin">
+                  <div class="col-sm-6">
+                    <input id="range_5" type="text" name="range_5" value="">
+                  </div>
+                  <div class="col-sm-6">
+                    <input id="range_6" type="text" name="range_6" value="">
+                  </div>
+                </div>
+                <div class="row margin">
+                  <div class="col-sm-12">
+                    <input id="range_4" type="text" name="range_4" value="10000;100000">
+                  </div>
+                </div>
+              </div>
+
                         </div>                        
                       </div>
                       </div>

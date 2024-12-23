@@ -486,9 +486,15 @@
                   <div>
                     <input type="text" name="telefonnummer" placeholder="Telefonnummer" />
                   </div>
-                  <div>
-                    <input type="anfrage" name="message_input" placeholder="Ihre Anfrage" />
+                  
+                  <div class="">
+                    <input type="text" placeholder="Ihre Anfrage" class="message_input" />
                   </div>
+
+                  <div class="">
+                    <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
+                  </div>
+
                   <div class="btn-box ">
                     <button type="submit">Senden</button>
                   </div>

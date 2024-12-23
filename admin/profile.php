@@ -287,9 +287,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 <!-- /.modal -->
 
     <!-- Liste der hochgeladenen Dokumente -->
-<div class="mt-4">
-    <h5>Hochgeladene Dokumente:</h5>
-    <?php if ($_SESSION['permissions']['view_documents'] ?? false): ?>
+    <div class="mt-4">
+        <h5>Hochgeladene Dokumente:</h5>
         <ul>
             <?php if (!empty($documents)): ?>
                 <?php foreach ($documents as $doc): ?>
@@ -303,9 +302,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <li>Keine Dokumente vorhanden.</li>
             <?php endif; ?>
         </ul>
-    <?php else: ?>
-        <p>Sie haben keine Berechtigung, die hochgeladenen Dokumente anzuzeigen.</p>
-    <?php endif; ?>
+    </div>
 </div>
 
 <!-- Tab für Notizen -->

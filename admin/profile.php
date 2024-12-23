@@ -143,7 +143,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
           
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">
                   User Bearbeiten
-                </button>
+                </button></br>
           <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
         </div>
       </div>

@@ -1,61 +1,51 @@
 <?php
-include 'include/db.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+include 'db.php';
+
 // Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
 $user_id = $_GET['id'] ?? 1;
 
 // Benutzerinformationen abrufen
 $sql = "SELECT u.email, u.created_at, r.name as role_name FROM users u 
-        JOIN roles r ON u.role_id = r.id WHERE u.id = ?";
+        JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt->execute(['user_id' => $user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-} else {
+if (!$user) {
     die("Benutzer nicht gefunden.");
 }
 
 // Dokumente abrufen
-$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = ?";
+$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
-$stmt_documents->bind_param("i", $user_id);
-$stmt_documents->execute();
-$documents = $stmt_documents->get_result();
+$stmt_documents->execute(['user_id' => $user_id]);
+$documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausrüstung abrufen
-$sql_equipment = "SELECT equipment_name, reveived FROM equipment WHERE user_id = ?";
+$sql_equipment = "SELECT equipment_name, reveived FROM equipment WHERE user_id = :user_id";
 $stmt_equipment = $conn->prepare($sql_equipment);
-$stmt_equipment->bind_param("i", $user_id);
-$stmt_equipment->execute();
-$equipment = $stmt_equipment->get_result();
+$stmt_equipment->execute(['user_id' => $user_id]);
+$equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);
 
 // Notizen abrufen
-$sql_notes = "SELECT note, created_at FROM notes WHERE user_id = ?";
+$sql_notes = "SELECT note, created_at FROM notes WHERE user_id = :user_id";
 $stmt_notes = $conn->prepare($sql_notes);
-$stmt_notes->bind_param("i", $user_id);
-$stmt_notes->execute();
-$notes = $stmt_notes->get_result();
+$stmt_notes->execute(['user_id' => $user_id]);
+$notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausbildungen abrufen
-$sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = ?";
+$sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";
 $stmt_trainings = $conn->prepare($sql_trainings);
-$stmt_trainings->bind_param("i", $user_id);
-$stmt_trainings->execute();
-$trainings = $stmt_trainings->get_result();
+$stmt_trainings->execute(['user_id' => $user_id]);
+$trainings = $stmt_trainings->fetchAll(PDO::FETCH_ASSOC);
 
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name FROM permissions p
                     JOIN role_permissions rp ON p.id = rp.permission_id
-                    JOIN users u ON rp.role_id = u.role_id WHERE u.id = ?";
+                    JOIN users u ON rp.role_id = u.role_id WHERE u.id = :user_id";
 $stmt_permissions = $conn->prepare($sql_permissions);
-$stmt_permissions->bind_param("i", $user_id);
-$stmt_permissions->execute();
-$permissions = $stmt_permissions->get_result();
+$stmt_permissions->execute(['user_id' => $user_id]);
+$permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>

@@ -491,7 +491,7 @@
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Schließfach</label>
                         <div class="col-sm-10">
-                        <label class="form-check-label" for="fasi_baller">Fasi PerSchutz Limo</label>
+                        <label class="form-check-label" for="schließfach">Fasi PerSchutz Limo</label>
 
                         </div>
                       </div>

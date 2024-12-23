@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_path = '/admin/uploads/' . $unique_name;
 
         if (move_uploaded_file($file['tmp_name'], $physical_path)) {
+            // Dokument in die Datenbank speichern
             $sql = "INSERT INTO documents (user_id, file_name, file_path, uploaded_at, doc_type) 
                     VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
             $stmt = $conn->prepare($sql);
@@ -43,6 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'file_name' => $custom_name,
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
+            ]);
+
+            // Log in die Datenbank schreiben
+            $uploaded_by = $_SESSION['username'] ?? 'Unbekannt'; // Angemeldeter Benutzername aus der Session
+            $sql_log = "INSERT INTO upload_logs (user_id, uploaded_by, document_name, upload_time) 
+                        VALUES (:user_id, :uploaded_by, :document_name, NOW())";
+            $stmt_log = $conn->prepare($sql_log);
+            $stmt_log->execute([
+                'user_id' => $user_id,
+                'uploaded_by' => $uploaded_by,
+                'document_name' => $custom_name
             ]);
         }
     }

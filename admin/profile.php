@@ -7,14 +7,20 @@ error_reporting(E_ALL);
 $user_id = $_GET['id'] ?? 1;
 
 // Benutzerinformationen abrufen
-$sql = "SELECT u.email, u.created_at, r.name as role_name FROM users u 
-        JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id";
+$sql = "SELECT u.email, u.created_at, COALESCE(r.name, 'Keine Rolle') as role_name, u.role_id 
+        FROM users u 
+        LEFT JOIN roles r ON u.role_id = r.id 
+        WHERE u.id = :user_id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['user_id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     die("Benutzer nicht gefunden.");
+}
+
+if (empty($user['role_id'])) {
+    die("Dieser Benutzer hat keine Rolle zugewiesen.");
 }
 
 // Dokumente abrufen

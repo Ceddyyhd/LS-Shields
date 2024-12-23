@@ -484,11 +484,11 @@
                     <input type="text" name="vorname_nachname" placeholder="Vor- & Nachname" required />
                   </div>
                   <div>
-                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" required/>
+                    <input type="text" name="telefonnummer" placeholder="Telefonnummer" value="555-" required/>
                   </div>
                   
                   <div class="">
-                    <textarea type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
+                    <input type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
                   </div>
 
                   <div class="">

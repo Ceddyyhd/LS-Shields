@@ -738,7 +738,7 @@ $(document).ready(function () {
                 </script>
 
                   <!-- Ausrüstung -->
-                  <div class="tab-pane" id="ausrüstung">
+                  <div class="tab-pane" id="ausruestung">
     <form id="ausruestungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <?php

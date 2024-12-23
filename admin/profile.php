@@ -163,6 +163,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <h3 class="card-title">Information</h3>
           </div>
           <div class="card-body">
+
+
+             <div class="form-group">
+             <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
+             <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['name']); ?>">
+            </div>          
             <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
             <p class="text-muted"><?php echo htmlspecialchars($user['name']); ?></p>
 

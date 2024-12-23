@@ -225,29 +225,35 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
-  $(document).ready(function () {
-    $("#editUserForm").on("submit", function (e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
+    $(document).ready(function () {
+        $("#saveChanges").on("click", function (e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: "include/edit_user.php", // Ziel-Skript für das Speichern
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message);
-                    location.reload(); // Seite aktualisieren
-                } else {
-                    alert("Fehler: " + response.message);
+            // Sammle die Daten aus dem Formular
+            var formData = $("#userEditForm").serialize();
+
+            // Sende die Daten per AJAX
+            $.ajax({
+                url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    console.log("Antwort:", response);
+
+                    if (response.success) {
+                        alert("Änderungen erfolgreich gespeichert.");
+                        location.reload(); // Seite neu laden, um Änderungen zu sehen
+                    } else {
+                        alert("Fehler: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler:", error);
+                    alert("Fehler: " + error);
                 }
-            },
-            error: function (xhr, status, error) {
-                alert("Fehler: " + error);
-            }
+            });
         });
     });
-});
 </script>
           <div class="col-md-9">
             <div class="card">

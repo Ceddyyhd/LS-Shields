@@ -648,7 +648,7 @@ $(document).ready(function () {
                 $stmt->execute([':user_id' => $user_id]);
                 $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Datenbankdaten in ein assoziatives Array umwandeln
+                // Benutzerausbildungen in ein Array umwandeln
                 $dbAusbildungen = [];
                 foreach ($ausbildungen as $ausbildung) {
                     $dbAusbildungen[$ausbildung['ausbildung']] = [
@@ -657,7 +657,7 @@ $(document).ready(function () {
                     ];
                 }
 
-                // HTML-Ausgabe für jede Ausbildung
+                // Darstellung der Ausbildungstypen und der Benutzerausbildungen
                 foreach ($ausbildungstypen as $type) {
                     $keyName = $type['key_name'];
                     $displayName = $type['display_name'];
@@ -666,19 +666,19 @@ $(document).ready(function () {
                     ?>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" 
-                               id="<?= $keyName; ?>" 
-                               name="ausbildungen[<?= $keyName; ?>][status]" 
+                               id="<?= htmlspecialchars($keyName); ?>" 
+                               name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= $keyName; ?>">
+                        <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>">
                             <?= htmlspecialchars($displayName); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $keyName; ?>">
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
                                    data-value="<?= $i; ?>" 
-                                   data-ausbildung="<?= $keyName; ?>"></i>
+                                   data-ausbildung="<?= htmlspecialchars($keyName); ?>"></i>
                             <?php endfor; ?>
-                            <input type="hidden" name="ausbildungen[<?= $keyName; ?>][rating]" value="<?= $rating; ?>">
+                            <input type="hidden" name="ausbildungen[<?= htmlspecialchars($keyName); ?>][rating]" value="<?= $rating; ?>">
                         </div>
                     </div>
                     <?php
@@ -688,6 +688,8 @@ $(document).ready(function () {
         </div>
     </form>
 </div>
+
+
 
 
                 <script>

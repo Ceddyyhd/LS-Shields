@@ -239,37 +239,36 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-    // Checkbox-Logik: Passwortfeld aktivieren/deaktivieren
-    $("#changePasswordCheckbox").on("change", function () {
-        if ($(this).is(":checked")) {
-            $("#passwordField").prop("disabled", false); // Aktivieren
-        } else {
-            $("#passwordField").prop("disabled", true).val(""); // Deaktivieren und leeren
-        }
-    });
-
-    // Speichern-Button: Daten speichern
     $("#saveChanges").on("click", function (e) {
         e.preventDefault();
 
+        // Sammle die Daten aus dem Formular
         var formData = $("#userEditForm").serialize();
 
+        // Sende die Daten per AJAX
         $.ajax({
-            url: "include/edit_user.php", // Backend-URL
+            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
             type: "POST",
             data: formData,
             success: function (response) {
+                console.log("Antwort:", response);
+
                 if (response.success) {
-                    $("#user-bearbeiten").modal("hide"); // Modal schließen
-                    location.reload(); // Seite aktualisieren
+                    // Schließe das Modal
+                    $("#user-bearbeiten").modal("hide");
+
+                    // Seite neu laden, um die Änderungen zu sehen
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500); // Ein kleiner Timeout, um sicherzustellen, dass das Modal geschlossen ist
                 } else {
-                    alert(response.message); // Nur bei wirklichem Fehler
+                    // Zeige die Fehlermeldung im Modal an
+                    alert("Fehler: " + response.message);
                 }
             },
             error: function (xhr, status, error) {
                 console.error("Fehler:", error);
-                $("#user-bearbeiten").modal("hide"); // Modal schließen, unabhängig vom Fehler
-                location.reload(); // Seite aktualisieren
+                alert("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
             },
         });
     });

@@ -142,7 +142,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     <label for="waffenscheinFile">Datei hochladen</label>
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="waffenscheinFile" name="waffenschein_file" value="<?= htmlspecialchars($user_id); ?>">
+                            <input type="file" class="custom-file-input" id="waffenscheinFile" name="waffenschein_file" >
                             <label class="custom-file-label" for="waffenscheinFile">Choose file</label>
                         </div>
                         <div class="input-group-append">
@@ -217,7 +217,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-sm-10">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
                         <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
                     </div>
                     <div class="input-group-append">

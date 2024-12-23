@@ -88,6 +88,7 @@
               <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
               <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
               <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+              <li class="nav-item"><a class="nav-link" href="#ausrüstung" data-toggle="tab">ausrüstung</a></li>
             </ul>
           </div>
           <div class="card-body">
@@ -284,6 +285,127 @@
                 </div>
               </div>
 
+              <div class="tab-pane" id="ausrüstung">
+                <form class="form-horizontal">
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Bewertungen</label>
+                    <div class="col-sm-10">
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Leitstelle</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
+                        <label class="form-check-label" for="ortskentnisse">Ortskenntnisse</label>
+                        <div class="stars ml-3" data-rating="4">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="fas fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eventlead">
+                        <label class="form-check-label" for="eventlead">Eventlead</label>
+                        <div class="stars ml-3" data-rating="5">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="fas fa-star" data-value="4"></i>
+                          <i class="fas fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
+                        <label class="form-check-label" for="ausbilderschein">Ausbilderschein</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="fasi_baller">
+                        <label class="form-check-label" for="fasi_baller">Fasi Baller</label>
+                        <div class="stars ml-3" data-rating="2">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="far fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eh_schulung">
+                        <label class="form-check-label" for="eh_schulung">EH-Schulung</label>
+                        <div class="stars ml-3" data-rating="3">
+                          <i class="fas fa-star" data-value="1"></i>
+                          <i class="fas fa-star" data-value="2"></i>
+                          <i class="fas fa-star" data-value="3"></i>
+                          <i class="far fa-star" data-value="4"></i>
+                          <i class="far fa-star" data-value="5"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Spezial Ausrüstung</label>
+                    <div class="col-sm-10">
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Weste</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
+                        <label class="form-check-label" for="ortskentnisse">Bretta</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eventlead">
+                        <label class="form-check-label" for="eventlead">Taschenlampe</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Kleidung Taktisch</label>
+                    <div class="col-sm-10">
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">H.I.M Shark mit H II S</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
+                        <label class="form-check-label" for="ortskentnisse">Cargo Hose 1 S</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eventlead">
+                        <label class="form-check-label" for="eventlead">Einsatzstiefel</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
+                        <label class="form-check-label" for="ausbilderschein">Steve Stops</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="fasi_baller">
+                        <label class="form-check-label" for="fasi_baller">Pali Tuch</label>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
               <div class="tab-pane" id="settings">
                 <form class="form-horizontal">
                   <div class="form-group row">

@@ -140,7 +140,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
             <p class="text-muted">Kane</p>
           </div>
-          <button type="button" class="btn btn-block btn-primary">Speichern</button>
+          <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
 
         </div>
       </div>
@@ -162,19 +162,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <div class="active tab-pane" id="dokumente">
     <form class="form-horizontal" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-        <!-- Waffenschein -->
-        <div class="form-group row">
-            <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
-            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
-                <div style="margin-right: 20px; width: 200px;">
-                    <select id="waffenscheinSelect" class="form-control" style="height: 38px; width: 100%;" name="waffenschein_type">
-                        <option value="none">Keiner Vorhanden</option>
-                        <option value="small">Kleiner Waffenschein</option>
-                        <option value="big_small">Großer & Kleiner Waffenschein</option>
-                    </select>
-                </div>
-            </div>
+    <!-- Waffenschein -->
+    <div class="form-group row">
+        <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
+        <div class="col-sm-10">
+            <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">
+                <option value="none" <?= $employee['waffenschein_type'] === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
+                <option value="small" <?= $employee['waffenschein_type'] === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
+                <option value="big_small" <?= $employee['waffenschein_type'] === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
+            </select>
         </div>
+    </div>
 
         <?php
 // Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
@@ -198,7 +196,27 @@ if (!is_array($fuehrerscheine)) {
 </div>>
 
         <!-- Weitere Dokumente -->
+        <script>
+$("#saveButton").on("click", function () {
+    var formData = $("#employeeForm").serialize();
 
+    $.ajax({
+        url: "include/save_employee_info.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert("Fehler: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Fehler: " + error);
+        }
+    });
+});
+</script>
         <!-- Button für das Modal -->
           <div class="form-group row">
               <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>

@@ -240,7 +240,7 @@
                         <div class="timeline-item">
                           <span class="time"><i class="far fa-clock"></i> 12:05</span>
 
-                          <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+                          <h3 class="timeline-header"><a>Cedric Schmidt</a> verwarnte ...</h3>
 
                           <div class="timeline-body">
                             Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
@@ -268,9 +268,9 @@
                         <i class="fas fa-comments bg-warning"></i>
 
                         <div class="timeline-item">
-                          <span class="time"><i class="far fa-clock"></i> 27 mins ago</span>
+                          <span class="time"><i class="far fa-clock"></i> 12:45</span>
 
-                          <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+                          <h3 class="timeline-header"><a>Jack Hunter</a> fügte eine Notiz hinzu</h3>
 
                           <div class="timeline-body">
                             Take me to your leader!
@@ -291,22 +291,7 @@
                       </div>
                       <!-- /.timeline-label -->
                       <!-- timeline item -->
-                      <div>
-                        <i class="fas fa-camera bg-purple"></i>
-
-                        <div class="timeline-item">
-                          <span class="time"><i class="far fa-clock"></i> 2 days ago</span>
-
-                          <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                          <div class="timeline-body">
-                            <img src="https://placehold.it/150x100" alt="...">
-                            <img src="https://placehold.it/150x100" alt="...">
-                            <img src="https://placehold.it/150x100" alt="...">
-                            <img src="https://placehold.it/150x100" alt="...">
-                          </div>
-                        </div>
-                      </div>
+                      
                       <!-- END timeline item -->
                       <div>
                         <i class="far fa-clock bg-gray"></i>

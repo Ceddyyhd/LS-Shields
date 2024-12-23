@@ -216,31 +216,33 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-            <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
-                <div class="modal-body">
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+    <!-- Benutzer-ID -->
+    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+    <!-- Dokumenttyp -->
+    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
-                    <!-- Eingabe für den benutzerdefinierten Namen -->
-                    <div class="form-group">
-                        <label for="documentName">Dokumentname</label>
-                        <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
-                    </div>
+    <div class="modal-body">
+        <!-- Eingabe für den benutzerdefinierten Namen -->
+        <div class="form-group">
+            <label for="documentName">Dokumentname</label>
+            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
+        </div>
 
-                    <!-- Dateiupload -->
-                    <div class="form-group">
-                      <label for="documentFile">Datei auswählen</label>
-                      <div class="custom-file">
-                          <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
-                          <label class="custom-file-label" for="documentFile">Datei auswählen</label>
-                      </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary">Hochladen</button>
-                </div>
-            </form>
+        <!-- Dateiupload -->
+        <div class="form-group">
+            <label for="documentFile">Datei auswählen</label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="submit" class="btn btn-primary">Hochladen</button>
+    </div>
+</form>
         </div>
         <!-- /.modal-content -->
     </div>

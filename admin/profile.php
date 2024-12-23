@@ -185,10 +185,10 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
             </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-upload">
         </div>
 
         <!-- Weitere Dokumente -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-upload">
     </form>
 
     <!-- Liste der hochgeladenen Dokumente -->

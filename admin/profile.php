@@ -141,6 +141,7 @@
                   <div class="form-group row">
                       <label for="inputName" class="col-sm-2 col-form-label">Führerscheine</label>
                       <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                      <div style="margin-right: 20px;">
                           <div class="form-group">
                             <label>Select Multiple</label>
                             <select multiple class="form-control">
@@ -150,6 +151,7 @@
                               <option>option 4</option>
                               <option>option 5</option>
                             </select>
+                          </div>
                           </div>
 
                           <div style="flex-grow: 1;">

@@ -180,7 +180,7 @@ $(document).ready(function () {
 
     // AJAX-Anfrage, um die neue Rolle zu speichern
     $.ajax({
-        url: 'add_role.php',
+        url: 'include/add_role.php',
         type: 'POST',
         data: {
             name: name,
@@ -206,7 +206,7 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 
     $.ajax({
-        url: 'get_role.php',
+        url: 'include/get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',

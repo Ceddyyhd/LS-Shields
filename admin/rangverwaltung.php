@@ -34,60 +34,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-header -->
 
     <!-- Main content -->
+    
     <?php
-    include 'include/db.php';
+include 'include/db.php';
 
-    // Ränge aus der Datenbank abrufen
-    $stmt = $conn->prepare("SELECT * FROM roles");
-    $stmt->execute();
-    $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    ?>
+// Ränge aus der Datenbank abrufen
+$stmt = $conn->prepare("SELECT * FROM roles");
+$stmt->execute();
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Rollenverwaltung</h3>
-                    <div class="card-tools">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
-                    </div>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Rang</th>
-                                <th>Ebene</th>
-                                <th>Bearbeiten</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($roles as $role): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($role['id']) ?></td>
-                                    <td><?= htmlspecialchars($role['name']) ?></td>
-                                    <td><?= htmlspecialchars($role['level']) ?></td>
-                                    <td>
-                                    <<button type="button" class="btn btn-block btn-outline-secondary" 
-                                          data-toggle="modal" 
-                                          data-target="#modal-default" 
-                                          data-id="<?= $role['id'] ?>" 
-                                          data-name="<?= htmlspecialchars($role['name']) ?>">
-                                    Bearbeiten
-                                  </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Responsive Hover Table</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
         </div>
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Rang</th>
+              <th>Ebene</th>
+              <th>Bearbeiten</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($roles as $role): ?>
+              <tr>
+                <td><?= htmlspecialchars($role['id']) ?></td>
+                <td><?= htmlspecialchars($role['name']) ?></td>
+                <td><?= htmlspecialchars($role['level']) ?></td>
+                <td>
+                  <button type="button" class="btn btn-block btn-outline-secondary" 
+                          data-toggle="modal" 
+                          data-target="#modal-default" 
+                          data-id="<?= $role['id'] ?>" 
+                          data-name="<?= htmlspecialchars($role['name']) ?>">
+                    Bearbeiten
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
+    <!-- /.card -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+</section>
+    
 
-<!-- Modal für neue Rolle -->
 <div class="modal fade" id="modal-add-role">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -126,7 +134,47 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
 </div>
 
-<!-- Modal für Bearbeiten -->
+<script>
+ $('#saveRoleButton').click(function () {
+    const roleId = $('#modal-default').data('role-id');
+    const name = $('#modal-default #roleName').val();
+    const level = $('#modal-default #roleLevel').val();
+
+    // Alle Checkboxen auslesen
+    const permissions = {};
+    $('#permissionsContainer input[type="checkbox"]').each(function () {
+        const key = $(this).attr('id');
+        const value = $(this).is(':checked');
+        permissions[key] = value;
+    });
+
+    // AJAX-Anfrage, um die Änderungen zu speichern
+    $.ajax({
+        url: 'update_role.php',
+        type: 'POST',
+        data: {
+            id: roleId,
+            name: name,
+            level: level,
+            permissions: JSON.stringify(permissions)
+        },
+        success: function (response) {
+            if (response.success) {
+                alert('Rolle erfolgreich aktualisiert.');
+                location.reload();
+            } else {
+                alert('Fehler: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Speichern der Rolle.');
+        }
+    });
+});
+
+</script>
+
+    
 <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -173,132 +221,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                   <div class="form-group" id="permissionsContainer">
   <!-- Dynamisch eingefügte Checkboxen erscheinen hier -->
+</div>
 
-<script>
-// Rechte dynamisch laden für "Neue Rolle hinzufügen"
-$('#modal-add-role').on('show.bs.modal', function () {
-    const permissionsContainer = $('#addPermissionsContainer');
-    permissionsContainer.empty();
+                </div>
+                <!-- /.card-body -->
+              </form>
 
+
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+      
+
+    <script>$(document).on('click', '[data-target="#modal-default"]', function () {
+    const roleId = $(this).data('id'); // ID der Rolle
+
+    // AJAX-Anfrage, um die Rollendaten zu laden
     $.ajax({
-        url: 'include/get_permissions.php',
+        url: 'get_role.php',
         type: 'GET',
+        data: { id: roleId },
         dataType: 'json',
         success: function (response) {
             if (response.success) {
-                response.permissions.forEach(permission => {
-                    permissionsContainer.append(`
+                const role = response.role;
+
+                // Felder mit Rollendaten füllen
+                $('#modal-default #roleName').val(role.name);
+                $('#modal-default #roleLevel').val(role.level);
+
+                // Checkboxen für Permissions dynamisch erstellen
+                const permissions = JSON.parse(role.permissions);
+                const permissionsContainer = $('#modal-default #permissionsContainer');
+                permissionsContainer.empty();
+
+                for (const [key, value] of Object.entries(permissions)) {
+                    const checked = value ? 'checked' : '';
+                    permissionsContainer.append(
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="${permission.name}">
-                            <label class="form-check-label" for="${permission.name}">${permission.description}</label>
+                            <input type="checkbox" class="form-check-input" id="${key}" ${checked}>
+                            <label class="form-check-label" for="${key}">${key}</label>
                         </div>
-                    `);
-                });
-            }
-        },
-        error: function () {
-            alert('Fehler beim Laden der Rechte.');
-        }
-    });
-});
-
-// Rechte und Rollendaten laden für "Bearbeiten"
-$(document).on('click', '[data-target="#modal-default"]', function () {
-    const roleId = $(this).data('id');
-    const permissionsContainer = $('#editPermissionsContainer');
-    permissionsContainer.empty();
-
-    $.ajax({
-        url: 'include/get_permissions.php',
-        type: 'GET',
-        dataType: 'json',
-        success: function (permissionsResponse) {
-            if (permissionsResponse.success) {
-                $.ajax({
-                    url: 'include/get_role.php',
-                    type: 'GET',
-                    data: { id: roleId },
-                    dataType: 'json',
-                    success: function (roleResponse) {
-                        if (roleResponse.success) {
-                            $('#editRoleName').val(roleResponse.role.name);
-                            $('#editRoleLevel').val(roleResponse.role.level);
-
-                            permissionsResponse.permissions.forEach(permission => {
-                                const checked = roleResponse.role.permissions[permission.name] ? 'checked' : '';
-                                permissionsContainer.append(`
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="${permission.name}" ${checked}>
-                                        <label class="form-check-label" for="${permission.name}">${permission.description}</label>
-                                    </div>
-                                `);
-                            });
-                        }
-                    }
-                });
-            }
-        }
-    });
-});
-
-// Speichern von "Neue Rolle"
-$('#saveAddRoleButton').click(function () {
-    const name = $('#addRoleName').val();
-    const level = $('#addRoleLevel').val();
-    const permissions = {};
-
-    $('#addPermissionsContainer input[type="checkbox"]').each(function () {
-        permissions[$(this).attr('id')] = $(this).is(':checked');
-    });
-
-    $.ajax({
-        url: 'include/add_role.php',
-        type: 'POST',
-        data: {
-            name: name,
-            level: level,
-            permissions: JSON.stringify(permissions)
-        },
-        success: function (response) {
-            if (response.success) {
-                alert('Neue Rolle erfolgreich hinzugefügt.');
-                location.reload();
+                    );
+                }
             } else {
                 alert('Fehler: ' + response.message);
             }
         },
         error: function () {
-            alert('Fehler beim Hinzufügen der Rolle.');
+            alert('Fehler beim Laden der Rollendaten.');
         }
     });
 });
+</script>
+<script> 
+  $('#modal-default .btn-primary').click(function () {
+    const roleId = $('[data-target="#modal-default"]').data('id'); // ID des Rangs
+    const name = $('#modal-default input[placeholder="CEO"]').val();
+    const level = $('#modal-default select#exampleSelectBorder').val();
+    const permissions = [];
 
-// Speichern von "Bearbeiten"
-$('#saveEditRoleButton').click(function () {
-    const roleId = $('#editRoleName').data('role-id');
-    const name = $('#editRoleName').val();
-    const level = $('#editRoleLevel').val();
-    const permissions = {};
-
-    $('#editPermissionsContainer input[type="checkbox"]').each(function () {
-        permissions[$(this).attr('id')] = $(this).is(':checked');
+    // Alle markierten Rechte sammeln
+    $('#modal-default input[type="checkbox"]:checked').each(function () {
+        permissions.push($(this).attr('id')); // ID entspricht dem Recht
     });
 
+    // AJAX-Anfrage, um die Änderungen zu speichern
     $.ajax({
-        url: 'include/update_role.php',
+        url: 'include/update_role.php', // PHP-Datei, die die Änderungen speichert
         type: 'POST',
-        data: {
-            id: roleId,
-            name: name,
-            level: level,
-            permissions: JSON.stringify(permissions)
-        },
+        data: { id: roleId, name: name, level: level, permissions: JSON.stringify(permissions) },
         success: function (response) {
             if (response.success) {
-                alert('Änderungen erfolgreich gespeichert.');
-                location.reload();
+                alert('Rang erfolgreich aktualisiert.');
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
             } else {
-                alert('Fehler: ' + response.message);
+                alert('Fehler beim Speichern: ' + response.message);
             }
         },
         error: function () {
@@ -308,5 +314,39 @@ $('#saveEditRoleButton').click(function () {
 });
 </script>
 
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      Anything you want
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
 </body>
 </html>

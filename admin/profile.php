@@ -97,7 +97,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <h3 class="profile-username text-center">
-                  <?php echo htmlspecialchars($user['email']); ?>
+                  <?php echo htmlspecialchars($user['name']); ?>
                 </h3>
                 <p class="text-muted text-center">
                   <?php echo htmlspecialchars($user['role_name']); ?>
@@ -118,16 +118,16 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <h3 class="card-title">Information</h3>
           </div>
           <div class="card-body">
-            <strong><i class="fas fa-envelope mr-1"></i> Gmail</strong>
-            <p class="text-muted">Ceddyyhd@gmail.com</p>
+            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
 
             <hr>
             <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
-            <p class="text-muted">fal.hunter@umail.com</p>
+            <p class="text-muted"><?php echo htmlspecialchars($user['umail']); ?></p>
 
             <hr>
             <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
-            <p class="text-muted">LS84643386</p>
+            <p class="text-muted"><?php echo htmlspecialchars($user['kontonummer']); ?></p>
 
             <hr>
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>

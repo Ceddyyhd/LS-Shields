@@ -189,46 +189,20 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Weitere Dokumente -->
 
-        <!-- Modal für Dateiupload -->
-<div class="modal fade" id="modal-primary">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h4 class="modal-title">Datei hochladen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="form-group row">
+        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
+                    <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+                </div>
             </div>
-            <form action="include/upload_document.php" method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-
-                    <!-- Eingabe für den benutzerdefinierten Namen -->
-                    <div class="form-group">
-                        <label for="customName">Dokumentname</label>
-                        <input type="text" class="form-control" id="customName" name="custom_name" placeholder="z.B. Arbeitsvertrag" required>
-                    </div>
-
-                    <!-- Dateiupload -->
-                    <div class="form-group">
-                        <label for="customFile">Datei auswählen</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFile" name="uploaded_file" required>
-                            <label class="custom-file-label" for="customFile">Datei auswählen</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary">Hochladen</button>
-                </div>
-            </form>
         </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
     </form>
 
     <!-- Liste der hochgeladenen Dokumente -->

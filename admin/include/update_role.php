@@ -21,7 +21,7 @@ try {
         ':id' => $id,
         ':name' => $name,
         ':level' => $level,
-        ':permissions' => json_encode($permissions) // Als JSON speichern
+        ':permissions' => json_encode($permissions) // JSON der Namen speichern
     ]);
 
     echo json_encode(['success' => true]);

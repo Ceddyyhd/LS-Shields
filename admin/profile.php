@@ -204,8 +204,29 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </form>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Launch Default Modal</button>
-    <div class="modal fade" id="modal-default">
+
+    <!-- Liste der hochgeladenen Dokumente -->
+    <div class="mt-4">
+        <h5>Hochgeladene Dokumente:</h5>
+        <ul>
+            <?php if (!empty($documents)): ?>
+                <?php foreach ($documents as $doc): ?>
+                    <li>
+                        <a href="<?= htmlspecialchars($doc['file_path']); ?>" target="_blank">
+                            <?= htmlspecialchars($doc['file_name']); ?>
+                        </a> (<?= htmlspecialchars($doc['uploaded_at']); ?>)
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>Keine Dokumente vorhanden.</li>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Launch Default Modal</button>
+
+<div class="modal fade" id="modal-default">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -238,24 +259,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   </div>
                 </div>
               </div>
-    <!-- Liste der hochgeladenen Dokumente -->
-    <div class="mt-4">
-        <h5>Hochgeladene Dokumente:</h5>
-        <ul>
-            <?php if (!empty($documents)): ?>
-                <?php foreach ($documents as $doc): ?>
-                    <li>
-                        <a href="<?= htmlspecialchars($doc['file_path']); ?>" target="_blank">
-                            <?= htmlspecialchars($doc['file_name']); ?>
-                        </a> (<?= htmlspecialchars($doc['uploaded_at']); ?>)
-                    </li>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <li>Keine Dokumente vorhanden.</li>
-            <?php endif; ?>
-        </ul>
-    </div>
-</div>
 
                   <!-- Notizen -->
                   <div class="tab-pane" id="notizen">

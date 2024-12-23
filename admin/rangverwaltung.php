@@ -238,6 +238,43 @@ $(document).ready(function () {
     });
 });
 
+$('#modal-default .btn-primary').click(function () {
+    const roleId = $('#modal-default').data('id'); // ID der Rolle
+    const name = $('#modal-default #roleName').val();
+    const level = $('#modal-default #roleLevel').val();
+    const permissions = [];
+
+    // Alle markierten Berechtigungen sammeln
+    $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
+        permissions.push($(this).val());
+    });
+
+    // AJAX-Anfrage, um die Änderungen zu speichern
+    $.ajax({
+        url: 'include/update_role.php',
+        type: 'POST',
+        data: {
+            id: roleId,
+            name: name,
+            level: level,
+            permissions: JSON.stringify(permissions)
+        },
+        success: function (response) {
+            console.log(response); // Debug-Ausgabe
+            if (response.success) {
+                alert('Rolle erfolgreich aktualisiert.');
+                location.reload();
+            } else {
+                alert('Fehler: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Speichern der Rolle.');
+        }
+    });
+});
+
+
 $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 

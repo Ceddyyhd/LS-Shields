@@ -1,44 +1,27 @@
 <?php
-// Debugging: Alle Fehler anzeigen
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 include 'db.php';
 
 header('Content-Type: application/json');
 
-// POST-Daten abrufen
-$roleId = $_POST['id'] ?? null;
+// Eingabedaten abrufen
+$id = $_POST['id'] ?? null;
 $name = $_POST['name'] ?? null;
 $level = $_POST['level'] ?? null;
-$permissions = $_POST['permissions'] ?? null;
+$permissions = json_decode($_POST['permissions'], true); // JSON-Daten dekodieren
 
-if (!$roleId || !is_numeric($roleId) || !$name || !$level || !$permissions) {
+if (!$id || !$name || !$level || !is_array($permissions)) {
     echo json_encode(['success' => false, 'message' => 'Ungültige Eingaben.']);
     exit;
 }
 
 try {
-    // Berechtigungen validieren und als JSON speichern
-    $permissionsArray = json_decode($permissions, true);
-    if (!is_array($permissionsArray)) {
-        echo json_encode(['success' => false, 'message' => 'Ungültige Berechtigungen.']);
-        exit;
-    }
-
-    $permissionsJson = json_encode(array_map('intval', $permissionsArray));
-
     // Rollendaten aktualisieren
-    $stmt = $conn->prepare("
-        UPDATE roles 
-        SET name = :name, level = :level, permissions = :permissions 
-        WHERE id = :id
-    ");
+    $stmt = $conn->prepare("UPDATE roles SET name = :name, level = :level, permissions = :permissions WHERE id = :id");
     $stmt->execute([
+        ':id' => $id,
         ':name' => $name,
         ':level' => $level,
-        ':permissions' => $permissionsJson,
-        ':id' => $roleId
+        ':permissions' => json_encode($permissions) // Als JSON speichern
     ]);
 
     echo json_encode(['success' => true]);

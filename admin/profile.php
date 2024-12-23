@@ -218,24 +218,27 @@ $(document).ready(function () {
     $("#saveButton").on("click", function () {
     var formData = $("#employeeForm").serialize();
 
-    console.log("Gesendete Daten:", formData); // Debugging
-
     $.ajax({
         url: "include/save_employee_info.php",
         type: "POST",
         data: formData,
         success: function (response) {
-            console.log("Antwort:", response); // Debugging
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert("Fehler: " + response.message);
+            try {
+                var res = JSON.parse(response); // JSON-Antwort parsen
+                if (res.success) {
+                    alert(res.message); // Erfolgsmeldung anzeigen
+                } else {
+                    alert("Fehler: " + res.message); // Fehler vom Server anzeigen
+                }
+            } catch (e) {
+                console.error("Fehler beim Verarbeiten der Antwort:", e);
+                alert("Ein unerwarteter Fehler ist aufgetreten.");
             }
         },
         error: function (xhr, status, error) {
             console.error("Fehler:", error);
             alert("Fehler: " + error);
-        }
+        },
     });
 });
     // Datei-Auswahl anzeigen

@@ -204,7 +204,7 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     console.log('Bearbeiten-Button geklickt, ID:', roleId); // Debug-Ausgabe
 
     $.ajax({
-        url: 'get_role.php',
+        url: 'include/get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',

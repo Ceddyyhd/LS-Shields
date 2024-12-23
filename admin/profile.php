@@ -119,8 +119,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         </button>
                       </div>
                       <div class="modal-body">
-                      <label for="exampleInputBorder">Bottom Border only <code>.form-control-border</code></label>
-                      <input type="text" class="form-control form-control-border" id="exampleInputBorder" placeholder=".form-control-border">
+                          <label for="exampleInputBorderWidth2">Bottom Border only 2px Border <code>.form-control-border.border-width-2</code></label>
+                          <input type="text" class="form-control form-control-border border-width-2" id="exampleInputBorderWidth2" placeholder=".form-control-border.border-width-2">
                       </div>
                       <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

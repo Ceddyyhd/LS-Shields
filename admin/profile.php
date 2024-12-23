@@ -639,11 +639,11 @@ $(document).ready(function () {
             <div class="col-sm-10">
                 <?php
                 // Ausbildungstypen aus der Datenbank abrufen
-                $stmt = $conn->prepare("SELECT identifier, name FROM ausbildungstypen");
+                $stmt = $conn->prepare("SELECT key_name, display_name FROM ausbildungstypen");
                 $stmt->execute();
                 $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Ausbildungen des Benutzers abrufen
+                // Benutzerausbildungen abrufen
                 $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE user_id = :user_id");
                 $stmt->execute([':user_id' => $user_id]);
                 $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -659,26 +659,26 @@ $(document).ready(function () {
 
                 // HTML-Ausgabe für jede Ausbildung
                 foreach ($ausbildungstypen as $type) {
-                    $identifier = $type['identifier'];
-                    $name = $type['name'];
-                    $status = $dbAusbildungen[$identifier]['status'] ?? 0;
-                    $rating = $dbAusbildungen[$identifier]['bewertung'] ?? 0;
+                    $keyName = $type['key_name'];
+                    $displayName = $type['display_name'];
+                    $status = $dbAusbildungen[$keyName]['status'] ?? 0;
+                    $rating = $dbAusbildungen[$keyName]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" 
-                               id="<?= $identifier; ?>" 
-                               name="ausbildungen[<?= $identifier; ?>][status]" 
+                               id="<?= $keyName; ?>" 
+                               name="ausbildungen[<?= $keyName; ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= $identifier; ?>">
-                            <?= htmlspecialchars($name); ?>
+                        <label class="form-check-label" for="<?= $keyName; ?>">
+                            <?= htmlspecialchars($displayName); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $identifier; ?>">
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $keyName; ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
                                    data-value="<?= $i; ?>" 
-                                   data-ausbildung="<?= $identifier; ?>"></i>
+                                   data-ausbildung="<?= $keyName; ?>"></i>
                             <?php endfor; ?>
-                            <input type="hidden" name="ausbildungen[<?= $identifier; ?>][rating]" value="<?= $rating; ?>">
+                            <input type="hidden" name="ausbildungen[<?= $keyName; ?>][rating]" value="<?= $rating; ?>">
                         </div>
                     </div>
                     <?php

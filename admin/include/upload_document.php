@@ -21,43 +21,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Hochlade-Funktion für eine Datei
     function handleFileUpload($file, $upload_dir, $user_id, $doc_type, $conn)
-    {
-        global $allowed_extensions;
+{
+    global $allowed_extensions;
 
-        if ($file['error'] === UPLOAD_ERR_OK) {
-            $file_name = basename($file['name']);
-            $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+    if ($file['error'] === UPLOAD_ERR_OK) {
+        $file_name = basename($file['name']);
+        $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
-            // Überprüfen, ob der Dateityp erlaubt ist
-            if (!in_array(strtolower($file_extension), $allowed_extensions)) {
-                echo "Ungültiger Dateityp für $file_name.";
-                return;
-            }
-            $upload_dir_db = '/admin/uploads/';
-            // Eindeutigen Dateinamen erstellen
-            $unique_name = uniqid('doc_', true) . '.' . $file_extension;
-            $file_path = $upload_dir_db . $unique_name;
-
-            // Datei verschieben
-            if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                // In die Datenbank einfügen
-                $sql = "INSERT INTO documents (user_id, file_name, file_path, uploaded_at, doc_type) 
-                        VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute([
-                    'user_id' => $user_id,
-                    'file_name' => $file_name,
-                    'file_path' => $file_path,
-                    'doc_type' => $doc_type
-                ]);
-                echo "Datei $file_name erfolgreich hochgeladen.";
-            } else {
-                echo "Fehler beim Hochladen der Datei $file_name.";
-            }
-        } else {
-            echo "Fehler beim Hochladen der Datei.";
+        // Überprüfen, ob der Dateityp erlaubt ist
+        if (!in_array(strtolower($file_extension), $allowed_extensions)) {
+            echo "Ungültiger Dateityp für $file_name.";
+            return;
         }
+
+        // Eindeutigen Dateinamen erstellen
+        $unique_name = uniqid('doc_', true) . '.' . $file_extension;
+        $physical_path = $upload_dir . $unique_name;
+        $file_path = '/admin/uploads/' . $unique_name; // Für die Datenbank
+
+        // Datei verschieben
+        if (move_uploaded_file($file['tmp_name'], $physical_path)) {
+            // In die Datenbank einfügen
+            $sql = "INSERT INTO documents (user_id, file_name, file_path, uploaded_at, doc_type) 
+                    VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                'user_id' => $user_id,
+                'file_name' => $file_name,
+                'file_path' => $file_path,
+                'doc_type' => $doc_type
+            ]);
+            echo "Datei $file_name erfolgreich hochgeladen.";
+        } else {
+            echo "Fehler beim Hochladen der Datei $file_name.";
+        }
+    } else {
+        echo "Fehler beim Hochladen der Datei.";
     }
+}
 
     // Überprüfen und Verarbeiten der hochgeladenen Dateien
     if (!empty($_FILES['waffenschein_file']['name'])) {

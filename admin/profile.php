@@ -104,6 +104,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </p>
 
                 <ul class="list-group list-group-unbordered mb-3">
+                <li class="list-group-item">
+                <b>Tel. Nr.:</b> <a class="float-right"><?php echo htmlspecialchars($user['nummer']); ?></a>
+              </li>
                   <li class="list-group-item">
                     <b>Erstellt am:</b> <a class="float-right">
                       <?php echo htmlspecialchars($user['created_at']); ?>

@@ -124,17 +124,25 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               <div class="card-body">
                 <div class="tab-content">
                   <!-- Dokumente -->
-                  <div class="active tab-pane" id="dokumente">
-                    <ul>
-                      <?php while ($doc = $documents->fetch_assoc()): ?>
-                        <li>
-                          <a href="<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank">
-                            <?php echo htmlspecialchars($doc['file_name']); ?>
-                          </a> (<?php echo htmlspecialchars($doc['uploaded_at']); ?>)
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
+                  <div class="tab-pane active" id="dokumente">
+    <form action="upload_document.php" method="POST" enctype="multipart/form-data">
+        <div class="form-group row">
+            <label for="exampleInputFile" class="col-sm-2 col-form-label">Datei hochladen</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exampleInputFile" name="document" required>
+                        <label class="custom-file-label" for="exampleInputFile">Wähle eine Datei</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+                <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+            </div>
+        </div>
+    </form>
+</div>
 
                   <!-- Notizen -->
                   <div class="tab-pane" id="notizen">

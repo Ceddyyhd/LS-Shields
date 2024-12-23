@@ -337,18 +337,20 @@
                   <div class="tab-pane" id="settings">
                     <form class="form-horizontal">
                     <div class="form-group row">
-                      <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                      <div class="col-sm-10">
-                          <!-- Checkbox -->
-                          <div class="form-check mb-3">
-                              <input class="form-check-input" type="checkbox" id="exampleCheckbox">
-                              <label class="form-check-label" for="exampleCheckbox">Checkbox</label>
-                          </div>
-                          <!-- Ion Slider -->
-                          <label for="range_6">Select Range</label>
-                          <input id="range_6" type="text" name="range_6" value="">
-                      </div>
-                  </div>
+    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-sm-10">
+        <!-- Checkbox -->
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="exampleCheckbox">
+            <label class="form-check-label" for="exampleCheckbox">Checkbox</label>
+        </div>
+        <!-- Ion Slider -->
+        <div class="form-group">
+            <label for="range_6">Select Range</label>
+            <input id="range_6" type="text" name="range_6" value="">
+        </div>
+    </div>
+</div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
@@ -410,15 +412,21 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-<script>$('#range_6').ionRangeSlider({
-    min: -50,
-    max: 50,
-    from: 0,
-    type: 'single',
-    step: 1,
-    postfix: '°',
-    prettify: false,
-    hasGrid: true
+  <script src="../../plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+  <link rel="stylesheet" href="../../plugins/ion-rangeslider/css/ion.rangeSlider.min.css">
+
+<script>$(document).ready(function () {
+    // Initialisierung des Ion Slider für range_6
+    $('#range_6').ionRangeSlider({
+        min: -50,
+        max: 50,
+        from: 0,
+        type: 'single',
+        step: 1,
+        postfix: '°',
+        prettify: false,
+        hasGrid: true
+    });
 });</script>
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">

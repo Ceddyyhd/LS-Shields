@@ -116,7 +116,7 @@
                     <form class="form-horizontal">
                     <div class="form-group row">
                       <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                      <div class="form-group d-flex align-items-center gap-3" style="flex-wrap: nowrap;">
+                      <div class="form-group d-flex align-items-center gap-4" style="flex-wrap: nowrap;">
                           <div>
                               <label for="waffenscheinSelect">Waffenschein</label>
                               <select id="waffenscheinSelect" class="form-control" style="height: 38px;">

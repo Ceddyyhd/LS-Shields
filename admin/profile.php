@@ -157,8 +157,30 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
-            </div>
+
+            <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Information</h3>
+          </div>
+          <div class="card-body">
+            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
+
+            <hr>
+            <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['umail']); ?></p>
+
+            <hr>
+            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['kontonummer']); ?></p>
+
+            <hr>
+            <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
+            <p class="text-muted">Kane</p>
+          </div>
+        </div>
+
+          </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary">Save changes</button>

@@ -107,12 +107,14 @@ $(document).ready(function () {
                 <td><?= htmlspecialchars($role['name']) ?></td>
                 <td><?= htmlspecialchars($role['level']) ?></td>
                 <td>
-                <button type="button" class="btn btn-block btn-outline-secondary" 
-        data-toggle="modal" 
-        data-target="#modal-default" 
-        data-id="<?= $role['id'] ?>">
-    Bearbeiten
-</button>
+                <?php if ($_SESSION['permissions']['role_change'] ?? false): ?>
+                  <button type="button" class="btn btn-block btn-outline-secondary" 
+                          data-toggle="modal" 
+                          data-target="#modal-default" 
+                          data-id="<?= $role['id'] ?>">
+                      Bearbeiten
+                  </button>
+                <?php endif; ?>
                 </td>
               </tr>
             <?php endforeach; ?>

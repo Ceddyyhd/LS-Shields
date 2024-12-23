@@ -303,7 +303,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Tab für Notizen -->
 <div class="tab-pane" id="notizen">
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
+    <?php if ($_SESSION['permissions']['create_note'] ?? false || $_SESSION['permissions']['create_warning'] ?? false || $_SESSION['permissions']['create_termination'] ?? false): ?>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
+    <?php else: ?>
+        <p class="text-muted">Sie haben keine Berechtigung, Notizen hinzuzufügen.</p>
+    <?php endif; ?>
+
     <div id="timeline" class="timeline timeline-inverse">
         <?php foreach ($notes as $note): ?>
             <div>
@@ -339,33 +344,38 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <form id="noteForm">
-    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>"> <!-- Benutzer-ID -->
-    <div class="modal-body">
-        <div class="form-group">
-            <label>Typ</label>
-            <select id="noteType" name="note_type" class="form-control" required>
-                <option value="notiz">Notiz</option>
-                <option value="verwarnung">Verwarnung</option>
-                <option value="kuendigung">Kündigung</option>
-            </select>
-        </div>
+                <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>"> <!-- Benutzer-ID -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Typ</label>
+                        <select id="noteType" name="note_type" class="form-control" required>
+                            <?php if ($_SESSION['permissions']['create_note'] ?? false): ?>
+                                <option value="notiz">Notiz</option>
+                            <?php endif; ?>
+                            <?php if ($_SESSION['permissions']['create_warning'] ?? false): ?>
+                                <option value="verwarnung">Verwarnung</option>
+                            <?php endif; ?>
+                            <?php if ($_SESSION['permissions']['create_termination'] ?? false): ?>
+                                <option value="kuendigung">Kündigung</option>
+                            <?php endif; ?>
+                        </select>
+                    </div>
 
-        <div class="form-group">
-            <label>Inhalt</label>
-            <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
-        </div>
-    </div>
-    <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-        <button type="submit" class="btn btn-primary">Speichern</button>
-    </div>
-</form>
+                    <div class="form-group">
+                        <label>Inhalt</label>
+                        <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Speichern</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-<script>
-$("#noteForm").on("submit", function (e) {
+<script>$("#noteForm").on("submit", function (e) {
     e.preventDefault();
     var formData = $(this).serialize();
 

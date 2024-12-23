@@ -99,5 +99,5 @@ if (isset($_SESSION['permissions'])) {
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="dist/css/adminlte.min.css?v=<?= time(); ?>">
 </head>

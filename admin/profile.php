@@ -251,24 +251,30 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             type: "POST",
             data: formData,
             success: function (response) {
-                console.log("Antwort:", response);
+                try {
+                    // Versuche, die Antwort als JSON zu interpretieren
+                    response = JSON.parse(response);
 
-                if (response.success) {
-                    // Schließe das Modal
-                    $("#user-bearbeiten").modal("hide");
+                    if (response.success) {
+                        // Schließe das Modal
+                        $("#user-bearbeiten").modal("hide");
 
-                    // Seite neu laden, um die Änderungen zu sehen
-                    setTimeout(function () {
-                        location.reload();
-                    }, 500); // Ein kleiner Timeout, um sicherzustellen, dass das Modal geschlossen ist
-                } else {
-                    // Zeige die Fehlermeldung im Modal an
-                    alert("Fehler: " + response.message);
+                        // Seite neu laden, um die Änderungen zu sehen
+                        setTimeout(function () {
+                            location.reload();
+                        }, 500);
+                    } else {
+                        // Zeige die Fehlermeldung im Modal an
+                        alert("Fehler: " + response.message);
+                    }
+                } catch (error) {
+                    console.error("Fehler beim Parsen der Antwort:", error);
+                    alert("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
                 }
             },
             error: function (xhr, status, error) {
-                console.error("Fehler:", error);
-                alert("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
+                console.error("AJAX-Fehler:", error);
+                alert("Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
             },
         });
     });

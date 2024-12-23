@@ -52,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'doc_type' => $doc_type
             ]);
 
-            // Erfolgsnachricht
-            echo "<script>alert('Datei erfolgreich hochgeladen!'); window.location.href='../profile.php?id=" . htmlspecialchars($user_id) . "';</script>";
         } else {
             die("Fehler beim Hochladen der Datei.");
         }

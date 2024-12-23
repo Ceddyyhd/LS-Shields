@@ -84,7 +84,7 @@
 
                 <hr>
 
-                <strong><i class="fas fa-pencil-alt mr-1"></i> Kontonummer</strong>
+                <strong><i class="fas fa-solid fa-credit-card mr-1"></i> Kontonummer</strong>
                 <p class="text-muted">LS84643386</p>
                 </p>
 

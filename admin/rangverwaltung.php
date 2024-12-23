@@ -8,6 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <?php include 'include/navbar.php'; ?>
 

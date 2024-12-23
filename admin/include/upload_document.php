@@ -1,15 +1,21 @@
 <?php
 // Datenbankverbindung einbinden
-echo "<pre>";
-print_r($_POST);
-print_r($_FILES);
-echo "</pre>";
-die();
+include 'db.php';
+
+// Debugging: POST- und FILES-Daten ausgeben (optional)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    echo "<pre>";
+    print_r($_POST);
+    print_r($_FILES);
+    echo "</pre>";
+    // Entferne das `die()` nach dem Debugging!
+}
+
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzer-ID und benutzerdefinierter Name überprüfen
     $user_id = $_POST['user_id'] ?? null;
-    $custom_name = $_POST['custom_name'] ?? null;
+    $custom_name = $_POST['document_name'] ?? null; // Achte darauf, dass der Name übereinstimmt
     $doc_type = $_POST['doc_type'] ?? 'unbekannt';
 
     if (!$user_id || !$custom_name) {
@@ -26,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
     // Datei verarbeiten
-    if (!empty($_FILES['uploaded_file']['name'])) {
-        $file = $_FILES['uploaded_file'];
+    if (!empty($_FILES['document_file']['name'])) {
+        $file = $_FILES['document_file'];
         $file_name = basename($file['name']);
         $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
 
@@ -65,3 +71,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     die("Ungültige Anforderung.");
 }
+?>

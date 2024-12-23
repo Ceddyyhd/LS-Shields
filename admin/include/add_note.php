@@ -1,22 +1,21 @@
 <?php
-session_start();
 include 'db.php';
 header('Content-Type: application/json');
+
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
     $note_type = $_POST['note_type'] ?? 'notiz';
     $note_content = $_POST['note_content'] ?? '';
 
-    // Debugging
-    error_log("Received Data: " . print_r($_POST, true));
+    // Sicherstellen, dass `username` aus der Session kommt
+    $author = $_SESSION['username'] ?? 'Unbekannt';
 
     if (!$user_id || empty($note_content)) {
         echo json_encode(['success' => false, 'message' => 'Alle Felder ausfüllen.']);
         exit;
     }
-
-    $author = $_SESSION['username'] ?? 'Unbekannt';
 
     $sql = "INSERT INTO notes (user_id, type, content, created_at, author) 
             VALUES (:user_id, :type, :content, NOW(), :author)";

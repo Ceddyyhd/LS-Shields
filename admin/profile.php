@@ -365,58 +365,53 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
-$(document).ready(function() {
-    // Notiz erstellen
-    $("#noteForm").on("submit", function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
+$("#noteForm").on("submit", function (e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
 
-        $.ajax({
-            url: "include/add_note.php", // Server-Skript zum Speichern der Notiz
-            type: "POST",
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    // Modal schließen
-                    $("#modal-default").modal("hide");
+    console.log("Form Data:", formData); // Debugging
 
-                    // Timeline aktualisieren
-                    var iconClass;
-                    switch (response.data.type) {
-                        case "notiz":
-                            iconClass = "fas fa-user bg-info";
-                            break;
-                        case "verwarnung":
-                            iconClass = "fas fa-user bg-warning";
-                            break;
-                        case "kuendigung":
-                            iconClass = "fas fa-user bg-danger";
-                            break;
-                        default:
-                            iconClass = "fas fa-user bg-secondary";
-                    }
+    $.ajax({
+        url: "include/add_note.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            console.log("Response:", response); // Debugging
+            if (response.success) {
+                $("#modal-default").modal("hide");
+                $("#noteForm")[0].reset();
 
-                    var newNote = `
-                        <div>
-                            <i class="${iconClass}"></i>
-                            <div class="timeline-item">
-                                <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                                <h3 class="timeline-header">${response.data.user} fügte eine ${response.data.type} hinzu</h3>
-                                <div class="timeline-body">${response.data.content}</div>
-                            </div>
-                        </div>`;
-                    $("#timeline").prepend(newNote);
-
-                    // Formular zurücksetzen
-                    $("#noteForm")[0].reset();
-                } else {
-                    alert(response.message);
+                var iconClass;
+                switch (response.data.type) {
+                    case "notiz":
+                        iconClass = "fas fa-user bg-info";
+                        break;
+                    case "verwarnung":
+                        iconClass = "fas fa-user bg-warning";
+                        break;
+                    case "kuendigung":
+                        iconClass = "fas fa-user bg-danger";
+                        break;
                 }
-            },
-            error: function(xhr, status, error) {
-                alert("Fehler: " + error);
+
+                var newNote = `
+                    <div>
+                        <i class="${iconClass}"></i>
+                        <div class="timeline-item">
+                            <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
+                            <h3 class="timeline-header">${response.data.user} fügte eine ${response.data.type} hinzu</h3>
+                            <div class="timeline-body">${response.data.content}</div>
+                        </div>
+                    </div>`;
+                $("#timeline").prepend(newNote);
+            } else {
+                alert(response.message);
             }
-        });
+        },
+        error: function (xhr, status, error) {
+            console.error("Fehler:", error);
+            alert("Fehler: " + error);
+        },
     });
 });
 </script>

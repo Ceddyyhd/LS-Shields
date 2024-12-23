@@ -7,12 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
     $note_type = $_POST['note_type'] ?? 'notiz';
     $note_content = $_POST['note_content'] ?? '';
-    $author = $_SESSION['username'] ?? 'Unbekannt'; // Benutzername aus der Session holen
+
+    // Debugging
+    error_log("Received Data: " . print_r($_POST, true));
 
     if (!$user_id || empty($note_content)) {
         echo json_encode(['success' => false, 'message' => 'Alle Felder ausfüllen.']);
         exit;
     }
+
+    $author = $_SESSION['username'] ?? 'Unbekannt';
 
     $sql = "INSERT INTO notes (user_id, type, content, created_at, author) 
             VALUES (:user_id, :type, :content, NOW(), :author)";

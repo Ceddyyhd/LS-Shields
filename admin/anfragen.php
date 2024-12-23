@@ -62,41 +62,47 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($anfragen as $anfrage): ?>
-              <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
-                <td><?= htmlspecialchars($anfrage['id']) ?></td>
-                <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
-                <td><?= htmlspecialchars($anfrage['anfrage']) ?></td>
-                <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
-                <td>Details einblenden</td>
-              </tr>
-              <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-                <td colspan="5">
-                  <div class="p-3">
-                    <div class="mb-3">
-                      <strong>Datum & Uhrzeit:</strong>
-                      <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                      <strong>Telefonnummer:</strong>
-                      <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                      <strong>Status:</strong>
-                      <div><?= htmlspecialchars($anfrage['status']) ?></div>
-                    </div>
-                    <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-                      <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-                        <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-                      <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-                        <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
-                      <?php endif; ?>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
+<?php foreach ($anfragen as $anfrage): ?>
+  <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
+    <td><?= htmlspecialchars($anfrage['id']) ?></td>
+    <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
+    <td>
+      <?= mb_strimwidth(htmlspecialchars($anfrage['anfrage']), 0, 20, '...') ?>
+    </td>
+    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
+    <td>Details einblenden</td>
+  </tr>
+  <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
+    <td colspan="5">
+      <div class="p-3">
+        <div class="mb-3">
+          <strong>Datum & Uhrzeit:</strong>
+          <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Telefonnummer:</strong>
+          <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Status:</strong>
+          <div><?= htmlspecialchars($anfrage['status']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Anfrage:</strong>
+          <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
+        </div>
+        <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
+          <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
+            <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
+          <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
+            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
+          <?php endif; ?>
+        </div>
+      </div>
+    </td>
+  </tr>
+<?php endforeach; ?>
+</tbody>
         </table>
       </div>
     </div>

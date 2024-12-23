@@ -242,7 +242,7 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 
     $.ajax({
-        url: 'include/get_role.php',
+        url: 'get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',
@@ -257,9 +257,22 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
                 // Checkboxen für Permissions dynamisch erstellen
                 const permissionsContainer = $('#modal-default #permissionsContainer');
                 permissionsContainer.empty();
+
                 response.all_permissions.forEach(permission => {
+                    const sectionLabel = permission.bereich === 1 ? 'Mitarbeiter Bereich' : 'Leitungs Bereich';
+                    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+                    if (!sectionDiv.length) {
+                        // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+                        permissionsContainer.append(
+                            `<div class="permissions-section section-${permission.bereich}">
+                                <h5>${sectionLabel}</h5>
+                            </div>`
+                        );
+                        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+                    }
+
                     const checked = role.permissions.includes(permission.id) ? 'checked' : '';
-                    permissionsContainer.append(`
+                    sectionDiv.append(`
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.id}" ${checked}>
                             <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>

@@ -223,6 +223,32 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#editUserForm").on("submit", function (e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: "include/edit_user.php", // Ziel-Skript für das Speichern
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    location.reload(); // Seite aktualisieren
+                } else {
+                    alert("Fehler: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Fehler: " + error);
+            }
+        });
+    });
+});
+</script>
           <div class="col-md-9">
             <div class="card">
               <div class="card-header p-2">

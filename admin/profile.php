@@ -333,7 +333,18 @@
                     <!-- /.modal-dialog -->
                   </div>
 
-
+                  <style>
+    .stars {
+        display: inline-flex;
+        align-items: center;
+        color: gold;
+        cursor: pointer;
+    }
+    .stars i {
+        margin-right: 2px;
+        font-size: 1.2rem;
+    }
+</style>
                   <div class="tab-pane" id="settings">
     <form class="form-horizontal">
         <div class="form-group row">
@@ -342,12 +353,12 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="exampleCheckbox">
                     <label class="form-check-label" for="exampleCheckbox">Checkbox</label>
-                    <div class="stars ml-3">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <i class="far fa-star"></i>
+                    <div class="stars ml-3" data-rating="3">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="far fa-star" data-value="4"></i>
+                        <i class="far fa-star" data-value="5"></i>
                     </div>
                 </div>
             </div>
@@ -413,7 +424,35 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const starsContainers = document.querySelectorAll('.stars');
 
+        starsContainers.forEach(starsContainer => {
+            const stars = starsContainer.querySelectorAll('i');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function () {
+                    const value = this.getAttribute('data-value');
+                    starsContainer.setAttribute('data-rating', value);
+
+                    // Aktualisiere die Sterneanzeige
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-value') <= value) {
+                            s.classList.remove('far'); // leere Sterne
+                            s.classList.add('fas'); // gefüllte Sterne
+                        } else {
+                            s.classList.remove('fas'); // gefüllte Sterne
+                            s.classList.add('far'); // leere Sterne
+                        }
+                    });
+
+                    console.log(`Neue Bewertung: ${value}`);
+                });
+            });
+        });
+    });
+</script>
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->

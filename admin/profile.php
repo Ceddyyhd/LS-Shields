@@ -190,20 +190,14 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         <!-- Weitere Dokumente -->
 
         <div class="form-group row">
-        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
+        <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
         <div class="col-sm-10">
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
-                    <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
-                </div>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </div>
-                </div>
-            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                Dokument hochladen
+            </button>
         </div>
-    </form>
+    </div>
+</form>
 
     <!-- Liste der hochgeladenen Dokumente -->
     <div class="mt-4">

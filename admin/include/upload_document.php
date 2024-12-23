@@ -2,10 +2,6 @@
 // Datenbankverbindung einbinden
 include 'db.php';
 session_start();
-echo '<pre>';
-print_r($_SESSION);
-echo '</pre>';
-die();
 
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -52,14 +48,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             // Log in die Datenbank schreiben
-            $uploaded_by = $_SESSION['username'] ?? 'Unbekannt'; // Angemeldeter Benutzername aus der Session
-            $sql_log = "INSERT INTO upload_logs (user_id, uploaded_by, document_name, upload_time) 
-                        VALUES (:user_id, :uploaded_by, :document_name, NOW())";
+            session_start();
+
+            $uploaded_by = $_SESSION['username'] ?? 'Unbekannt'; // Benutzernamen aus der Session holen
+
+            $sql_log = "INSERT INTO upload_logs (user_id, document_name, uploaded_by, created_at) 
+                        VALUES (:user_id, :document_name, :uploaded_by, NOW())";
             $stmt_log = $conn->prepare($sql_log);
             $stmt_log->execute([
                 'user_id' => $user_id,
-                'uploaded_by' => $uploaded_by,
-                'document_name' => $custom_name
+                'document_name' => $custom_name,
+                'uploaded_by' => $uploaded_by
             ]);
         }
     }

@@ -43,35 +43,6 @@ $stmt = $conn->prepare($query);
 $stmt->execute();
 $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<script>
-$(document).ready(function () {
-    // Berechtigungen dynamisch laden
-    const permissions = <?= json_encode($permissions) ?>;
-    const permissionsContainer = $('#permissionsContainer');
-
-    permissions.forEach(permission => {
-        const sectionLabel = permission.bereich === 1 ? 'Mitarbeiter Rechte' : 'Leitungs Rechte';
-        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        if (!sectionDiv.length) {
-            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-            permissionsContainer.append(
-                `<div class="permissions-section section-${permission.bereich}">
-                    <h5>${sectionLabel}</h5>
-                </div>`
-            );
-            sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        }
-
-        // Checkbox für die Berechtigung hinzufügen
-        sectionDiv.append(`
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name}</label>
-            </div>
-        `);
-    });
-});
-</script>
 
 <div class="row">
   <div class="col-12">

@@ -178,16 +178,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Führerscheine -->
         <div class="form-group row">
-        <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
-        <div class="col-sm-10">
-            <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-                <option value="C" <?= in_array('C', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>C</option>
-                <option value="A" <?= in_array('A', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>A</option>
-                <option value="M2" <?= in_array('M2', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>M2</option>
-                <option value="PTL" <?= in_array('PTL', $employee['fuehrerscheine']) ? 'selected' : ''; ?>>PTL</option>
-            </select>
-        </div>
-    </div>
+            <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                <div style="margin-right: 20px; width: 200px;">
+                    <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]" style="height: 100px; width: 100%;">
+                        <option value="C">C</option>
+                        <option value="A">A</option>
+                        <option value="M2">M2</option>
+                        <option value="PTL">PTL</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <!-- Weitere Dokumente -->

@@ -124,24 +124,127 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               <div class="card-body">
                 <div class="tab-content">
                   <!-- Dokumente -->
-                  <div class="tab-pane active" id="dokumente">
-    <form action="upload_document.php" method="POST" enctype="multipart/form-data">
+                  <div class="active tab-pane" id="dokumente">
+    <form class="form-horizontal" action="upload_document.php" method="POST" enctype="multipart/form-data">
+        <!-- Waffenschein -->
         <div class="form-group row">
-            <label for="exampleInputFile" class="col-sm-2 col-form-label">Datei hochladen</label>
+            <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
+            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                <div style="margin-right: 20px; width: 200px;">
+                    <select id="waffenscheinSelect" class="form-control" style="height: 38px; width: 100%;" name="waffenschein_type">
+                        <option value="none">Keiner Vorhanden</option>
+                        <option value="small">Kleiner Waffenschein</option>
+                        <option value="big_small">Großer & Kleiner Waffenschein</option>
+                    </select>
+                </div>
+
+                <div style="flex-grow: 1;">
+                    <label for="waffenscheinFile">Datei hochladen</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="waffenscheinFile" name="waffenschein_file">
+                            <label class="custom-file-label" for="waffenscheinFile">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Führerscheine -->
+        <div class="form-group row">
+            <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+            <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
+                <div style="margin-right: 20px; width: 200px;">
+                    <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]" style="height: 100px; width: 100%;">
+                        <option value="C">C</option>
+                        <option value="A">A</option>
+                        <option value="M2">M2</option>
+                        <option value="PTL">PTL</option>
+                    </select>
+                </div>
+
+                <div style="flex-grow: 1;">
+                    <label for="fuehrerscheinFile">Datei hochladen</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="fuehrerscheinFile" name="fuehrerschein_file">
+                            <label class="custom-file-label" for="fuehrerscheinFile">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weitere Dokumente -->
+        <div class="form-group row">
+            <label for="arbeitsvertragFile" class="col-sm-2 col-form-label">Arbeitsvertrag</label>
             <div class="col-sm-10">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile" name="document" required>
-                        <label class="custom-file-label" for="exampleInputFile">Wähle eine Datei</label>
+                        <input type="file" class="custom-file-input" id="arbeitsvertragFile" name="arbeitsvertrag_file">
+                        <label class="custom-file-label" for="arbeitsvertragFile">Choose file</label>
                     </div>
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">Upload</button>
                     </div>
                 </div>
-                <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="fuehrungszeugnisFile" class="col-sm-2 col-form-label">Führungszeugnis</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="fuehrungszeugnisFile" name="fuehrungszeugnis_file">
+                        <label class="custom-file-label" for="fuehrungszeugnisFile">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="erstehilfeFile" class="col-sm-2 col-form-label">Erstehilfeschein</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
+                        <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
+
+    <!-- Liste der hochgeladenen Dokumente -->
+    <div class="mt-4">
+        <h5>Hochgeladene Dokumente:</h5>
+        <ul>
+            <?php if (!empty($documents)): ?>
+                <?php foreach ($documents as $doc): ?>
+                    <li>
+                        <a href="<?= htmlspecialchars($doc['file_path']); ?>" target="_blank">
+                            <?= htmlspecialchars($doc['file_name']); ?>
+                        </a> (<?= htmlspecialchars($doc['uploaded_at']); ?>)
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li>Keine Dokumente vorhanden.</li>
+            <?php endif; ?>
+        </ul>
+    </div>
 </div>
 
                   <!-- Notizen -->

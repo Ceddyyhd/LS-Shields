@@ -1,6 +1,8 @@
 <?php
 include 'db.php';
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
 $user_id = $_GET['id'] ?? 1;
 

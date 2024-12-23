@@ -165,36 +165,35 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Waffenschein -->
     <div class="form-group row">
-        <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
-        <div class="col-sm-10">
-            <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">
-                <option value="none" <?= $employee['waffenschein_type'] === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
-                <option value="small" <?= $employee['waffenschein_type'] === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
-                <option value="big_small" <?= $employee['waffenschein_type'] === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
-            </select>
-        </div>
+    <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
+    <div class="col-sm-10">
+        <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">
+            <option value="none" <?= $employee['waffenschein_type'] === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
+            <option value="small" <?= $employee['waffenschein_type'] === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
+            <option value="big_small" <?= $employee['waffenschein_type'] === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
+        </select>
     </div>
+</div>
 
-        <?php
+    <?php
 // Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
 $fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
 if (!is_array($fuehrerscheine)) {
     $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
 }
 ?>
-
 <!-- Führerscheine -->
 <div class="form-group row">
-        <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
-        <div class="col-sm-10">
-            <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-                <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
-                <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
-                <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
-                <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
-            </select>
-        </div>
+    <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+    <div class="col-sm-10">
+        <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
+            <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
+            <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
+            <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
+            <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
+        </select>
     </div>
+</div>
 
         <!-- Weitere Dokumente -->
         <script>
@@ -228,7 +227,8 @@ $(document).ready(function () {
         $(this).next(".custom-file-label").text(fileName);
     });
 });
-</script>        <!-- Button für das Modal -->
+</script>        
+<!-- Button für das Modal -->
           <div class="form-group row">
               <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
               <div class="col-sm-10">

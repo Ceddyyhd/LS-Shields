@@ -694,6 +694,8 @@ $(document).ready(function () {
                 }
                 ?>
             </div>
+            <i class="fas fa-star" data-value="2"></i>
+
         </div>
     </form>
 </div>

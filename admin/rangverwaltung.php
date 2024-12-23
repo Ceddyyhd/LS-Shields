@@ -282,7 +282,37 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     });
 });
 </script>
+<script> 
+  $('#modal-default .btn-primary').click(function () {
+    const roleId = $('[data-target="#modal-default"]').data('id'); // ID des Rangs
+    const name = $('#modal-default input[placeholder="CEO"]').val();
+    const level = $('#modal-default select#exampleSelectBorder').val();
+    const permissions = [];
 
+    // Alle markierten Rechte sammeln
+    $('#modal-default input[type="checkbox"]:checked').each(function () {
+        permissions.push($(this).attr('id')); // ID entspricht dem Recht
+    });
+
+    // AJAX-Anfrage, um die Änderungen zu speichern
+    $.ajax({
+        url: 'include/update_role.php', // PHP-Datei, die die Änderungen speichert
+        type: 'POST',
+        data: { id: roleId, name: name, level: level, permissions: JSON.stringify(permissions) },
+        success: function (response) {
+            if (response.success) {
+                alert('Rang erfolgreich aktualisiert.');
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+            } else {
+                alert('Fehler beim Speichern: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Speichern der Änderungen.');
+        }
+    });
+});
+</script>
 
     <!-- /.content -->
   </div>

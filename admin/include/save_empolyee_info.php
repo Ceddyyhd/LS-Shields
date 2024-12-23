@@ -9,6 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $waffenschein_type = $_POST['waffenschein_type'] ?? 'none';
     $fuehrerscheine = json_encode($_POST['fuehrerscheine'] ?? []);
 
+    // Debugging: Eingehende Daten prüfen
+    file_put_contents('debug_save_employee.log', "Empfangene Daten:\n" . print_r($_POST, true), FILE_APPEND);
+
     if (!$user_id) {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);
         exit;
@@ -35,8 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':fuehrerscheine' => $fuehrerscheine
         ]);
 
+        // Debugging: Bestätigung der SQL-Ausführung
+        file_put_contents('debug_save_employee.log', "SQL erfolgreich ausgeführt\n", FILE_APPEND);
+
         echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
     } catch (Exception $e) {
+        // Debugging: Fehlerprotokoll
+        file_put_contents('debug_save_employee.log', "Fehler:\n" . $e->getMessage(), FILE_APPEND);
         echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
 } else {

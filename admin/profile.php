@@ -170,13 +170,13 @@ if (!is_array($fuehrerscheine)) {
 }
 ?>
     <!-- Waffenschein -->
-    <div class="form-group row">
+<div class="form-group row">
     <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
     <div class="col-sm-10">
         <select id="waffenscheinSelect" class="form-control" name="waffenschein_type">
-            <option value="none" <?= $employee['waffenschein_type'] === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
-            <option value="small" <?= $employee['waffenschein_type'] === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
-            <option value="big_small" <?= $employee['waffenschein_type'] === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
+            <option value="none" <?= $waffenschein_type === 'none' ? 'selected' : ''; ?>>Keiner Vorhanden</option>
+            <option value="small" <?= $waffenschein_type === 'small' ? 'selected' : ''; ?>>Kleiner Waffenschein</option>
+            <option value="big_small" <?= $waffenschein_type === 'big_small' ? 'selected' : ''; ?>>Großer & Kleiner Waffenschein</option>
         </select>
     </div>
 </div>
@@ -203,12 +203,14 @@ $(document).ready(function () {
     $("#saveButton").on("click", function () {
     var formData = $("#employeeForm").serialize();
 
+    console.log("Gesendete Daten:", formData); // Debugging
+
     $.ajax({
         url: "include/save_employee_info.php",
         type: "POST",
         data: formData,
         success: function (response) {
-            console.log("Antwort:", response);
+            console.log("Antwort:", response); // Debugging
             if (response.success) {
                 alert(response.message);
             } else {
@@ -221,7 +223,6 @@ $(document).ready(function () {
         }
     });
 });
-
     // Datei-Auswahl anzeigen
     $("#documentFile").on("change", function () {
         var fileName = $(this).val().split("\\").pop();

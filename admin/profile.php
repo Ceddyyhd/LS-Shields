@@ -216,6 +216,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <form action="include/upload_document.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
                 <div class="modal-body">
                     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
 

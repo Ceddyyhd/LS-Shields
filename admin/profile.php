@@ -224,7 +224,7 @@
                     <!-- The timeline -->
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
                   Launch Default Modal
-                </button>
+                </button> </br>
                     <div class="timeline timeline-inverse">
                       <!-- timeline time label -->
                       <div class="time-label">

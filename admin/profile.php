@@ -105,10 +105,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </h3>
                 <p class="text-muted text-center">
                   <?php echo htmlspecialchars($user['role_name']); ?>
-                  <i class="fa-solid fa-user-pen"></i>
+                  <ion-icon name="pencil-outline"></ion-icon>
                 </a>
                 </p>
-                <i class="fa-solid fa-user-pen"></i>
 
                 <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">

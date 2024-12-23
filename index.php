@@ -488,15 +488,10 @@
                   <div>
                     <input type="text" name="telefonnummer" placeholder="Telefonnummer" value="555- " required/>
                   </div>
-                  
+                  <h5> Ihre Anfrage</h5>
                   <div class="">
                     <input type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
                   </div>
-
-                  <div class="">
-                    <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
-                  </div>
-
                   <div class="btn-box ">
                     <button type="submit">Senden</button>
                   </div>

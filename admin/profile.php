@@ -160,8 +160,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <div class="tab-content">
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
-    <form class="form-horizontal" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
+                  <form id="employeeForm" class="form-horizontal" method="POST">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+
     <!-- Waffenschein -->
     <div class="form-group row">
         <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
@@ -184,16 +185,16 @@ if (!is_array($fuehrerscheine)) {
 
 <!-- Führerscheine -->
 <div class="form-group row">
-    <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
-    <div class="col-sm-10">
-        <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-            <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
-            <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
-            <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
-            <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
-        </select>
+        <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+        <div class="col-sm-10">
+            <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
+                <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
+                <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
+                <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
+                <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
+            </select>
+        </div>
     </div>
-</div>>
 
         <!-- Weitere Dokumente -->
         <script>

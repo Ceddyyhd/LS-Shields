@@ -1,30 +1,37 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+<html lang="en">
 <?php include 'include/header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="en">
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <?php include 'include/navbar.php'; ?>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
     <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Rangverwaltung</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Rangverwaltung</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Starter Page</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Starter Page</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
     </div>
+    <!-- /.content-header -->
 
     <!-- Main content -->
     <?php
@@ -62,12 +69,13 @@
                                     <td><?= htmlspecialchars($role['name']) ?></td>
                                     <td><?= htmlspecialchars($role['level']) ?></td>
                                     <td>
-                                        <button type="button" class="btn btn-block btn-outline-secondary" 
-                                                data-toggle="modal" 
-                                                data-target="#modal-default" 
-                                                data-id="<?= $role['id'] ?>">
-                                            Bearbeiten
-                                        </button>
+                                    <button type="button" class="btn btn-block btn-outline-secondary" 
+                                        data-toggle="modal" 
+                                        data-target="#modal-default" 
+                                        data-id="<?= $role['id'] ?>" 
+                                        data-name="<?= htmlspecialchars($role['name']) ?>">
+                                  Bearbeiten
+                                </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -81,13 +89,13 @@
 
 <!-- Modal für neue Rolle -->
 <div class="modal fade" id="modal-add-role">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Neue Rolle erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Neue Rolle erstellen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
             </div>
             <div class="modal-body">
                 <form id="addRoleForm">

@@ -1,7 +1,9 @@
 <?php
 // Datenbankverbindung einbinden
 include 'db.php';
-
+var_dump($_POST);
+var_dump($_FILES);
+die();
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzer-ID und benutzerdefinierter Name überprüfen

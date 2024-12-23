@@ -303,15 +303,85 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
                   <!-- Notizen -->
                   <div class="tab-pane" id="notizen">
-                    <ul>
-                      <?php while ($note = $notes->fetch_assoc()): ?>
-                        <li>
-                          <strong><?php echo htmlspecialchars($note['created_at']); ?>:</strong>
-                          <?php echo htmlspecialchars($note['note']); ?>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
+    <div id="timeline" class="timeline timeline-inverse">
+        <!-- Timeline-Notizen werden hier dynamisch eingefügt -->
+    </div>
+</div>
+
+<!-- Modal für Notizerstellung -->
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Notiz erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="noteForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Typ</label>
+                        <select id="noteType" name="note_type" class="form-control" required>
+                            <option value="notiz">Notiz</option>
+                            <option value="verwarnung">Verwarnung</option>
+                            <option value="kuendigung">Kündigung</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Inhalt</label>
+                        <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Notiz erstellen
+    $("#noteForm").on("submit", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $.ajax({
+            url: "include/add_note.php", // Server-Skript zum Speichern der Notiz
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    // Modal schließen
+                    $("#modal-default").modal("hide");
+
+                    // Timeline aktualisieren
+                    var newNote = `
+                        <div>
+                            <i class="fas fa-comments bg-warning"></i>
+                            <div class="timeline-item">
+                                <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
+                                <h3 class="timeline-header">${response.data.user} fügte eine Notiz hinzu</h3>
+                                <div class="timeline-body">${response.data.content}</div>
+                            </div>
+                        </div>`;
+                    $("#timeline").prepend(newNote);
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("Fehler: " + error);
+            }
+        });
+    });
+});
+</script>
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">

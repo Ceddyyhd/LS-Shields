@@ -114,17 +114,19 @@
                     
                     
                     <form class="form-horizontal">
-                    <div class="col-sm-6">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Waffenschein</label>
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                        <div class="form-group">
+                        <label>Select</label>
                         <select class="form-control">
-                          <option>Nein</option>
-                          <option>Kleiner Waffenschein</option>
-                          <option>Großer & Kleiner Waffenschein</option>
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
                         </select>
                       </div>
-                    </div>
+                      </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">

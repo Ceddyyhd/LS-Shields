@@ -13,9 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Autor aus der Session holen
-    $author = $_SESSION['username'] ?? 'Unbekannt';
+    $author = $_SESSION['username'] ?? null;
+    if (!$author) {
+        // Wenn kein Benutzername in der Session ist
+        echo json_encode(['success' => false, 'message' => 'Fehler: Benutzername nicht in der Session vorhanden.']);
+        exit;
+    }
 
     try {
+        // Notiz in die Datenbank einfügen
         $stmt = $conn->prepare("INSERT INTO notes (user_id, type, content, created_at, author) 
                                 VALUES (:user_id, :type, :content, NOW(), :author)");
         $stmt->execute([

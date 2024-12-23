@@ -580,7 +580,8 @@ $(document).ready(function () {
     </div>
 </div>
 
-<script>$("#noteForm").on("submit", function (e) {
+<script>
+$("#noteForm").on("submit", function (e) {
     e.preventDefault();
     var formData = $(this).serialize();
 

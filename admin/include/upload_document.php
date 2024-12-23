@@ -10,6 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Benutzer-ID fehlt.");
     }
 
+    // Dokumenttyp überprüfen (muss im Formular enthalten sein)
+    $doc_type = $_POST['doc_type'] ?? null;
+    if (!$doc_type) {
+        die("Dokumenttyp fehlt.");
+    }
+
     // Verzeichnis für hochgeladene Dateien
     $upload_dir = '../uploads/';
     if (!is_dir($upload_dir)) {
@@ -19,10 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Erlaubte Dateitypen
     $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
-    // Funktion zum Verarbeiten einer Datei
-    function handleFileUpload($file, $upload_dir, $user_id, $doc_type, $conn)
-    {
-        global $allowed_extensions;
+    // Überprüfen, ob eine Datei hochgeladen wurde
+    if (!empty($_FILES['file']['name'])) {
+        $file = $_FILES['file'];
 
         if ($file['error'] === UPLOAD_ERR_OK) {
             $file_name = basename($file['name']);
@@ -30,18 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Überprüfen, ob der Dateityp erlaubt ist
             if (!in_array(strtolower($file_extension), $allowed_extensions)) {
-                echo "Ungültiger Dateityp für $file_name.";
-                return;
+                die("Ungültiger Dateityp.");
             }
 
             // Eindeutigen Dateinamen erstellen
-            $unique_name = uniqid('doc_', true) . '.' . $file_extension;
-            $physical_path = $upload_dir . $unique_name; // Physischer Speicherort
-            $file_path = '/admin/uploads/' . $unique_name; // Pfad für die Datenbank
+            $unique_name = $doc_type . '_' . $user_id . '_' . uniqid() . '.' . $file_extension;
+            $physical_path = $upload_dir . $unique_name;
+            $file_path = '/admin/uploads/' . $unique_name; // Für die Datenbank
 
             // Datei verschieben
             if (move_uploaded_file($file['tmp_name'], $physical_path)) {
-                // In die Datenbank eintragen
+                // In die Datenbank einfügen
                 $sql = "INSERT INTO documents (user_id, file_name, file_path, uploaded_at, doc_type) 
                         VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
                 $stmt = $conn->prepare($sql);
@@ -51,34 +55,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'file_path' => $file_path,
                     'doc_type' => $doc_type
                 ]);
-                echo "Datei $file_name erfolgreich hochgeladen.";
+
+                // Erfolgsnachricht
+                header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
+                exit;
             } else {
-                echo "Fehler beim Hochladen der Datei $file_name.";
+                die("Fehler beim Hochladen der Datei.");
             }
         } else {
-            echo "Fehler beim Hochladen der Datei.";
+            die("Fehler beim Hochladen der Datei: " . $file['error']);
         }
+    } else {
+        die("Keine Datei ausgewählt.");
     }
-
-    // Überprüfen und Verarbeiten der hochgeladenen Dateien
-    if (!empty($_FILES['waffenschein_file']['name'])) {
-        handleFileUpload($_FILES['waffenschein_file'], $upload_dir, $user_id, 'waffenschein', $conn);
-    }
-    if (!empty($_FILES['fuehrerschein_file']['name'])) {
-        handleFileUpload($_FILES['fuehrerschein_file'], $upload_dir, $user_id, 'fuehrerschein', $conn);
-    }
-    if (!empty($_FILES['arbeitsvertrag_file']['name'])) {
-        handleFileUpload($_FILES['arbeitsvertrag_file'], $upload_dir, $user_id, 'arbeitsvertrag', $conn);
-    }
-    if (!empty($_FILES['fuehrungszeugnis_file']['name'])) {
-        handleFileUpload($_FILES['fuehrungszeugnis_file'], $upload_dir, $user_id, 'fuehrungszeugnis', $conn);
-    }
-    if (!empty($_FILES['erstehilfe_file']['name'])) {
-        handleFileUpload($_FILES['erstehilfe_file'], $upload_dir, $user_id, 'erstehilfe', $conn);
-    }
-
-    // Weiterleitung zur Profilseite
-    header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
-    exit;
 }
-?>
+
+// Wenn kein POST-Request
+header("Location: ../profile.php");
+exit;

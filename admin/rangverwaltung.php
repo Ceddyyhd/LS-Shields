@@ -4,13 +4,11 @@
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <?php include 'include/navbar.php'; ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
   <div class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
@@ -26,9 +24,7 @@
       </div>
     </div>
   </div>
-  <!-- /.content-header -->
 
-  <!-- Main content -->
   <?php
   include 'include/db.php';
 
@@ -79,7 +75,6 @@
       </div>
     </div>
   </div>
-  <!-- /.row -->
 
   <!-- Modal: Neue Rolle hinzufügen -->
   <div class="modal fade" id="modal-add-role">
@@ -95,7 +90,7 @@
           <form id="addRoleForm">
             <div class="form-group">
               <label for="addRoleName">Rangname</label>
-              <input type="text" id="addRoleName" class="form-control" required>
+              <input type="text" id="addRoleName" class="form-control">
             </div>
             <div class="form-group">
               <label for="addRoleLevel">Rang Ebene</label>
@@ -123,7 +118,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Rang bearbeiten: <span id="modalRoleName"></span></h4>
+          <h4 class="modal-title">Rang bearbeiten</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -132,7 +127,7 @@
           <form id="editRoleForm">
             <div class="form-group">
               <label for="editRoleName">Rangname</label>
-              <input type="text" id="editRoleName" class="form-control" required>
+              <input type="text" id="editRoleName" class="form-control">
             </div>
             <div class="form-group">
               <label for="editRoleLevel">Rang Ebene</label>
@@ -157,18 +152,68 @@
 </div>
 
 <script>
-  // Add Role Script
-  $('#saveAddRoleButton').click(function () {
-    const name = $('#addRoleName').val();
-    const level = $('#addRoleLevel').val();
-
-    // Implement AJAX logic for adding roles
-  });
-
-  // Edit Role Script
+  // Modal "Rolle bearbeiten" laden
   $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id');
-    // Implement AJAX logic for loading and saving roles
+    $.ajax({
+      url: 'get_role.php',
+      type: 'GET',
+      data: { id: roleId },
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          $('#editRoleName').val(response.role.name);
+          $('#editRoleLevel').val(response.role.level);
+
+          const permissionsContainer = $('#editPermissionsContainer');
+          permissionsContainer.empty();
+          const permissions = response.role.permissions;
+          for (const [key, value] of Object.entries(permissions)) {
+            permissionsContainer.append(`
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="${key}" ${value ? 'checked' : ''}>
+                <label class="form-check-label" for="${key}">${key}</label>
+              </div>
+            `);
+          }
+        }
+      },
+      error: function () {
+        alert('Fehler beim Laden der Rolle.');
+      }
+    });
+  });
+
+  // Änderungen speichern
+  $('#saveEditRoleButton').click(function () {
+    const roleId = $('#editRoleName').data('role-id');
+    const name = $('#editRoleName').val();
+    const level = $('#editRoleLevel').val();
+    const permissions = {};
+
+    $('#editPermissionsContainer input[type="checkbox"]').each(function () {
+      permissions[$(this).attr('id')] = $(this).is(':checked');
+    });
+
+    $.ajax({
+      url: 'update_role.php',
+      type: 'POST',
+      data: {
+        id: roleId,
+        name: name,
+        level: level,
+        permissions: JSON.stringify(permissions),
+      },
+      success: function (response) {
+        if (response.success) {
+          alert('Änderungen erfolgreich gespeichert.');
+          location.reload();
+        }
+      },
+      error: function () {
+        alert('Fehler beim Speichern.');
+      },
+    });
   });
 </script>
 </body>

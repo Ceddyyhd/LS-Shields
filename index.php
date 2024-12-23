@@ -490,7 +490,7 @@
                   </div>
                   <h5> Ihre Anfrage</h5>
                   <div class="">
-                    <input type="text" name="anfrage" placeholder="Bitte teilen sie uns ihre Anfrage so kurz wie möglich mit. Wir melden uns dann unter der angegeben Telefonnummer." class="message_input" />
+                    <textarea name="anfrage" placeholder="Bitte teilen Sie uns Ihre Anfrage so kurz wie möglich mit. Wir melden uns dann unter der angegebenen Telefonnummer." class="message_input" rows="4" style="width: 100%;"></textarea>
                   </div>
                   <div class="btn-box ">
                     <button type="submit">Senden</button>

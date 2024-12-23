@@ -218,7 +218,7 @@ $('#saveRoleButton').click(function () {
 
     // AJAX-Anfrage, um die neue Rolle zu speichern
     $.ajax({
-        url: 'add_role.php',
+        url: 'include/add_role.php',
         type: 'POST',
         data: {
             name: name,

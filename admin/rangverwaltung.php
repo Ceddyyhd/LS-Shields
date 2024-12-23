@@ -150,16 +150,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Recht 1</label>
-                    <label class="form-check-label" for="exampleCheck1">Recht 2</label>
-                    <label class="form-check-label" for="exampleCheck1">Recht 3</label>
-                    <label class="form-check-label" for="exampleCheck1">Recht 4</label>
+                    <div>
+                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                    <label class="form-check-label" for="exampleCheck2">Recht 2</label>
+                    </div>
                   </div>
                 </div>
                 <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
               </form>
 
 

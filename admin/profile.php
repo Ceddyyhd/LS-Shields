@@ -7,10 +7,8 @@ error_reporting(E_ALL);
 $user_id = $_GET['id'] ?? 1;
 
 // Benutzerinformationen abrufen
-$sql = "SELECT u.email, u.created_at, COALESCE(r.name, 'Keine Rolle') as role_name, u.role_id 
-        FROM users u 
-        LEFT JOIN roles r ON u.role_id = r.id 
-        WHERE u.id = :user_id";
+$sql = "SELECT u.email, u.created_at, r.name as role_name FROM users u 
+        JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['user_id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -19,16 +17,11 @@ if (!$user) {
     die("Benutzer nicht gefunden.");
 }
 
-if (empty($user['role_id'])) {
-    die("Dieser Benutzer hat keine Rolle zugewiesen.");
-}
-
 // Dokumente abrufen
 $sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
 $stmt_documents->execute(['user_id' => $user_id]);
-$documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC); // Mehrere Ergebnisse
-
+$documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausrüstung abrufen
 $sql_equipment = "SELECT equipment_name, received FROM equipment WHERE user_id = :user_id";
@@ -133,15 +126,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
                     <ul>
-                      <?php if ($documents) {
-    foreach ($documents as $doc) {
-        echo '<li><a href="' . htmlspecialchars($doc['file_path']) . '" target="_blank">'
-             . htmlspecialchars($doc['file_name']) . '</a> ('
-             . htmlspecialchars($doc['uploaded_at']) . ')</li>';
-    }
-} else {
-    echo '<p>Keine Dokumente gefunden.</p>';
-}
+                      <?php while ($doc = $documents->fetch_assoc()): ?>
+                        <li>
+                          <a href="<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank">
+                            <?php echo htmlspecialchars($doc['file_name']); ?>
+                          </a> (<?php echo htmlspecialchars($doc['uploaded_at']); ?>)
+                        </li>
                       <?php endwhile; ?>
                     </ul>
                   </div>

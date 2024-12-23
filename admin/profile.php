@@ -115,28 +115,28 @@
                     
                     <form class="form-horizontal">
                     <div class="form-group row">
-                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
-                        <div class="form-group" style="display: flex; gap: 10px; align-items: center;">
-                            <div>
-                                <label>Waffenschein</label>
-                                <select class="form-control">
-                                    <option>Keiner Vorhanden</option>
-                                    <option>Kleiner Waffenschein</option>
-                                    <option>Großer & Kleiner Waffenschein</option>
-                                </select>
-                            </div>
+                      <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                      <div class="form-group d-flex align-items-center gap-3" style="flex-wrap: nowrap;">
+                          <div>
+                              <label>Waffenschein</label>
+                              <select class="form-control" style="height: 38px;">
+                                  <option>Keiner Vorhanden</option>
+                                  <option>Kleiner Waffenschein</option>
+                                  <option>Großer & Kleiner Waffenschein</option>
+                              </select>
+                          </div>
 
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="exampleInputFile">
-                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">Upload</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                          <div class="input-group" style="flex-grow: 1;">
+                              <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="exampleInputFile">
+                                  <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                              </div>
+                              <div class="input-group-append">
+                                  <span class="input-group-text">Upload</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">

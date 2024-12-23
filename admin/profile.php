@@ -344,7 +344,14 @@
                           <label class="form-check-label">Checkbox</label>
                         
 
-                          <div class="card-body">
+                          <div class="row">
+          <div class="col-12">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Ion Slider</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
                 <div class="row margin">
                   <div class="col-sm-6">
                     <input id="range_1" type="text" name="range_1" value="">
@@ -369,6 +376,12 @@
                   </div>
                 </div>
               </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
 
                         </div>                        
                       </div>

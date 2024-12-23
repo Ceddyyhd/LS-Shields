@@ -124,7 +124,7 @@
 $(document).ready(function () {
   // Rollen laden
   function loadRoles() {
-    $.get('get_role.php', function (response) {
+    $.get('include/get_role.php', function (response) {
       if (response.success) {
         const roles = response.roles;
         const tableBody = $('#roles-table-body');
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
   // Berechtigungen laden
   function loadPermissions(container, selectedPermissions = []) {
-    $.get('get_permissions.php', function (response) {
+    $.get('include/get_permissions.php', function (response) {
       if (response.success) {
         const permissions = response.permissions;
         container.empty();
@@ -176,7 +176,7 @@ $(document).ready(function () {
       permissions.push($(this).val());
     });
 
-    $.post('add_role.php', {
+    $.post('include/add_role.php', {
       action: 'addRole',
       name,
       level,
@@ -195,7 +195,7 @@ $(document).ready(function () {
   $(document).on('click', '.edit-role', function () {
     const roleId = $(this).data('id');
 
-    $.get('get_role.php' + roleId, function (response) {
+    $.get('include/get_role.php' + roleId, function (response) {
       if (response.success) {
         const role = response.role;
         $('#editRoleName').val(role.name);
@@ -218,7 +218,7 @@ $(document).ready(function () {
       permissions.push($(this).val());
     });
 
-    $.post('update_role.php', {
+    $.post('include/update_role.php', {
       action: 'updateRole',
       id: roleId,
       name,

@@ -2,12 +2,11 @@
 // Datenbankverbindung einbinden
 include 'db.php';
 
-
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzer-ID und benutzerdefinierter Name überprüfen
     $user_id = $_POST['user_id'] ?? null;
-    $custom_name = $_POST['document_name'] ?? null; // Achte darauf, dass der Name übereinstimmt
+    $custom_name = $_POST['document_name'] ?? null;
     $doc_type = $_POST['doc_type'] ?? 'unbekannt';
 
     if (!$user_id || !$custom_name) {
@@ -52,13 +51,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'doc_type' => $doc_type
             ]);
 
+            // Erfolgsnachricht (in einer Session speichern)
+            session_start();
+            $_SESSION['upload_success'] = 'Datei erfolgreich hochgeladen.';
         } else {
             die("Fehler beim Hochladen der Datei.");
         }
     } else {
         die("Keine Datei ausgewählt.");
     }
-} else {
-    die("Ungültige Anforderung.");
 }
+
+// Weiterleitung zurück zur Profilseite
+header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
+exit;
 ?>

@@ -243,12 +243,12 @@ $('#saveRoleButton').click(function () {
 });
 
 $('#modal-default .btn-primary').click(function () {
-    const roleId = $('#modal-default').data('id'); // Hole die ID der Rolle
-    const name = $('#modal-default #roleName').val();
-    const level = $('#modal-default #roleLevel').val();
+    const roleId = $('#modal-default').data('id'); // ID der Rolle aus Modal
+    const name = $('#modal-default #roleName').val(); // Name der Rolle
+    const level = $('#modal-default #roleLevel').val(); // Ebene der Rolle
     const permissions = [];
 
-    // Sammle die Berechtigungen
+    // Sammle die Namen der ausgewählten Berechtigungen
     $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
         permissions.push($(this).val());
     });
@@ -260,10 +260,10 @@ $('#modal-default .btn-primary').click(function () {
         url: 'include/update_role.php',
         type: 'POST',
         data: {
-            id: roleId,
+            id: roleId, // Übermittle die ID der Rolle
             name: name,
             level: level,
-            permissions: JSON.stringify(permissions)
+            permissions: JSON.stringify(permissions) // Berechtigungen als JSON
         },
         success: function (response) {
             console.log(response); // Debug-Ausgabe
@@ -282,7 +282,8 @@ $('#modal-default .btn-primary').click(function () {
 
 
 $(document).on('click', '[data-target="#modal-default"]', function () {
-    const roleId = $(this).data('id'); // ID der Rolle
+    const roleId = $(this).data('id'); // ID der Rolle aus Button
+    $('#modal-default').data('id', roleId); // ID an Modal binden
 
     $.ajax({
     url: 'include/get_role.php',

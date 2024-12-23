@@ -83,7 +83,7 @@
                 <p class="text-muted">fal.hunter@umail.com</p>
 
                 <hr>
-
+                <i class="fa-solid fa-building-columns"></i>
                 <strong><i class="fa-solid fa-building-columns"></i> Kontonummer</strong>
                 <p class="text-muted">LS84643386</p>
                 </p>

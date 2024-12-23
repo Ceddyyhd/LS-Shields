@@ -1,40 +1,53 @@
 <?php
-include 'db.php';
-header('Content-Type: application/json');
-
 session_start();
+include 'db.php';
+
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
     $note_type = $_POST['note_type'] ?? 'notiz';
     $note_content = $_POST['note_content'] ?? '';
 
-    // Sicherstellen, dass `username` aus der Session kommt
-    $author = $_SESSION['username'] ?? 'Unbekannt';
-
     if (!$user_id || empty($note_content)) {
         echo json_encode(['success' => false, 'message' => 'Alle Felder ausfüllen.']);
         exit;
     }
 
-    $sql = "INSERT INTO notes (user_id, type, content, created_at, author) 
-            VALUES (:user_id, :type, :content, NOW(), :author)";
-    $stmt = $conn->prepare($sql);
+    // Benutzername ermitteln
+    $author = $_SESSION['username'] ?? null;
+
+    if (!$author) {
+        // Falls die Session keinen Benutzernamen enthält, aus der Datenbank holen
+        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :id");
+        $stmt->execute([':id' => $user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $author = $user['name'] ?? 'Unbekannt';
+    }
+
+    // Notiz in die Datenbank einfügen
+    $stmt = $conn->prepare("INSERT INTO notes (user_id, note_type, content, created_at, author) 
+                            VALUES (:user_id, :note_type, :content, NOW(), :author)");
     $stmt->execute([
-        ':user_id' => $user_id,
-        ':type' => $note_type,
-        ':content' => $note_content,
-        ':author' => $author
+        'user_id' => $user_id,
+        'note_type' => $note_type,
+        'content' => $note_content,
+        'author' => $author,
     ]);
 
-    echo json_encode([
+    // Rückmeldung mit den neuen Notizdaten
+    $response = [
         'success' => true,
         'data' => [
             'type' => $note_type,
             'content' => $note_content,
-            'created_at' => date('Y-m-d H:i:s'),
-            'user' => $author
-        ]
-    ]);
+            'created_at' => date('Y-m-d H:i:s'), // Aktuelle Zeit
+            'user' => $author, // Name des Autors
+        ],
+    ];
+
+    echo json_encode($response);
     exit;
 }
+
+echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);

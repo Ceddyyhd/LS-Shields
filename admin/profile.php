@@ -395,15 +395,15 @@ $("#noteForm").on("submit", function (e) {
                 }
 
                 var newNote = `
-                    <div>
-                        <i class="${iconClass}"></i>
-                        <div class="timeline-item">
-                            <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                            <h3 class="timeline-header">${response.data.user} fügte eine ${response.data.type} hinzu</h3>
-                            <div class="timeline-body">${response.data.content}</div>
-                        </div>
-                    </div>`;
-                $("#timeline").prepend(newNote);
+                  <div>
+                      <i class="${iconClass}"></i>
+                      <div class="timeline-item">
+                          <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
+                          <h3 class="timeline-header">${response.data.user} fügte eine ${response.data.type} hinzu</h3>
+                          <div class="timeline-body">${response.data.content}</div>
+                      </div>
+                  </div>`;
+              $("#timeline").prepend(newNote);
             } else {
                 alert(response.message);
             }

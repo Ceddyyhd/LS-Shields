@@ -738,16 +738,18 @@ $(document).ready(function () {
                 </script>
 
                   <!-- Ausrüstung -->
-                  <div class="tab-pane" id="ausruestung">
+                  <div class="tab-pane" id="ausrüstung">
     <form id="ausruestungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <?php
-        // Ausrüstungstypen aus der Datenbank abrufen
+        // Berechtigungsprüfung
+        $canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
+
+        // Ausrüstungstypen und Benutzer-Ausrüstung abrufen
         $stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");
         $stmt->execute();
         $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Benutzer-Ausrüstung abrufen
         $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
         $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -764,7 +766,7 @@ $(document).ready(function () {
             $categories[$item['category']][] = $item;
         }
 
-        // HTML-Ausgabe für jede Kategorie und Ausrüstung
+        // HTML-Ausgabe
         foreach ($categories as $category => $items) {
             ?>
             <div class="form-group row">
@@ -777,7 +779,8 @@ $(document).ready(function () {
                             <input class="form-check-input" type="checkbox" 
                                    id="<?= $item['key_name']; ?>" 
                                    name="ausruestung[<?= $item['key_name']; ?>]" 
-                                   value="1" <?= $status ? 'checked' : ''; ?>>
+                                   value="1" <?= $status ? 'checked' : ''; ?>
+                                   <?= $canEdit ? '' : 'disabled'; ?>>
                             <label class="form-check-label" for="<?= $item['key_name']; ?>">
                                 <?= htmlspecialchars($item['display_name']); ?>
                             </label>

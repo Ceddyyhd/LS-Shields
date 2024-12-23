@@ -72,7 +72,7 @@ $(document).ready(function () {
         sectionDiv.append(`
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.name} (${permission.description})</label>
+                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
             </div>
         `);
     });
@@ -242,7 +242,7 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 
     $.ajax({
-        url: 'include/get_role.php',
+        url: 'get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',
@@ -262,13 +262,10 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
                     permissionsContainer.append(`
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.id}" ${checked}>
-                            <label class="form-check-label" for="perm_${permission.id}">${permission.name}</label>
+                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
                         </div>
                     `);
                 });
-
-                // Modal anzeigen
-                $('#modal-default').modal('show');
             } else {
                 alert('Fehler: ' + response.error);
             }

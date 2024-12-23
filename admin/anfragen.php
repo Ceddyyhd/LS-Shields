@@ -103,6 +103,10 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
+
+<script>var_dump($_SESSION['permissions']);
+exit;
+</script>
 <script>
 function changeStatus(id, action) {
   fetch('include/update_status.php', {

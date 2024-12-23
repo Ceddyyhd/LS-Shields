@@ -188,21 +188,29 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Weitere Dokumente -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-upload">
 
-        <div class="form-group row">
-        <label for="erstehilfeFile" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
-        <div class="col-sm-10">
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="erstehilfeFile" name="erstehilfe_file">
-                    <label class="custom-file-label" for="erstehilfeFile">Choose file</label>
-                </div>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </div>
-                </div>
+        <div class="modal fade" id="modal-upload">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Default Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
         </div>
+        <!-- /.modal-dialog -->
+      </div>
     </form>
 
     <!-- Liste der hochgeladenen Dokumente -->

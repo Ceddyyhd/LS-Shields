@@ -486,6 +486,9 @@
                   <div>
                     <input type="text" name="telefonnummer" placeholder="Telefonnummer" />
                   </div>
+                  <div>
+                    <input type="anfrage" name="Ihre Anfrage" placeholder="message_input" />
+                  </div>
                   <div class="">
                     <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
                   </div>

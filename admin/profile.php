@@ -117,13 +117,11 @@
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                         <div class="form-group">
-                        <label>Select</label>
+                        <label>Waffenschein</label>
                         <select class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
+                          <option>Keiner Vorhanden</option>
+                          <option>Kleiner Waffenschein</option>
+                          <option>Großer & Kleiner Waffenschein</option>
                         </select>
                       </div>
                       </div>

@@ -1,55 +1,59 @@
 <?php
-session_start();
-include 'db.php';
+// Debugging aktivieren
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// JSON-Antwort sicherstellen
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? null;
-    $note_type = $_POST['note_type'] ?? 'notiz';
-    $note_content = $_POST['note_content'] ?? '';
+// Session starten
+session_start();
 
-    if (!$user_id || empty($note_content)) {
+// Datenbankverbindung einbinden
+include 'db.php';
+
+try {
+    // POST-Daten validieren
+    $user_id = $_POST['user_id'] ?? null;
+    $note_type = $_POST['note_type'] ?? null;
+    $note_content = $_POST['note_content'] ?? null;
+
+    if (!$user_id || !$note_type || !$note_content) {
         echo json_encode(['success' => false, 'message' => 'Alle Felder ausfüllen.']);
         exit;
     }
 
-    // Benutzername ermitteln
-    $author = $_SESSION['username'] ?? null;
+    // Benutzername aus der Session oder Datenbank holen
+    $stmt_user = $conn->prepare("SELECT name FROM users WHERE id = :id");
+    $stmt_user->execute([':id' => $user_id]);
+    $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+    $author = $user['name'] ?? 'Unbekannt';
 
-    if (!$author) {
-        // Falls die Session keinen Benutzernamen enthält, aus der Datenbank holen
-        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :id");
-        $stmt->execute([':id' => $user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $author = $user['name'] ?? 'Unbekannt';
-    }
-
-    // Notiz in die Datenbank einfügen
+    // Datenbankeintrag für die Notiz
     $stmt = $conn->prepare("INSERT INTO notes (user_id, note_type, content, created_at, author) 
                             VALUES (:user_id, :note_type, :content, NOW(), :author)");
     $stmt->execute([
         'user_id' => $user_id,
         'note_type' => $note_type,
         'content' => $note_content,
-        'author' => $author,
+        'author' => $author
     ]);
 
-    // Rückmeldung mit den neuen Notizdaten
-    $response = [
+    // Erfolg zurückgeben
+    echo json_encode([
         'success' => true,
+        'message' => 'Notiz hinzugefügt.',
         'data' => [
             'type' => $note_type,
             'content' => $note_content,
-            'created_at' => date('Y-m-d H:i:s'), // Aktuelle Zeit
-            'user' => $author, // Name des Autors
-        ],
-    ];
-
-    echo json_encode($response);
+            'created_at' => date('Y-m-d H:i:s'),
+            'user' => $author
+        ]
+    ]);
+} catch (Exception $e) {
+    // Fehler in der Logdatei speichern und zurückgeben
+    file_put_contents('debug_add_note.log', $e->getMessage() . PHP_EOL, FILE_APPEND);
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     exit;
 }
-
-echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);

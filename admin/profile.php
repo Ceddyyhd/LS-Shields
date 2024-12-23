@@ -594,7 +594,8 @@ $("#noteForm").on("submit", function (e) {
                 response = JSON.parse(response);
 
                 if (response.success) {
-                    $("#modal-default").modal("hide");
+                  $('#modal-default').modal('hide');
+                  $('.modal-backdrop').remove(); // Entfernt den dunklen Hintergrund
                     $("#noteForm")[0].reset();
 
                     var iconClass;

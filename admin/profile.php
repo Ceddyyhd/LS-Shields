@@ -201,20 +201,22 @@ $("#saveButton").on("click", function () {
     var formData = $("#employeeForm").serialize();
 
     $.ajax({
-        url: "include/save_employee_info.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert("Fehler: " + response.message);
-            }
-        },
-        error: function (xhr, status, error) {
-            alert("Fehler: " + error);
+    url: "include/save_employee_info.php",
+    type: "POST",
+    data: $("#employeeForm").serialize(),
+    success: function(response) {
+        console.log("Antwort:", response);
+        if (response.success) {
+            alert(response.message);
+        } else {
+            alert("Fehler: " + response.message);
         }
-    });
+    },
+    error: function(xhr, status, error) {
+        console.error("Fehler:", error);
+        alert("Fehler: " + error);
+    }
+});
 });
 </script>
         <!-- Button für das Modal -->

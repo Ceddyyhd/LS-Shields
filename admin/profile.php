@@ -158,9 +158,10 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               </div>
               <div class="card-body">
                 <div class="tab-content">
-                <form id="employeeForm" class="form-horizontal" method="POST">
+                  <!-- Dokumente -->
+                  <div class="active tab-pane" id="dokumente">
+    <form class="form-horizontal" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-
     <!-- Waffenschein -->
     <div class="form-group row">
         <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
@@ -173,43 +174,59 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <!-- Führerscheine -->
-    <?php
-    // Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
-    $fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
-    if (!is_array($fuehrerscheine)) {
-        $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
-    }
-    ?>
-    <div class="form-group row">
-        <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
-        <div class="col-sm-10">
-            <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
-                <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
-                <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
-                <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
-                <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
-            </select>
-        </div>
-    </div>
+        <?php
+// Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
+$fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
+if (!is_array($fuehrerscheine)) {
+    $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
+}
+?>
 
-    <!-- Weitere Dokumente -->
-    <div class="form-group row">
-        <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
-        <div class="col-sm-10">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
-                Dokument hochladen
-            </button>
-        </div>
+<!-- Führerscheine -->
+<div class="form-group row">
+    <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
+    <div class="col-sm-10">
+        <select id="fuehrerscheinSelect" class="form-control" multiple name="fuehrerscheine[]">
+            <option value="C" <?= in_array('C', $fuehrerscheine) ? 'selected' : ''; ?>>C</option>
+            <option value="A" <?= in_array('A', $fuehrerscheine) ? 'selected' : ''; ?>>A</option>
+            <option value="M2" <?= in_array('M2', $fuehrerscheine) ? 'selected' : ''; ?>>M2</option>
+            <option value="PTL" <?= in_array('PTL', $fuehrerscheine) ? 'selected' : ''; ?>>PTL</option>
+        </select>
     </div>
+</div>>
 
-    <!-- Speichern-Button -->
-    <div class="form-group row">
-        <div class="col-sm-12 text-right">
-            <button type="button" id="saveButton" class="btn btn-success">Speichern</button>
-        </div>
-    </div>
-</form>
+        <!-- Weitere Dokumente -->
+        <script>
+$("#saveButton").on("click", function () {
+    var formData = $("#employeeForm").serialize();
+
+    $.ajax({
+        url: "include/save_employee_info.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert("Fehler: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Fehler: " + error);
+        }
+    });
+});
+</script>
+        <!-- Button für das Modal -->
+          <div class="form-group row">
+              <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
+              <div class="col-sm-10">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                      Dokument hochladen
+                  </button>
+              </div>
+          </div>
+    </form>
 
 <!-- Modal für Dateiupload -->
 <div class="modal fade" id="modal-primary">
@@ -272,39 +289,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- /.modal-dialog -->
 </div>
-
-<script>
-$(document).ready(function () {
-    // Speichern-Button
-    $("#saveButton").on("click", function () {
-        var formData = $("#employeeForm").serialize();
-
-        $.ajax({
-            url: "include/save_employee_info.php",
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                console.log("Antwort:", response);
-                if (response.success) {
-                    alert(response.message);
-                } else {
-                    alert("Fehler: " + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Fehler:", error);
-                alert("Fehler: " + error);
-            }
-        });
-    });
-
-    // Datei-Auswahl anzeigen
-    $("#documentFile").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
-        $(this).next(".custom-file-label").text(fileName);
-    });
-});
-</script>
 
 <script>
     document.getElementById("documentFile").addEventListener("change", function() {

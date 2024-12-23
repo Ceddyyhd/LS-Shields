@@ -2,13 +2,11 @@
 session_start();
 include 'include/db.php';
 
-// Prüfen, ob der Benutzer bereits eingeloggt ist
 if (!isset($_SESSION['user_id'])) {
-    // Prüfen, ob das "Remember Me"-Cookie existiert
     if (isset($_COOKIE['remember_me'])) {
         $token = $_COOKIE['remember_me'];
 
-        // Überprüfen, ob das Token in der Datenbank existiert
+        // Token in der Datenbank prüfen
         $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = :token");
         $stmt->execute([':token' => $token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -24,7 +22,7 @@ if (!isset($_SESSION['user_id'])) {
 
     // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
     if (!isset($_SESSION['user_id'])) {
-        header('Location: index.html');
+        header('Location: login.html');
         exit;
     }
 }

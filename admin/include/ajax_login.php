@@ -26,10 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user_id'] = $user['id'];
 
         if ($remember) {
-            // Erstelle ein Token und speichere es im Cookie und in der Datenbank
+            // Erstelle ein zufälliges Token
             $token = bin2hex(random_bytes(32));
             setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
-
+        
+            // Token in der Datenbank speichern
             $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
             $stmt->execute([':token' => $token, ':id' => $user['id']]);
         }

@@ -488,10 +488,12 @@
                   </div>
                   
                   <div class="">
-                    <input type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
+                    <textarea type="text" name="anfrage" placeholder="Ihre Anfrage" class="message_input" />
                   </div>
 
-                  
+                  <div class="">
+                    <textarea name="anfrage" placeholder="Ihre Anfrage" class="message_input" required></textarea>
+                  </div>
 
                   <div class="btn-box ">
                     <button type="submit">Senden</button>

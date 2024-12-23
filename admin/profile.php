@@ -365,13 +365,63 @@
 
                       <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="ortskentnisse">
-                        <label class="form-check-label" for="ortskentnisse">Bretta</label>
+                        <label class="form-check-label" for="ortskentnisse">Ortskenntnisse</label>
                       </div>
 
                       <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" id="eventlead">
-                        <label class="form-check-label" for="eventlead">Taschenlampe</label>
+                        <label class="form-check-label" for="eventlead">Eventlead</label>
                       </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
+                        <label class="form-check-label" for="ausbilderschein">Ausbilderschein</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="fasi_baller">
+                        <label class="form-check-label" for="fasi_baller">Fasi Baller</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eh_schulung">
+                        <label class="form-check-label" for="eh_schulung">EH-Schulung</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Spezial Ausrüstung</label>
+                    <div class="col-sm-10">
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="leitstelle">
+                        <label class="form-check-label" for="leitstelle">Weste</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
+                        <label class="form-check-label" for="ortskentnisse">Ortskenntnisse</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eventlead">
+                        <label class="form-check-label" for="eventlead">Eventlead</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
+                        <label class="form-check-label" for="ausbilderschein">Ausbilderschein</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="fasi_baller">
+                        <label class="form-check-label" for="fasi_baller">Fasi Baller</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="eh_schulung">
+                        <label class="form-check-label" for="eh_schulung">EH-Schulung</label>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>

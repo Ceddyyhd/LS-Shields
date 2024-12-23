@@ -85,7 +85,9 @@ $(document).ready(function () {
       <div class="card-header">
         <h3 class="card-title">Responsive Hover Table</h3>
         <div class="card-tools">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
+        <?php if ($_SESSION['permissions']['role_create'] ?? false): ?>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
+          <?php endif; ?>
         </div>
       </div>
       <div class="card-body table-responsive p-0">

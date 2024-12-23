@@ -242,7 +242,7 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 
     $.ajax({
-        url: 'get_role.php',
+        url: 'include/get_role.php',
         type: 'GET',
         data: { id: roleId },
         dataType: 'json',

@@ -56,7 +56,7 @@ $(document).ready(function () {
     const permissionsContainer = $('#permissionsContainer');
 
     permissions.forEach(permission => {
-        const sectionLabel = permission.bereich === 1 ? 'Mitarbeiter Bereich' : 'Leitungs Bereich';
+        const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Fix Bereich Abgleich als String
         let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
         if (!sectionDiv.length) {
             // Abschnitt für den Bereich erstellen, falls nicht vorhanden

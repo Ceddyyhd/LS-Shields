@@ -97,45 +97,44 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <h3 class="profile-username text-center">
-  <?php echo htmlspecialchars($user['email']); ?>
-</h3>
-<p class="text-muted text-center">
-  <?php echo htmlspecialchars($user['role_name']); ?>
-</p>
+                  <?php echo htmlspecialchars($user['email']); ?>
+                </h3>
+                <p class="text-muted text-center">
+                  <?php echo htmlspecialchars($user['role_name']); ?>
+                </p>
 
-<ul class="list-group list-group-unbordered mb-3">
-  <li class="list-group-item">
-    <b>Erstellt am:</b> <a class="float-right">
-      <?php echo htmlspecialchars($user['created_at']); ?>
-    </a>
-  </li>
-</ul>
-
-<!-- About Me Box -->
-<div class="card card-primary">
-  <div class="card-header">
-    <h3 class="card-title">Information</h3>
-  </div>
-  <div class="card-body">
-    <strong><i class="fas fa-envelope mr-1"></i> Gmail</strong>
-    <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
-
-    <hr>
-    <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
-    <p class="text-muted"><?php echo htmlspecialchars($user['nummer'] ?? 'Keine Nummer angegeben'); ?></p>
-
-    <hr>
-    <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
-    <p class="text-muted"><?php echo htmlspecialchars($user['kontonummer'] ?? 'Keine Kontonummer angegeben'); ?></p>
-
-    <hr>
-    <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
-    <p class="text-muted">Kane</p>
-  </div>
-</div>
+                <ul class="list-group list-group-unbordered mb-3">
+                  <li class="list-group-item">
+                    <b>Erstellt am:</b> <a class="float-right">
+                      <?php echo htmlspecialchars($user['created_at']); ?>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
+          <!-- About Me Box -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Information</h3>
           </div>
+          <div class="card-body">
+            <strong><i class="fas fa-envelope mr-1"></i> Gmail</strong>
+            <p class="text-muted">Ceddyyhd@gmail.com</p>
+
+            <hr>
+            <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
+            <p class="text-muted">fal.hunter@umail.com</p>
+
+            <hr>
+            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
+            <p class="text-muted">LS84643386</p>
+
+            <hr>
+            <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
+            <p class="text-muted">Kane</p>
+          </div>
+        </div>
+      </div>
 
           <div class="col-md-9">
             <div class="card">

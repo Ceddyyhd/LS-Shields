@@ -68,8 +68,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <td>1</td>
                   <td>CEO</td>
                   <td>Inhaber</td>
-                  <td>                              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-                  Bearbeiten
+                  <td>                              <button type="button" class="btn btn-block btn-outline-secondary" 
+        data-toggle="modal" 
+        data-target="#modal-default" 
+        data-id="1">Bearbeiten</button>
                   </td>
                 </tr>
                 <tr>
@@ -125,7 +127,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <form>
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
+                    <label for="exampleInputEmail1">Rang</label>
                     <input class="form-control" type="Rang" placeholder="CEO">                  
                   </div>
                 <div class="form-group">
@@ -173,6 +175,64 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       
 
+    <script>$(document).on('click', '[data-target="#modal-default"]', function () {
+    const roleId = $(this).data('id'); // ID des Rangs aus dem Button
+
+    // AJAX-Anfrage, um die Rang-Daten abzurufen
+    $.ajax({
+        url: 'include/get_role.php', // PHP-Datei, die die Rangdaten liefert
+        type: 'GET',
+        data: { id: roleId },
+        dataType: 'json',
+        success: function (response) {
+            // Fülle die Modal-Felder mit den Daten
+            $('#modal-default input[placeholder="CEO"]').val(response.name);
+            $('#modal-default select#exampleSelectBorder').val(response.level);
+            
+            // Rechte markieren
+            $('#modal-default input[type="checkbox"]').each(function () {
+                const checkbox = $(this);
+                const right = checkbox.attr('id'); // Checkbox-ID entspricht dem Recht
+                checkbox.prop('checked', response.permissions.includes(right));
+            });
+        },
+        error: function () {
+            alert('Fehler beim Laden der Rangdaten.');
+        }
+    });
+});
+</script>
+<script> 
+  $('#modal-default .btn-primary').click(function () {
+    const roleId = $('[data-target="#modal-default"]').data('id'); // ID des Rangs
+    const name = $('#modal-default input[placeholder="CEO"]').val();
+    const level = $('#modal-default select#exampleSelectBorder').val();
+    const permissions = [];
+
+    // Alle markierten Rechte sammeln
+    $('#modal-default input[type="checkbox"]:checked').each(function () {
+        permissions.push($(this).attr('id')); // ID entspricht dem Recht
+    });
+
+    // AJAX-Anfrage, um die Änderungen zu speichern
+    $.ajax({
+        url: 'include/update_role.php', // PHP-Datei, die die Änderungen speichert
+        type: 'POST',
+        data: { id: roleId, name: name, level: level, permissions: JSON.stringify(permissions) },
+        success: function (response) {
+            if (response.success) {
+                alert('Rang erfolgreich aktualisiert.');
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+            } else {
+                alert('Fehler beim Speichern: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Speichern der Änderungen.');
+        }
+    });
+});
+</script>
 
     <!-- /.content -->
   </div>

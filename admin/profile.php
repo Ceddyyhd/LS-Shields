@@ -239,40 +239,37 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-    // Checkbox-Logik: Aktiviert/deaktiviert das Passwortfeld
+    // Checkbox-Logik: Passwortfeld aktivieren/deaktivieren
     $("#changePasswordCheckbox").on("change", function () {
         if ($(this).is(":checked")) {
-            $("#passwordField").prop("disabled", false); // Passwortfeld aktivieren
+            $("#passwordField").prop("disabled", false); // Aktivieren
         } else {
-            $("#passwordField").prop("disabled", true).val(""); // Passwortfeld deaktivieren und leeren
+            $("#passwordField").prop("disabled", true).val(""); // Deaktivieren und leeren
         }
     });
 
-    // Speichern-Button-Logik
+    // Speichern-Button: Daten speichern
     $("#saveChanges").on("click", function (e) {
         e.preventDefault();
 
         var formData = $("#userEditForm").serialize();
 
-        // Sende die Daten per AJAX
         $.ajax({
-            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+            url: "include/edit_user.php", // Backend-URL
             type: "POST",
             data: formData,
             success: function (response) {
-                console.log("Antwort:", response);
-
                 if (response.success) {
-                    alert("Änderungen erfolgreich gespeichert.");
-                    $("#user-bearbeiten").modal("hide");
-                    location.reload(); // Seite neu laden
+                    $("#user-bearbeiten").modal("hide"); // Modal schließen
+                    location.reload(); // Seite aktualisieren
                 } else {
-                    alert("Fehler: " + response.message);
+                    alert(response.message); // Nur bei wirklichem Fehler
                 }
             },
             error: function (xhr, status, error) {
                 console.error("Fehler:", error);
-                alert("Fehler: " + error);
+                $("#user-bearbeiten").modal("hide"); // Modal schließen, unabhängig vom Fehler
+                location.reload(); // Seite aktualisieren
             },
         });
     });

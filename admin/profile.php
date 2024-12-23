@@ -395,6 +395,7 @@ $(document).ready(function() {
 });
 </script>
 
+
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">
                     <ul>

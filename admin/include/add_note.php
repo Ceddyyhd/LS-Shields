@@ -15,21 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("INSERT INTO notes (user_id, type, content, created_at) VALUES (:user_id, :type, :content, NOW())");
+        $username = $_SESSION['username'] ?? 'Unbekannt';
+    
+        $stmt = $conn->prepare("INSERT INTO notes (user_id, type, content, created_by, created_at) 
+                                VALUES (:user_id, :type, :content, :created_by, NOW())");
         $stmt->execute([
             ':user_id' => $user_id,
             ':type' => $note_type,
-            ':content' => $note_content
+            ':content' => $note_content,
+            ':created_by' => $username
         ]);
-
+    
         $note_id = $conn->lastInsertId();
-
-        // Antwort zurückgeben
+    
         echo json_encode([
             'success' => true,
             'data' => [
                 'id' => $note_id,
-                'user' => $_SESSION['username'] ?? 'Unbekannt',
+                'user' => htmlspecialchars($username),
                 'type' => $note_type,
                 'content' => htmlspecialchars($note_content),
                 'created_at' => date('Y-m-d H:i:s')

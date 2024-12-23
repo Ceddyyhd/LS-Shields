@@ -694,50 +694,52 @@ $(document).ready(function () {
 
 <script>
     $(document).ready(function () {
-        // Sterne-Bewertung ändern
-        $(".stars i").on("click", function () {
-            var rating = $(this).data("value");
-            var ausbildungId = $(this).data("ausbildung");
+    $(".stars i").on("click", function () {
+        var rating = $(this).data("value"); // Wert des angeklickten Sterns
+        var ausbildungId = $(this).data("ausbildung"); // ID der Ausbildung
 
-            // Aktive Sterne setzen
-            $(`.stars[data-id="${ausbildungId}"] i`).each(function () {
-                if ($(this).data("value") <= rating) {
-                    $(this).removeClass("far").addClass("fas");
-                } else {
-                    $(this).removeClass("fas").addClass("far");
-                }
-            });
-
-            // Hidden-Input für die Bewertung setzen
-            $(`.stars[data-id="${ausbildungId}"] input[name="ausbildungen[${ausbildungId}][rating]"]`).val(rating);
+        // Sterne setzen
+        $(`.stars[data-id="${ausbildungId}"] i`).each(function () {
+            if ($(this).data("value") <= rating) {
+                $(this).removeClass("far").addClass("fas");
+            } else {
+                $(this).removeClass("fas").addClass("far");
+            }
         });
 
-        // Speichern
-        $("#saveButton").on("click", function () {
-            var formData = $("#ausbildungForm").serialize();
+        // Hidden-Input aktualisieren
+        $(`.stars[data-id="${ausbildungId}"] input[name="ausbildungen[${ausbildungId}][rating]"]`).val(rating);
+    });
 
-            $.ajax({
-                url: "include/save_ausbildungen.php",
-                type: "POST",
-                data: formData,
-                success: function (response) {
-                    try {
-                        response = JSON.parse(response);
-                        if (response.success) {
-                            location.reload();
-                        } else {
-                            console.error("Fehler:", response.message);
-                        }
-                    } catch (error) {
-                        console.error("Fehler beim Parsen der Antwort:", error);
+    // Speichern
+    $("#saveButton").on("click", function () {
+        var formData = $("#ausbildungForm").serialize();
+
+        $.ajax({
+            url: "include/save_ausbildungen.php",
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                try {
+                    response = JSON.parse(response);
+                    if (response.success) {
+                        alert("Änderungen erfolgreich gespeichert.");
+                        location.reload(); // Seite neu laden
+                    } else {
+                        alert("Fehler: " + response.message);
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Fehler:", error);
+                } catch (error) {
+                    console.error("Fehler beim Parsen der Antwort:", error);
                 }
-            });
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler:", error);
+                alert("Fehler beim Speichern.");
+            }
         });
     });
+});
+
 </script>
 
 

@@ -342,7 +342,11 @@
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox">
                           <label class="form-check-label">Checkbox</label>
-                        </div>                        </div>
+                          <div class="col-sm-6">
+                          <input id="range_6" type="text" name="range_6" value="">
+                        </div>
+                        </div>                        
+                      </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
@@ -406,6 +410,26 @@
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 
+
+  <script>
+  $(function () {
+    /* BOOTSTRAP SLIDER */
+    $('.slider').bootstrapSlider()
+
+    /* ION SLIDER */
+    
+    $('#range_6').ionRangeSlider({
+      min     : -50,
+      max     : 50,
+      from    : 0,
+      type    : 'single',
+      step    : 1,
+      postfix : '°',
+      prettify: false,
+      hasGrid : true
+    })
+  })
+</script>
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->

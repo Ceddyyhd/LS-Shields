@@ -141,9 +141,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label" for="exampleCheck1">Recht 1</label>
+                    <div>
                     <input type="checkbox" class="form-check-input" id="exampleCheck2">
                     <label class="form-check-label" for="exampleCheck2">Recht 2</label>
-
+                    </div>
                   </div>
                   <label for="exampleInputEmail1">Leitungs Bereich</label>
                   <div class="form-check">

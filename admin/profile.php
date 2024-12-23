@@ -675,7 +675,6 @@ $(document).ready(function () {
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
                     </form>
                 </div>
 

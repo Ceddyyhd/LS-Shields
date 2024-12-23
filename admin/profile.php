@@ -631,54 +631,45 @@ $(document).ready(function () {
 
 
                   <!-- Ausbildungen -->
-                  <div class="tab-pane" id="ausbildungen">
+                  <<div class="tab-pane" id="ausbildungen">
     <form id="ausbildungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Bewertungen</label>
             <div class="col-sm-10">
                 <?php
-                // Ausbildungstypen aus der Datenbank abrufen
+                $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM benutzer_ausbildungen WHERE user_id = :user_id");
+                $stmt->execute([':user_id' => $user_id]);
+                $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                $ausbildungData = [];
+                foreach ($ausbildungen as $ausbildung) {
+                    $ausbildungData[$ausbildung['ausbildung']] = $ausbildung;
+                }
+
                 $stmt = $conn->prepare("SELECT key_name, display_name FROM ausbildungstypen");
                 $stmt->execute();
                 $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // Benutzerausbildungen abrufen
-                $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE user_id = :user_id");
-                $stmt->execute([':user_id' => $user_id]);
-                $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                // Datenbankdaten in ein assoziatives Array umwandeln
-                $dbAusbildungen = [];
-                foreach ($ausbildungen as $ausbildung) {
-                    $dbAusbildungen[$ausbildung['ausbildung']] = [
-                        'status' => (int)$ausbildung['status'],
-                        'bewertung' => (int)$ausbildung['bewertung']
-                    ];
-                }
-
-                // HTML-Ausgabe für jede Ausbildung
                 foreach ($ausbildungstypen as $type) {
-                    $keyName = $type['key_name'];
-                    $displayName = $type['display_name'];
-                    $status = $dbAusbildungen[$keyName]['status'] ?? 0;
-                    $rating = $dbAusbildungen[$keyName]['bewertung'] ?? 0;
+                    $status = $ausbildungData[$type['key_name']]['status'] ?? 0;
+                    $rating = $ausbildungData[$type['key_name']]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" 
-                               id="<?= $keyName; ?>" 
-                               name="ausbildungen[<?= $keyName; ?>][status]" 
+                               id="<?= $type['key_name']; ?>" 
+                               name="ausbildungen[<?= $type['key_name']; ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= $keyName; ?>">
-                            <?= htmlspecialchars($displayName); ?>
+                        <label class="form-check-label" for="<?= $type['key_name']; ?>">
+                            <?= htmlspecialchars($type['display_name']); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $keyName; ?>">
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $type['key_name']; ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
                                    data-value="<?= $i; ?>" 
-                                   data-ausbildung="<?= $keyName; ?>"></i>
+                                   data-ausbildung="<?= $type['key_name']; ?>"></i>
                             <?php endfor; ?>
-                            <input type="hidden" name="ausbildungen[<?= $keyName; ?>][rating]" value="<?= $rating; ?>">
+                            <input type="hidden" name="ausbildungen[<?= $type['key_name']; ?>][rating]" value="<?= $rating; ?>">
                         </div>
                     </div>
                     <?php

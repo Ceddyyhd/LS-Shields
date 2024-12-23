@@ -27,7 +27,8 @@ if (empty($user['role_id'])) {
 $sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
 $stmt_documents->execute(['user_id' => $user_id]);
-$documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
+$documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC); // Mehrere Ergebnisse
+
 
 // Ausrüstung abrufen
 $sql_equipment = "SELECT equipment_name, received FROM equipment WHERE user_id = :user_id";
@@ -132,12 +133,15 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
                     <ul>
-                      <?php foreach ($documents as $doc): ?>
-                        <li>
-                          <a href="<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank">
-                            <?php echo htmlspecialchars($doc['file_name']); ?>
-                          </a> (<?php echo htmlspecialchars($doc['uploaded_at']); ?>)
-                        </li>
+                      <?php if ($documents) {
+    foreach ($documents as $doc) {
+        echo '<li><a href="' . htmlspecialchars($doc['file_path']) . '" target="_blank">'
+             . htmlspecialchars($doc['file_name']) . '</a> ('
+             . htmlspecialchars($doc['uploaded_at']) . ')</li>';
+    }
+} else {
+    echo '<p>Keine Dokumente gefunden.</p>';
+}
                       <?php endwhile; ?>
                     </ul>
                   </div>

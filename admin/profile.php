@@ -296,10 +296,30 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
+<!-- Tab für Notizen -->
 <div class="tab-pane" id="notizen">
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
     <div id="timeline" class="timeline timeline-inverse">
-        <!-- Timeline-Notizen werden hier dynamisch eingefügt -->
+        <?php foreach ($notes as $note): ?>
+            <div>
+                <?php
+                $iconClass = 'fas fa-user bg-secondary';
+                if ($note['type'] === 'notiz') {
+                    $iconClass = 'fas fa-user bg-info';
+                } elseif ($note['type'] === 'verwarnung') {
+                    $iconClass = 'fas fa-user bg-warning';
+                } elseif ($note['type'] === 'kuendigung') {
+                    $iconClass = 'fas fa-user bg-danger';
+                }
+                ?>
+                <i class="<?= $iconClass; ?>"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="far fa-clock"></i> <?= htmlspecialchars($note['created_at']); ?></span>
+                    <h3 class="timeline-header"><?= htmlspecialchars($note['author'] ?? 'Unbekannt'); ?> fügte eine <?= htmlspecialchars($note['type']); ?> hinzu</h3>
+                    <div class="timeline-body"><?= htmlspecialchars($note['content']); ?></div>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
 </div>
 

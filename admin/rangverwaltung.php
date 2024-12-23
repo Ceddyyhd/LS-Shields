@@ -304,14 +304,29 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
 
             // Hier den Code einfügen
             response.all_permissions.forEach(permission => {
-                const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Vergleiche mit permission.name
-                permissionsContainer.append(`
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
-                        <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                    </div>
-                `);
-            });
+    const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Bereich bestimmen
+
+    // Überprüfen, ob der Abschnitt schon existiert
+    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+    if (!sectionDiv.length) {
+        // Abschnitt erstellen, falls er nicht existiert
+        permissionsContainer.append(`
+            <div class="permissions-section section-${permission.bereich}">
+                <h5>${sectionLabel}</h5>
+            </div>
+        `);
+        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+    }
+
+    // Checkbox hinzufügen
+    const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Überprüfung mit permission.name
+    sectionDiv.append(`
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
+            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+        </div>
+    `);
+});
         } else {
             alert('Fehler: ' + response.error);
         }

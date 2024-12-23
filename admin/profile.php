@@ -105,7 +105,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </h3>
                 <p class="text-muted text-center">
                   <?php echo htmlspecialchars($user['role_name']); ?>
-                  <i class="fas fa-edit"></i> Edit
+                  <a class="btn btn-sm btn-primary">
+                  <i class="fa-solid fa-pen-to-square"></i> Bearbeiten
+                </a>
                 </a>
                 </p>
                 

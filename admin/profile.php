@@ -125,6 +125,7 @@
                                   <option>Großer & Kleiner Waffenschein</option>
                               </select>
                           </div>
+                          <label>Waffenschein</label>
                           <div class="input-group" style="flex-grow: 1;">
                           <label>Waffenschein</label>
                               <div class="custom-file">

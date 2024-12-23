@@ -296,8 +296,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-                  <!-- Notizen -->
-                  <div class="tab-pane" id="notizen">
+<div class="tab-pane" id="notizen">
     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
     <div id="timeline" class="timeline timeline-inverse">
         <!-- Timeline-Notizen werden hier dynamisch eingefügt -->
@@ -356,12 +355,13 @@ $(document).ready(function() {
                     $("#modal-default").modal("hide");
 
                     // Timeline aktualisieren
+                    var iconClass = response.data.type === 'notiz' ? 'fas fa-user bg-info' : (response.data.type === 'verwarnung' ? 'fas fa-user bg-warning' : 'fas fa-user bg-danger');
                     var newNote = `
                         <div>
-                            <i class="fas fa-comments bg-warning"></i>
+                            <i class="${iconClass}"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                                <h3 class="timeline-header">${response.data.user} fügte eine Notiz hinzu</h3>
+                                <h3 class="timeline-header">${response.data.user} ${response.data.type === 'notiz' ? 'fügte eine Notiz hinzu' : (response.data.type === 'verwarnung' ? 'sprach eine Verwarnung aus' : 'sprach eine Kündigung aus')}</h3>
                                 <div class="timeline-body">${response.data.content}</div>
                             </div>
                         </div>`;

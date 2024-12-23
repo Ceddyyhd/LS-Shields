@@ -32,11 +32,7 @@ $stmt_equipment = $conn->prepare($sql_equipment);
 $stmt_equipment->execute(['user_id' => $user_id]);
 $equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);
 
-// Notizen abrufen
-$sql_notes = "SELECT note, created_at FROM notes WHERE user_id = :user_id";
-$stmt_notes = $conn->prepare($sql_notes);
-$stmt_notes->execute(['user_id' => $user_id]);
-$notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Ausbildungen abrufen
 $sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";
@@ -301,17 +297,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-                  <!-- Notizen -->
-                  <div class="tab-pane" id="notizen">
-                    <ul>
-                      <?php while ($note = $notes->fetch_assoc()): ?>
-                        <li>
-                          <strong><?php echo htmlspecialchars($note['created_at']); ?>:</strong>
-                          <?php echo htmlspecialchars($note['note']); ?>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
+                  
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">

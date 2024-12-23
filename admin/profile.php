@@ -692,52 +692,54 @@ $(document).ready(function () {
 
 
 
-                <script>
-                $(document).ready(function () {
-                    // Sterne-Bewertung ändern
-                    $(".stars i").on("click", function () {
-                        var rating = $(this).data("value");
-                        var ausbildungId = $(this).data("ausbildung");
+<script>
+    $(document).ready(function () {
+        // Sterne-Bewertung ändern
+        $(".stars i").on("click", function () {
+            var rating = $(this).data("value");
+            var ausbildungId = $(this).data("ausbildung");
 
-                        // Aktive Sterne setzen
-                        $(`.stars[data-id="${ausbildungId}"] i`).each(function () {
-                            if ($(this).data("value") <= rating) {
-                                $(this).removeClass("far").addClass("fas");
-                            } else {
-                                $(this).removeClass("fas").addClass("far");
-                            }
-                        });
+            // Aktive Sterne setzen
+            $(`.stars[data-id="${ausbildungId}"] i`).each(function () {
+                if ($(this).data("value") <= rating) {
+                    $(this).removeClass("far").addClass("fas");
+                } else {
+                    $(this).removeClass("fas").addClass("far");
+                }
+            });
 
-                        // Hidden-Input für die Bewertung setzen
-                        $(`.stars[data-id="${ausbildungId}"] input[name="ausbildungen[${ausbildungId}][rating]"]`).val(rating);
-                    });
+            // Hidden-Input für die Bewertung setzen
+            $(`.stars[data-id="${ausbildungId}"] input[name="ausbildungen[${ausbildungId}][rating]"]`).val(rating);
+        });
 
-                    // Speichern
-                    $("#saveButton").on("click", function () {
-                        var formData = $("#ausbildungForm").serialize();
+        // Speichern
+        $("#saveButton").on("click", function () {
+            var formData = $("#ausbildungForm").serialize();
 
-                        $.ajax({
-                            url: "include/save_ausbildungen.php",
-                            type: "POST",
-                            data: formData,
-                            success: function (response) {
-                                try {
-                                    response = JSON.parse(response);
-                                    if (response.success) {
-                                        location.reload();
-                                    } else {
-                                    }
-                                } catch (error) {
-                                    console.error("Fehler beim Parsen der Antwort:", error);
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("Fehler:", error);
-                            }
-                        });
-                    });
-                });
-                </script>
+            $.ajax({
+                url: "include/save_ausbildungen.php",
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    try {
+                        response = JSON.parse(response);
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            console.error("Fehler:", response.message);
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Parsen der Antwort:", error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler:", error);
+                }
+            });
+        });
+    });
+</script>
+
 
                   <!-- Ausrüstung -->
                   <div class="tab-pane" id="ausruestung">

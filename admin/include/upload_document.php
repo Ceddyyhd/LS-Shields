@@ -2,6 +2,7 @@
 // Datenbankverbindung einbinden
 include 'db.php';
 session_start();
+
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzer-ID und benutzerdefinierter Name überprüfen
@@ -46,11 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'doc_type' => $doc_type
             ]);
 
+            // Benutzernamen ermitteln
+            $uploaded_by = $_SESSION['username'] ?? null;
+
+            if (!$uploaded_by) {
+                // Benutzername aus der Datenbank abrufen, falls nicht in der Session gespeichert
+                $stmt_user = $conn->prepare("SELECT name FROM users WHERE id = :id");
+                $stmt_user->execute([':id' => $user_id]);
+                $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+                $uploaded_by = $user['name'] ?? 'Unbekannt';
+            }
+
             // Log in die Datenbank schreiben
-            session_start();
-
-            $uploaded_by = $_SESSION['username'] ?? 'Unbekannt'; // Benutzernamen aus der Session holen
-
             $sql_log = "INSERT INTO upload_logs (user_id, document_name, uploaded_by, created_at) 
                         VALUES (:user_id, :document_name, :uploaded_by, NOW())";
             $stmt_log = $conn->prepare($sql_log);

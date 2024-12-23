@@ -126,27 +126,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="card-body">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    <input class="form-control" type="Rang" placeholder="CEO">                  
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                      </div>
-                      <div class="input-group-append">
-                        <span class="input-group-text">Upload</span>
-                      </div>
-                    </div>
+                <div class="form-group">
+                  <label for="exampleSelectBorder">Rang Ebene </label>
+                  <select class="custom-select form-control-border" id="exampleSelectBorder">
+                    <option>Inhaber</option>
+                    <option>Geschäftsführung</option>
+                    <option>Ausbildung</option>
+                    <option>Mitarbeiter</option>
+                  </select>
+                </div>
+                  <div class="form-check">
+                  <label for="exampleInputEmail1">Mitarbeiter Bereich</label>
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Recht 1</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 2</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 3</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 4</label>
                   </div>
                   <div class="form-check">
+                  <label for="exampleInputEmail1">Leitungs Bereich</label>
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 1</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 2</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 3</label>
+                    <label class="form-check-label" for="exampleCheck1">Recht 4</label>
                   </div>
                 </div>
                 <!-- /.card-body -->

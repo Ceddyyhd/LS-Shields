@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Verzeichnis für hochgeladene Dateien
     $upload_dir = '../uploads/';
+    $upload_dir_db = 'admin/uploads/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Eindeutigen Dateinamen erstellen
             $unique_name = uniqid('doc_', true) . '.' . $file_extension;
-            $file_path = $upload_dir . $unique_name;
+            $file_path = $upload_dir_db . $unique_name;
 
             // Datei verschieben
             if (move_uploaded_file($file['tmp_name'], $file_path)) {

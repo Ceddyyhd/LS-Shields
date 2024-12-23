@@ -638,67 +638,57 @@ $(document).ready(function () {
             <label class="col-sm-2 col-form-label">Bewertungen</label>
             <div class="col-sm-10">
                 <?php
-                // Ausbildungen aus der Datenbank abrufen
+                // Ausbildungstypen aus der Datenbank abrufen
+                $stmt = $conn->prepare("SELECT identifier, name FROM ausbildungstypen");
+                $stmt->execute();
+                $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Ausbildungen des Benutzers abrufen
                 $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE user_id = :user_id");
                 $stmt->execute([':user_id' => $user_id]);
                 $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                // Standardausbildungen, falls keine Daten vorhanden sind
-                $defaultAusbildungen = [
-                    'leitstelle' => 'Leitstelle',
-                    'ortskentnisse' => 'Ortskenntnisse',
-                    'eventlead' => 'Eventlead',
-                    'fasi_baller' => 'Fasi Baller',
-                    'eh_schulung' => 'EH-Schulung',
-                    'rechtsschulungen' => 'Rechtsschulungen',
-                    'personenschutz' => 'Personen Schutz',
-                    'fasi_bf400' => 'Fasi BF-400',
-                    'waffenkunde' => 'Waffenkunde',
-                    'taktischesvorgehen' => 'Taktisches Vorgehen',
-                    'fasi_limo' => 'Fasi PerSchutz Limo',
-                    'ausbilderschein' => 'Ausbilderschein',
-                ];
 
                 // Datenbankdaten in ein assoziatives Array umwandeln
                 $dbAusbildungen = [];
                 foreach ($ausbildungen as $ausbildung) {
                     $dbAusbildungen[$ausbildung['ausbildung']] = [
-                        'status' => (int) $ausbildung['status'],
-                        'bewertung' => (int) $ausbildung['bewertung']
+                        'status' => (int)$ausbildung['status'],
+                        'bewertung' => (int)$ausbildung['bewertung']
                     ];
                 }
 
                 // HTML-Ausgabe für jede Ausbildung
-                foreach ($defaultAusbildungen as $id => $name) {
-                    $status = $dbAusbildungen[$id]['status'] ?? 0;
-                    $rating = $dbAusbildungen[$id]['bewertung'] ?? 0;
+                foreach ($ausbildungstypen as $type) {
+                    $identifier = $type['identifier'];
+                    $name = $type['name'];
+                    $status = $dbAusbildungen[$identifier]['status'] ?? 0;
+                    $rating = $dbAusbildungen[$identifier]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" 
-                               id="<?= $id; ?>" 
-                               name="ausbildungen[<?= $id; ?>][status]" 
+                               id="<?= $identifier; ?>" 
+                               name="ausbildungen[<?= $identifier; ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= $id; ?>">
+                        <label class="form-check-label" for="<?= $identifier; ?>">
                             <?= htmlspecialchars($name); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $id; ?>">
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= $identifier; ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
                                    data-value="<?= $i; ?>" 
-                                   data-ausbildung="<?= $id; ?>"></i>
+                                   data-ausbildung="<?= $identifier; ?>"></i>
                             <?php endfor; ?>
-                            <input type="hidden" name="ausbildungen[<?= $id; ?>][rating]" value="<?= $rating; ?>">
+                            <input type="hidden" name="ausbildungen[<?= $identifier; ?>][rating]" value="<?= $rating; ?>">
                         </div>
                     </div>
                     <?php
                 }
                 ?>
             </div>
-            <i class="fas fa-star" data-value="2"></i>
-
         </div>
     </form>
 </div>
+
 
                 <script>
                 $(document).ready(function () {

@@ -255,7 +255,7 @@ $('#modal-default .btn-primary').click(function () {
 
     // AJAX-Anfrage
     $.ajax({
-        url: 'update_role.php',
+        url: 'include/update_role.php',
         type: 'POST',
         data: {
             id: roleId,

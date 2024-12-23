@@ -339,26 +339,27 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <form id="noteForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Typ</label>
-                        <select id="noteType" name="note_type" class="form-control" required>
-                            <option value="notiz">Notiz</option>
-                            <option value="verwarnung">Verwarnung</option>
-                            <option value="kuendigung">Kündigung</option>
-                        </select>
-                    </div>
+    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>"> <!-- Benutzer-ID -->
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Typ</label>
+            <select id="noteType" name="note_type" class="form-control" required>
+                <option value="notiz">Notiz</option>
+                <option value="verwarnung">Verwarnung</option>
+                <option value="kuendigung">Kündigung</option>
+            </select>
+        </div>
 
-                    <div class="form-group">
-                        <label>Inhalt</label>
-                        <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary">Speichern</button>
-                </div>
-            </form>
+        <div class="form-group">
+            <label>Inhalt</label>
+            <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
+        </div>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>
         </div>
     </div>
 </div>

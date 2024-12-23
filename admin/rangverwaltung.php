@@ -34,75 +34,57 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main content -->
     
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Responsive Hover Table</h3>
+    <?php
+include 'include/db.php';
 
-            <div class="card-tools">
-              <div class="input-group input-group-sm" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+// Ränge aus der Datenbank abrufen
+$stmt = $conn->prepare("SELECT * FROM roles");
+$stmt->execute();
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-default">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Rang</th>
-                  <th>Ebene</th>
-                  <th>Bearbeiten</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>CEO</td>
-                  <td>Inhaber</td>
-                  <td>                              <button type="button" class="btn btn-block btn-outline-secondary" 
-        data-toggle="modal" 
-        data-target="#modal-default" 
-        data-id="1">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>CFO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>COO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td>CTO</td>
-                  <td>Geschäftsführung</td>
-                  <td>              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Responsive Hover Table</h3>
+        <div class="card-tools">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
         </div>
-        <!-- /.card -->
+      </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Rang</th>
+              <th>Ebene</th>
+              <th>Bearbeiten</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($roles as $role): ?>
+              <tr>
+                <td><?= htmlspecialchars($role['id']) ?></td>
+                <td><?= htmlspecialchars($role['name']) ?></td>
+                <td><?= htmlspecialchars($role['level']) ?></td>
+                <td>
+                  <button type="button" class="btn btn-block btn-outline-secondary" 
+                          data-toggle="modal" 
+                          data-target="#modal-default" 
+                          data-id="<?= $role['id'] ?>" 
+                          data-name="<?= htmlspecialchars($role['name']) ?>">
+                    Bearbeiten
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
+</div>
     <!-- /.card -->
   </div>
   <!-- /.col -->
@@ -112,12 +94,74 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- /.container-fluid -->
 </section>
     
+
+<div class="modal fade" id="modal-add-role">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Neue Rolle erstellen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addRoleForm">
+          <div class="card-body">
+            <div class="form-group">
+              <label for="roleName">Rangname</label>
+              <input type="text" id="roleName" class="form-control" placeholder="Rangname" required>
+            </div>
+            <div class="form-group">
+              <label for="roleLevel">Ebene</label>
+              <select id="roleLevel" class="custom-select form-control-border" required>
+                <option value="Inhaber">Inhaber</option>
+                <option value="Geschäftsführung">Geschäftsführung</option>
+                <option value="Ausbildung">Ausbildung</option>
+                <option value="Mitarbeiter">Mitarbeiter</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+        <button type="button" class="btn btn-primary" id="saveRoleButton">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#saveRoleButton').click(function () {
+    const name = $('#roleName').val();
+    const level = $('#roleLevel').val();
+
+    $.ajax({
+        url: 'include/add_role.php',
+        type: 'POST',
+        data: { name: name, level: level },
+        success: function (response) {
+            if (response.success) {
+                alert('Rolle erfolgreich hinzugefügt.');
+                location.reload();
+            } else {
+                alert('Fehler: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Hinzufügen der Rolle.');
+        }
+    });
+});
+
+</script>
+
     
 <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
+            <h4 class="modal-title">Rang bearbeiten: <span id="modalRoleName"></span></h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -176,7 +220,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
       
 
     <script>$(document).on('click', '[data-target="#modal-default"]', function () {
-    const roleId = $(this).data('id'); // ID des Rangs aus dem Button
+    const roleId = $(this).data('id');
+    const roleName = $(this).data('name'); // Rangname aus dem Button
+
+    // Rangname im Modal-Titel setzen
+    $('#modalRoleName').text(roleName);
+
+    // AJAX-Anfrage, um die Rang-Daten zu laden (siehe vorherige Schritte)
 
     // AJAX-Anfrage, um die Rang-Daten abzurufen
     $.ajax({

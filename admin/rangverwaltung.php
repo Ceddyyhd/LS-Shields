@@ -106,11 +106,11 @@ $(document).ready(function () {
                 <td><?= htmlspecialchars($role['level']) ?></td>
                 <td>
                 <button type="button" class="btn btn-block btn-outline-secondary" 
-                        data-toggle="modal" 
-                        data-target="#modal-default" 
-                        data-id="<?= $role['id'] ?>">
-                    Bearbeiten
-                </button>
+        data-toggle="modal" 
+        data-target="#modal-default" 
+        data-id="<?= $role['id'] ?>">
+    Bearbeiten
+</button>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -285,51 +285,40 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle
 
     $.ajax({
-        url: ' include/get_role.php',
-        type: 'GET',
-        data: { id: roleId },
-        dataType: 'json',
-        success: function (response) {
-            if (response.success) {
-                const role = response.role;
+    url: 'get_role.php',
+    type: 'GET',
+    data: { id: roleId },
+    dataType: 'json',
+    success: function (response) {
+        if (response.success) {
+            const role = response.role;
 
-                // Felder mit Rollendaten füllen
-                $('#modal-default #roleName').val(role.name);
-                $('#modal-default #roleLevel').val(role.level);
+            // Felder mit Rollendaten füllen
+            $('#modal-default #roleName').val(role.name);
+            $('#modal-default #roleLevel').val(role.level);
 
-                // Checkboxen für Permissions dynamisch erstellen
-                const permissionsContainer = $('#modal-default #permissionsContainer');
-                permissionsContainer.empty();
+            // Checkboxen für Permissions dynamisch erstellen
+            const permissionsContainer = $('#modal-default #permissionsContainer');
+            permissionsContainer.empty();
 
-                response.all_permissions.forEach(permission => {
-                  const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Fix Bereich Abgleich als String
-                    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    if (!sectionDiv.length) {
-                        // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-                        permissionsContainer.append(
-                            `<div class="permissions-section section-${permission.bereich}">
-                                <h5>${sectionLabel}</h5>
-                            </div>`
-                        );
-                        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    }
-
-                    const checked = role.permissions.includes(permission.id) ? 'checked' : '';
-                    sectionDiv.append(`
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-        <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-    </div>
-`);
-                });
-            } else {
-                alert('Fehler: ' + response.error);
-            }
-        },
-        error: function () {
-            alert('Fehler beim Laden der Rollendaten.');
+            // Hier den Code einfügen
+            response.all_permissions.forEach(permission => {
+                const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Vergleiche mit permission.name
+                permissionsContainer.append(`
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
+                        <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                    </div>
+                `);
+            });
+        } else {
+            alert('Fehler: ' + response.error);
         }
-    });
+    },
+    error: function () {
+        alert('Fehler beim Laden der Rollendaten.');
+    }
+});
 });
 </script>
 

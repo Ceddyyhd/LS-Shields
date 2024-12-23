@@ -494,6 +494,8 @@
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox">
                           <label class="form-check-label">Schließfach</label>
+                          <input class="form-check-input" type="checkbox" id="fasi_baller">
+                          <label class="form-check-label" for="fasi_baller">Fasi PerSchutz Limo</label>
                         </div>
                         </div>
                       </div>

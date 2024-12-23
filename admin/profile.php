@@ -113,8 +113,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
           </div>
-<!-- About Me Box -->
-<div class="card card-primary">
+
+            <!-- About Me Box -->
+        <div class="card card-primary">
           <div class="card-header">
             <h3 class="card-title">Information</h3>
           </div>

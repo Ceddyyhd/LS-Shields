@@ -208,8 +208,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 <div class="modal fade" id="modal-primary">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h4 class="modal-title">Datei hochladen</h4>
+        <div class="modal-header">
+                <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                    <h4 class="modal-title">Datei hochladen</h4>
+                <?php else: ?>
+                    <h4 class="modal-title">Keine Berechtigung</h4>
+                <?php endif; ?>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -283,8 +287,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 <!-- /.modal -->
 
     <!-- Liste der hochgeladenen Dokumente -->
-    <div class="mt-4">
-        <h5>Hochgeladene Dokumente:</h5>
+<div class="mt-4">
+    <h5>Hochgeladene Dokumente:</h5>
+    <?php if ($_SESSION['permissions']['view_documents'] ?? false): ?>
         <ul>
             <?php if (!empty($documents)): ?>
                 <?php foreach ($documents as $doc): ?>
@@ -298,7 +303,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <li>Keine Dokumente vorhanden.</li>
             <?php endif; ?>
         </ul>
-    </div>
+    <?php else: ?>
+        <p>Sie haben keine Berechtigung, die hochgeladenen Dokumente anzuzeigen.</p>
+    <?php endif; ?>
 </div>
 
 <!-- Tab für Notizen -->

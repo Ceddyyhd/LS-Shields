@@ -215,7 +215,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="include/upload_document.php" method="POST" enctype="multipart/form-data">
+            <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
     <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
                 <div class="modal-body">
@@ -231,8 +231,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-group">
                         <label for="customFile">Datei auswählen</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFile" name="uploaded_file" required>
-                            <label class="custom-file-label" for="customFile">Datei auswählen</label>
+                            <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                            <label class="custom-file-label" for="documentFile">Datei auswählen</label>
                         </div>
                     </div>
                 </div>
@@ -246,6 +246,41 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+<script>
+    document.getElementById("documentFile").addEventListener("change", function() {
+        var fileName = this.files[0].name;
+        var nextSibling = this.nextElementSibling;
+        nextSibling.innerText = fileName; // Ändert den Text des Labels
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#uploadForm").on("submit", function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: $(this).attr("method"),
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    alert(response); // Zeige Erfolgsmeldung
+                    $("#modal-primary").modal("hide"); // Modal schließen
+                    location.reload(); // Seite neu laden, um Änderungen zu sehen
+                },
+                error: function(xhr, status, error) {
+                    alert("Fehler: " + error);
+                }
+            });
+        });
+    });
+</script>
+
+
 <!-- /.modal -->
 
     <!-- Liste der hochgeladenen Dokumente -->

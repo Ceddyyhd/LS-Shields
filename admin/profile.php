@@ -190,27 +190,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Weitere Dokumente -->
-        <script>
-$("#saveButton").on("click", function () {
-    var formData = $("#employeeForm").serialize();
 
-    $.ajax({
-        url: "include/save_employee_info.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert("Fehler: " + response.message);
-            }
-        },
-        error: function (xhr, status, error) {
-            alert("Fehler: " + error);
-        }
-    });
-});
-</script>
         <!-- Button für das Modal -->
           <div class="form-group row">
               <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>

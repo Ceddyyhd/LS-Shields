@@ -196,24 +196,28 @@
     });
 
     $.ajax({
-      url: 'include/update_role.php',
-      type: 'POST',
-      data: {
+    url: 'include/update_role.php',
+    type: 'POST',
+    data: {
         id: roleId,
         name: name,
         level: level,
         permissions: JSON.stringify(permissions),
-      },
-      success: function (response) {
+    },
+    success: function (response) {
+        console.log('Antwort vom Server:', response); // Debugging
         if (response.success) {
-          alert('Änderungen erfolgreich gespeichert.');
-          location.reload();
+            alert('Änderungen erfolgreich gespeichert.');
+            location.reload();
+        } else {
+            alert('Fehler: ' + response.message);
         }
-      },
-      error: function () {
-        alert('Fehler beim Speichern.');
-      },
-    });
+    },
+    error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', error);
+        alert('Fehler beim Speichern der Änderungen.');
+    },
+});
   });
 </script>
 </body>

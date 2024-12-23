@@ -2,6 +2,10 @@
 session_start();
 include 'db.php';
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_SESSION['user_id'] ?? null; // ID des eingeloggten Benutzers

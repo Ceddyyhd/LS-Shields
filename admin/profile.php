@@ -355,17 +355,34 @@ $(document).ready(function() {
                     $("#modal-default").modal("hide");
 
                     // Timeline aktualisieren
-                    var iconClass = response.data.type === 'notiz' ? 'fas fa-user bg-info' : (response.data.type === 'verwarnung' ? 'fas fa-user bg-warning' : 'fas fa-user bg-danger');
+                    var iconClass;
+                    switch (response.data.type) {
+                        case "notiz":
+                            iconClass = "fas fa-user bg-info";
+                            break;
+                        case "verwarnung":
+                            iconClass = "fas fa-user bg-warning";
+                            break;
+                        case "kuendigung":
+                            iconClass = "fas fa-user bg-danger";
+                            break;
+                        default:
+                            iconClass = "fas fa-user bg-secondary";
+                    }
+
                     var newNote = `
                         <div>
                             <i class="${iconClass}"></i>
                             <div class="timeline-item">
                                 <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                                <h3 class="timeline-header">${response.data.user} ${response.data.type === 'notiz' ? 'fügte eine Notiz hinzu' : (response.data.type === 'verwarnung' ? 'sprach eine Verwarnung aus' : 'sprach eine Kündigung aus')}</h3>
+                                <h3 class="timeline-header">${response.data.user} fügte eine ${response.data.type} hinzu</h3>
                                 <div class="timeline-body">${response.data.content}</div>
                             </div>
                         </div>`;
                     $("#timeline").prepend(newNote);
+
+                    // Formular zurücksetzen
+                    $("#noteForm")[0].reset();
                 } else {
                     alert(response.message);
                 }

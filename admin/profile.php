@@ -168,25 +168,28 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
              <div class="form-group">
              <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
              <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['name']); ?>">
-            </div>          
-            <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['name']); ?></p>
+            </div>     
+            
+            <div class="form-group">
+             <strong><i class="fas fa-envelope mr-1"></i> Nummer</strong>
+             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['nummer']); ?>">
+            </div>   
 
-            <hr>
-            <strong><i class="fas fa-envelope mr-1"></i> Nummer</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['nummer']); ?></p>
 
-            <hr>
-            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
+            <div class="form-group">
+             <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
+             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>">
+            </div>   
 
-            <hr>
-            <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['umail']); ?></p>
+            <div class="form-group">
+             <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
+             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['umail']); ?>">
+            </div>  
 
-            <hr>
-            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['kontonummer']); ?></p>
+            <div class="form-group">
+             <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
+             <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['kontonummer']); ?>">
+            </div> 
           </div>
         </div>
 

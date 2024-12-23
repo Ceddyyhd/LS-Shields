@@ -177,7 +177,6 @@ $(document).ready(function () {
     });
 
     $.post('include/add_role.php', {
-      action: 'addRole',
       name,
       level,
       permissions: JSON.stringify(permissions)
@@ -195,7 +194,7 @@ $(document).ready(function () {
   $(document).on('click', '.edit-role', function () {
     const roleId = $(this).data('id');
 
-    $.get('include/get_role.php' + roleId, function (response) {
+    $.get('include/get_role.php?id=' + roleId, function (response) {
       if (response.success) {
         const role = response.role;
         $('#editRoleName').val(role.name);
@@ -219,7 +218,6 @@ $(document).ready(function () {
     });
 
     $.post('include/update_role.php', {
-      action: 'updateRole',
       id: roleId,
       name,
       level,

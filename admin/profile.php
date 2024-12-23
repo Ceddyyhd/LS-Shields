@@ -311,11 +311,9 @@
                         <div class="form-group">
                         <label>Select</label>
                         <select class="form-control">
-                          <option>option 1</option>
-                          <option>option 2</option>
-                          <option>option 3</option>
-                          <option>option 4</option>
-                          <option>option 5</option>
+                          <option>Notiz</option>
+                          <option>Verwarnung</option>
+                          <option>Kündigung</option>
                         </select>
                       </div>
 
@@ -341,8 +339,10 @@
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputName" placeholder="Name">
-                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox">
+                          <label class="form-check-label">Checkbox</label>
+                        </div>                        </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>

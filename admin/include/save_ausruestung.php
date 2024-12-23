@@ -2,6 +2,11 @@
 include 'db.php';
 session_start();
 
+// Fehleranzeige aktivieren (für Debugging)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? null;
     $ausruestung = $_POST['ausruestung'] ?? [];
@@ -14,10 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzername aus Session oder Datenbank holen
     $uploaded_by = $_SESSION['username'] ?? null;
     if (!$uploaded_by) {
-        $stmt = $conn->prepare("SELECT username FROM users WHERE id = :id");
-        $stmt->execute([':id' => $_SESSION['user_id']]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $uploaded_by = $user['username'] ?? 'Unbekannt';
+        try {
+            $stmt = $conn->prepare("SELECT username FROM users WHERE id = :id");
+            $stmt->execute([':id' => $_SESSION['user_id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $uploaded_by = $user['username'] ?? 'Unbekannt';
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Abrufen des Benutzernamens: ' . $e->getMessage()]);
+            exit;
+        }
     }
 
     if (!$user_id) {
@@ -95,4 +105,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
-?>

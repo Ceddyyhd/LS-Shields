@@ -141,10 +141,32 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-muted">Kane</p>
           </div>
           <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
-
+          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#user-bearbeiten">
+                  User Bearbeiten
+                </button>
         </div>
       </div>
-
+      <div class="modal fade" id="user-bearbeiten">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Default Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
           <div class="col-md-9">
             <div class="card">
               <div class="card-header p-2">

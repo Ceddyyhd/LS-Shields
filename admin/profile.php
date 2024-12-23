@@ -127,6 +127,7 @@
                           </div>
 
                           <div class="input-group" style="flex-grow: 1;">
+                          <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                               <div class="custom-file">
                                   <input type="file" class="custom-file-input" id="exampleInputFile">
                                   <label class="custom-file-label" for="exampleInputFile">Choose file</label>

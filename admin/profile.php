@@ -344,44 +344,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    // Notiz erstellen
-    $("#noteForm").on("submit", function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
 
-        $.ajax({
-            url: "include/add_note.php", // Server-Skript zum Speichern der Notiz
-            type: "POST",
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    // Modal schließen
-                    $("#modal-default").modal("hide");
-
-                    // Timeline aktualisieren
-                    var newNote = `
-                        <div>
-                            <i class="fas fa-comments bg-warning"></i>
-                            <div class="timeline-item">
-                                <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                                <h3 class="timeline-header">${response.data.user} fügte eine Notiz hinzu</h3>
-                                <div class="timeline-body">${response.data.content}</div>
-                            </div>
-                        </div>`;
-                    $("#timeline").prepend(newNote);
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                alert("Fehler: " + error);
-            }
-        });
-    });
-});
-</script>
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">

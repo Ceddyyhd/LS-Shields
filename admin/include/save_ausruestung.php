@@ -28,8 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existingStatus[$item['key_name']] = (int)$item['status'];
         }
 
-        // Benutzername für das Log
-        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
+        // Benutzername direkt aus der Datenbank holen
+        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $editor_name = $user['name'] ?? 'Unbekannt';
+
 
         // Logs und Updates vorbereiten
         $logData = [];

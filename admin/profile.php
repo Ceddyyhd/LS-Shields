@@ -167,7 +167,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                       <?php while ($equip = $equipment->fetch_assoc()): ?>
                         <li>
                           <?php echo htmlspecialchars($equip['equipment_name']); ?>:
-                          Erhalten: <?php echo htmlspecialchars($equip['reveived']); ?>
+                          Erhalten: <?php echo htmlspecialchars($equip['received']); ?>
                         </li>
                       <?php endwhile; ?>
                     </ul>

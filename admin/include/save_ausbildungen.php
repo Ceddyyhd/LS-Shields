@@ -47,17 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentStatus = $existingData[$key_name]['status'] ?? 0;
             $currentRating = $existingData[$key_name]['bewertung'] ?? 0;
 
-            // Prüfen, ob es Änderungen gibt
+            // Prüfen, ob der Status oder die Bewertung geändert wurde
             if ($newStatus !== $currentStatus || $newRating !== $currentRating) {
+                $action = '';
+                if ($newStatus !== $currentStatus) {
+                    $action = $newStatus ? 'hinzugefügt' : 'entfernt';
+                } elseif ($newRating !== $currentRating) {
+                    $action = 'geändert';
+                }
+
                 // Loggen der Änderung
-                $action = $newStatus ? 'hinzugefügt' : 'entfernt';
-                $logData[] = [
-                    'user_id' => $user_id,
-                    'editor_name' => $editor_name,
-                    'ausbildung' => $key_name,
-                    'action' => $action,
-                    'rating' => $newRating
-                ];
+                if ($action) {
+                    $logData[] = [
+                        'user_id' => $user_id,
+                        'editor_name' => $editor_name,
+                        'ausbildung' => $key_name,
+                        'action' => $action,
+                        'rating' => $newRating
+                    ];
+                }
 
                 // Datenbank aktualisieren
                 if ($newStatus || $newRating > 0) {
@@ -95,3 +103,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
+?>

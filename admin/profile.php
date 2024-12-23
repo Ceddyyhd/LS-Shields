@@ -162,7 +162,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <div class="active tab-pane" id="dokumente">
                   <form id="employeeForm" class="form-horizontal" method="POST">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-
+    <?php
+// Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
+$fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
+if (!is_array($fuehrerscheine)) {
+    $fuehrerscheine = []; // Standardwert setzen, falls JSON fehlerhaft ist
+}
+?>
     <!-- Waffenschein -->
     <div class="form-group row">
     <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>
@@ -175,13 +181,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-    <?php
-// Fuehrerscheine aus der Datenbank lesen und in ein Array umwandeln
-$fuehrerscheine = json_decode($employee['fuehrerscheine'] ?? '[]', true);
-if (!is_array($fuehrerscheine)) {
-    $fuehrerscheine = []; // Falls JSON fehlerhaft ist, Standardwert setzen
-}
-?>
+
+
 <!-- Führerscheine -->
 <div class="form-group row">
     <label for="fuehrerscheinSelect" class="col-sm-2 col-form-label">Führerscheine</label>
@@ -200,26 +201,26 @@ if (!is_array($fuehrerscheine)) {
 $(document).ready(function () {
     // Speichern-Button
     $("#saveButton").on("click", function () {
-        var formData = $("#employeeForm").serialize();
+    var formData = $("#employeeForm").serialize();
 
-        $.ajax({
-            url: "include/save_employee_info.php",
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                console.log("Antwort:", response);
-                if (response.success) {
-                    alert(response.message);
-                } else {
-                    alert("Fehler: " + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Fehler:", error);
-                alert("Fehler: " + error);
+    $.ajax({
+        url: "include/save_employee_info.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            console.log("Antwort:", response);
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert("Fehler: " + response.message);
             }
-        });
+        },
+        error: function (xhr, status, error) {
+            console.error("Fehler:", error);
+            alert("Fehler: " + error);
+        }
     });
+});
 
     // Datei-Auswahl anzeigen
     $("#documentFile").on("change", function () {

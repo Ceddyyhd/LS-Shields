@@ -15,16 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Überprüfen, ob der Mitarbeiter existiert
+        // Prüfen, ob ein Eintrag für den Mitarbeiter existiert
         $stmt = $conn->prepare("SELECT id FROM employees WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
         $exists = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($exists) {
-            // Aktualisieren
+            // Wenn Eintrag existiert, aktualisieren
             $sql = "UPDATE employees SET waffenschein_type = :waffenschein_type, fuehrerscheine = :fuehrerscheine WHERE user_id = :user_id";
         } else {
-            // Einfügen
+            // Wenn kein Eintrag existiert, neuen erstellen
             $sql = "INSERT INTO employees (user_id, waffenschein_type, fuehrerscheine) VALUES (:user_id, :waffenschein_type, :fuehrerscheine)";
         }
 

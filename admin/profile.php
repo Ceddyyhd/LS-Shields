@@ -42,11 +42,11 @@ $stmt_trainings->execute(['user_id' => $user_id]);
 $trainings = $stmt_trainings->fetchAll(PDO::FETCH_ASSOC);
 
 // Rechte des Benutzers abrufen
-$sql_permissions = "SELECT p.name, p.description, p.display_name FROM permissions p
-                    JOIN role_permissions rp ON p.id = rp.permission_id
-                    JOIN users u ON rp.role_id = u.role_id WHERE u.id = :user_id";
+$sql_permissions = "SELECT p.name, p.description, p.display_name 
+                    FROM permissions p
+                    JOIN roles r ON r.id = :role_id";
 $stmt_permissions = $conn->prepare($sql_permissions);
-$stmt_permissions->execute(['user_id' => $user_id]);
+$stmt_permissions->execute(['role_id' => $user['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 ?>
 

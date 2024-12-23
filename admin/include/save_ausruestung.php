@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Benutzername für das Log
-    $editor_name = $_SESSION['username'] ?? 'Unbekannt';
+    $editor_name = = $_SESSION['username'] ?? null;
 
     if (!$user_id) {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);

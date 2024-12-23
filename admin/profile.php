@@ -140,10 +140,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
             <p class="text-muted">Kane</p>
           </div>
-          <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
-          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#user-bearbeiten">
+          
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">
                   User Bearbeiten
                 </button>
+          <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
         </div>
       </div>
       <div class="modal fade" id="user-bearbeiten">

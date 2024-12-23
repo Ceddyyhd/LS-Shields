@@ -738,16 +738,79 @@ $(document).ready(function () {
                 </script>
 
                   <!-- Ausrüstung -->
-                  <div class="tab-pane" id="ausruestung">
-                    <ul>
-                      <?php while ($equip = $equipment->fetch_assoc()): ?>
-                        <li>
-                          <?php echo htmlspecialchars($equip['equipment_name']); ?>:
-                          Erhalten: <?php echo htmlspecialchars($equip['received']); ?>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
+                  <div class="tab-pane" id="ausrüstung">
+    <form id="ausruestungForm">
+        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+        <?php
+        // Ausrüstungstypen aus der Datenbank abrufen
+        $stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");
+        $stmt->execute();
+        $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Benutzer-Ausrüstung abrufen
+        $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Benutzer-Ausrüstung in ein Array umwandeln
+        $userAusrüstung = [];
+        foreach ($benutzerAusrüstung as $item) {
+            $userAusrüstung[$item['key_name']] = (int)$item['status'];
+        }
+
+        // Nach Kategorien gruppieren
+        $categories = [];
+        foreach ($ausruestungstypen as $item) {
+            $categories[$item['category']][] = $item;
+        }
+
+        // HTML-Ausgabe für jede Kategorie und Ausrüstung
+        foreach ($categories as $category => $items) {
+            ?>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
+                <div class="col-sm-10">
+                    <?php foreach ($items as $item): 
+                        $status = $userAusrüstung[$item['key_name']] ?? 0;
+                        ?>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" 
+                                   id="<?= $item['key_name']; ?>" 
+                                   name="ausruestung[<?= $item['key_name']; ?>]" 
+                                   value="1" <?= $status ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="<?= $item['key_name']; ?>">
+                                <?= htmlspecialchars($item['display_name']); ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+    </form>
+</div>
+
+<script>$("#saveButton").on("click", function () {
+    var formData = $("#ausruestungForm").serialize();
+
+    $.ajax({
+        url: "include/save_ausruestung.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert("Änderungen gespeichert.");
+            } else {
+                alert("Fehler: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Fehler: " + error);
+        },
+    });
+});</script>
+
                 </div>
               </div>
             </div>

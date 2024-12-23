@@ -217,15 +217,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <!-- Passwort ändern -->
                             <div class="form-group">
                                 <strong><i class="fas fa-lock mr-1"></i> Passwort ändern</strong>
-                                <?php if ($_SESSION['permissions']['edit_password'] ?? false): ?>
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="changePasswordCheckbox">
-                                        <label class="form-check-label" for="changePasswordCheckbox">Passwort ändern aktivieren</label>
-                                    </div>
-                                    <input type="password" class="form-control mt-2" id="passwordField" name="password" placeholder="Neues Passwort eingeben" disabled>
-                                <?php else: ?>
-                                    <input type="password" class="form-control" placeholder="Keine Berechtigung" disabled>
-                                <?php endif; ?>
+                                <div class="form-check">
+                                    <input type="checkbox" id="changePasswordCheckbox" class="form-check-input">
+                                    <label for="changePasswordCheckbox" class="form-check-label">Passwort ändern</label>
+                                </div>
+                                <input type="password" id="passwordField" name="password" class="form-control" placeholder="Neues Passwort" disabled>
                             </div>
 
                         </div>
@@ -243,10 +239,19 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
+    // Checkbox-Logik: Aktiviert/deaktiviert das Passwortfeld
+    $("#changePasswordCheckbox").on("change", function () {
+        if ($(this).is(":checked")) {
+            $("#passwordField").prop("disabled", false); // Passwortfeld aktivieren
+        } else {
+            $("#passwordField").prop("disabled", true).val(""); // Passwortfeld deaktivieren und leeren
+        }
+    });
+
+    // Speichern-Button-Logik
     $("#saveChanges").on("click", function (e) {
         e.preventDefault();
 
-        // Sammle die Daten aus dem Formular
         var formData = $("#userEditForm").serialize();
 
         // Sende die Daten per AJAX
@@ -257,16 +262,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             success: function (response) {
                 console.log("Antwort:", response);
 
-                // Modal schließen und Seite neu laden
-                $("#user-bearbeiten").modal("hide");
-                location.reload(); // Seite neu laden, um die Änderungen zu sehen
+                if (response.success) {
+                    alert("Änderungen erfolgreich gespeichert.");
+                    $("#user-bearbeiten").modal("hide");
+                    location.reload(); // Seite neu laden
+                } else {
+                    alert("Fehler: " + response.message);
+                }
             },
             error: function (xhr, status, error) {
                 console.error("Fehler:", error);
-
-                // Modal schließen und Seite neu laden, auch bei Fehlern
-                $("#user-bearbeiten").modal("hide");
-                location.reload(); // Seite neu laden
+                alert("Fehler: " + error);
             },
         });
     });

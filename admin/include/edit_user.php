@@ -30,19 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Passwort verarbeiten, falls erlaubt und übergeben
-if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
-    $password = $_POST['password'];
-
-    // Überprüfen, ob das Passwort leer ist, obwohl die Checkbox aktiviert wurde
-    if (empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'Passwort darf nicht leer sein.']);
-        exit;
+    if (isset($updates['password'])) {
+        if (empty($updates['password'])) {
+            echo json_encode(['success' => false, 'message' => 'Passwort darf nicht leer sein.']);
+            exit;
+        }
+    
+        // Passwort-Hashing
+        $updates['password'] = password_hash($updates['password'], PASSWORD_BCRYPT);
+    } else {
+        unset($updates['password']); // Passwort-Update entfernen, wenn Checkbox nicht aktiv war
     }
-
-    // Passwort hashen und hinzufügen
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    $updates['password'] = $hashedPassword;
-}
 
     // Daten aktualisieren
     if (!empty($updates)) {

@@ -4,8 +4,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
-$user_id = $_GET['id'] ?? 1;
-
+$user_id = $_GET['id'] ?? null;
+if (!$user_id) {
+    die("Benutzer-ID fehlt.");
+}
 // Benutzerinformationen abrufen
 $sql = "SELECT u.email, u.created_at, r.name as role_name FROM users u 
         JOIN roles r ON u.role_id = r.id WHERE u.id = :user_id";

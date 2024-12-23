@@ -641,16 +641,94 @@ $(document).ready(function () {
 
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">
-                    <ul>
-                      <?php while ($training = $trainings->fetch_assoc()): ?>
-                        <li>
-                          <?php echo htmlspecialchars($training['training_name']); ?>:
-                          Bewertung: <?php echo htmlspecialchars($training['rating']); ?>,
-                          Abgeschlossen: <?php echo htmlspecialchars($training['completed'] ? 'Ja' : 'Nein'); ?>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
+                    <form id="ausbildungForm">
+                        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Bewertungen</label>
+                            <div class="col-sm-10">
+                                <?php 
+                                // Beispiel für die Liste der Ausbildungen (kann dynamisch aus der DB kommen)
+                                $ausbildungen = [
+                                    ['id' => 'leitstelle', 'name' => 'Leitstelle', 'rating' => 3, 'status' => 1],
+                                    ['id' => 'ortskentnisse', 'name' => 'Ortskenntnisse', 'rating' => 4, 'status' => 1],
+                                    ['id' => 'eventlead', 'name' => 'Eventlead', 'rating' => 5, 'status' => 0],
+                                ];
+
+                                foreach ($ausbildungen as $ausbildung): ?>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" 
+                                        id="<?= $ausbildung['id']; ?>" 
+                                        name="ausbildungen[<?= $ausbildung['id']; ?>][status]" 
+                                        value="1" <?= $ausbildung['status'] ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="<?= $ausbildung['id']; ?>">
+                                        <?= htmlspecialchars($ausbildung['name']); ?>
+                                    </label>
+                                    <div class="stars ml-3" data-rating="<?= $ausbildung['rating']; ?>" data-id="<?= $ausbildung['id']; ?>">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <i class="<?= $i <= $ausbildung['rating'] ? 'fas' : 'far'; ?> fa-star" 
+                                          data-value="<?= $i; ?>" 
+                                          data-ausbildung="<?= $ausbildung['id']; ?>"></i>
+                                        <?php endfor; ?>
+                                        <input type="hidden" name="ausbildungen[<?= $ausbildung['id']; ?>][rating]" value="<?= $ausbildung['rating']; ?>">
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
+                    </form>
+                </div>
+
+                <script>
+                $(document).ready(function () {
+                    // Sterne-Bewertung ändern
+                    $(".stars i").on("click", function () {
+                        var rating = $(this).data("value");
+                        var ausbildungId = $(this).data("ausbildung");
+
+                        // Aktive Sterne setzen
+                        $(`.stars[data-id="${ausbildungId}"] i`).each(function () {
+                            if ($(this).data("value") <= rating) {
+                                $(this).removeClass("far").addClass("fas");
+                            } else {
+                                $(this).removeClass("fas").addClass("far");
+                            }
+                        });
+
+                        // Hidden-Input für die Bewertung setzen
+                        $(`.stars[data-id="${ausbildungId}"] input[name="ausbildungen[${ausbildungId}][rating]"]`).val(rating);
+                    });
+
+                    // Speichern
+                    $("#saveButton").on("click", function () {
+                        var formData = $("#ausbildungForm").serialize();
+
+                        $.ajax({
+                            url: "include/save_ausbildungen.php",
+                            type: "POST",
+                            data: formData,
+                            success: function (response) {
+                                try {
+                                    response = JSON.parse(response);
+                                    if (response.success) {
+                                        alert("Änderungen erfolgreich gespeichert.");
+                                        location.reload();
+                                    } else {
+                                        alert("Fehler: " + response.message);
+                                    }
+                                } catch (error) {
+                                    console.error("Fehler beim Parsen der Antwort:", error);
+                                    alert("Ein unerwarteter Fehler ist aufgetreten.");
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Fehler:", error);
+                                alert("Fehler: " + error);
+                            }
+                        });
+                    });
+                });
+                </script>
 
                   <!-- Ausrüstung -->
                   <div class="tab-pane" id="ausruestung">

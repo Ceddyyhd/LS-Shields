@@ -9,7 +9,10 @@ if (!$user_id) {
     die("Benutzer-ID fehlt.");
 }
 // Benutzerinformationen abrufen
-$sql = "SELECT * FROM users WHERE id = :id";
+$sql = "SELECT users.*, roles.name AS role_name 
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id 
+        WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);

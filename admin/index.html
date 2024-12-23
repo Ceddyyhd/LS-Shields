@@ -64,21 +64,24 @@ $(document).ready(function () {
     const remember = $('#remember').is(':checked');
 
     $.ajax({
-        url: 'include/ajax_login.php',
-        type: 'POST',
-        data: { email, password, remember },
-        dataType: 'json',
-        success: function (response) {
-            if (response.success) {
-                window.location.href = 'index.php';
-            } else {
-                $('#loginMessage').text(response.message);
-            }
-        },
-        error: function () {
-            $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+    url: 'include/ajax_login.php',
+    type: 'POST',
+    data: { email, password, remember },
+    dataType: 'json',
+    success: function (response) {
+        if (response.success) {
+            window.location.href = 'index.php';
+        } else {
+            $('#loginMessage').text(response.message);
         }
-    });
+    },
+    error: function (xhr, status, error) {
+        console.log('Fehlerdetails:', xhr.responseText); // Serverantwort
+        console.log('Status:', status); // Status des Requests
+        console.log('Error:', error); // Fehlerbeschreibung
+        $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+    }
+});
 });
 });
 </script>

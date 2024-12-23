@@ -30,7 +30,11 @@ if (!isset($_SESSION['user_id'])) {
 
                 if ($role) {
                     $permissionsArray = json_decode($role['permissions'], true);
-                    $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+                    if (is_array($permissionsArray)) {
+                        $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+                    } else {
+                        $_SESSION['permissions'] = []; // Fallback, falls keine Berechtigungen vorliegen
+                    }
                 }
             }
         } else {

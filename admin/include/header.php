@@ -1,7 +1,6 @@
 <?php
 session_start();
-var_dump($_SESSION);
-exit;
+
 session_regenerate_id(true);
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

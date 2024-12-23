@@ -20,12 +20,13 @@ if (!$roleId || !is_numeric($roleId) || !$name || !$level || !$permissions) {
 
 try {
     // Berechtigungen validieren und als JSON speichern
-    $permissionsJson = json_encode(json_decode($permissions, true));
-
-    if (!$permissionsJson) {
+    $permissionsArray = json_decode($permissions, true);
+    if (!is_array($permissionsArray)) {
         echo json_encode(['success' => false, 'message' => 'Ungültige Berechtigungen.']);
         exit;
     }
+
+    $permissionsJson = json_encode(array_map('intval', $permissionsArray));
 
     // Rollendaten aktualisieren
     $stmt = $conn->prepare("

@@ -248,14 +248,14 @@ $('#modal-default .btn-primary').click(function () {
 
     // Alle markierten Berechtigungen sammeln
     $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
-        permissions.push($(this).attr('data-name')); // Verwende 'data-name'
+        permissions.push($(this).val());
     });
 
     console.log({ id: roleId, name, level, permissions }); // Debug-Ausgabe
 
-    // AJAX-Anfrage
+    // AJAX-Anfrage, um die Änderungen zu speichern
     $.ajax({
-        url: 'include/update_role.php',
+        url: ' include/update_role.php',
         type: 'POST',
         data: {
             id: roleId,

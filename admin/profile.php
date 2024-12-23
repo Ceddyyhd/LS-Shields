@@ -243,41 +243,43 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-    $("#saveChanges").on("click", function (e) {
-        e.preventDefault();
+        $("#changePasswordCheckbox").on("change", function () {
+            if ($(this).is(":checked")) {
+                $("#passwordField").prop("disabled", false); // Passwortfeld aktivieren
+            } else {
+                $("#passwordField").prop("disabled", true); // Passwortfeld deaktivieren
+                $("#passwordField").val(""); // Passwortfeld zurücksetzen
+            }
+        });
 
-        // Sammle die Daten aus dem Formular
-        var formData = $("#userEditForm").serialize();
+        $("#saveChanges").on("click", function (e) {
+            e.preventDefault();
 
-        // Sende die Daten per AJAX
-        $.ajax({
-            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                console.log("Antwort:", response);
+            // Sammle die Daten aus dem Formular
+            var formData = $("#userEditForm").serialize();
 
-                if (response.success) {
-                    // Erfolgreich: Modal schließen und Seite neu laden
-                    $("#user-bearbeiten").modal("hide");
-                    location.reload(); // Seite neu laden, um Änderungen zu sehen
-                } else {
-                    // Fehler: Nachricht anzeigen, Modal bleibt offen
-                    if (response.message) {
-                        // Zeige die spezifische Fehlermeldung
-                        $("#modal-error-message").text(response.message).show();
+            // Sende die Daten per AJAX
+            $.ajax({
+                url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    console.log("Antwort:", response);
+
+                    if (response.success) {
+                        alert("Änderungen erfolgreich gespeichert.");
+                        location.reload(); // Seite neu laden, um Änderungen zu sehen
                     } else {
-                        console.error("Unerwartete Antwort:", response);
+                        alert("Fehler: " + response.message);
                     }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler:", error);
+                    alert("Fehler: " + error);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("Fehler:", error);
-                $("#modal-error-message").text("Ein unbekannter Fehler ist aufgetreten.").show();
-            },
+            });
         });
     });
-});
 </script>
           <div class="col-md-9">
             <div class="card">

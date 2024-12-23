@@ -28,13 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existingStatus[$item['key_name']] = (int)$item['status'];
         }
 
+        // Benutzername für das Log
+        if (!isset($_SESSION['username'])) {
+            $stmt = $conn->prepare("SELECT username FROM users WHERE id = :user_id");
+            $stmt->execute([':user_id' => $_SESSION['user_id']]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $editor_name = $user['username'] ?? 'Unbekannt';
+        } else {
+            $editor_name = $_SESSION['username'];
+        }
+
         // Logs und Updates vorbereiten
         $logData = [];
         foreach ($existingStatus as $key_name => $currentStatus) {
             $newStatus = isset($ausruestung[$key_name]) ? (int)$ausruestung[$key_name] : 0;
-
-                // Benutzername für das Log
-                $editor_name = $_SESSION['username'] ?? 'Unbekannt';
 
             if ($newStatus !== $currentStatus) {
                 $action = $newStatus ? 'hinzugefügt' : 'entfernt';

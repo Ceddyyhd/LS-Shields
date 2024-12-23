@@ -136,6 +136,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
             <p class="text-muted">Kane</p>
           </div>
+          <button type="button" class="btn btn-block btn-primary">Primary</button>
+
         </div>
       </div>
 

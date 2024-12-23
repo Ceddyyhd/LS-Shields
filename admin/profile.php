@@ -190,6 +190,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
              <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
              <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['kontonummer']); ?>">
             </div> 
+
+            <div class="form-group">
+            <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
+            <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['kontonummer']); ?>" disabled>
+            </div>
+
           </div>
         </div>
 

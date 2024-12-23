@@ -196,11 +196,6 @@
                     </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                        <div class="col-sm-10">
-                        </div>
-                      </div>
-                      <div class="form-group row">
                         <label for="inputSkills" class="col-sm-2 col-form-label">Erstehilfeschein</label>
                         <div class="col-sm-10">
                         <div class="input-group">

@@ -163,8 +163,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <h3 class="card-title">Information</h3>
           </div>
           <div class="card-body">
-            <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
+            <strong><i class="fas fa-envelope mr-1"></i> Name</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['name']); ?></p>
+
+            <hr>
+            <strong><i class="fas fa-envelope mr-1"></i> Nummer</strong>
+            <p class="text-muted"><?php echo htmlspecialchars($user['nummer']); ?></p>
 
             <hr>
             <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
@@ -177,10 +181,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <hr>
             <strong><i class="fas fa-credit-card mr-1"></i> Kontonummer</strong>
             <p class="text-muted"><?php echo htmlspecialchars($user['kontonummer']); ?></p>
-
-            <hr>
-            <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
-            <p class="text-muted">Kane</p>
           </div>
         </div>
 

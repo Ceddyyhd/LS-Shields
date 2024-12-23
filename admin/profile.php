@@ -408,54 +408,6 @@
                       </div>
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Spezial Ausrüstung</label>
-                    <div class="col-sm-10">
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="leitstelle">
-                        <label class="form-check-label" for="leitstelle">Weste</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
-                        <label class="form-check-label" for="ortskentnisse">Bretta</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="eventlead">
-                        <label class="form-check-label" for="eventlead">Taschenlampe</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Kleidung Taktisch</label>
-                    <div class="col-sm-10">
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="leitstelle">
-                        <label class="form-check-label" for="leitstelle">H.I.M Shark mit H II S</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="ortskentnisse">
-                        <label class="form-check-label" for="ortskentnisse">Cargo Hose 1 S</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="eventlead">
-                        <label class="form-check-label" for="eventlead">Einsatzstiefel</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="ausbilderschein">
-                        <label class="form-check-label" for="ausbilderschein">Steve Stops</label>
-                      </div>
-
-                      <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="fasi_baller">
-                        <label class="form-check-label" for="fasi_baller">Pali Tuch</label>
-                      </div>
-                    </div>
-                  </div>
                 </form>
               </div>
             </div>

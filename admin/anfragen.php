@@ -87,9 +87,9 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       <div><?= htmlspecialchars($anfrage['status']) ?></div>
                     </div>
                     <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-                      <?php if ($anfrage['status'] === 'Eingetroffen'): ?>
+                      <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
                         <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-                      <?php elseif ($anfrage['status'] === 'in Bearbeitung'): ?>
+                      <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
                         <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
                       <?php endif; ?>
                     </div>

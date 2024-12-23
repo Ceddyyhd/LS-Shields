@@ -222,10 +222,10 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">
                     <!-- The timeline -->
-                    <div class="timeline timeline-inverse">
                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
                   Launch Default Modal
                 </button>
+                    <div class="timeline timeline-inverse">
                       <!-- timeline time label -->
                       <div class="time-label">
                         <span class="bg-danger">

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Verzeichnis für hochgeladene Dateien
-    $upload_dir = '../uploads/';
+    $upload_dir = '/var/www/vhosts/ceddyyhd2.eu/ls-shields.ceddyyhd2.eu/uploads/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }

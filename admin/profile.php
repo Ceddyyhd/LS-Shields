@@ -24,7 +24,7 @@ $stmt_documents->execute(['user_id' => $user_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausrüstung abrufen
-$sql_equipment = "SELECT equipment_name, reveived FROM equipment WHERE user_id = :user_id";
+$sql_equipment = "SELECT equipment_name, received FROM equipment WHERE user_id = :user_id";
 $stmt_equipment = $conn->prepare($sql_equipment);
 $stmt_equipment->execute(['user_id' => $user_id]);
 $equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);

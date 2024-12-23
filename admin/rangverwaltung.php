@@ -70,11 +70,11 @@ $(document).ready(function () {
 
         // Checkbox für die Berechtigung hinzufügen
         sectionDiv.append(`
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-            </div>
-        `);
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+        <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+    </div>
+`);
     });
 });
 </script>
@@ -206,17 +206,19 @@ $(document).ready(function () {
 
 
 <script>
- $('#saveRoleButton').click(function () {
+$('#saveRoleButton').click(function () {
     const name = $('#roleName').val();
     const level = $('#roleLevel').val();
     const permissions = [];
+
+    // Sammle die Namen der angekreuzten Berechtigungen
     $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
-        permissions.push($(this).val());
+        permissions.push($(this).attr('data-name')); // Verwende das Attribut 'data-name'
     });
 
     // AJAX-Anfrage, um die neue Rolle zu speichern
     $.ajax({
-        url: 'include/add_role.php',
+        url: 'add_role.php',
         type: 'POST',
         data: {
             name: name,
@@ -310,11 +312,11 @@ $(document).on('click', '[data-target="#modal-default"]', function () {
 
                     const checked = role.permissions.includes(permission.id) ? 'checked' : '';
                     sectionDiv.append(`
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.id}" ${checked}>
-                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                        </div>
-                    `);
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+        <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+    </div>
+`);
                 });
             } else {
                 alert('Fehler: ' + response.error);

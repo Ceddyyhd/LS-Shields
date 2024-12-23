@@ -19,7 +19,7 @@ try {
     $stmt->execute([
         ':name' => $name,
         ':level' => $level,
-        ':permissions' => json_encode($permissions) // Als JSON speichern
+        ':permissions' => json_encode($permissions) // Namen als JSON speichern
     ]);
 
     echo json_encode(['success' => true]);

@@ -125,7 +125,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <div class="tab-content">
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
-    <form class="form-horizontal" action="upload_document.php" method="POST" enctype="multipart/form-data">
+    <form class="form-horizontal" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
         <!-- Waffenschein -->
         <div class="form-group row">
             <label for="waffenscheinSelect" class="col-sm-2 col-form-label">Waffenschein</label>

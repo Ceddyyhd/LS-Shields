@@ -288,7 +288,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
                   <li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>
                   <li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#rechte" data-toggle="tab">Rechte</a></li>
                 </ul>
               </div>
               <div class="card-body">
@@ -660,18 +659,6 @@ $(document).ready(function () {
                         <li>
                           <?php echo htmlspecialchars($equip['equipment_name']); ?>:
                           Erhalten: <?php echo htmlspecialchars($equip['received']); ?>
-                        </li>
-                      <?php endwhile; ?>
-                    </ul>
-                  </div>
-
-                  <!-- Rechte -->
-                  <div class="tab-pane" id="rechte">
-                    <ul>
-                      <?php while ($perm = $permissions->fetch_assoc()): ?>
-                        <li>
-                          <strong><?php echo htmlspecialchars($perm['display_name']); ?>:</strong>
-                          <?php echo htmlspecialchars($perm['description']); ?>
                         </li>
                       <?php endwhile; ?>
                     </ul>

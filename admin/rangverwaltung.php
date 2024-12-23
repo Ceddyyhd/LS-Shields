@@ -185,7 +185,7 @@ $(document).ready(function () {
 
     // AJAX-Anfrage, um die Änderungen zu speichern
     $.ajax({
-        url: 'update_role.php',
+        url: 'include/update_role.php',
         type: 'POST',
         data: {
             id: roleId,

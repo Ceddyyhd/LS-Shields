@@ -202,6 +202,12 @@
                         </div>
                       </div>
                       <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                        </div>
+                      </div>
+                      <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
                           <div class="checkbox">
                             <label>

@@ -115,9 +115,9 @@
                     <div class="form-group row">
     <label for="inputName" class="col-sm-2 col-form-label">Waffenschein</label>
     <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
-        <div style="margin-right: 20px;">
+        <div style="margin-right: 20px; width: 200px;">
             <label for="waffenscheinSelect">Waffenschein</label>
-            <select id="waffenscheinSelect" class="form-control" style="height: 38px;">
+            <select id="waffenscheinSelect" class="form-control" style="height: 38px; width: 100%;">
                 <option>Keiner Vorhanden</option>
                 <option>Kleiner Waffenschein</option>
                 <option>Großer & Kleiner Waffenschein</option>
@@ -142,9 +142,9 @@
 <div class="form-group row">
     <label for="inputName" class="col-sm-2 col-form-label">Führerscheine</label>
     <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
-        <div style="margin-right: 20px;">
+        <div style="margin-right: 20px; width: 200px;">
             <label for="fuehrerscheinSelect">Führerscheine</label>
-            <select id="fuehrerscheinSelect" multiple class="form-control" style="height: 38px; overflow: hidden;">
+            <select id="fuehrerscheinSelect" multiple class="form-control" style="height: 120px; width: 100%;">
                 <option>Option 1</option>
                 <option>Option 2</option>
                 <option>Option 3</option>

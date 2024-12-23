@@ -156,7 +156,7 @@
   $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id');
     $.ajax({
-      url: 'get_role.php',
+      url: 'include/get_role.php',
       type: 'GET',
       data: { id: roleId },
       dataType: 'json',
@@ -196,7 +196,7 @@
     });
 
     $.ajax({
-      url: 'update_role.php',
+      url: 'include/update_role.php',
       type: 'POST',
       data: {
         id: roleId,

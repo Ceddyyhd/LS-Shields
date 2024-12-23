@@ -32,6 +32,11 @@ $stmt_equipment = $conn->prepare($sql_equipment);
 $stmt_equipment->execute(['user_id' => $user_id]);
 $equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);
 
+// Notizen abrufen
+$sql_notes = "SELECT type, content, created_at, author FROM notes WHERE user_id = :user_id ORDER BY created_at DESC";
+$stmt_notes = $conn->prepare($sql_notes);
+$stmt_notes->execute(['user_id' => $user_id]);
+$notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausbildungen abrufen
 $sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";

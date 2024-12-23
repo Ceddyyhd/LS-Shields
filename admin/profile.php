@@ -141,8 +141,6 @@
                   <div class="form-group row">
                       <label for="inputName" class="col-sm-2 col-form-label">Führerscheine</label>
                       <div class="form-group d-flex align-items-center" style="flex-wrap: nowrap;">
-                          <div class="col-sm-6">
-                          <!-- Select multiple-->
                           <div class="form-group">
                             <label>Select Multiple</label>
                             <select multiple class="form-control">
@@ -153,7 +151,6 @@
                               <option>option 5</option>
                             </select>
                           </div>
-                        </div>
 
                           <div style="flex-grow: 1;">
                               <label for="exampleInputFile">Datei hochladen</label>

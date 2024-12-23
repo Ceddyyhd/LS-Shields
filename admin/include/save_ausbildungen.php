@@ -19,14 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Benutzername direkt aus der Session oder Datenbank holen
-        if (!isset($_SESSION['username'])) {
-            $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
-            $stmt->execute([':user_id' => $_SESSION['user_id']]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            $editor_name = $user['name'] ?? 'Unbekannt';
-        } else {
-            $editor_name = $_SESSION['username'];
-        }
+        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
 
         // Abrufen der aktuellen Einträge in der Datenbank
         $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM benutzer_ausbildungen WHERE user_id = :user_id");
@@ -46,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $newStatus = isset($ausbildungen[$key_name]['status']) ? (int)$ausbildungen[$key_name]['status'] : 0;
             $newBewertung = isset($ausbildungen[$key_name]['rating']) ? (int)$ausbildungen[$key_name]['rating'] : 0;
 
-            // Änderungen überprüfen
             if ($newStatus !== $currentStatus || $newBewertung !== ($existingBewertungen[$key_name] ?? 0)) {
                 $action = $newStatus ? 'hinzugefügt/aktualisiert' : 'entfernt';
                 $logData[] = [

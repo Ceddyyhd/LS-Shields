@@ -631,7 +631,7 @@ $(document).ready(function () {
 
 
                   <!-- Ausbildungen -->
-                  <<div class="tab-pane" id="ausbildungen">
+                  <div class="tab-pane" id="ausbildungen">
     <form id="ausbildungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <div class="form-group row">
@@ -681,6 +681,7 @@ $(document).ready(function () {
 </div>
 
 
+
                 <script>
                 $(document).ready(function () {
                     // Sterne-Bewertung ändern
@@ -703,28 +704,24 @@ $(document).ready(function () {
 
                     // Speichern
                     $("#saveButton").on("click", function () {
-                        var formData = $("#ausbildungForm").serialize();
+    var formData = $("#ausbildungForm").serialize();
 
-                        $.ajax({
-                            url: "include/save_ausbildungen.php",
-                            type: "POST",
-                            data: formData,
-                            success: function (response) {
-                                try {
-                                    response = JSON.parse(response);
-                                    if (response.success) {
-                                        location.reload();
-                                    } else {
-                                    }
-                                } catch (error) {
-                                    console.error("Fehler beim Parsen der Antwort:", error);
-                                }
-                            },
-                            error: function (xhr, status, error) {
-                                console.error("Fehler:", error);
-                            }
-                        });
-                    });
+    $.ajax({
+        url: "include/save_ausbildungen.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert("Fehler: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Ein Fehler ist aufgetreten: " + error);
+        },
+    });
+});
                 });
                 </script>
 

@@ -126,7 +126,7 @@
                               </select>
                           </div>
 
-                          <div style="flex-grow: 1;">
+                          <div style="flex-grow: 2;">
                               <label for="exampleInputFile">Datei hochladen</label>
                               <div class="input-group">
                                   <div class="custom-file">

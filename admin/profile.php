@@ -169,9 +169,15 @@
 
                       <div class="form-group row">
                         <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputName2" placeholder="Name">
-                        </div>
+                        <div class="input-group">
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                      </div>
+                      <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                      </div>
+                    </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>

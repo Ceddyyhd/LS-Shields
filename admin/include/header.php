@@ -55,13 +55,6 @@ if ($userRole) {
         }
     }
 }
-
-// Debugging (entfernen in der Produktion)
-if (isset($_SESSION['permissions'])) {
-    error_log("Permissions: " . print_r($_SESSION['permissions'], true));
-} else {
-    error_log("Permissions not set.");
-}
 ?>
 
 <head>

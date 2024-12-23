@@ -193,7 +193,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         <label for="erstehilfeFile" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
         <div class="col-sm-10">
             <div class="input-group">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-upload">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                  Launch Primary Modal
+                </button>
             </div>
         </div>
     </form>

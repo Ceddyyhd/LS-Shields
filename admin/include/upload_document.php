@@ -19,28 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mkdir($upload_dir, 0755, true);
     }
 
-    // Erlaubte Dateitypen
-    $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
-
-    // Datei verarbeiten
+    // Datei hochladen und speichern
     if (!empty($_FILES['document_file']['name'])) {
         $file = $_FILES['document_file'];
         $file_name = basename($file['name']);
         $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
-        // Dateityp überprüfen
         if (!in_array(strtolower($file_extension), $allowed_extensions)) {
             die("Ungültiger Dateityp.");
         }
 
-        // Eindeutigen Dateinamen erstellen
         $unique_name = $custom_name . '_' . uniqid('doc_', true) . '.' . $file_extension;
         $physical_path = $upload_dir . $unique_name;
-        $file_path = '/admin/uploads/' . $unique_name; // Pfad für die Datenbank
+        $file_path = '/admin/uploads/' . $unique_name;
 
-        // Datei verschieben
         if (move_uploaded_file($file['tmp_name'], $physical_path)) {
-            // In Datenbank speichern
             $sql = "INSERT INTO documents (user_id, file_name, file_path, uploaded_at, doc_type) 
                     VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
             $stmt = $conn->prepare($sql);
@@ -50,19 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
             ]);
-
-            // Erfolgsnachricht (in einer Session speichern)
-            session_start();
-            $_SESSION['upload_success'] = 'Datei erfolgreich hochgeladen.';
-        } else {
-            die("Fehler beim Hochladen der Datei.");
         }
-    } else {
-        die("Keine Datei ausgewählt.");
     }
-}
 
-// Weiterleitung zurück zur Profilseite
-header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
-exit;
+    // Weiterleitung zur Profilseite
+    header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
+    exit;
+}
 ?>

@@ -223,7 +223,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
             <hr>
             <strong><i class="far fa-file-alt mr-1"></i> Letzte Beförderung durch</strong>
-            <p class="text-muted">Kane</p>
+            <p class="text-muted"><?php echo htmlspecialchars($user['rank_last_changed_by']); ?>
+            </p>
           </div>
           
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">

@@ -47,7 +47,7 @@ try {
     $umail = $_POST['umail'] ?? null;
     $kontonummer = $_POST['kontonummer'] ?? null;
     $nummer = $_POST['nummer'] ?? null;
-    $role_id = $_POST['role_id'] ?? null;
+    $role_id = $_POST['role_id'] ?? 8; // Standardrollen-ID auf 8 setzen, wenn keine übergeben wurde
 
     // Benutzer in die Datenbank einfügen
     $stmt = $conn->prepare("

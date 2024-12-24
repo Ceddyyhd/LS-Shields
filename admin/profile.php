@@ -314,12 +314,15 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
                                 <strong><i class="fas fa-lock mr-1"></i> Gekündigt?</strong>
                                 <div class="form-check">
-                                    <input type="hidden" name="gekündigt" value="0"> <!-- Standardwert -->
+                                    <!-- Standardwert 0, falls die Checkbox nicht angehakt ist -->
+                                    <input type="hidden" name="gekündigt" value="0">
+                                    <!-- Checkbox für den Status -->
                                     <input type="checkbox" id="gekündigtCheckbox" name="gekündigt" value="1" class="form-check-input" 
                                         <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
                                     <label for="gekündigtCheckbox" class="form-check-label">Gekündigt</label>
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

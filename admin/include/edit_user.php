@@ -21,8 +21,9 @@ try {
     $updates = [];
 
     // Gekündigt-Status aktualisieren
-    if (isset($_POST['gekündigt']) && ($_SESSION['permissions']['edit_gekündigt'] ?? false)) {
-        $updates['gekündigt'] = $_POST['gekündigt'] === '1' ? 1 : 0;
+    if ($_SESSION['permissions']['edit_gekündigt'] ?? false) {
+        // Hier wird der Wert immer verarbeitet, selbst wenn keine weiteren Felder geändert werden
+        $updates['gekündigt'] = isset($_POST['gekündigt']) && $_POST['gekündigt'] === '1' ? 1 : 0;
     }
 
     // Weitere Felder aktualisieren
@@ -73,7 +74,6 @@ try {
 
         echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
     } else {
-        // Wenn keine Updates erkannt wurden, explizit darauf hinweisen
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
     }
 } catch (PDOException $e) {

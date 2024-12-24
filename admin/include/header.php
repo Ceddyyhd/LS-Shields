@@ -7,6 +7,10 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 include 'include/db.php';
+include 'auth.php'; // Authentifizierungslogik einbinden
+
+// Session-Wiederherstellung prüfen
+restoreSessionIfRememberMe($conn);
 
 // Prüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['user_id'])) {

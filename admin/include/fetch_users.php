@@ -4,10 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Nur autorisierte Anfragen zulassen (optional)
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    die(json_encode(['error' => 'Ungültige Anfrage']));
-}
+
 
 // Mitarbeiterdaten sicher abrufen
 try {

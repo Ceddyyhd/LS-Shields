@@ -160,7 +160,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
 
         const formData = new FormData(document.getElementById('createUserForm'));
-        fetch('user_create.php', {
+        fetch('include/user_create.php', {
             method: 'POST',
             body: formData,
         })

@@ -112,10 +112,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </div>
                 </div>
                 <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
               </form>
             </div>
             <div class="modal-footer justify-content-between">

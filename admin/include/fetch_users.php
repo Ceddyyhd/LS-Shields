@@ -1,24 +1,13 @@
 <?php
-include 'db.php';
+require_once 'db.php';
 
+// Fehleranzeige für Debugging aktivieren
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 try {
-    // Test: Verbindung zur Datenbank
-    $conn->query("SELECT 1");
-    echo json_encode(['success' => 'Datenbankverbindung erfolgreich']);
-    exit;
-} catch (PDOException $e) {
-    echo json_encode(['error' => 'Datenbankverbindung fehlgeschlagen: ' . $e->getMessage()]);
-    exit;
-}
-
-
-
-// Mitarbeiterdaten sicher abrufen
-try {
+    // Mitarbeiterdaten sicher abrufen
     $stmt = $conn->prepare("
         SELECT 
             u.id,
@@ -39,12 +28,13 @@ try {
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Debug-Ausgabe
+    // JSON-Ausgabe der Daten
     header('Content-Type: application/json');
     echo json_encode($users, JSON_PRETTY_PRINT);
     exit;
 
 } catch (PDOException $e) {
+    // Fehlerausgabe bei SQL-Problemen
     header('Content-Type: application/json');
     echo json_encode(['error' => 'SQL-Fehler: ' . $e->getMessage()]);
     exit;

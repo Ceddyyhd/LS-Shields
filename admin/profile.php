@@ -51,6 +51,15 @@ $sql_permissions = "SELECT p.name, p.description, p.display_name
 $stmt_permissions = $conn->prepare($sql_permissions);
 $stmt_permissions->execute(['role_id' => $user['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
+
+// Angenommen, die Checkbox wird über POST gesendet
+$gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekündigt' : 'no_kuendigung';
+
+// SQL zum Speichern des Werts in der Datenbank
+$stmt = $conn->prepare("UPDATE users SET kuendigung = :gekuendigt WHERE id = :user_id");
+$stmt->bindParam(':gekuendigt', $gekuendigt);
+$stmt->bindParam(':user_id', $user_id);
+$stmt->execute();
 ?>
 
 <!DOCTYPE html>
@@ -314,7 +323,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
     <strong><i class="fas fa-user-times mr-1"></i> Gekuendigt</strong> 
     <div class="form-check">
-        <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['gekuendigt'] === 'gekündigt' ? 'checked' : ''; ?>>
+        <!-- Prüfen, ob der Benutzer 'gekündigt' ist -->
+        <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['kuendigung'] === 'gekündigt' ? 'checked' : ''; ?>>
         <label for="gekuendigtCheckbox" class="form-check-label">Benutzer als gekuendigt markieren</label>
     </div>
 </div>

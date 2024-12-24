@@ -151,33 +151,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 
     document.querySelector('.btn-primary').addEventListener('click', function() {
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+    const password = document.getElementById('password').value.trim();
+    const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
-        if (password !== confirmPassword) {
-            alert('Die Passwörter stimmen nicht überein!');
-            return;
+    // Prüfen, ob die Felder leer sind
+    if (!password || !confirmPassword) {
+        alert('Bitte füllen Sie beide Passwortfelder aus!');
+        return;
+    }
+
+    // Prüfen, ob die Passwörter übereinstimmen
+    if (password !== confirmPassword) {
+        alert('Die Passwörter stimmen nicht überein!');
+        return;
+    }
+
+    // Formulardaten sammeln und absenden
+    const formData = new FormData(document.getElementById('createUserForm'));
+    fetch('user_create.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Benutzer erfolgreich erstellt.');
+            location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+        } else {
+            alert('Fehler: ' + data.message);
         }
-
-        const formData = new FormData(document.getElementById('createUserForm'));
-        fetch('include/user_create.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Benutzer erfolgreich erstellt.');
-                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
-            } else {
-                alert('Fehler: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Fehler:', error);
-            alert('Ein unerwarteter Fehler ist aufgetreten.');
-        });
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein unerwarteter Fehler ist aufgetreten.');
     });
+});
 </script>
 
 <!-- JavaScript Section -->

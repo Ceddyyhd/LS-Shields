@@ -6,7 +6,7 @@ try {
     $sql = "SELECT users.*, roles.name AS role_name 
             FROM users 
             LEFT JOIN roles ON users.role_id = roles.id 
-            WHERE users.gekuendigt = 'gekündigt'";  // Filter nur 'gekündigte' Benutzer
+            WHERE users.gekuendigt = 'gekuendigt'";  // Filter nur 'gekündigte' Benutzer
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();

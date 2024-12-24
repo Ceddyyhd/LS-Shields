@@ -78,18 +78,31 @@
                   <dt class="col-sm-4">Haupteingang</dt>
                   <dd class="col-sm-8"> 
                     <ul>
-                      <li>Phasellus iaculis neque</li>
-                      <li>Purus sodales ultricies</li>
-                      <li>Vestibulum laoreet porttitor sem</li>
-                      <li>Ac tristique libero volutpat at</li>
-                    </ul></dd>
+                      <li>Cedric Schmidt</li>
+                      <li>John Schmidt</li>
+                    </ul>
+                </dd>
                   <dt class="col-sm-4">Nebeneingang</dt>
-                  <dd class="col-sm-8">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-                  <dt class="col-sm-4">Tür 1</dt>
-                  <dd class="col-sm-8">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-                  <dt class="col-sm-4">Tür 2</dt>
-                  <dd class="col-sm-8">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-
+                  <dd class="col-sm-8"> 
+                    <ul>
+                      <li>Cedric Schmidt</li>
+                      <li>John Schmidt</li>
+                    </ul>
+                </dd>
+                    <dt class="col-sm-4">Tür 1</dt>
+                    <dd class="col-sm-8"> 
+                    <ul>
+                      <li>Cedric Schmidt</li>
+                      <li>John Schmidt</li>
+                    </ul>
+                </dd>
+                                  <dt class="col-sm-4">Tür 2</dt>
+                                  <dd class="col-sm-8"> 
+                    <ul>
+                      <li>Cedric Schmidt</li>
+                      <li>John Schmidt</li>
+                    </ul>
+                </dd>
                   </dd>
                 </dl>
               </div>

@@ -38,11 +38,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Main content -->
   <div class="card">
+  <?php if (isset($_SESSION['permissions']['user_create']) && $_SESSION['permissions']['user_create']): ?>
     <div class="card-header">
-      <h3 class="card-title"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
-                  Benutzer erstellen
-                </button></h3>
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
+                Benutzer erstellen
+            </button>
+        </h3>
     </div>
+<?php endif; ?>
     <div class="card-body">
       <table id="example1" class="table table-bordered table-striped">
         <thead>

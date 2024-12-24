@@ -59,8 +59,8 @@ try {
     }
 
     // Gekündigt-Status aktualisieren
-    if ($_SESSION['permissions']['edit_gekündigt'] ?? false) {
-        $updates['gekündigt'] = isset($_POST['gekündigt']) ? 1 : 0;
+    if (isset($_POST['gekündigt']) && ($_SESSION['permissions']['edit_gekündigt'] ?? false)) {
+        $updates['gekündigt'] = $_POST['gekündigt'] === '1' ? 1 : 0;
     }
 
     // Updates in der Datenbank ausführen

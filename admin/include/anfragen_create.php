@@ -1,14 +1,16 @@
 <?php
 include 'db.php'; // Datenbankverbindung
 
-// Überprüfen, ob der Benutzer eingeloggt ist
-session_start();
+session_start(); // Stelle sicher, dass die Sitzung gestartet wurde
+
+// Überprüfe, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['username'])) {
-    die('Benutzer ist nicht eingeloggt.');
+    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
+    exit;
 }
 
 // Hole den Benutzernamen aus der Session
-$erstellt_von = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
+$erstellt_von = $_SESSION['username']; // Benutzernamen aus der Session holen
 
 // Formulardaten auslesen
 $name = $_POST['name'] ?? '';
@@ -17,7 +19,7 @@ $anfrage = $_POST['anfrage'] ?? '';
 $status = 'Eingetroffen'; // Status immer auf "Eingetroffen" setzen
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
-// Validierung
+// Validierung der Formulardaten
 if (empty($name) || empty($nummer) || empty($anfrage)) {
     echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
     exit;

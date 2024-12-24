@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
+            // Gebe die Fehlernachricht als JSON zurück, ohne zusätzliche Ausgaben
             echo json_encode([
                 'success' => false,
                 'message' => 'Fehler beim Speichern: ' . $e->getMessage(),

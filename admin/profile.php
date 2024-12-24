@@ -341,19 +341,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
     // Sende die Daten per AJAX
     $.ajax({
-    url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+    url: "include/edit_user.php",
     type: "POST",
-    data: formData,  // Übergebene Formulardaten
-    success: function (response) {
+    data: formData,
+    success: function(response) {
         try {
-            // Versuche, die Antwort als JSON zu interpretieren
+            // Versuche, die Antwort als JSON zu parsen
             response = JSON.parse(response);
 
             if (response.success) {
-                // Schließe das Modal
+                // Schließe das Modal und lade die Seite neu
                 $("#user-bearbeiten").modal("hide");
-
-                // Seite neu laden, um die Änderungen zu sehen
                 setTimeout(function () {
                     location.reload();
                 }, 500);
@@ -365,9 +363,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             console.error("Fehler beim Parsen der Antwort:", error);
         }
     },
-    error: function (xhr, status, error) {
+    error: function(xhr, status, error) {
         console.error("AJAX-Fehler:", error);
-    },
+    }
 });
 });
 });

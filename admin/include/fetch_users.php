@@ -7,7 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 try {
-    // Mitarbeiterdaten sicher abrufen, nur Benutzer, deren kuendigung nicht 'gekündigt' ist
+    // Mitarbeiterdaten sicher abrufen, nur Benutzer, deren kuendigung 'no_kuendigung' ist
     $stmt = $conn->prepare("
         SELECT 
             u.id,
@@ -44,7 +44,7 @@ try {
             END AS next_vacation
         FROM users u
         LEFT JOIN roles r ON u.role_id = r.id
-        WHERE u.kuendigung != 'gekündigt';  -- Hier wird überprüft, dass die kuendigung nicht 'gekündigt' ist
+        WHERE u.kuendigung = 'no_kuendigung';  -- Hier wird überprüft, dass die kuendigung 'no_kuendigung' ist
     ");
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

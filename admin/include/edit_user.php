@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Verbindung und Sitzung starten
 include 'db.php';
 session_start();
@@ -71,7 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Fehler beim Speichern: ' . $e->getMessage(),
+                'sql' => $sql,  // Gibt die fehlerhafte SQL-Abfrage zurück
+                'params' => print_r($params, true)  // Gibt die Parameter zurück
+            ]);
         }
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);

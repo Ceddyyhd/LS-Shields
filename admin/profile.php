@@ -352,7 +352,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         if (response.success) {
                             alert('Daten erfolgreich gespeichert');
                             $('#user-bearbeiten').modal('hide'); // Schließt das Modal
-                            // Erfolg: Seite neu laden oder andere Maßnahmen
+                            location.reload();  // Lädt die Seite neu
                         } else {
                             alert('Fehler: ' + response.message);  // Fehlernachricht anzeigen
                         }
@@ -368,6 +368,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         });
     });
 </script>
+
           <div class="col-md-9">
             <div class="card">
               <div class="card-header p-2">

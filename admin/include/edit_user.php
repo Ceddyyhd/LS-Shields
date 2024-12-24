@@ -52,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
+    // Debugging: Überprüfen, was in $updates ist
+    var_dump($updates);
+
     // Daten aktualisieren
     if (!empty($updates)) {
         $sql = "UPDATE users SET ";
@@ -59,22 +62,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Dynamische Erstellung der SQL-Klausel und des Parameter-Arrays
         foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";
-            $params[":$key"] = $value;
+            $sql .= "$key = :$key, ";  // Plazhalter wird hinzugefügt
+            $params[":$key"] = $value;  // Parameter wird zugewiesen
         }
 
         // Entferne das letzte Komma
         $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-        $params[':user_id'] = $user_id;  // Stelle sicher, dass :user_id auch im Array ist
+        $params[':user_id'] = $user_id;  // :user_id auch im Array hinzufügen
+
+        // Debugging: Überprüfen, ob die SQL-Abfrage und Parameter korrekt sind
+        var_dump($sql);    // Zeigt die SQL-Abfrage an
+        var_dump($params);  // Zeigt das Parameter-Array an
 
         try {
+            // Deine SQL-Abfrage
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
+            // Fehlerbehandlung: Nur JSON zurückgeben
             echo json_encode([
                 'success' => false,
-                'message' => 'Fehler beim Speichern: ' . $e->getMessage()
+                'message' => 'Fehler beim Speichern: ' . $e->getMessage(),
+                'sql' => $sql,  // Gibt die fehlerhafte SQL-Abfrage zurück
+                'params' => print_r($params, true)  // Gibt die Parameter zurück
             ]);
         }
     } else {

@@ -1,8 +1,19 @@
 <?php
 require_once 'db.php';
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+try {
+    // Test: Verbindung zur Datenbank
+    $conn->query("SELECT 1");
+    echo json_encode(['success' => 'Datenbankverbindung erfolgreich']);
+    exit;
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Datenbankverbindung fehlgeschlagen: ' . $e->getMessage()]);
+    exit;
+}
 
 
 
@@ -34,6 +45,8 @@ try {
     exit;
 
 } catch (PDOException $e) {
-    echo json_encode(['error' => 'Fehler beim Abrufen der Daten']);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'SQL-Fehler: ' . $e->getMessage()]);
+    exit;
 }
 ?>

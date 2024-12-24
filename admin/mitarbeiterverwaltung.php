@@ -217,33 +217,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
   $(document).ready(function () {
     $.ajax({
-        url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users.php',
-        type: 'POST',
-        dataType: 'json',
-        success: function (data) {
-            let tableBody = $('#example1 tbody');
-            tableBody.empty();
+    url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users.php',
+    type: 'POST',
+    dataType: 'json',
+    success: function (data) {
+        console.log(data);  // Füge dies hinzu, um die Struktur von 'data' zu überprüfen
 
-            data.forEach(user => {
-                tableBody.append(`
-                    <tr>
-                        <td>${user.name}</td>
-                        <td>${user.role_name}</td>
-                        <td>${user.nummer ? user.nummer : 'N/A'}</td>
-                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
-                        <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
-                        <td>
-                            <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
-                        </td>
-                    </tr>
-                `);
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error('AJAX-Fehler:', xhr.responseText);
-            alert('Fehler beim Abrufen der Daten.');
+        // Wenn 'data' kein Array ist, handle den Fehler
+        if (!Array.isArray(data)) {
+            console.error('Die Antwort ist kein Array:', data);
+            alert('Fehler: Antwort ist kein Array.');
+            return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
         }
-    });
+
+        let tableBody = $('#example1 tbody');
+        tableBody.empty();
+
+        data.forEach(user => {
+            tableBody.append(`
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.role_name}</td>
+                    <td>${user.nummer ? user.nummer : 'N/A'}</td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
+                    <td>
+                        <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                    </td>
+                </tr>
+            `);
+        });
+    },
+    error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', xhr.responseText);
+        alert('Fehler beim Abrufen der Daten.');
+    }
+});
 });
 </script>
 

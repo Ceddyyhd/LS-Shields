@@ -15,6 +15,13 @@ if (!$id || !$name || !$level || !is_array($permissions)) {
     exit;
 }
 
+$value = $_POST['value'] ?? null;
+if (!$value || !is_numeric($value)) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiger Value.']);
+    exit;
+}
+
+
 try {
     // Bestehende Rolle aktualisieren
     $stmt = $conn->prepare("UPDATE roles SET name = :name, level = :level, value = :value, permissions = :permissions WHERE id = :id");

@@ -223,73 +223,75 @@ $(document).ready(function () {
 
 
 <script>
-$('#saveRoleButton').click(function () {
-    const name = $('#roleName').val();
-    const level = $('#roleLevel').val();
-    const value = $('#roleValue').val(); // Neuen Wert holen
-    const permissions = [];
+    // Funktion zum Erstellen einer Rolle
+    $('#saveRoleButton').click(function () {
+        const name = $('#roleName').val();
+        const level = $('#roleLevel').val();
+        const value = $('#roleValue').val(); // Neuen Wert holen
+        const permissions = [];
 
-    $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
-        permissions.push($(this).attr('data-name'));
-    });
+        $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
+            permissions.push($(this).attr('data-name'));
+        });
 
-    $.ajax({
-        url: 'include/add_role.php',
-        type: 'POST',
-        data: {
-            name: name,
-            level: level,
-            value: value, // Value mit senden
-            permissions: JSON.stringify(permissions)
-        },
-        success: function (response) {
-            if (response.success) {
-                alert('Rolle erfolgreich hinzugefügt.');
-                location.reload();
-            } else {
-                alert('Fehler: ' + response.message);
+        $.ajax({
+            url: 'include/add_role.php',
+            type: 'POST',
+            data: {
+                name: name,
+                level: level,
+                value: value, // Value mit senden
+                permissions: JSON.stringify(permissions)
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Rolle erfolgreich hinzugefügt.');
+                    location.reload();
+                } else {
+                    alert('Fehler: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Fehler beim Speichern der Rolle.');
             }
-        },
-        error: function () {
-            alert('Fehler beim Speichern der Rolle.');
-        }
-    });
-});
-
-$('#modal-default .btn-primary').click(function () {
-    const roleId = $('#modal-default').data('id');
-    const name = $('#modal-default #roleName').val();
-    const level = $('#modal-default #roleLevel').val();
-    const value = $('#modal-default #roleValue').val(); // Neuen Wert holen
-    const permissions = [];
-
-    $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
-        permissions.push($(this).val());
+        });
     });
 
-    $.ajax({
-        url: 'include/update_role.php',
-        type: 'POST',
-        data: {
-            id: roleId,
-            name: name,
-            level: level,
-            value: value, // Value mit senden
-            permissions: JSON.stringify(permissions)
-        },
-        success: function (response) {
-            if (response.success) {
-                alert('Rolle erfolgreich aktualisiert.');
-                location.reload();
-            } else {
-                alert('Fehler: ' + response.message);
+    // Funktion zum Bearbeiten einer Rolle
+    $('#modal-default .btn-primary').click(function () {
+        const roleId = $('#modal-default').data('id');
+        const name = $('#modal-default #roleName').val();
+        const level = $('#modal-default #roleLevel').val();
+        const value = $('#modal-default #roleValue').val(); // Neuen Wert holen
+        const permissions = [];
+
+        $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
+            permissions.push($(this).val());
+        });
+
+        $.ajax({
+            url: 'include/update_role.php',
+            type: 'POST',
+            data: {
+                id: roleId,
+                name: name,
+                level: level,
+                value: value, // Value mit senden
+                permissions: JSON.stringify(permissions)
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Rolle erfolgreich aktualisiert.');
+                    location.reload();
+                } else {
+                    alert('Fehler: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Fehler beim Speichern der Rolle.');
             }
-        },
-        error: function () {
-            alert('Fehler beim Speichern der Rolle.');
-        }
+        });
     });
-});
 
 
 $(document).on('click', '[data-target="#modal-default"]', function () {

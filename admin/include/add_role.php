@@ -23,6 +23,12 @@ if ($current_user_value === null || $value > $current_user_value) {
     exit;
 }
 
+$value = $_POST['value'] ?? null;
+if (!$value || !is_numeric($value)) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiger Value.']);
+    exit;
+}
+
 try {
     // Rolle in die Datenbank einfügen
     $stmt = $conn->prepare("INSERT INTO roles (name, level, value, permissions) VALUES (:name, :level, :value, :permissions)");

@@ -55,7 +55,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 $sql_user = "SELECT id, name, kuendigung FROM users WHERE id = :user_id";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->execute(['user_id' => $user_id]);
-$user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+$user_info = $stmt_user->fetch(PDO::FETCH_ASSOC);  // Ändere den Namen hier, um Konflikte zu vermeiden
 
 ?>
 

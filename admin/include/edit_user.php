@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 // Verbindung und Sitzung starten
 include 'db.php';
 session_start();
@@ -32,13 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
     }
 
-    // Berechtigungen für 'edit_gekundigt' prüfen und den "gekündigt"-Status setzen
-    if (isset($_POST['gekundigt']) && ($_SESSION['permissions']['edit_gekundigt'] ?? false)) {
-        $updates['gekündigt'] = ($_POST['gekundigt'] === 'on') ? 'gekündigt' : 'no_kuendigung';
-    }
-
     // Passwort verarbeiten, falls erlaubt und übergeben
-    if (isset($_POST['password']) && ($_SESSION['permissions']['edit_password'] ?? false)) {
+    if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
         $password = $_POST['password'];
 
         // Überprüfen, ob das Passwort leer ist, obwohl die Checkbox aktiviert wurde
@@ -52,36 +44,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-    // Wenn Updates existieren, SQL-Abfrage erstellen und ausführen
+    // Gekündigt verarbeiten
+    $gekundigt = isset($_POST['gekundigt']) && $_POST['gekundigt'] === 'on' ? 'gekündigt' : 'no_kuendigung';
+    $updates['gekündigt'] = $gekundigt;
+
+    // Daten aktualisieren
     if (!empty($updates)) {
         $sql = "UPDATE users SET ";
         $params = [];
-
-        // Dynamische Erstellung der SQL-Klausel und des Parameter-Arrays
         foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";  // Platzhalter wird hinzugefügt
-            $params[":$key"] = $value;  // Parameter wird zugewiesen
+            $sql .= "$key = :$key, ";
+            $params[":$key"] = $value;
         }
-
-        // Entferne das letzte Komma und füge die WHERE-Klausel hinzu
         $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-        $params[':user_id'] = $user_id;  // :user_id auch im Array hinzufügen
-
-        // Debugging-Ausgabe (optional, für das Testen)
-        // echo "SQL: $sql\n";
-        // print_r($params);
+        $params[':user_id'] = $user_id;
 
         try {
-            // Deine SQL-Abfrage ausführen
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
-            // Fehlerbehandlung: Nur JSON zurückgeben
-            echo json_encode([
-                'success' => false,
-                'message' => 'Fehler beim Speichern: ' . $e->getMessage()
-            ]);
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
         }
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
@@ -89,4 +72,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
 }
-?>

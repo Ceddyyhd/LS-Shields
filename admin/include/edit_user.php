@@ -1,70 +1,61 @@
 <?php
-// Verbindung und Sitzung starten
-include 'db.php';
-session_start();
+require_once 'db.php';
 
-// Überprüfen, ob die Anfrage korrekt ist
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? null;
-    if (!$user_id) {
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
+    exit;
+}
+
+try {
+    // Benutzerdaten abrufen
+    $userId = $_POST['user_id'] ?? null;
+    $name = $_POST['name'] ?? null;
+    $nummer = $_POST['nummer'] ?? null;
+    $email = $_POST['email'] ?? null;
+    $umail = $_POST['umail'] ?? null;
+    $kontonummer = $_POST['kontonummer'] ?? null;
+    $password = $_POST['password'] ?? null;
+    $gekündigt = isset($_POST['gekündigt']) ? 1 : 0; // Checkbox-Wert: 1 = true, 0 = false
+
+    if (!$userId) {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);
         exit;
     }
 
-    // Berechtigungen überprüfen und Updates vorbereiten
-    $updates = [];
-    if ($_SESSION['permissions']['edit_name'] ?? false) {
-        $updates['name'] = $_POST['name'] ?? '';
-    }
-    if ($_SESSION['permissions']['edit_nummer'] ?? false) {
-        $updates['nummer'] = $_POST['nummer'] ?? '';
-    }
-    if ($_SESSION['permissions']['edit_email'] ?? false) {
-        $updates['email'] = $_POST['email'] ?? '';
-    }
-    if ($_SESSION['permissions']['edit_umail'] ?? false) {
-        $updates['umail'] = $_POST['umail'] ?? '';
-    }
-    if ($_SESSION['permissions']['edit_kontonummer'] ?? false) {
-        $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
+    // Datenbank-Update vorbereiten
+    $fields = [
+        'name' => $name,
+        'nummer' => $nummer,
+        'email' => $email,
+        'umail' => $umail,
+        'kontonummer' => $kontonummer,
+        'gekündigt' => $gekündigt,
+    ];
+
+    // Passwort-Hash aktualisieren, falls ein neues Passwort angegeben wurde
+    if (!empty($password)) {
+        $fields['password'] = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    // Passwort verarbeiten, falls erlaubt und übergeben
-if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
-    $password = $_POST['password'];
-
-    // Überprüfen, ob das Passwort leer ist, obwohl die Checkbox aktiviert wurde
-    if (empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'Passwort darf nicht leer sein.']);
-        exit;
-    }
-
-    // Passwort hashen und hinzufügen
-    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-    $updates['password'] = $hashedPassword;
-}
-
-    // Daten aktualisieren
-    if (!empty($updates)) {
-        $sql = "UPDATE users SET ";
-        $params = [];
-        foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";
+    // SQL-Update dynamisch erstellen
+    $setFields = [];
+    $params = [];
+    foreach ($fields as $key => $value) {
+        if ($value !== null) {
+            $setFields[] = "$key = :$key";
             $params[":$key"] = $value;
         }
-        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-        $params[':user_id'] = $user_id;
-
-        try {
-            $stmt = $conn->prepare($sql);
-            $stmt->execute($params);
-            echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
-        } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
-        }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
+
+    // Benutzer aktualisieren
+    $params[':user_id'] = $userId;
+    $sql = "UPDATE users SET " . implode(', ', $setFields) . " WHERE id = :user_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+
+    echo json_encode(['success' => true, 'message' => 'Benutzer erfolgreich aktualisiert.']);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
 }

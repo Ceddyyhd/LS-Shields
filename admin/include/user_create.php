@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+    session_start();
+
     // Pflichtfelder prüfen
     $email = $_POST['email'] ?? null;
     $password = $_POST['password'] ?? null;
@@ -54,8 +56,20 @@ try {
     ");
     $stmt->execute([$email, $umail, $name, $nummer, $kontonummer, $passwordHash, $role_id, $profileImagePath]);
 
+    // ID des erstellten Benutzers abrufen
+    $newUserId = $conn->lastInsertId();
+
+    // Logging: Wer hat diesen Benutzer erstellt?
+    $createdBy = $_SESSION['user_id'] ?? null; // ID des aktuellen Benutzers aus der Session
+    if ($createdBy) {
+        $logStmt = $conn->prepare("
+            INSERT INTO user_logs (created_by, action, target_user)
+            VALUES (?, 'Benutzer erstellt', ?)
+        ");
+        $logStmt->execute([$createdBy, $newUserId]);
+    }
+
     echo json_encode(['success' => true, 'message' => 'Benutzer erfolgreich erstellt.']);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
-?>

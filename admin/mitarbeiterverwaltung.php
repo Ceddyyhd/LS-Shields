@@ -85,44 +85,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
             </div>
             <div class="modal-body">
-                <form id="createUserForm">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="email">Email Adresse</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-                        </div>
-                        <div class="form-group">
-                            <label for="umail">Umail Adresse</label>
-                            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
-                        </div>
-                        <div class="form-group">
-                            <label for="kontonummer">Kontonummer</label>
-                            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
-                        </div>
-                        <div class="form-group">
-                            <label for="nummer">Tel. Nr.</label>
-                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Passwort</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword">Passwort Bestätigen</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
-                        </div>
-                        <div class="form-group">
-                            <label for="profileImageInput">Profilbild</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
-                                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
-                                </div>
-                            </div>
-                            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
-                        </div>
-                    </div>
-                </form>
+              <form id="createUserForm">
+              <div class="card-body">
+                  <div class="form-group">
+                      <label for="name">Name</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                  </div>
+                  <div class="form-group">
+                      <label for="email">Email Adresse</label>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                      <label for="password">Passwort</label>
+                      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                      <label for="confirmPassword">Passwort Bestätigen</label>
+                      <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                      <label for="profileImageInput">Profilbild</label>
+                      <div class="input-group">
+                          <div class="custom-file">
+                              <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
+                              <label class="custom-file-label" for="profileImageInput">Choose file</label>
+                          </div>
+                      </div>
+                      <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
+                  </div>
+              </div>
+          </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -151,17 +143,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 
     // Listener nur für den "Save changes"-Button im Modal
-document.querySelector('#modal-user-create .btn-primary').addEventListener('click', function() {
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
     const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
     // Prüfen, ob die Felder leer sind
-    if (!password || !confirmPassword) {
-        alert('Bitte füllen Sie beide Passwortfelder aus!');
+    if (!email || !password) {
+        alert('Bitte füllen Sie die erforderlichen Felder aus (Email, Passwort)!');
         return;
     }
 
-    // Prüfen, ob die Passwörter übereinstimmen
     if (password !== confirmPassword) {
         alert('Die Passwörter stimmen nicht überein!');
         return;
@@ -169,7 +162,7 @@ document.querySelector('#modal-user-create .btn-primary').addEventListener('clic
 
     // Formulardaten sammeln und absenden
     const formData = new FormData(document.getElementById('createUserForm'));
-    fetch('include/user_create.php', {
+    fetch('user_create.php', {
         method: 'POST',
         body: formData,
     })

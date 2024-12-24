@@ -150,7 +150,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     });
 
-    document.querySelector('.btn-primary').addEventListener('click', function() {
+    // Listener nur für den "Save changes"-Button im Modal
+document.querySelector('#modal-user-create .btn-primary').addEventListener('click', function() {
     const password = document.getElementById('password').value.trim();
     const confirmPassword = document.getElementById('confirmPassword').value.trim();
 

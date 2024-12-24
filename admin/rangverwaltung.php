@@ -97,6 +97,7 @@ $(document).ready(function () {
               <th>ID</th>
               <th>Rang</th>
               <th>Ebene</th>
+              <th>value</th>
               <th>Bearbeiten</th>
             </tr>
           </thead>
@@ -106,6 +107,7 @@ $(document).ready(function () {
               <td><?= htmlspecialchars($role['id']) ?></td>
               <td><?= htmlspecialchars($role['name']) ?></td>
               <td><?= htmlspecialchars($role['level']) ?></td>
+              <td><?= htmlspecialchars($role['value']) ?></td>
               <td>
                 <?php if ((int)$role['id'] !== 1 && ($_SESSION['permissions']['role_change'] ?? false)): ?>
                   <button type="button" class="btn btn-block btn-outline-secondary" 

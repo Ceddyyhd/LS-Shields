@@ -24,21 +24,14 @@
 <body>
 
   <!-- Textarea für den Editor -->
-  <textarea id="summernote">Place <em>some</em> <u>text</u> <strong>here</strong></textarea>
+  <div id="summernote">Hello Summernote</div>
 
-  <!-- Summernote JS -->
-  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
   <!-- Script zur Initialisierung von Summernote -->
   <script>
     $(document).ready(function() {
-      // Initialisiere Summernote
-      $('#summernote').summernote({
-        height: 300, // Setzt die Höhe des Editors
-        placeholder: 'Write your content here...', // Platzhaltertext
-        tabsize: 2 // Tab-Indents für Code
-      });
-    });
+  $('#summernote').summernote();
+});
   </script>
 
 </body>

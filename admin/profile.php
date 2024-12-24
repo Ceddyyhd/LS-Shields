@@ -333,42 +333,43 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-    $("#saveChanges").on("click", function (e) {
-        e.preventDefault();
+        $("#saveChanges").on("click", function (e) {
+    e.preventDefault();
 
-        // Sammle die Daten aus dem Formular
-        var formData = $("#userEditForm").serialize();
+    // Sammle die Daten aus dem Formular
+    var formData = $("#userEditForm").serialize();
 
-        // Sende die Daten per AJAX
-        $.ajax({
-            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                try {
-                    // Versuche, die Antwort als JSON zu interpretieren
-                    response = JSON.parse(response);
+    // Sende die Daten per AJAX
+    $.ajax({
+        url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            try {
+                // Versuche, die Antwort als JSON zu interpretieren
+                response = JSON.parse(response);
 
-                    if (response.success) {
-                        // Schließe das Modal
-                        $("#user-bearbeiten").modal("hide");
+                if (response.success) {
+                    // Schließe das Modal
+                    $("#user-bearbeiten").modal("hide");
 
-                        // Seite neu laden, um die Änderungen zu sehen
-                        setTimeout(function () {
-                            location.reload();
-                        }, 500);
-                    } else {
-                        // Zeige die Fehlermeldung im Modal an
-                    }
-                } catch (error) {
-                    console.error("Fehler beim Parsen der Antwort:", error);
+                    // Seite neu laden, um die Änderungen zu sehen
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+                } else {
+                    // Zeige Fehlermeldung im Modal an
+                    alert(response.message);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX-Fehler:", error);
-            },
-        });
+            } catch (error) {
+                console.error("Fehler beim Parsen der Antwort:", error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX-Fehler:", error);
+        },
     });
+});
 });
 </script>
           <div class="col-md-9">

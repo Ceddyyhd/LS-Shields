@@ -55,6 +55,9 @@
                   <li class="list-group-item">
                     <b>Datum & Uhrzeit:</b> <a class="float-right">15.12.2024</a>
                   </li>
+                  <li class="list-group-item">
+                    <b>Ort:</b> <a class="float-right">15.12.2024</a>
+                  </li>
                 </ul>
               </div>
               <!-- /.card-body -->
@@ -64,15 +67,27 @@
             <!-- About Me Box -->
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">About Me</h3>
+                <h3 class="card-title">Informationen</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Education</strong>
+                <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
-                <p class="text-muted">
-                  B.S. in Computer Science from the University of Tennessee at Knoxville
-                </p>
+                <div class="card-body">
+                <dl class="row">
+                  <dt class="col-sm-4">Description lists</dt>
+                  <dd class="col-sm-8">A description list is perfect for defining terms.</dd>
+                  <dt class="col-sm-4">Euismod</dt>
+                  <dd class="col-sm-8">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
+                  <dd class="col-sm-8 offset-sm-4">Donec id elit non mi porta gravida at eget metus.</dd>
+                  <dt class="col-sm-4">Malesuada porta</dt>
+                  <dd class="col-sm-8">Etiam porta sem malesuada magna mollis euismod.</dd>
+                  <dt class="col-sm-4">Felis euismod semper eget lacinia</dt>
+                  <dd class="col-sm-8">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo
+                    sit amet risus.
+                  </dd>
+                </dl>
+              </div>
 
                 <hr>
 

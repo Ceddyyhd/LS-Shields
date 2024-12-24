@@ -177,8 +177,9 @@
                     <link href="summernote-bs5.css" rel="stylesheet">
                     <script src="summernote-bs5.js"></script>
 
-                    <div id="summernote">Hello Summernote</div>
-
+                    <form method="post">
+                    <textarea id="summernote" name="editordata"></textarea>
+                    </form
                     
                     
                         <script>

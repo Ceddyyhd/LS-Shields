@@ -350,16 +350,14 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             response = JSON.parse(response);
 
             if (response.success) {
-                // Schließe das Modal und lade die Seite neu
-                $("#user-bearbeiten").modal("hide");
-                setTimeout(function () {
-                    location.reload();
-                }, 500);
+                // Erfolg
+                alert('Daten erfolgreich gespeichert');
             } else {
-                // Zeige Fehlermeldung im Modal an
-                alert(response.message);
+                // Fehler
+                alert('Fehler: ' + response.message);
             }
         } catch (error) {
+            // Fehlerbehandlung
             console.error("Fehler beim Parsen der Antwort:", error);
         }
     },

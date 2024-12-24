@@ -72,16 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         var_dump($params);  // Zeigt das Parameter-Array an
 
         try {
+            // Deine SQL-Abfrage
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
-            // Gebe die Fehlernachricht als JSON zurück, ohne zusätzliche Ausgaben
+            // Fehlerbehandlung: Nur JSON zurückgeben
             echo json_encode([
                 'success' => false,
-                'message' => 'Fehler beim Speichern: ' . $e->getMessage(),
-                'sql' => $sql,  // Gibt die fehlerhafte SQL-Abfrage zurück
-                'params' => print_r($params, true)  // Gibt die Parameter zurück
+                'message' => 'Fehler beim Speichern: ' . $e->getMessage()
             ]);
         }
     } else {

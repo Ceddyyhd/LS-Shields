@@ -314,8 +314,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
                                 <strong><i class="fas fa-user-times mr-1"></i> Gekündigt</strong>
                                 <div class="form-check">
-                                    <input type="checkbox" id="gekundigtCheckbox" class="form-check-input" name="gekundigt" <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
-                                    <label for="gekundigtCheckbox" class="form-check-label">Benutzer als gekündigt markieren</label>
+                                <input type="checkbox" id="gekundigtCheckbox" class="form-check-input" name="gekundigt" <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
+                                <label for="gekundigtCheckbox" class="form-check-label">Benutzer als gekündigt markieren</label>
                                 </div>
                             </div>
                         </div>
@@ -341,34 +341,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
     // Sende die Daten per AJAX
     $.ajax({
-        url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            try {
-                // Versuche, die Antwort als JSON zu interpretieren
-                response = JSON.parse(response);
+    url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+    type: "POST",
+    data: formData,  // Übergebene Formulardaten
+    success: function (response) {
+        try {
+            // Versuche, die Antwort als JSON zu interpretieren
+            response = JSON.parse(response);
 
-                if (response.success) {
-                    // Schließe das Modal
-                    $("#user-bearbeiten").modal("hide");
+            if (response.success) {
+                // Schließe das Modal
+                $("#user-bearbeiten").modal("hide");
 
-                    // Seite neu laden, um die Änderungen zu sehen
-                    setTimeout(function () {
-                        location.reload();
-                    }, 500);
-                } else {
-                    // Zeige Fehlermeldung im Modal an
-                    alert(response.message);
-                }
-            } catch (error) {
-                console.error("Fehler beim Parsen der Antwort:", error);
+                // Seite neu laden, um die Änderungen zu sehen
+                setTimeout(function () {
+                    location.reload();
+                }, 500);
+            } else {
+                // Zeige Fehlermeldung im Modal an
+                alert(response.message);
             }
-        },
-        error: function (xhr, status, error) {
-            console.error("AJAX-Fehler:", error);
-        },
-    });
+        } catch (error) {
+            console.error("Fehler beim Parsen der Antwort:", error);
+        }
+    },
+    error: function (xhr, status, error) {
+        console.error("AJAX-Fehler:", error);
+    },
+});
 });
 });
 </script>

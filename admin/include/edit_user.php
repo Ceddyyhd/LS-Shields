@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Gekündigt verarbeiten
     $gekundigt = isset($_POST['gekundigt']) && $_POST['gekundigt'] === 'on' ? 'gekündigt' : 'no_kuendigung';
-    $updates['gekündigt'] = $gekundigt;
+    $updates['gekündigt'] = $gekundigt;  // Den "gekündigt"-Wert in das Updates-Array einfügen
 
     // Daten aktualisieren
     if (!empty($updates)) {
@@ -54,14 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params = [];
         foreach ($updates as $key => $value) {
             $sql .= "$key = :$key, ";
-            $params[":$key"] = $value;
+            $params[":$key"] = $value;  // Parameter in die $params-Array einfügen
         }
-        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-        $params[':user_id'] = $user_id;
+        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";  // Entferne das letzte Komma
+        $params[':user_id'] = $user_id;  // Benutzer-ID hinzufügen
 
         try {
             $stmt = $conn->prepare($sql);
-            $stmt->execute($params);
+            $stmt->execute($params);  // SQL mit den richtigen Parametern ausführen
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
             echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);

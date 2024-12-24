@@ -16,9 +16,11 @@ try {
 
     $updates = [];
 
-    // Gekündigt-Status
+    // Gekündigt-Status hinzufügen
     if (isset($_POST['gekündigt'])) {
-        $updates['gekündigt'] = (int) $_POST['gekündigt']; // Typensicherheit durch (int)
+        $updates['gekündigt'] = (int) $_POST['gekündigt'];
+    } else {
+        $updates['gekündigt'] = 0; // Standardwert
     }
 
     // Weitere Felder

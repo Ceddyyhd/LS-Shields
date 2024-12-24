@@ -169,7 +169,7 @@ document.querySelector('#modal-user-create .btn-primary').addEventListener('clic
 
     // Formulardaten sammeln und absenden
     const formData = new FormData(document.getElementById('createUserForm'));
-    fetch('user_create.php', {
+    fetch('include/user_create.php', {
         method: 'POST',
         body: formData,
     })

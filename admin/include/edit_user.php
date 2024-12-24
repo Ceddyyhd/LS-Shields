@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Verbindung und Sitzung starten
 include 'db.php';
 session_start();
@@ -64,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
         $params[':user_id'] = $user_id;  // Stelle sicher, dass :user_id auch im Array ist
 
-        // Debugging: Überprüfen, ob alle Parameter korrekt gesetzt sind
-        // error_log('SQL: ' . $sql);  // Gibt die SQL-Abfrage ins Log
-        // error_log('Params: ' . print_r($params, true));  // Gibt die Parameter ins Log
+        // Debugging-Ausgabe
+        var_dump($sql);    // Zeigt die SQL-Abfrage an
+        var_dump($params);  // Zeigt das Parameter-Array an
 
         try {
             $stmt = $conn->prepare($sql);

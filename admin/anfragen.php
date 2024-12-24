@@ -150,7 +150,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?= mb_strimwidth(htmlspecialchars($anfrage['anfrage']), 0, 50, '...') ?>
     </td>
     <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
-    <td id="erstellt_von-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
+    <td><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
     <td>Details einblenden</td>
   </tr>
   <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">

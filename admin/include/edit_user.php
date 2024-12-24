@@ -16,7 +16,12 @@ try {
 
     $updates = [];
 
-    
+   // Gekündigt-Status
+if (isset($_POST['gekündigt'])) {
+    $updates['gekündigt'] = (int) $_POST['gekündigt']; // Typensicherheit durch (int)
+} else {
+    $updates['gekündigt'] = 0; // Standardwert, falls der Wert nicht übergeben wurde
+}
 
     // Weitere Felder
     if ($_SESSION['permissions']['edit_name'] ?? false && isset($_POST['name'])) {

@@ -10,7 +10,14 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
+<!-- include libraries(jQuery, bootstrap) -->
+<script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- include summernote css/js-->
+<link href="summernote-bs5.css" rel="stylesheet">
+<script src="summernote-bs5.js"></script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -170,19 +177,11 @@
                   <div class="active tab-pane" id="plan-bearbeiten">
                     
 
-                  <div class="info-box bg-gradient-info">
-                        <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Bookmarks</span>
-                            <span class="info-box-number">41,410</span>
-                            <div class="progress">
-                            <div class="progress-bar" style="width: 70%"></div>
-                            </div>
-                            <span class="progress-description">
-                            70% Increase in 30 Days
-                            </span>
-                        </div>
-                        </div>
+                  <div id="summernote">Hello Summernote</div>
+                    <script>$(document).ready(function() {
+                    $('#summernote').summernote();
+                    });
+                    </script>
 
                     
 

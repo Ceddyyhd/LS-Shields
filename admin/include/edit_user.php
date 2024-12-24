@@ -52,30 +52,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-    // Debugging: Überprüfen, was in $updates ist
-    var_dump($updates);
-
-    // Daten aktualisieren
+    // Wenn Updates existieren, SQL-Abfrage erstellen und ausführen
     if (!empty($updates)) {
         $sql = "UPDATE users SET ";
         $params = [];
 
         // Dynamische Erstellung der SQL-Klausel und des Parameter-Arrays
         foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";  // Plazhalter wird hinzugefügt
+            $sql .= "$key = :$key, ";  // Platzhalter wird hinzugefügt
             $params[":$key"] = $value;  // Parameter wird zugewiesen
         }
 
-        // Entferne das letzte Komma
+        // Entferne das letzte Komma und füge die WHERE-Klausel hinzu
         $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
         $params[':user_id'] = $user_id;  // :user_id auch im Array hinzufügen
 
-        // Debugging: Überprüfen, ob die SQL-Abfrage und Parameter korrekt sind
-        var_dump($sql);    // Zeigt die SQL-Abfrage an
-        var_dump($params);  // Zeigt das Parameter-Array an
+        // Debugging-Ausgabe (optional, für das Testen)
+        // echo "SQL: $sql\n";
+        // print_r($params);
 
         try {
-            // Deine SQL-Abfrage
+            // Deine SQL-Abfrage ausführen
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
@@ -83,9 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Fehlerbehandlung: Nur JSON zurückgeben
             echo json_encode([
                 'success' => false,
-                'message' => 'Fehler beim Speichern: ' . $e->getMessage(),
-                'sql' => $sql,  // Gibt die fehlerhafte SQL-Abfrage zurück
-                'params' => print_r($params, true)  // Gibt die Parameter zurück
+                'message' => 'Fehler beim Speichern: ' . $e->getMessage()
             ]);
         }
     } else {

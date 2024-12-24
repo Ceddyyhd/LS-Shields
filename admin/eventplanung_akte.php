@@ -45,9 +45,8 @@
                        src="dist/img/user4-128x128.jpg"
                        alt="User profile picture">
                 </div>
-
+                <h5 class="profile-username text-center">Ansprechpartner</h5>
                 <h3 class="profile-username text-center">Nina Mcintire</h3>
-                <h3 class="profile-username text-center">Vor Nachname</h3>
 
                 <p class="text-muted text-center">Software Engineer</p>
                 <p class="text-muted text-center">Rang</p>

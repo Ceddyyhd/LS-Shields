@@ -162,7 +162,7 @@ $(document).ready(function () {
             </div>
             <div class="form-group">
               <label for="roleValue">Wert (Value)</label>
-              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
+              <input type="number" id="roleValue" class="form-control" min="1" max="100" value="<?= htmlspecialchars($role['value']) ?>"placeholder="Zahlenwert für den Rang">
             </div>
             <div class="form-group" id="permissionsContainer">
               <!-- Dynamische Rechte erscheinen hier -->

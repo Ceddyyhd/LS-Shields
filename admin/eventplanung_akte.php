@@ -179,7 +179,7 @@
 
                     <form method="post">
                     <textarea id="summernote" name="editordata"></textarea>
-                    </form
+                    </formy>
                     
                     
                         <script>

@@ -137,6 +137,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <th>Ansprechpartner</th>
               <th>Anfrage</th>
               <th>Status</th>
+              <th>Erstellt von</th>
               <th>Details einblenden</th>
             </tr>
           </thead>
@@ -149,6 +150,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?= mb_strimwidth(htmlspecialchars($anfrage['anfrage']), 0, 50, '...') ?>
     </td>
     <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
+    <td id="erstellt_von-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
     <td>Details einblenden</td>
   </tr>
   <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">

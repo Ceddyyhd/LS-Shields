@@ -10,20 +10,40 @@ try {
     // Mitarbeiterdaten sicher abrufen
     $stmt = $conn->prepare("
         SELECT 
-            u.id,
-            u.name,
-            u.nummer,
-            u.created_at,
-            r.name AS role_name,
-            (
-                SELECT CONCAT(DATE_FORMAT(v.start_date, '%d.%m.%Y'), ' - ', DATE_FORMAT(v.end_date, '%d.%m.%Y'))
-                FROM vacations v
-                WHERE v.user_id = u.id AND v.status = 'approved' AND v.start_date >= CURDATE()
-                ORDER BY v.start_date ASC
-                LIMIT 1
-            ) AS next_vacation
-        FROM users u
-        LEFT JOIN roles r ON u.role_id = r.id
+    u.id,
+    u.name,
+    u.nummer,
+    u.created_at,
+    r.name AS role_name,
+    CASE
+        -- Prüfen, ob der Mitarbeiter aktuell im Urlaub ist
+        WHEN EXISTS (
+            SELECT 1
+            FROM vacations v
+            WHERE v.user_id = u.id 
+              AND v.status = 'approved' 
+              AND CURDATE() BETWEEN v.start_date AND v.end_date
+        ) THEN (
+            SELECT CONCAT('Im Urlaub: ', DATE_FORMAT(v.start_date, '%d.%m.%Y'), ' - ', DATE_FORMAT(v.end_date, '%d.%m.%Y'))
+            FROM vacations v
+            WHERE v.user_id = u.id 
+              AND v.status = 'approved' 
+              AND CURDATE() BETWEEN v.start_date AND v.end_date
+            LIMIT 1
+        )
+        -- Andernfalls den nächsten geplanten Urlaub anzeigen
+        ELSE (
+            SELECT CONCAT(DATE_FORMAT(v.start_date, '%d.%m.%Y'), ' - ', DATE_FORMAT(v.end_date, '%d.%m.%Y'))
+            FROM vacations v
+            WHERE v.user_id = u.id 
+              AND v.status = 'approved' 
+              AND v.start_date >= CURDATE()
+            ORDER BY v.start_date ASC
+            LIMIT 1
+        )
+    END AS next_vacation
+FROM users u
+LEFT JOIN roles r ON u.role_id = r.id;
     ");
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

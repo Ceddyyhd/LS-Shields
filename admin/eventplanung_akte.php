@@ -45,11 +45,8 @@
                        src="dist/img/user4-128x128.jpg"
                        alt="User profile picture">
                 </div>
-                <h5 class="profile-username text-center">Ansprechpartner</h5>
+                <p class="text-muted text-center">Ansprechpartner</p>
                 <h3 class="profile-username text-center">Nina Mcintire</h3>
-
-                <p class="text-muted text-center">Software Engineer</p>
-                <p class="text-muted text-center">Rang</p>
 
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">

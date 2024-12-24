@@ -72,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
   $(document).ready(function () {
     $.ajax({
-      url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users_gekündigt.php', // URL zu deiner neuen fetch_users_gekündigt.php
+      url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users_gekuendigt.php', // URL zu deiner neuen fetch_users_gekündigt.php
       type: 'POST',
       dataType: 'json',
       success: function (data) {

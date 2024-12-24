@@ -54,15 +54,24 @@ if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? fa
 
     // Daten aktualisieren
     // Daten aktualisieren, inklusive gekündigt
+// Daten aktualisieren, inklusive gekündigt
 if (!empty($updates)) {
     $sql = "UPDATE users SET ";
     $params = [];
+    
+    // Dynamische Erstellung der SQL-Klausel und des Parameter-Arrays
     foreach ($updates as $key => $value) {
         $sql .= "$key = :$key, ";
         $params[":$key"] = $value;
     }
+
+    // Entferne das letzte Komma
     $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-    $params[':user_id'] = $user_id;
+    $params[':user_id'] = $user_id;  // Stelle sicher, dass :user_id auch im Array ist
+
+    // Debugging: Überprüfen, ob alle Parameter korrekt gesetzt sind
+    var_dump($sql); // Zeigt die endgültige SQL-Abfrage
+    var_dump($params); // Zeigt das Parameter-Array
 
     try {
         $stmt = $conn->prepare($sql);
@@ -73,6 +82,7 @@ if (!empty($updates)) {
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+} json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
 }
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);

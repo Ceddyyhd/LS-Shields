@@ -181,9 +181,11 @@
 
                     
                     
-                        <script>$(document).ready(function() {
-                        $('#summernote').summernote();
-                        });</script>
+                        <script>
+                        $('.summernote').summernote({
+                            airMode: true
+                            });
+                        </script>
 
 
                   </div>

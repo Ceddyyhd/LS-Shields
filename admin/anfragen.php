@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php';
 
 // Anfragen aus der Datenbank abrufen
-$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status FROM anfragen ORDER BY datum_uhrzeit DESC";
+$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, erstellt_von, status FROM anfragen ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);

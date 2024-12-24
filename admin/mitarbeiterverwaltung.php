@@ -39,7 +39,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main content -->
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+      <h3 class="card-title"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
                   Launch Primary Modal
                 </button></h3>
     </div>
@@ -74,7 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 
-<div class="modal fade" id="modal-default">
+<div class="modal fade" id="modal-user-create">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">

@@ -199,9 +199,12 @@
 $(function () {
     // Initializing Summernote
     $('#summernote').summernote({
-        height: 200, // Adjust the height of the editor
+        height: 300, // Adjust the height of the editor
         placeholder: 'Write your content here...', // Placeholder text
-        tabsize: 2 // Indentation for code blocks
+        tabsize: 2, // Indentation for code blocks
+        codemirror: { // If you want to enable CodeMirror mode
+            theme: 'monokai'
+        }
     });
 });
 </script>

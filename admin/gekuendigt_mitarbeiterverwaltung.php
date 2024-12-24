@@ -70,45 +70,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Dein JavaScript -->
     <script>
-      $(document).ready(function () {
-        $.ajax({
-          url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users.php', // URL zu deiner fetch_users.php
-          type: 'POST',
-          dataType: 'json',
-          success: function (data) {
-            console.log(data);  // Überprüfe die Antwortstruktur
+  $(document).ready(function () {
+    $.ajax({
+      url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users_gekündigt.php', // URL zu deiner neuen fetch_users_gekündigt.php
+      type: 'POST',
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);  // Überprüfe die Antwortstruktur
 
-            if (!Array.isArray(data)) {
-              console.error('Die Antwort ist kein Array:', data);
-              alert('Fehler: Antwort ist kein Array.');
-              return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
-            }
+        if (!Array.isArray(data)) {
+          console.error('Die Antwort ist kein Array:', data);
+          alert('Fehler: Antwort ist kein Array.');
+          return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
+        }
 
-            let tableBody = $('#example1 tbody');
-            tableBody.empty();
+        let tableBody = $('#example1 tbody');
+        tableBody.empty();
 
-            data.forEach(user => {
-              tableBody.append(`
-                <tr>
-                  <td>${user.name}</td>
-                  <td>${user.role_name}</td>
-                  <td>${user.nummer ? user.nummer : 'N/A'}</td>
-                  <td>${new Date(user.created_at).toLocaleDateString()}</td>
-                  <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
-                  <td>
-                    <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
-                  </td>
-                </tr>
-              `);
-            });
-          },
-          error: function (xhr, status, error) {
-            console.error('AJAX-Fehler:', xhr.responseText);
-            alert('Fehler beim Abrufen der Daten.');
-          }
+        data.forEach(user => {
+          tableBody.append(`
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.role_name}</td>
+              <td>${user.nummer ? user.nummer : 'N/A'}</td>
+              <td>${new Date(user.created_at).toLocaleDateString()}</td>
+              <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
+              <td>
+                <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+              </td>
+            </tr>
+          `);
         });
-      });
-    </script>
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', xhr.responseText);
+        alert('Fehler beim Abrufen der Daten.');
+      }
+    });
+  });
+</script>
 
 
 

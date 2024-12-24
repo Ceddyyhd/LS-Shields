@@ -48,8 +48,78 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Anfragen Tabelle</h3>
-      </div>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
+                Benutzer erstellen
+            </button>      </div>
+
+
+
+
+            <!-- Dein HTML-Modal -->
+<div class="modal fade" id="modal-anfrage-create">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Benutzer Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <form id="createUserForm">
+    <div class="card-body">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email Adresse</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="umail">Umail Adresse</label>
+            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="kontonummer">Kontonummer</label>
+            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
+        </div>
+        <div class="form-group">
+            <label for="nummer">Tel. Nr.</label>
+            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Passwort Bestätigen</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <label for="profileImageInput">Profilbild</label>
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
+                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
+                </div>
+            </div>
+            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
+        </div>
+    </div>
+</form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
       <div class="card-body">
         <table class="table table-bordered table-hover">
           <thead>

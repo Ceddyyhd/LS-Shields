@@ -91,7 +91,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <td>${new Date(user.created_at).toLocaleDateString()}</td>
                         <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
                         <td>
-                            <a href="/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                            <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
                         </td>
                     </tr>
                 `);

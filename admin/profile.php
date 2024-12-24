@@ -312,12 +312,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <!-- Gekündigt -->
                             <div class="form-group">
-                                <strong><i class="fas fa-user-times mr-1"></i> Gekündigt</strong>
-                                <div class="form-check">
-                                <input type="checkbox" id="gekundigtCheckbox" class="form-check-input" name="gekundigt" <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
-                                <label for="gekundigtCheckbox" class="form-check-label">Benutzer als gekündigt markieren</label>
-                                </div>
-                            </div>
+    <strong><i class="fas fa-user-times mr-1"></i> Gekuendigt</strong> 
+    <div class="form-check">
+        <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['gekuendigt'] ? 'checked' : ''; ?>>
+        <label for="gekuendigtCheckbox" class="form-check-label">Benutzer als gekuendigt markieren</label>
+    </div>
+</div>
                         </div>
                     </div>
                 </div>

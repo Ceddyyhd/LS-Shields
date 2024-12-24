@@ -1,5 +1,4 @@
 <?php
-// Verbindung und Sitzung starten
 include 'db.php';
 session_start();
 
@@ -44,6 +43,9 @@ try {
         $updates['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
     }
 
+    // Debugging: Überprüfe die Updates
+    error_log("Updates: " . print_r($updates, true));
+
     // SQL erstellen und Parameter binden
     if (!empty($updates)) {
         $sql = "UPDATE users SET ";
@@ -54,6 +56,10 @@ try {
         }
         $sql = rtrim($sql, ', ') . " WHERE id = :id";
         $params[':id'] = $user_id;
+
+        // Debugging: Überprüfe die SQL-Abfrage und Parameter
+        error_log("SQL: " . $sql);
+        error_log("Parameter: " . print_r($params, true));
 
         $stmt = $conn->prepare($sql);
         $stmt->execute($params);

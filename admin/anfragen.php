@@ -49,7 +49,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="card">
       <div class="card-header">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
-                Benutzer erstellen
+                Anfrage erstellen
             </button>      </div>
 
 
@@ -60,7 +60,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Benutzer Erstellen</h4>
+                <h4 class="modal-title">Anfrage Erstellen</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -73,39 +73,13 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
         </div>
         <div class="form-group">
-            <label for="email">Email Adresse</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="umail">Umail Adresse</label>
-            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="kontonummer">Kontonummer</label>
-            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
-        </div>
-        <div class="form-group">
             <label for="nummer">Tel. Nr.</label>
             <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
         </div>
         <div class="form-group">
-            <label for="password">Passwort</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">Passwort Bestätigen</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="profileImageInput">Profilbild</label>
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
-                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
-                </div>
+            <label for="nummer">Anfrage</label>
+            <textarea name="anfrage" placeholder="Bitte teilen Sie uns Ihre Anfrage so kurz wie möglich mit. Wir melden uns dann unter der angegebenen Telefonnummer." class="message_input" rows="4" style="width: 100%;"></textarea>
             </div>
-            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
-        </div>
     </div>
 </form>
             </div>

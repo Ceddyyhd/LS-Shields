@@ -129,7 +129,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </script>
 
 
-
       <div class="card-body">
         <table class="table table-bordered table-hover">
           <thead>

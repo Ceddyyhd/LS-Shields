@@ -311,6 +311,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="password" id="passwordField" name="password" class="form-control" placeholder="Neues Passwort" disabled>
                             </div>
 
+                            <div class="form-group">
+                                <strong><i class="fas fa-lock mr-1"></i> Gekündigt</strong>
+                                <div class="form-check">
+                                    <label for="changePasswordCheckbox" class="form-check-label">Passwort ändern</label>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

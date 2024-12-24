@@ -28,11 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Prüfen, ob der neue Rang existiert
-        $stmt = $conn->prepare("SELECT id FROM roles WHERE id = :role_id");
+        // Den Wert des neuen Rangs abrufen
+        $stmt = $conn->prepare("SELECT value FROM roles WHERE id = :role_id");
         $stmt->execute([':role_id' => $new_role_id]);
-        if (!$stmt->fetchColumn()) {
+        $new_role_value = $stmt->fetchColumn();
+
+        if (!$new_role_value) { // Wenn der neue Rang nicht existiert
             echo json_encode(['success' => false, 'message' => 'Ungültiger Rang angegeben.']);
+            exit;
+        }
+
+        // Den Wert des aktuellen Benutzers abrufen
+        $stmt = $conn->prepare("SELECT roles.value FROM users JOIN roles ON users.role_id = roles.id WHERE users.id = :current_user_id");
+        $stmt->execute([':current_user_id' => $_SESSION['user_id']]);
+        $current_user_value = $stmt->fetchColumn();
+
+        if (!$current_user_value || $new_role_value > $current_user_value) {
+            echo json_encode(['success' => false, 'message' => 'Sie können keine Gruppen mit einem höheren Rang als Ihrem eigenen ändern.']);
             exit;
         }
 

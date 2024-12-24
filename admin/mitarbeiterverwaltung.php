@@ -33,50 +33,65 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-header -->
 
     <!-- Main content -->
-    
-    <div class="card">
-      <div class="card-header">
+    <?php
+    include 'include/db.php';
+    // Mitarbeiterdaten abrufen
+$sql = "SELECT 
+            u.id,
+            u.name,
+            u.nummer,
+            u.created_at,
+            r.name AS role_name
+        FROM users u
+        LEFT JOIN roles r ON u.role_id = r.id";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="card">
+    <div class="card-header">
         <h3 class="card-title">DataTable with default features</h3>
-      </div>
-      <!-- /.card-header -->
-      <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-          <thead>
-          <tr>
-            <th>Mitarbeiter</th>
-            <th>Rang</th>
-            <th>Telefonnummer</th>
-            <th>Beitritt</th>
-            <th>Urlaub</th>
-            <th>Bearbeiten</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Cedric Schmidt</td>
-            <td>Trainee 1</td>
-            <td>555 - 974 33 67</td>
-            <td>15.12.2024</td>
-            <td>N/A</td>
-            <td>
-              <button type="button" class="btn btn-block btn-outline-secondary">Bearbeiten</button>
-            </td>
-          </tr>
-          </tbody>
-          <tfoot>
-          <tr>
-            <th>Mitarbeiter</th>
-            <th>Rang</th>
-            <th>Telefonnummer</th>
-            <th>Beitritt</th>
-            <th>Urlaub</th>
-            <th>Bearbeiten</th>
-          </tr>
-          </tfoot>
-        </table>
-      </div>
-      <!-- /.card-body -->
     </div>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Mitarbeiter</th>
+                    <th>Rang</th>
+                    <th>Telefonnummer</th>
+                    <th>Beitritt</th>
+                    <th>Urlaub</th>
+                    <th>Bearbeiten</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($user['name']) ?></td>
+                        <td><?= htmlspecialchars($user['role_name']) ?></td>
+                        <td><?= htmlspecialchars($user['nummer'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars(date('d.m.Y', strtotime($user['created_at']))) ?></td>
+                        <td>N/A</td>
+                        <td>
+                            <a href="/profile.php?id=<?= $user['id'] ?>" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Mitarbeiter</th>
+                    <th>Rang</th>
+                    <th>Telefonnummer</th>
+                    <th>Beitritt</th>
+                    <th>Urlaub</th>
+                    <th>Bearbeiten</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
     <!-- /.card -->
   </div>
   <!-- /.col -->

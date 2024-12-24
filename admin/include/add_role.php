@@ -1,5 +1,6 @@
 <?php
 include 'db.php';
+session_start();
 
 header('Content-Type: application/json');
 
@@ -7,29 +8,34 @@ header('Content-Type: application/json');
 $name = $_POST['name'] ?? null;
 $level = $_POST['level'] ?? null;
 $value = $_POST['value'] ?? null;
-$permissions = json_decode($_POST['permissions'], true);
+$permissions = json_decode($_POST['permissions'], true); // JSON-Daten dekodieren
 
-// Eingaben validieren
 if (!$name || !$level || !$value || !is_array($permissions)) {
     echo json_encode(['success' => false, 'message' => 'Ungültige Eingaben.']);
     exit;
 }
 
-// Überprüfen, ob der Benutzer die Berechtigung hat, Rollen mit diesem Wert zu erstellen
-session_start();
-$current_user_value = $_SESSION['user_value'] ?? null; // Aktueller Wert des eingeloggten Benutzers
-if ($current_user_value === null || $value > $current_user_value) {
-    echo json_encode(['success' => false, 'message' => 'Sie können keine Rollen mit einem höheren Rang als Ihrem erstellen.']);
-    exit;
-}
-
-$value = $_POST['value'] ?? null;
-if (!$value || !is_numeric($value)) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiger Value.']);
-    exit;
-}
-
 try {
+    // Hole den Wert des eingeloggten Benutzers
+    $stmt = $conn->prepare("SELECT roles.value FROM roles 
+                            JOIN users ON users.role_id = roles.id 
+                            WHERE users.id = :user_id");
+    $stmt->execute([':user_id' => $_SESSION['user_id']]);
+    $currentUserRole = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$currentUserRole) {
+        echo json_encode(['success' => false, 'message' => 'Benutzerrolle nicht gefunden.']);
+        exit;
+    }
+
+    $currentUserValue = (int) $currentUserRole['value'];
+
+    // Überprüfen, ob der neue Wert den Wert des aktuellen Benutzers überschreitet
+    if ($value > $currentUserValue) {
+        echo json_encode(['success' => false, 'message' => 'Sie können keine Rolle mit einem höheren Wert erstellen als Ihre eigene Rolle.']);
+        exit;
+    }
+
     // Rolle in die Datenbank einfügen
     $stmt = $conn->prepare("INSERT INTO roles (name, level, value, permissions) VALUES (:name, :level, :value, :permissions)");
     $stmt->execute([

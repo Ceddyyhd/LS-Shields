@@ -1,16 +1,16 @@
 <?php
 include 'db.php'; // Datenbankverbindung
 
-session_start(); // Stelle sicher, dass die Sitzung gestartet wurde
+session_start(); // Sitzung starten
 
-// Überprüfe, ob der Benutzer eingeloggt ist
+// Überprüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['username'])) {
     echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
     exit;
 }
 
-// Hole den Benutzernamen aus der Session
-$erstellt_von = $_SESSION['username']; // Benutzernamen aus der Session holen
+// Hole den Benutzernamen aus der Session (falls nicht über AJAX übermittelt)
+$erstellt_von = $_POST['erstellt_von'] ?? $_SESSION['username']; // Falls der Benutzername nicht per AJAX gesendet wurde, nehme ihn aus der Session
 
 // Formulardaten auslesen
 $name = $_POST['name'] ?? '';

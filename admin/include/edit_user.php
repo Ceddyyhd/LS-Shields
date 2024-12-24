@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Berechtigungen für 'edit_gekundigt' prüfen
     if (isset($_POST['gekundigt']) && ($_SESSION['permissions']['edit_gekundigt'] ?? false)) {
-        $updates['gekündigt'] = $_POST['gekundigt'] == 'on' ? 1 : 0;
+        $updates['gekündigt'] = isset($_POST['gekundigt']) && $_POST['gekundigt'] === 'on' ? 1 : 0;
     }
 
     // Passwort verarbeiten, falls erlaubt und übergeben

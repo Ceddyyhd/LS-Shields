@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[':user_id'] = $user_id;  // Stelle sicher, dass :user_id auch im Array ist
 
         // Debugging: Überprüfen, ob alle Parameter korrekt gesetzt sind
-        //error_log('SQL: ' . $sql);  // Gibt die SQL-Abfrage ins Log
-        //error_log('Params: ' . print_r($params, true));  // Gibt die Parameter ins Log
+        error_log('SQL: ' . $sql);  // Gibt die SQL-Abfrage ins Log
+        error_log('Params: ' . print_r($params, true));  // Gibt die Parameter ins Log
 
         try {
             $stmt = $conn->prepare($sql);

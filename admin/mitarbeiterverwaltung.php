@@ -74,63 +74,111 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 
+<!-- Dein HTML-Modal -->
 <div class="modal fade" id="modal-user-create">
-        <div class="modal-dialog">
-          <div class="modal-content">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h4 class="modal-title">Benutzer Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-            <form>
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email adresse</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Umail adresse</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Kontonummer</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Tel. Nr.</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">Profilbild</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                      </div>
-                      <div class="input-group-append">
-                        <span class="input-group-text">Upload</span>
-                      </div>
+                <form id="createUserForm">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="email">Email Adresse</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="umail">Umail Adresse</label>
+                            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="kontonummer">Kontonummer</label>
+                            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
+                        </div>
+                        <div class="form-group">
+                            <label for="nummer">Tel. Nr.</label>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Passwort</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Passwort Bestätigen</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileImageInput">Profilbild</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
+                                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
+                                </div>
+                            </div>
+                            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
+                        </div>
                     </div>
-                  </div>
-                </div>
-                <!-- /.card-body -->
-              </form>
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
-          </div>
-          <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
-      </div>
+    </div>
+</div>
+
+<!-- Dein JavaScript -->
+<script>
+    document.getElementById('profileImageInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('profileImagePreview');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+    });
+
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+            alert('Die Passwörter stimmen nicht überein!');
+            return;
+        }
+
+        const formData = new FormData(document.getElementById('createUserForm'));
+        fetch('user_create.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Benutzer erfolgreich erstellt.');
+                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+            } else {
+                alert('Fehler: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler:', error);
+            alert('Ein unerwarteter Fehler ist aufgetreten.');
+        });
+    });
+</script>
 
 <!-- JavaScript Section -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

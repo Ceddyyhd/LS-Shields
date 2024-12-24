@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_SESSION['permissions']['edit_kontonummer'] ?? false) {
         $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
     }
+    // Überprüfen, ob die 'gekündigt' Checkbox aktiviert ist und Berechtigung zum Bearbeiten vorhanden ist
+    if (isset($_POST['gekundigt']) && $_SESSION['permissions']['edit_gekundigt'] ?? false) {
+        $updates['gekündigt'] = $_POST['gekundigt'] == 'on' ? 1 : 0;
+    }
 
     // Passwort verarbeiten, falls erlaubt und übergeben
 if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
@@ -45,26 +49,27 @@ if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? fa
 }
 
     // Daten aktualisieren
-    if (!empty($updates)) {
-        $sql = "UPDATE users SET ";
-        $params = [];
-        foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";
-            $params[":$key"] = $value;
-        }
-        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-        $params[':user_id'] = $user_id;
-
-        try {
-            $stmt = $conn->prepare($sql);
-            $stmt->execute($params);
-            echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
-        } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
-        }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+    // Daten aktualisieren, inklusive gekündigt
+if (!empty($updates)) {
+    $sql = "UPDATE users SET ";
+    $params = [];
+    foreach ($updates as $key => $value) {
+        $sql .= "$key = :$key, ";
+        $params[":$key"] = $value;
     }
+    $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
+    $params[':user_id'] = $user_id;
+
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($params);
+        echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+}
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
 }

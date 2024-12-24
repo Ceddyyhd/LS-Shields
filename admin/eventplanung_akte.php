@@ -172,42 +172,41 @@
                     
 
                   <div class="row">
-                    <div class="col-md-12">
-                    <div class="card card-outline card-info">
-                        <div class="card-header">
-                        <h3 class="card-title">
-                            Summernote
-                        </h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                        <textarea id="summernote">
-                            Place <em>some</em> <u>text</u> <strong>here</strong>
-                        </textarea>
-                        </div>
-                        <div class="card-footer">
-                        Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
-                        </div>
-                    </div>
-                    </div>
-                    <!-- /.col-->
-                </div>                   
-                
-                <!-- Summernote -->
-                <script src="../../plugins/summernote/summernote-bs4.min.js"></script>
-                <!-- Page specific script -->
-                <script>
-                $(function () {
-                    // Summernote
-                    $('#summernote').summernote()
+    <div class="col-md-12">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">
+                    Summernote
+                </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <textarea id="summernote">
+                    Place <em>some</em> <u>text</u> <strong>here</strong>
+                </textarea>
+            </div>
+            <div class="card-footer">
+                Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
+            </div>
+        </div>
+    </div>
+    <!-- /.col-->
+</div>                   
 
-                    // CodeMirror
-                    CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
-                    mode: "htmlmixed",
-                    theme: "monokai"
-                    });
-                })
-                </script>
+<!-- Summernote -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+<!-- Page specific script -->
+<script>
+$(function () {
+    // Initializing Summernote
+    $('#summernote').summernote({
+        height: 200, // Adjust the height of the editor
+        placeholder: 'Write your content here...', // Placeholder text
+        tabsize: 2 // Indentation for code blocks
+    });
+});
+</script>
 
                     
 

@@ -12,12 +12,11 @@
   <!-- Main Sidebar Container -->
 <!-- include libraries(jQuery, bootstrap) -->
 <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<!-- include summernote css/js-->
-<link href="summernote-bs5.css" rel="stylesheet">
-<script src="summernote-bs5.js"></script>
+<!-- Summernote -->
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -177,10 +176,28 @@
                   <div class="active tab-pane" id="plan-bearbeiten">
                     
 
-                  <div id="summernote">Hello Summernote</div>
-                    <script>$(document).ready(function() {
-                    $('#summernote').summernote();
-                    });
+                  <div class="card card-outline card-info">
+                    <div class="card-header">
+                    <h3 class="card-title">
+                        Summernote
+                    </h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <textarea id="summernote">
+                        Place <em>some</em> <u>text</u> <strong>here</strong>
+                    </textarea>
+                    </div>
+                    <div class="card-footer">
+                    Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
+                    </div>
+                </div>                    
+                
+                <script>
+                    $(function () {
+                        // Summernote
+                        $('#summernote').summernote()
+                    })
                     </script>
 
                     

@@ -347,18 +347,17 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     success: function(response) {
         try {
             // Versuche, die Antwort als JSON zu parsen
-            response = JSON.parse(response);
+            response = JSON.parse(response);  // Hier die Antwort als JSON parsen
 
             if (response.success) {
-                // Erfolg
                 alert('Daten erfolgreich gespeichert');
+                // Erfolg: Seite neu laden oder andere Maßnahmen
             } else {
-                // Fehler
-                alert('Fehler: ' + response.message);
+                alert('Fehler: ' + response.message);  // Fehlernachricht anzeigen
             }
         } catch (error) {
-            // Fehlerbehandlung
             console.error("Fehler beim Parsen der Antwort:", error);
+            alert("Fehler beim Parsen der Antwort");
         }
     },
     error: function(xhr, status, error) {

@@ -67,17 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
         $params[':user_id'] = $user_id;  // Stelle sicher, dass :user_id auch im Array ist
 
-        // Debugging-Ausgabe
-        var_dump($sql);    // Zeigt die SQL-Abfrage an
-        var_dump($params);  // Zeigt das Parameter-Array an
-
         try {
-            // Deine SQL-Abfrage
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
             echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
         } catch (PDOException $e) {
-            // Fehlerbehandlung: Nur JSON zurückgeben
             echo json_encode([
                 'success' => false,
                 'message' => 'Fehler beim Speichern: ' . $e->getMessage()

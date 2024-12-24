@@ -1,5 +1,4 @@
 <?php
-define('SECURE_ACCESS', true);
 require_once 'include/db.php';
 
 // Nur autorisierte Anfragen zulassen (optional)

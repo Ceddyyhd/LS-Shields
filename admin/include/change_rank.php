@@ -3,7 +3,7 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? null;
+    $user_id = $_POST['user_id'] ?? null; // ID des Benutzers, dessen Rang geändert werden soll
     $new_role_id = $_POST['role_id'] ?? null;
 
     // Berechtigungsprüfung
@@ -18,17 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Alten Rang abrufen
+        // Zielbenutzer prüfen
         $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
         $old_role_id = $stmt->fetchColumn();
 
-        if (!$old_role_id) {
-            echo json_encode(['success' => false, 'message' => 'Benutzer nicht gefunden.']);
+        if ($old_role_id === false) { // Kein Eintrag gefunden
+            echo json_encode(['success' => false, 'message' => 'Zielbenutzer nicht gefunden.']);
             exit;
         }
 
-        // Rang aktualisieren
+        // Prüfen, ob der neue Rang existiert
+        $stmt = $conn->prepare("SELECT id FROM roles WHERE id = :role_id");
+        $stmt->execute([':role_id' => $new_role_id]);
+        if (!$stmt->fetchColumn()) {
+            echo json_encode(['success' => false, 'message' => 'Ungültiger Rang angegeben.']);
+            exit;
+        }
+
+        // Rangänderung durchführen
         $editor_name = $_SESSION['username'] ?? 'Unbekannt';
         $stmt = $conn->prepare("UPDATE users SET role_id = :new_role_id, rank_last_changed_by = :changed_by WHERE id = :user_id");
         $stmt->execute([
@@ -37,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':user_id' => $user_id,
         ]);
 
-        // Änderungen in die Logging-Tabelle einfügen
+        // Log in die Tabelle `rank_change_logs` schreiben
         $stmt = $conn->prepare("INSERT INTO rank_change_logs (user_id, old_role_id, new_role_id, changed_by) 
                                 VALUES (:user_id, :old_role_id, :new_role_id, :changed_by)");
         $stmt->execute([
@@ -52,3 +60,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
     }
 }
+?>

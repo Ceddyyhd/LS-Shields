@@ -103,38 +103,91 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <h3 class="profile-username text-center">
                   <?php echo htmlspecialchars($user['name']); ?>
                 </h3>
-                <p class="text-muted text-center">
-                  <?php echo htmlspecialchars($user['role_name']); ?>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; font-size: 14px; margin-left: 10px;">
-                  <i class="fa fa-pen"></i>
-                </button>
 
-                <div class="modal fade" id="rang-bearbeiten">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h4 class="modal-title">Default Modal</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                      <label for="exampleSelectBorderWidth2">Bottom Border only <code>.form-control-border.border-width-2</code></label>
-                  <select class="custom-select form-control-border border-width-2" id="exampleSelectBorderWidth2">
-                    <option>Value 1</option>
-                    <option>Value 2</option>
-                    <option>Value 3</option>
-                  </select>
-                      </div>
-                      <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
+
+
+
+
+
+
+
+
+                <p class="text-muted text-center">
+    <?php echo htmlspecialchars($user['role_name']); ?>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
+        <i class="fa-solid fa-pen-to-square"></i>
+    </button>
+</p>
+
+<div class="modal fade" id="rang-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Rang Bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="changeRankForm">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user['id']); ?>">
+                    <div class="form-group">
+                        <label for="roleSelect">Neuer Rang</label>
+                        <select class="custom-select" name="role_id" id="roleSelect" required>
+                            <?php
+                            $roles = $conn->query("SELECT id, name FROM roles")->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($roles as $role) {
+                                echo '<option value="' . $role['id'] . '">' . htmlspecialchars($role['name']) . '</option>';
+                            }
+                            ?>
+                        </select>
                     </div>
-                    <!-- /.modal-content -->
-                  </div>
-                  <!-- /.modal-dialog -->
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveRankButton">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>$(document).ready(function () {
+    $("#saveRankButton").on("click", function () {
+        var formData = $("#changeRankForm").serialize();
+
+        $.ajax({
+            url: "include/change_rank.php",
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                try {
+                    response = JSON.parse(response);
+                    if (response.success) {
+                        alert(response.message);
+                        $("#rang-bearbeiten").modal("hide");
+                        location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+                    } else {
+                        alert("Fehler: " + response.message);
+                    }
+                } catch (error) {
+                    console.error("Fehler beim Parsen der Antwort:", error);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler:", error);
+                alert("Es ist ein Fehler aufgetreten.");
+            },
+        });
+    });
+});</script>
+
+
+
+
+
+
+
 
                 </a>
                 </p>

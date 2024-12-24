@@ -18,6 +18,9 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
         </a>
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
       </li>
     </ul>
 </nav>

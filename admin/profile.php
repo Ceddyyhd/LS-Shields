@@ -316,10 +316,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-check">
                                     <!-- Standardwert 0, falls die Checkbox nicht angehakt ist -->
                                     <input type="hidden" name="gekündigt" value="0">
-                                    <!-- Checkbox für den Status -->
                                     <input type="checkbox" id="gekündigtCheckbox" name="gekündigt" value="1" class="form-check-input" 
                                         <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
-                                    <label for="gekündigtCheckbox" class="form-check-label">Gekündigt</label>
+                                        <label for="gekündigtCheckbox" class="form-check-label">Gekündigt</label>
                                 </div>
                             </div>
 
@@ -339,42 +338,42 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-    $("#saveChanges").on("click", function (e) {
-        e.preventDefault();
+        $("#saveChanges").on("click", function (e) {
+    e.preventDefault();
 
-        // Sammle die Daten aus dem Formular
-        var formData = $("#userEditForm").serialize();
+    // Sammle die Daten aus dem Formular
+    var formData = $("#userEditForm").serialize();
 
-        // Sende die Daten per AJAX
-        $.ajax({
-            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                try {
-                    // Versuche, die Antwort als JSON zu interpretieren
-                    response = JSON.parse(response);
+    // Debug-Ausgabe der gesendeten Daten
+    console.log("Gesendete Daten: ", formData);
 
-                    if (response.success) {
-                        // Schließe das Modal
-                        $("#user-bearbeiten").modal("hide");
+    // Sende die Daten per AJAX
+    $.ajax({
+        url: "include/edit_user.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            try {
+                response = JSON.parse(response);
+                console.log("Antwort vom Server: ", response);
 
-                        // Seite neu laden, um die Änderungen zu sehen
-                        setTimeout(function () {
-                            location.reload();
-                        }, 500);
-                    } else {
-                        // Zeige die Fehlermeldung im Modal an
-                    }
-                } catch (error) {
-                    console.error("Fehler beim Parsen der Antwort:", error);
+                if (response.success) {
+                    $("#user-bearbeiten").modal("hide");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
+                } else {
+                    console.error("Fehler: ", response.message);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX-Fehler:", error);
-            },
-        });
+            } catch (error) {
+                console.error("Fehler beim Parsen der Antwort:", error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX-Fehler: ", error);
+        },
     });
+});
 });
 </script>
           <div class="col-md-9">

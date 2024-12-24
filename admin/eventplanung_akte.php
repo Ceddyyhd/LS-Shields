@@ -141,14 +141,14 @@
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#plan" data-toggle="tab">Plan</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
-                  <div class="active tab-pane" id="activity">
+                  <div class="active tab-pane" id="plan">
                     
 
                   <h1><u>Heading Of Message</u></h1>
@@ -161,6 +161,28 @@
                     </ul>
                     <p>Standort Übersicht</p>
                     <p><img src="https://img.ceddyyhd2.eu/c51bef7c956b18e5d652994cb87d7584.png" alt="Image"></p>
+
+                    
+
+
+                  </div>
+
+                  <div class="active tab-pane" id="plan-bearbeiten">
+                    
+
+                  <div class="info-box bg-gradient-info">
+                        <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Bookmarks</span>
+                            <span class="info-box-number">41,410</span>
+                            <div class="progress">
+                            <div class="progress-bar" style="width: 70%"></div>
+                            </div>
+                            <span class="progress-description">
+                            70% Increase in 30 Days
+                            </span>
+                        </div>
+                        </div>
 
                     
 

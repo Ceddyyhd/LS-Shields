@@ -35,7 +35,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main content -->
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">DataTable with default features</h3>
+      <h3 class="card-title"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                  Launch Primary Modal
+                </button></h3>
     </div>
     <div class="card-body">
       <table id="example1" class="table table-bordered table-striped">
@@ -66,6 +68,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Default Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
 
 <!-- JavaScript Section -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -52,6 +52,11 @@ $stmt_permissions = $conn->prepare($sql_permissions);
 $stmt_permissions->execute(['role_id' => $user['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
+$sql_user = "SELECT id, name, kuendigung FROM users WHERE id = :user_id";
+$stmt_user = $conn->prepare($sql_user);
+$stmt_user->execute(['user_id' => $user_id]);
+$user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>

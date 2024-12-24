@@ -333,6 +333,19 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script>
+    // Event-Listener für die Checkbox
+    document.getElementById('changePasswordCheckbox').addEventListener('change', function() {
+        // Hole das Passwortfeld
+        var passwordField = document.getElementById('passwordField');
+        
+        // Wenn die Checkbox aktiviert ist, setze 'disabled' auf false (also aktivieren)
+        if (this.checked) {
+            passwordField.disabled = false;
+        } else {
+            // Wenn die Checkbox deaktiviert ist, setze 'disabled' auf true (also deaktivieren)
+            passwordField.disabled = true;
+        }
+    });
     $(document).ready(function () {
         $("#saveChanges").on("click", function (e) {
             e.preventDefault();

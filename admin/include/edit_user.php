@@ -16,15 +16,13 @@ try {
 
     $updates = [];
 
-    // Gekündigt-Status hinzufügen
+    // Gekündigt-Status
     if (isset($_POST['gekündigt'])) {
         $updates['gekündigt'] = (int) $_POST['gekündigt'];
-    } else {
-        $updates['gekündigt'] = 0; // Standardwert
     }
 
     // Weitere Felder
-    if ($_SESSION['permissions']['edit_name'] ?? false && isset($_POST['name'])) {
+    if ($_SESSION['permissions']['edit_name'] ?? false && !empty($_POST['name'])) {
         $updates['name'] = $_POST['name'];
     }
     if ($_SESSION['permissions']['edit_nummer'] ?? false && isset($_POST['nummer'])) {
@@ -45,31 +43,31 @@ try {
         $updates['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
     }
 
-    // Debugging: Überprüfe die Updates
-    error_log("Updates: " . print_r($updates, true));
-
-    // SQL erstellen und Parameter binden
-    if (!empty($updates)) {
-        $sql = "UPDATE users SET ";
-        $params = [];
-        foreach ($updates as $key => $value) {
-            $sql .= "$key = :$key, ";
-            $params[":$key"] = $value;
-        }
-        $sql = rtrim($sql, ', ') . " WHERE id = :id";
-        $params[':id'] = $user_id;
-
-        // Debugging: Überprüfe die SQL-Abfrage und Parameter
-        error_log("SQL: " . $sql);
-        error_log("Parameter: " . print_r($params, true));
-
-        $stmt = $conn->prepare($sql);
-        $stmt->execute($params);
-
-        echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
-    } else {
+    // Keine Änderungen vorgenommen
+    if (empty($updates)) {
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+        exit;
     }
+
+    // SQL erstellen
+    $sql = "UPDATE users SET ";
+    $params = [];
+    foreach ($updates as $key => $value) {
+        $sql .= "$key = :$key, ";
+        $params[":$key"] = $value;
+    }
+    $sql = rtrim($sql, ', ') . " WHERE id = :id";
+    $params[':id'] = $user_id;
+
+    // Debugging: Überprüfe SQL und Parameter
+    error_log("SQL: " . $sql);
+    error_log("Parameter: " . print_r($params, true));
+
+    // SQL ausführen
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($params);
+
+    echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
 }

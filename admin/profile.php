@@ -341,21 +341,29 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         $("#saveChanges").on("click", function (e) {
     e.preventDefault();
 
-    // Sammle die Daten aus dem Formular
-    var formData = $("#userEditForm").serialize();
+    // Daten aus dem Formular sammeln
+    var formData = $("#userEditForm").serializeArray();
 
-    // Debug-Ausgabe der gesendeten Daten
-    console.log("Gesendete Daten: ", formData);
+    // Überprüfen, ob die Checkbox aktiviert ist
+    formData = formData.filter(function (item) {
+        return item.name !== "gekündigt"; // Entferne alle vorhandenen "gekündigt"-Einträge
+    });
+
+    // Checkbox-Wert hinzufügen (nur wenn aktiviert)
+    if ($("#gekündigtCheckbox").is(":checked")) {
+        formData.push({ name: "gekündigt", value: "1" });
+    } else {
+        formData.push({ name: "gekündigt", value: "0" });
+    }
 
     // Sende die Daten per AJAX
     $.ajax({
         url: "include/edit_user.php",
         type: "POST",
-        data: formData,
+        data: $.param(formData), // Daten in URL-encoded-String konvertieren
         success: function (response) {
             try {
                 response = JSON.parse(response);
-                console.log("Antwort vom Server: ", response);
 
                 if (response.success) {
                     $("#user-bearbeiten").modal("hide");
@@ -366,7 +374,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     console.error("Fehler: ", response.message);
                 }
             } catch (error) {
-                console.error("Fehler beim Parsen der Antwort:", error);
+                console.error("Fehler beim Parsen der Antwort: ", error);
             }
         },
         error: function (xhr, status, error) {

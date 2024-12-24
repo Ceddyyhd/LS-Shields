@@ -13,87 +13,107 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Starter Page</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Starter Page</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Starter Page</li>
+          </ol>
+        </div>
+      </div>
     </div>
-    <!-- /.content-header -->
+  </div>
+  <!-- /.content-header -->
 
-    <!-- Main content -->
-    <?php
-    include 'include/db.php';
-    // Mitarbeiterdaten abrufen
-$sql = "SELECT 
-            u.id,
-            u.name,
-            u.nummer,
-            u.created_at,
-            r.name AS role_name
-        FROM users u
-        LEFT JOIN roles r ON u.role_id = r.id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<div class="card">
+  <!-- Main content -->
+  <div class="card">
     <div class="card-header">
-        <h3 class="card-title">DataTable with default features</h3>
+      <h3 class="card-title">DataTable with default features</h3>
     </div>
     <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Mitarbeiter</th>
-                    <th>Rang</th>
-                    <th>Telefonnummer</th>
-                    <th>Beitritt</th>
-                    <th>Urlaub</th>
-                    <th>Bearbeiten</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($user['name']) ?></td>
-                        <td><?= htmlspecialchars($user['role_name']) ?></td>
-                        <td><?= htmlspecialchars($user['nummer'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars(date('d.m.Y', strtotime($user['created_at']))) ?></td>
-                        <td>N/A</td>
-                        <td>
-                            <a href="/profile.php?id=<?= $user['id'] ?>" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Mitarbeiter</th>
-                    <th>Rang</th>
-                    <th>Telefonnummer</th>
-                    <th>Beitritt</th>
-                    <th>Urlaub</th>
-                    <th>Bearbeiten</th>
-                </tr>
-            </tfoot>
-        </table>
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Mitarbeiter</th>
+            <th>Rang</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Urlaub</th>
+            <th>Bearbeiten</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Daten werden dynamisch geladen -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>Mitarbeiter</th>
+            <th>Rang</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Urlaub</th>
+            <th>Bearbeiten</th>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-</div>
-    <!-- /.card -->
   </div>
+</div>
+
+<!-- JavaScript Section -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.6/js/dataTables.bootstrap4.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // Initialize DataTable
+    $('#example1').DataTable();
+
+    // Dynamisch Daten laden
+    $.ajax({
+      url: 'fetch_users.php', // Das PHP-Skript, das die Daten liefert
+      type: 'POST',
+      dataType: 'json',
+      success: function (data) {
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+
+        // Tabelle füllen
+        let tableBody = $('#example1 tbody');
+        tableBody.empty();
+
+        data.forEach(user => {
+          tableBody.append(`
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.role_name}</td>
+              <td>${user.nummer ? user.nummer : 'N/A'}</td>
+              <td>${new Date(user.created_at).toLocaleDateString()}</td>
+              <td>N/A</td>
+              <td>
+                <a href="/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+              </td>
+            </tr>
+          `);
+        });
+      },
+      error: function () {
+        alert('Fehler beim Abrufen der Daten.');
+      }
+    });
+  });
+</script>
+
   <!-- /.col -->
 </div>
 <!-- /.row -->

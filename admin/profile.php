@@ -334,38 +334,39 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 <script>
     $(document).ready(function () {
         $("#saveChanges").on("click", function (e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    // Sammle die Daten aus dem Formular
-    var formData = $("#userEditForm").serialize();
+            // Sammle die Daten aus dem Formular
+            var formData = $("#userEditForm").serialize();
 
-    // Sende die Daten per AJAX
-    $.ajax({
-    url: "include/edit_user.php",
-    type: "POST",
-    data: formData,
-    success: function(response) {
-        try {
-            // Versuche, die Antwort als JSON zu parsen
-            response = JSON.parse(response);  // Hier die Antwort als JSON parsen
+            // Sende die Daten per AJAX
+            $.ajax({
+                url: "include/edit_user.php",
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    try {
+                        // Versuche, die Antwort als JSON zu parsen
+                        response = JSON.parse(response);  // Hier die Antwort als JSON parsen
 
-            if (response.success) {
-                alert('Daten erfolgreich gespeichert');
-                // Erfolg: Seite neu laden oder andere Maßnahmen
-            } else {
-                alert('Fehler: ' + response.message);  // Fehlernachricht anzeigen
-            }
-        } catch (error) {
-            console.error("Fehler beim Parsen der Antwort:", error);
-            alert("Fehler beim Parsen der Antwort");
-        }
-    },
-    error: function(xhr, status, error) {
-        console.error("AJAX-Fehler:", error);
-    }
-});
-});
-});
+                        if (response.success) {
+                            alert('Daten erfolgreich gespeichert');
+                            $('#user-bearbeiten').modal('hide'); // Schließt das Modal
+                            // Erfolg: Seite neu laden oder andere Maßnahmen
+                        } else {
+                            alert('Fehler: ' + response.message);  // Fehlernachricht anzeigen
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Parsen der Antwort:", error);
+                        alert("Fehler beim Parsen der Antwort");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX-Fehler:", error);
+                }
+            });
+        });
+    });
 </script>
           <div class="col-md-9">
             <div class="card">

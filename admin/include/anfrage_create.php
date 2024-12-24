@@ -1,44 +1,46 @@
 <?php
 include 'db.php'; // Datenbankverbindung
 
-// Überprüfe, ob die Anfrage via POST gesendet wurde
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Holen der Formulardaten
-    $name = $_POST['name'] ?? '';
-    $nummer = $_POST['nummer'] ?? '';
-    $anfrage = $_POST['anfrage'] ?? '';
-    $status = $_POST['status'] ?? 'Eingetroffen';
-    $erstellt_von = $_POST['erstellt_von'] ?? 'Admin';  // Hier kannst du den Ersteller dynamisch setzen
+session_start(); // Sitzung starten
 
-    // Validierung der Eingabedaten
-    if (empty($name) || empty($nummer) || empty($anfrage)) {
-        echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
-        exit;
-    }
+if (!isset($_SESSION['username'])) {
+    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
+    exit;
+}
 
-    // Datum und Uhrzeit für die Anfrage
-    $datum_uhrzeit = date('Y-m-d H:i:s');  // Aktuelles Datum und Uhrzeit
+// Benutzernamen aus der Session holen
+$erstellt_von = $_SESSION['username'];
 
-    try {
-        // SQL zum Einfügen der Anfrage in die Datenbank
-        $sql = "INSERT INTO anfragen (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, erstellt_von)
-                VALUES (:name, :nummer, :anfrage, :datum_uhrzeit, :status, :erstellt_von)";
+// Formulardaten auslesen
+$name = $_POST['name'] ?? '';
+$nummer = $_POST['nummer'] ?? '';
+$anfrage = $_POST['anfrage'] ?? '';
+$status = 'Eingetroffen'; // Standardstatus
+$datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            ':name' => $name,
-            ':nummer' => $nummer,
-            ':anfrage' => $anfrage,
-            ':datum_uhrzeit' => $datum_uhrzeit,
-            ':status' => $status,
-            ':erstellt_von' => $erstellt_von,
-        ]);
+// Validierung der Formulardaten
+if (empty($name) || empty($nummer) || empty($anfrage)) {
+    echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
+    exit;
+}
 
-        // Erfolgreiche Antwort zurückgeben
-        echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
-    } catch (PDOException $e) {
-        // Fehler bei der Datenbankoperation
-        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
-    }
+try {
+    // SQL zum Einfügen der Anfrage in die Datenbank
+    $sql = "INSERT INTO anfragen (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, erstellt_von)
+            VALUES (:name, :nummer, :anfrage, :datum_uhrzeit, :status, :erstellt_von)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':name' => $name,
+        ':nummer' => $nummer,
+        ':anfrage' => $anfrage,
+        ':datum_uhrzeit' => $datum_uhrzeit,
+        ':status' => $status,
+        ':erstellt_von' => $erstellt_von, // Der Benutzername wird hier gespeichert
+    ]);
+
+    echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 ?>

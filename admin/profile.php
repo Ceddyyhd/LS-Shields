@@ -114,7 +114,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
                 <p class="text-muted text-center">
     <?php echo htmlspecialchars($user['role_name']); ?>
-    <button type="button" class="btn btn-primary fa-solid fa-pen" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
+    <button type="button" class="btn btn-primary fa-solid fa-pen-to-square" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen-to-square"></i>
     </button>
 </p>

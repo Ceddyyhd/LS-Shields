@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 // Verbindung und Sitzung starten
 include 'db.php';
 session_start();
@@ -32,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
     }
     // Berechtigungen für 'edit_gekundigt' prüfen
-    if (isset($_POST['gekundigt']) && ($_SESSION['permissions']['edit_gekundigt'] ?? false)) {
-        $updates['gekündigt'] = $_POST['gekundigt'] == 'on' ? 1 : 0;
-    } else {
-        // Optionale Fehlermeldung für keine Berechtigung
-        echo json_encode(['success' => false, 'message' => 'Keine Berechtigung für diese Aktion.']);
-        exit;
-    }
+        if (isset($_POST['gekundigt']) && ($_SESSION['permissions']['edit_gekundigt'] ?? false)) {
+            $updates['gekündigt'] = $_POST['gekundigt'] == 'on' ? 1 : 0;
+        } else {
+            // Optionale Fehlermeldung für keine Berechtigung
+            echo json_encode(['success' => false, 'message' => 'Keine Berechtigung für diese Aktion.']);
+            exit;
+        }
 
     // Passwort verarbeiten, falls erlaubt und übergeben
 if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? false) {
@@ -57,24 +54,15 @@ if (isset($_POST['password']) && $_SESSION['permissions']['edit_password'] ?? fa
 
     // Daten aktualisieren
     // Daten aktualisieren, inklusive gekündigt
-// Daten aktualisieren, einschließlich 'gekündigt'
 if (!empty($updates)) {
     $sql = "UPDATE users SET ";
     $params = [];
-
-    // Generiere die SQL SET-Klausel dynamisch basierend auf den $updates
     foreach ($updates as $key => $value) {
         $sql .= "$key = :$key, ";
-        $params[":$key"] = $value; // Füge den Parameter in $params hinzu
+        $params[":$key"] = $value;
     }
-
-    // Entferne das letzte Komma
     $sql = rtrim($sql, ', ') . " WHERE id = :user_id";
-    $params[':user_id'] = $user_id; // Stelle sicher, dass :user_id auch in $params ist
-
-    // Debugging: Ausgabe der SQL-Abfrage und der Parameter, um sicherzustellen, dass alles korrekt ist
-    var_dump($sql); 
-    var_dump($params);
+    $params[':user_id'] = $user_id;
 
     try {
         $stmt = $conn->prepare($sql);
@@ -85,4 +73,7 @@ if (!empty($updates)) {
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+}
+} else {
+    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
 }

@@ -111,6 +111,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 
 
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
                 <p class="text-muted text-center">
     <?php echo htmlspecialchars($user['role_name']); ?>

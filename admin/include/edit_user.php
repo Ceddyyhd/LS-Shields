@@ -20,29 +20,26 @@ try {
     // Berechtigungen überprüfen und Updates vorbereiten
     $updates = [];
 
-    // Name aktualisieren
-    if ($_SESSION['permissions']['edit_name'] ?? false) {
-        $updates['name'] = $_POST['name'] ?? '';
+    // Gekündigt-Status aktualisieren
+    if (isset($_POST['gekündigt']) && ($_SESSION['permissions']['edit_gekündigt'] ?? false)) {
+        $updates['gekündigt'] = $_POST['gekündigt'] === '1' ? 1 : 0;
     }
 
-    // Nummer aktualisieren
-    if ($_SESSION['permissions']['edit_nummer'] ?? false) {
-        $updates['nummer'] = $_POST['nummer'] ?? '';
+    // Weitere Felder aktualisieren
+    if ($_SESSION['permissions']['edit_name'] ?? false && isset($_POST['name'])) {
+        $updates['name'] = $_POST['name'];
     }
-
-    // Email aktualisieren
-    if ($_SESSION['permissions']['edit_email'] ?? false) {
-        $updates['email'] = $_POST['email'] ?? '';
+    if ($_SESSION['permissions']['edit_nummer'] ?? false && isset($_POST['nummer'])) {
+        $updates['nummer'] = $_POST['nummer'];
     }
-
-    // UMail aktualisieren
-    if ($_SESSION['permissions']['edit_umail'] ?? false) {
-        $updates['umail'] = $_POST['umail'] ?? '';
+    if ($_SESSION['permissions']['edit_email'] ?? false && isset($_POST['email'])) {
+        $updates['email'] = $_POST['email'];
     }
-
-    // Kontonummer aktualisieren
-    if ($_SESSION['permissions']['edit_kontonummer'] ?? false) {
-        $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
+    if ($_SESSION['permissions']['edit_umail'] ?? false && isset($_POST['umail'])) {
+        $updates['umail'] = $_POST['umail'];
+    }
+    if ($_SESSION['permissions']['edit_kontonummer'] ?? false && isset($_POST['kontonummer'])) {
+        $updates['kontonummer'] = $_POST['kontonummer'];
     }
 
     // Passwort aktualisieren
@@ -56,11 +53,6 @@ try {
         }
 
         $updates['password'] = password_hash($password, PASSWORD_BCRYPT);
-    }
-
-    // Gekündigt-Status aktualisieren
-    if (isset($_POST['gekündigt']) && ($_SESSION['permissions']['edit_gekündigt'] ?? false)) {
-        $updates['gekündigt'] = $_POST['gekündigt'] === '1' ? 1 : 0;
     }
 
     // Updates in der Datenbank ausführen
@@ -81,6 +73,7 @@ try {
 
         echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
     } else {
+        // Wenn keine Updates erkannt wurden, explizit darauf hinweisen
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
     }
 } catch (PDOException $e) {

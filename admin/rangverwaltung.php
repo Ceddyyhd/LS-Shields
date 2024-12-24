@@ -234,25 +234,26 @@ $('#saveRoleButton').click(function () {
     });
 
     $.ajax({
-    url: 'include/add_role.php',
-    type: 'POST',
-    data: {
-        name: name,
-        level: level,
-        value: $('#roleValue').val(), // Sicherstellen, dass der Value-Input übergeben wird
-        permissions: JSON.stringify(permissions)
-    },
-    success: function (response) {
-        if (response.success) {
-            alert('Rolle erfolgreich hinzugefügt.');
-            location.reload();
-        } else {
-            alert('Fehler: ' + response.message);
+        url: 'include/add_role.php',
+        type: 'POST',
+        data: {
+            name: name,
+            level: level,
+            value: value, // Value mit senden
+            permissions: JSON.stringify(permissions)
+        },
+        success: function (response) {
+            if (response.success) {
+                alert('Rolle erfolgreich hinzugefügt.');
+                location.reload();
+            } else {
+                alert('Fehler: ' + response.message);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Speichern der Rolle.');
         }
-    },
-    error: function () {
-        alert('Fehler beim Speichern der Rolle.');
-    }
+    });
 });
 
 $('#modal-default .btn-primary').click(function () {

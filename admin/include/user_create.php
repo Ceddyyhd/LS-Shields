@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // E-Mail und Passwort prüfen
+    // Pflichtfelder prüfen
     $email = $_POST['email'] ?? null;
     $password = $_POST['password'] ?? null;
 
@@ -21,10 +21,11 @@ try {
     // Passwort-Hash erstellen
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-    // Standardprofilbild, wenn kein Bild hochgeladen wird
-    $profileImagePath = 'uploads/profile_images/standard.png';
-    if (!empty($_FILES['profile_image']['name'])) {
-        $uploadDir = 'uploads/profile_images/';
+    // Upload-Verzeichnis anpassen
+    $uploadDir = __DIR__ . '/../uploads/profile_images/';
+    $profileImagePath = 'uploads/profile_images/standard.png'; // Standardbildpfad
+
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
         $fileName = time() . '_' . basename($_FILES['profile_image']['name']);
         $targetFilePath = $uploadDir . $fileName;
 
@@ -33,15 +34,13 @@ try {
             mkdir($uploadDir, 0777, true);
         }
 
+        // Datei verschieben und Pfad speichern
         if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $targetFilePath)) {
-            $profileImagePath = $targetFilePath;
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Das Hochladen des Profilbilds ist fehlgeschlagen.']);
-            exit;
+            $profileImagePath = 'uploads/profile_images/' . $fileName; // Relativer Pfad
         }
     }
 
-    // Optional: Andere Felder (Name, Umail, etc.)
+    // Optionale Felder
     $name = $_POST['name'] ?? null;
     $umail = $_POST['umail'] ?? null;
     $kontonummer = $_POST['kontonummer'] ?? null;
@@ -50,10 +49,10 @@ try {
 
     // Benutzer in die Datenbank einfügen
     $stmt = $conn->prepare("
-        INSERT INTO users (email, umail, name, nummer, kontonummer, password, role_id, created_at, remember_token, rank_last_changed_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NULL, NULL)
+        INSERT INTO users (email, umail, name, nummer, kontonummer, password, role_id, profile_image, created_at, remember_token, rank_last_changed_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NULL, NULL)
     ");
-    $stmt->execute([$email, $umail, $name, $nummer, $kontonummer, $passwordHash, $role_id]);
+    $stmt->execute([$email, $umail, $name, $nummer, $kontonummer, $passwordHash, $role_id, $profileImagePath]);
 
     echo json_encode(['success' => true, 'message' => 'Benutzer erfolgreich erstellt.']);
 } catch (Exception $e) {

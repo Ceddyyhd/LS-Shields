@@ -223,28 +223,40 @@ $(document).ready(function () {
 
 
 <script>
-$('#saveRoleButton').click(function () {
+$('#saveRoleButton, #saveEditRoleButton').click(function () {
+    const userValue = parseInt($('#currentUserValue').val(), 10); // Aktueller Wert des eingeloggten Nutzers
+    const roleValue = parseInt($('#roleValue').val(), 10); // Eingegebener Wert
+
+    if (roleValue > userValue) {
+        alert('Sie können keinen Rang mit einem höheren Wert erstellen oder bearbeiten als Ihren eigenen.');
+        return;
+    }
+
+    // Fortfahren, wenn der Wert valide ist
     const name = $('#roleName').val();
     const level = $('#roleLevel').val();
-    const value = $('#roleValue').val(); // Neuen Wert holen
     const permissions = [];
 
-    $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
+    $(this).closest('form').find('input[type="checkbox"]:checked').each(function () {
         permissions.push($(this).attr('data-name'));
     });
 
+    const url = $(this).attr('id') === 'saveRoleButton' ? 'include/add_role.php' : 'include/update_role.php';
+    const roleId = $(this).attr('id') === 'saveEditRoleButton' ? $('#modal-default').data('id') : null;
+
     $.ajax({
-        url: 'include/add_role.php',
+        url: url,
         type: 'POST',
         data: {
+            id: roleId,
             name: name,
             level: level,
-            value: value, // Value mit senden
+            value: roleValue,
             permissions: JSON.stringify(permissions)
         },
         success: function (response) {
             if (response.success) {
-                alert('Rolle erfolgreich hinzugefügt.');
+                alert('Rolle erfolgreich gespeichert.');
                 location.reload();
             } else {
                 alert('Fehler: ' + response.message);

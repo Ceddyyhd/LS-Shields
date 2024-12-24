@@ -6,10 +6,20 @@ header('Content-Type: application/json');
 // Eingabedaten abrufen
 $name = $_POST['name'] ?? null;
 $level = $_POST['level'] ?? null;
-$permissions = json_decode($_POST['permissions'], true); // JSON-Daten dekodieren
+$value = $_POST['value'] ?? null;
+$permissions = json_decode($_POST['permissions'], true);
 
-if (!$name || !$level || !is_array($permissions)) {
+// Eingaben validieren
+if (!$name || !$level || !$value || !is_array($permissions)) {
     echo json_encode(['success' => false, 'message' => 'Ungültige Eingaben.']);
+    exit;
+}
+
+// Überprüfen, ob der Benutzer die Berechtigung hat, Rollen mit diesem Wert zu erstellen
+session_start();
+$current_user_value = $_SESSION['user_value'] ?? null; // Aktueller Wert des eingeloggten Benutzers
+if ($current_user_value === null || $value > $current_user_value) {
+    echo json_encode(['success' => false, 'message' => 'Sie können keine Rollen mit einem höheren Rang als Ihrem erstellen.']);
     exit;
 }
 
@@ -19,7 +29,7 @@ try {
     $stmt->execute([
         ':name' => $name,
         ':level' => $level,
-        ':value' => $value, // Value einfügen
+        ':value' => $value,
         ':permissions' => json_encode($permissions)
     ]);
 
@@ -27,4 +37,5 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
+
 ?>

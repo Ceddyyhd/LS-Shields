@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-    // Gekuendigt verarbeiten (ohne ü, also "gekuendigt" anstelle von "gekündigt")
-    $gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
-    $updates['gekuendigt'] = $gekuendigt;  // Den "gekuendigt"-Wert in das Updates-Array einfügen
+        // Gekündigt verarbeiten (hier stellen wir sicher, dass nur die gültigen Werte gespeichert werden)
+        $gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
+        $updates['gekuendigt'] = $gekuendigt;  // Den "gekuendigt"-Wert in das Updates-Array einfügen
 
     // Daten aktualisieren
     if (!empty($updates)) {

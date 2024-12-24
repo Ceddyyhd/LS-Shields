@@ -55,7 +55,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-            <!-- Dein HTML-Modal -->
+<!-- Anfrage erstellen Modal -->
 <div class="modal fade" id="modal-anfrage-create">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -66,31 +66,67 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
             <div class="modal-body">
-            <form id="createUserForm">
-    <div class="card-body">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for="nummer">Tel. Nr.</label>
-            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
-        </div>
-        <div class="form-group">
-            <label for="nummer">Anfrage</label>
-            <textarea name="anfrage" placeholder="Bitte teilen Sie uns Ihre Anfrage so kurz wie möglich mit. Wir melden uns dann unter der angegebenen Telefonnummer." class="message_input" rows="4" style="width: 100%;"></textarea>
-            </div>
-    </div>
-</form>
+                <form id="createRequestForm">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nummer">Tel. Nr.</label>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="anfrage">Anfrage</label>
+                            <textarea name="anfrage" id="anfrage" class="form-control" rows="4" placeholder="Bitte teilen Sie uns Ihre Anfrage mit." required></textarea>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveRequestBtn">Speichern</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- JavaScript zur Verarbeitung des Formulars -->
+<script>
+    document.getElementById('saveRequestBtn').addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('createRequestForm'));
+
+        // Überprüfe, ob alle Felder ausgefüllt sind
+        if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {
+            alert('Bitte alle Felder ausfüllen!');
+            return;
+        }
+
+        // Füge zusätzliche Daten hinzu
+        formData.append('status', 'Eingetroffen');
+        formData.append('erstellt_von', 'Admin');  // Hier kannst du den Ersteller dynamisch setzen, z.B. aus der Session
+
+        // AJAX-Anfrage senden
+        fetch('include/anfrage_create.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Anfrage erfolgreich erstellt!');
+                $('#modal-anfrage-create').modal('hide'); // Schließt das Modal
+                location.reload();  // Optional: Seite neu laden, um die neue Anfrage zu sehen
+            } else {
+                alert('Fehler: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler:', error);
+            alert('Ein unerwarteter Fehler ist aufgetreten.');
+        });
+    });
+</script>
 
 
 

@@ -6,8 +6,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+header('Content-Type: application/json');
+
 try {
-    // Mitarbeiterdaten sicher abrufen, nur Benutzer, deren kuendigung 'no_kuendigung' ist
+    // Dein SQL-Statement für die Benutzerabfrage
     $stmt = $conn->prepare("
         SELECT 
             u.id,
@@ -44,19 +46,20 @@ try {
             END AS next_vacation
         FROM users u
         LEFT JOIN roles r ON u.role_id = r.id
-        WHERE u.kuendigung = 'no_kuendigung';  -- Hier wird überprüft, dass die kuendigung 'no_kuendigung' ist
-    ");
+        WHERE u.kuendigung = 'no_kuendigung';  ");
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // JSON-Ausgabe der Daten
-    header('Content-Type: application/json');
-    echo json_encode($users, JSON_PRETTY_PRINT);
+    // Wenn keine Benutzer gefunden wurden, gib ein leeres Array zurück
+    if (empty($users)) {
+        echo json_encode([]);
+    } else {
+        echo json_encode($users, JSON_PRETTY_PRINT);
+    }
     exit;
 
 } catch (PDOException $e) {
     // Fehlerausgabe bei SQL-Problemen
-    header('Content-Type: application/json');
     echo json_encode(['error' => 'SQL-Fehler: ' . $e->getMessage()]);
     exit;
 }

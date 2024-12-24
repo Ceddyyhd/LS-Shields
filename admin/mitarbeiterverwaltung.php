@@ -79,10 +79,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     // Dynamisch Daten laden
     $.ajax({
-    url: 'include/fetch_users.php',
+    url: 'fetch_users.php',
     type: 'POST',
     dataType: 'json',
     success: function (data) {
+        console.log(data); // Zeigt die Antwort in der Konsole
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
         let tableBody = $('#example1 tbody');
         tableBody.empty();
 
@@ -101,10 +107,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             `);
         });
     },
-    error: function () {
+    error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', error);
         alert('Fehler beim Abrufen der Daten.');
     }
-}); 
+});
   });
 </script>
 

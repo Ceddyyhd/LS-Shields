@@ -29,8 +29,11 @@ try {
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // JSON-Antwort
-    echo json_encode($users);
+    // Debug-Ausgabe
+    header('Content-Type: application/json');
+    echo json_encode($users, JSON_PRETTY_PRINT);
+    exit;
+
 } catch (PDOException $e) {
     echo json_encode(['error' => 'Fehler beim Abrufen der Daten']);
 }

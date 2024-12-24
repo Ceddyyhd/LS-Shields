@@ -79,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     // Dynamisch Daten laden
     $.ajax({
-    url: 'fetch_users.php',
+    url: 'include/fetch_users.php',
     type: 'POST',
     dataType: 'json',
     success: function (data) {

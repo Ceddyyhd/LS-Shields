@@ -16,13 +16,13 @@ try {
 
     $updates = [];
 
-    // Gekündigt-Status
+    // Gekündigt-Status prüfen und hinzufügen
     if (isset($_POST['gekündigt'])) {
-        $updates['gekündigt'] = (int) $_POST['gekündigt'];
+        $updates['gekündigt'] = (int) $_POST['gekündigt']; // Typensicherheit
     }
 
-    // Weitere Felder
-    if ($_SESSION['permissions']['edit_name'] ?? false && !empty($_POST['name'])) {
+    // Weitere Felder prüfen und hinzufügen
+    if ($_SESSION['permissions']['edit_name'] ?? false && isset($_POST['name'])) {
         $updates['name'] = $_POST['name'];
     }
     if ($_SESSION['permissions']['edit_nummer'] ?? false && isset($_POST['nummer'])) {
@@ -38,18 +38,18 @@ try {
         $updates['kontonummer'] = $_POST['kontonummer'];
     }
 
-    // Passwort
+    // Passwort prüfen und hinzufügen
     if (!empty($_POST['password']) && ($_SESSION['permissions']['edit_password'] ?? false)) {
         $updates['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
     }
 
-    // Keine Änderungen vorgenommen
+    // Prüfen, ob es Änderungen gibt
     if (empty($updates)) {
         echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
         exit;
     }
 
-    // SQL erstellen
+    // SQL-Abfrage dynamisch erstellen
     $sql = "UPDATE users SET ";
     $params = [];
     foreach ($updates as $key => $value) {
@@ -59,8 +59,8 @@ try {
     $sql = rtrim($sql, ', ') . " WHERE id = :id";
     $params[':id'] = $user_id;
 
-    // Debugging: Überprüfe SQL und Parameter
-    error_log("SQL: " . $sql);
+    // Debugging: SQL-Abfrage und Parameter überprüfen
+    error_log("SQL-Abfrage: " . $sql);
     error_log("Parameter: " . print_r($params, true));
 
     // SQL ausführen

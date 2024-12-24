@@ -3,12 +3,12 @@ include 'db.php'; // Datenbankverbindung
 
 // Überprüfen, ob der Benutzer eingeloggt ist
 session_start();
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['user_name'])) {
     die('Benutzer ist nicht eingeloggt.');
 }
 
 // Hole den Benutzernamen aus der Session
-$erstellt_von = $_SESSION['username']; // Setze den Benutzernamen als Wert für erstellt_von
+$erstellt_von = $_SESSION['user_name']; // Setze den Benutzernamen als Wert für erstellt_von
 
 // Formulardaten auslesen
 $name = $_POST['name'] ?? '';

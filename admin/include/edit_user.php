@@ -28,9 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_SESSION['permissions']['edit_kontonummer'] ?? false) {
         $updates['kontonummer'] = $_POST['kontonummer'] ?? '';
     }
-    // Überprüfen, ob die 'gekündigt' Checkbox aktiviert ist und Berechtigung zum Bearbeiten vorhanden ist
-    if (isset($_POST['gekundigt']) && $_SESSION['permissions']['edit_gekundigt'] ?? false) {
+    // Berechtigungen für 'edit_gekundigt' prüfen
+    if (isset($_POST['gekundigt']) && ($_SESSION['permissions']['edit_gekundigt'] ?? false)) {
         $updates['gekündigt'] = $_POST['gekundigt'] == 'on' ? 1 : 0;
+    } else {
+        // Optionale Fehlermeldung für keine Berechtigung
+        echo json_encode(['success' => false, 'message' => 'Keine Berechtigung für diese Aktion.']);
+        exit;
     }
 
     // Passwort verarbeiten, falls erlaubt und übergeben

@@ -87,7 +87,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <form>
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
+                    <label for="exampleInputEmail1">Email adresse</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Umail adresse</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Kontonummer</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Tel. Nr.</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                   </div>
                   <div class="form-group">
@@ -95,7 +107,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
+                    <label for="exampleInputFile">Profilbild</label>
                     <div class="input-group">
                       <div class="custom-file">
                         <input type="file" class="custom-file-input" id="exampleInputFile">

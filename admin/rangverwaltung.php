@@ -148,21 +148,25 @@ $(document).ready(function () {
       <div class="modal-body">
         <form id="addRoleForm">
           <div class="card-body">
-          <div class="form-group">
-  <label for="roleName">Rangname</label>
-  <input type="text" id="roleName" class="form-control">
-</div>
-<div class="form-group">
-  <label for="roleLevel">Rang Ebene</label>
-  <select id="roleLevel" class="custom-select">
-    <option value="Inhaber">Inhaber</option>
-    <option value="Geschäftsführung">Geschäftsführung</option>
-    <option value="Mitarbeiter">Mitarbeiter</option>
-  </select>
-</div>
-<div class="form-group" id="permissionsContainer">
-  <!-- Dynamische Rechte erscheinen hier -->
-</div>
+            <div class="form-group">
+              <label for="roleName">Rangname</label>
+              <input type="text" id="roleName" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="roleLevel">Rang Ebene</label>
+              <select id="roleLevel" class="custom-select">
+                <option value="Inhaber">Inhaber</option>
+                <option value="Geschäftsführung">Geschäftsführung</option>
+                <option value="Mitarbeiter">Mitarbeiter</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="roleValue">Wert (Value)</label>
+              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
+            </div>
+            <div class="form-group" id="permissionsContainer">
+              <!-- Dynamische Rechte erscheinen hier -->
+            </div>
           </div>
         </form>
       </div>
@@ -198,6 +202,10 @@ $(document).ready(function () {
                 <option value="Mitarbeiter">Mitarbeiter</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="roleValue">Wert (Value)</label>
+              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
+            </div>
             <div class="form-group" id="permissionsContainer">
               <!-- Dynamische Rechte erscheinen hier -->
             </div>
@@ -213,28 +221,28 @@ $(document).ready(function () {
 </div>
 
 
+
 <script>
 $('#saveRoleButton').click(function () {
     const name = $('#roleName').val();
     const level = $('#roleLevel').val();
+    const value = $('#roleValue').val(); // Neuen Wert holen
     const permissions = [];
 
-    // Sammle die Namen der angekreuzten Berechtigungen
     $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
-        permissions.push($(this).attr('data-name')); // Verwende das Attribut 'data-name'
+        permissions.push($(this).attr('data-name'));
     });
 
-    // AJAX-Anfrage, um die neue Rolle zu speichern
     $.ajax({
         url: 'include/add_role.php',
         type: 'POST',
         data: {
             name: name,
             level: level,
+            value: value, // Value mit senden
             permissions: JSON.stringify(permissions)
         },
         success: function (response) {
-            console.log(response); // Debug-Ausgabe
             if (response.success) {
                 alert('Rolle erfolgreich hinzugefügt.');
                 location.reload();
@@ -249,30 +257,27 @@ $('#saveRoleButton').click(function () {
 });
 
 $('#modal-default .btn-primary').click(function () {
-    const roleId = $('#modal-default').data('id'); // ID der Rolle aus Modal
-    const name = $('#modal-default #roleName').val(); // Name der Rolle
-    const level = $('#modal-default #roleLevel').val(); // Ebene der Rolle
+    const roleId = $('#modal-default').data('id');
+    const name = $('#modal-default #roleName').val();
+    const level = $('#modal-default #roleLevel').val();
+    const value = $('#modal-default #roleValue').val(); // Neuen Wert holen
     const permissions = [];
 
-    // Sammle die Namen der ausgewählten Berechtigungen
     $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
         permissions.push($(this).val());
     });
 
-    console.log({ id: roleId, name, level, permissions }); // Debug-Ausgabe
-
-    // AJAX-Anfrage senden
     $.ajax({
         url: 'include/update_role.php',
         type: 'POST',
         data: {
-            id: roleId, // Übermittle die ID der Rolle
+            id: roleId,
             name: name,
             level: level,
-            permissions: JSON.stringify(permissions) // Berechtigungen als JSON
+            value: value, // Value mit senden
+            permissions: JSON.stringify(permissions)
         },
         success: function (response) {
-            console.log(response); // Debug-Ausgabe
             if (response.success) {
                 alert('Rolle erfolgreich aktualisiert.');
                 location.reload();

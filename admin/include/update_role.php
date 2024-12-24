@@ -17,12 +17,13 @@ if (!$id || !$name || !$level || !is_array($permissions)) {
 
 try {
     // Bestehende Rolle aktualisieren
-    $stmt = $conn->prepare("UPDATE roles SET name = :name, level = :level, permissions = :permissions WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE roles SET name = :name, level = :level, value = :value, permissions = :permissions WHERE id = :id");
     $stmt->execute([
-        ':id' => $id,
         ':name' => $name,
         ':level' => $level,
-        ':permissions' => json_encode($permissions, JSON_UNESCAPED_UNICODE) // JSON der Namen speichern
+        ':value' => $value, // Value einfügen
+        ':permissions' => json_encode($permissions),
+        ':id' => $id
     ]);
 
     echo json_encode(['success' => true]);

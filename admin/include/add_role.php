@@ -15,11 +15,12 @@ if (!$name || !$level || !is_array($permissions)) {
 
 try {
     // Rolle in die Datenbank einfügen
-    $stmt = $conn->prepare("INSERT INTO roles (name, level, permissions) VALUES (:name, :level, :permissions)");
+    $stmt = $conn->prepare("INSERT INTO roles (name, level, value, permissions) VALUES (:name, :level, :value, :permissions)");
     $stmt->execute([
         ':name' => $name,
         ':level' => $level,
-        ':permissions' => json_encode($permissions) // Namen als JSON speichern
+        ':value' => $value, // Value einfügen
+        ':permissions' => json_encode($permissions)
     ]);
 
     echo json_encode(['success' => true]);

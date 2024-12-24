@@ -79,38 +79,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     // Dynamisch Daten laden
     $.ajax({
-      url: 'fetch_users.php', // Das PHP-Skript, das die Daten liefert
-      type: 'POST',
-      dataType: 'json',
-      success: function (data) {
-        if (data.error) {
-          alert(data.error);
-          return;
-        }
-
-        // Tabelle füllen
+    url: 'fetch_users.php',
+    type: 'POST',
+    dataType: 'json',
+    success: function (data) {
         let tableBody = $('#example1 tbody');
         tableBody.empty();
 
         data.forEach(user => {
-          tableBody.append(`
-            <tr>
-              <td>${user.name}</td>
-              <td>${user.role_name}</td>
-              <td>${user.nummer ? user.nummer : 'N/A'}</td>
-              <td>${new Date(user.created_at).toLocaleDateString()}</td>
-              <td>N/A</td>
-              <td>
-                <a href="/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
-              </td>
-            </tr>
-          `);
+            tableBody.append(`
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.role_name}</td>
+                    <td>${user.nummer ? user.nummer : 'N/A'}</td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
+                    <td>
+                        <a href="/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                    </td>
+                </tr>
+            `);
         });
-      },
-      error: function () {
+    },
+    error: function () {
         alert('Fehler beim Abrufen der Daten.');
-      }
-    });
+    }
+}); 
   });
 </script>
 

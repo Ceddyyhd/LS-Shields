@@ -20,8 +20,8 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" role="button">
-        <i class="fa-solid fa-right-from-bracket"></i>
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-right-from-bracket"></i>
         </a>
       </li>
     </ul>

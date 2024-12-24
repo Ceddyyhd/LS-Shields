@@ -311,18 +311,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="password" id="passwordField" name="password" class="form-control" placeholder="Neues Passwort" disabled>
                             </div>
 
-                            <div class="form-group">
-                                <strong><i class="fas fa-lock mr-1"></i> Gekündigt?</strong>
-                                <div class="form-check">
-                                    <!-- Standardwert 0, falls die Checkbox nicht angehakt ist -->
-                                    <input type="hidden" name="gekündigt" value="0">
-                                    <input type="checkbox" id="gekündigtCheckbox" name="gekündigt" value="1" class="form-check-input" 
-                                        <?php echo $user['gekündigt'] ? 'checked' : ''; ?>>
-                                        <label for="gekündigtCheckbox" class="form-check-label">Gekündigt</label>
-                                </div>
-                            </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -338,50 +326,42 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $(document).ready(function () {
-        $("#saveChanges").on("click", function (e) {
-    e.preventDefault();
+    $("#saveChanges").on("click", function (e) {
+        e.preventDefault();
 
-    // Daten aus dem Formular sammeln
-    var formData = $("#userEditForm").serializeArray();
+        // Sammle die Daten aus dem Formular
+        var formData = $("#userEditForm").serialize();
 
-    // Überprüfen, ob die Checkbox aktiviert ist
-    formData = formData.filter(function (item) {
-        return item.name !== "gekündigt"; // Entferne alle vorhandenen "gekündigt"-Einträge
-    });
+        // Sende die Daten per AJAX
+        $.ajax({
+            url: "include/edit_user.php", // Backend-URL für das Speichern der Änderungen
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                try {
+                    // Versuche, die Antwort als JSON zu interpretieren
+                    response = JSON.parse(response);
 
-    // Checkbox-Wert hinzufügen (nur wenn aktiviert)
-    if ($("#gekündigtCheckbox").is(":checked")) {
-        formData.push({ name: "gekündigt", value: "1" });
-    } else {
-        formData.push({ name: "gekündigt", value: "0" });
-    }
+                    if (response.success) {
+                        // Schließe das Modal
+                        $("#user-bearbeiten").modal("hide");
 
-    // Sende die Daten per AJAX
-    $.ajax({
-        url: "include/edit_user.php",
-        type: "POST",
-        data: $.param(formData), // Daten in URL-encoded-String konvertieren
-        success: function (response) {
-            try {
-                response = JSON.parse(response);
-
-                if (response.success) {
-                    $("#user-bearbeiten").modal("hide");
-                    setTimeout(function () {
-                        location.reload();
-                    }, 500);
-                } else {
-                    console.error("Fehler: ", response.message);
+                        // Seite neu laden, um die Änderungen zu sehen
+                        setTimeout(function () {
+                            location.reload();
+                        }, 500);
+                    } else {
+                        // Zeige die Fehlermeldung im Modal an
+                    }
+                } catch (error) {
+                    console.error("Fehler beim Parsen der Antwort:", error);
                 }
-            } catch (error) {
-                console.error("Fehler beim Parsen der Antwort: ", error);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error("AJAX-Fehler: ", error);
-        },
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX-Fehler:", error);
+            },
+        });
     });
-});
 });
 </script>
           <div class="col-md-9">

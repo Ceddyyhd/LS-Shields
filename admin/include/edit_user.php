@@ -16,10 +16,7 @@ try {
 
     $updates = [];
 
-    // Gekündigt-Status
-    if (isset($_POST['gekündigt'])) {
-        $updates['gekündigt'] = $_POST['gekündigt'] === '1' ? 1 : 0;
-    }
+    
 
     // Weitere Felder
     if ($_SESSION['permissions']['edit_name'] ?? false && isset($_POST['name'])) {

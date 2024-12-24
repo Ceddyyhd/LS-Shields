@@ -162,7 +162,7 @@ $(document).ready(function () {
             </div>
             <div class="form-group">
               <label for="roleValue">Wert (Value)</label>
-              <input type="number" id="roleValue" class="form-control" min="1" max="100" value="<?= htmlspecialchars($role['value']) ?>"placeholder="Zahlenwert für den Rang">
+              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
             <div class="form-group" id="permissionsContainer">
               <!-- Dynamische Rechte erscheinen hier -->
@@ -294,60 +294,60 @@ $(document).ready(function () {
     });
 
 
-$(document).on('click', '[data-target="#modal-default"]', function () {
+    $(document).on('click', '[data-target="#modal-default"]', function () {
     const roleId = $(this).data('id'); // ID der Rolle aus Button
     $('#modal-default').data('id', roleId); // ID an Modal binden
 
     $.ajax({
-    url: 'include/get_role.php',
-    type: 'GET',
-    data: { id: roleId },
-    dataType: 'json',
-    success: function (response) {
-        if (response.success) {
-            const role = response.role;
+        url: 'include/get_role.php',
+        type: 'GET',
+        data: { id: roleId },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                const role = response.role;
 
-            // Felder mit Rollendaten füllen
-            $('#modal-default #roleName').val(role.name);
-            $('#modal-default #roleLevel').val(role.level);
+                // Felder mit Rollendaten füllen
+                $('#modal-default #roleName').val(role.name);
+                $('#modal-default #roleLevel').val(role.level);
+                $('#modal-default #roleValue').val(role.value); // Wert eintragen
 
-            // Checkboxen für Permissions dynamisch erstellen
-            const permissionsContainer = $('#modal-default #permissionsContainer');
-            permissionsContainer.empty();
+                // Checkboxen für Permissions dynamisch erstellen
+                const permissionsContainer = $('#modal-default #permissionsContainer');
+                permissionsContainer.empty();
 
-            // Hier den Code einfügen
-            response.all_permissions.forEach(permission => {
-    const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Bereich bestimmen
+                response.all_permissions.forEach(permission => {
+                    const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Bereich bestimmen
 
-    // Überprüfen, ob der Abschnitt schon existiert
-    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-    if (!sectionDiv.length) {
-        // Abschnitt erstellen, falls er nicht existiert
-        permissionsContainer.append(`
-            <div class="permissions-section section-${permission.bereich}">
-                <h5>${sectionLabel}</h5>
-            </div>
-        `);
-        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-    }
+                    // Überprüfen, ob der Abschnitt schon existiert
+                    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+                    if (!sectionDiv.length) {
+                        // Abschnitt erstellen, falls er nicht existiert
+                        permissionsContainer.append(`
+                            <div class="permissions-section section-${permission.bereich}">
+                                <h5>${sectionLabel}</h5>
+                            </div>
+                        `);
+                        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+                    }
 
-    // Checkbox hinzufügen
-    const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Überprüfung mit permission.name
-    sectionDiv.append(`
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
-            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-        </div>
-    `);
-});
-        } else {
-            alert('Fehler: ' + response.error);
+                    // Checkbox hinzufügen
+                    const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Überprüfung mit permission.name
+                    sectionDiv.append(`
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
+                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                        </div>
+                    `);
+                });
+            } else {
+                alert('Fehler: ' + response.error);
+            }
+        },
+        error: function () {
+            alert('Fehler beim Laden der Rollendaten.');
         }
-    },
-    error: function () {
-        alert('Fehler beim Laden der Rollendaten.');
-    }
-});
+    });
 });
 </script>
 

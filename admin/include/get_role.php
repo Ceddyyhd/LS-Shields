@@ -32,6 +32,7 @@ try {
             'role' => [
                 'name' => $role['name'],
                 'level' => $role['level'],
+                'value' => $role['value'], // Hier wird der Wert hinzugefügt
                 'permissions' => json_decode($role['permissions'], true) ?? [] // Rechte als Array
             ],
             'all_permissions' => $permissions // Alle Berechtigungen

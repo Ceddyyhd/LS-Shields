@@ -120,6 +120,12 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                            <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Logout</p>
+                            </a>
+                        </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

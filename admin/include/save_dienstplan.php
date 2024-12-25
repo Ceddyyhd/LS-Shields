@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     SELECT id FROM dienstplan 
                     WHERE event_id = :event_id AND employee_id = :employee_id
                 ");
-                $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
+                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
                 $stmt->execute();
                 $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
                         WHERE id = :id
                     ");
-                    $stmt->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
+                    $stmt->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);  // bindValue für id
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
                     $stmt = $conn->prepare("

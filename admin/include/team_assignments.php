@@ -22,53 +22,51 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             $teamName = $team['team_name']; // Teamname
             $areaName = $team['bereich']; // Bereichname
 
+            // Überprüfen, ob das Team bereits existiert
+            $stmt = $conn->prepare("SELECT id FROM teams WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
+            $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+            $stmt->execute();
+            $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingTeam) {
+                // Team existiert, wir holen die Team-ID
+                $teamId = $existingTeam['id'];
+            } else {
+                // Team existiert nicht, also fügen wir es hinzu
+                $stmt = $conn->prepare("INSERT INTO teams (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
+                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
+                $stmt->execute();
+                $teamId = $conn->lastInsertId();  // ID des neu erstellten Teams holen
+            }
+
             // Gehe durch alle Mitarbeiter und aktualisiere oder füge sie hinzu
             foreach ($team['employee_names'] as $index => $employeeName) {
-                $employeeId = isset($team['employee_ids'][$index]) ? $team['employee_ids'][$index] : null; // ID des Mitarbeiters in der Tabelle
+                // Überprüfen, ob der Mitarbeiter bereits existiert
+                $stmt = $conn->prepare("SELECT id FROM employees WHERE team_id = :team_id AND employee_name = :employee_name LIMIT 1");
+                $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
+                $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                $stmt->execute();
+                $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($employeeId) {
-                    // Wenn der Mitarbeiter existiert, füge ihn zum Update-Array hinzu
-                    $updateEmployees[] = [
-                        'id' => $employeeId, // Die ID des Mitarbeiters
-                        'employee_name' => $employeeName,
-                        'is_team_lead' => $index == 0 ? 1 : 0,
-                    ];
+                if ($existingEmployee) {
+                    // Mitarbeiter existiert, Update durchführen
+                    $stmt = $conn->prepare("UPDATE employees SET employee_name = :employee_name, is_team_lead = :is_team_lead WHERE id = :id");
+                    $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                    $stmt->bindValue(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                    $stmt->bindValue(':id', $existingEmployee['id'], PDO::PARAM_INT);
+                    $stmt->execute(); // Mitarbeiter aktualisieren
                 } else {
-                    // Wenn der Mitarbeiter nicht existiert, füge ihn zum Insert-Array hinzu
-                    $insertEmployees[] = [
-                        'event_id' => $eventId,
-                        'team_name' => $teamName,
-                        'area_name' => $areaName,
-                        'employee_name' => $employeeName,
-                        'is_team_lead' => $index == 0 ? 1 : 0,
-                    ];
+                    // Mitarbeiter existiert nicht, neuen Mitarbeiter hinzufügen
+                    $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
+                    $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
+                    $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                    $stmt->bindValue(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                    $stmt->execute(); // Mitarbeiter hinzufügen
                 }
             }
-        }
-
-        // 1. UPDATE-Mitarbeiter in einem einzigen Schritt
-        if (count($updateEmployees) > 0) {
-            $updateQuery = "UPDATE team_assignments SET employee_name = CASE id ";
-            foreach ($updateEmployees as $employee) {
-                $updateQuery .= "WHEN {$employee['id']} THEN '{$employee['employee_name']}' ";
-            }
-            $updateQuery .= "END, is_team_lead = CASE id ";
-            foreach ($updateEmployees as $employee) {
-                $updateQuery .= "WHEN {$employee['id']} THEN {$employee['is_team_lead']} ";
-            }
-            $updateQuery .= "END WHERE id IN (" . implode(',', array_column($updateEmployees, 'id')) . ")";
-            $conn->exec($updateQuery);
-        }
-
-        // 2. INSERT-Mitarbeiter in einem einzigen Schritt
-        if (count($insertEmployees) > 0) {
-            $insertQuery = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES ";
-            $values = [];
-            foreach ($insertEmployees as $employee) {
-                $values[] = "({$employee['event_id']}, '{$employee['team_name']}', '{$employee['area_name']}', '{$employee['employee_name']}', {$employee['is_team_lead']})";
-            }
-            $insertQuery .= implode(", ", $values);
-            $conn->exec($insertQuery);
         }
 
         // Commit der Transaktion: Alle Änderungen werden in einem Schritt gespeichert

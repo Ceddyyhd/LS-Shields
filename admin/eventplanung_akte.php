@@ -177,6 +177,11 @@
                   <div class="active tab-pane" id="plan-bearbeiten">
                       <textarea id="summernote"></textarea>
                   </div>
+                  <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                      </div>
                   <script>$(document).ready(function() {
                     $('#summernote').summernote({
                         height: 300,   // Höhe von Summernote anpassen
@@ -361,10 +366,6 @@
 <script src="plugins/dropzone/min/dropzone.min.js"></script>
 <script>
   $(function () {
-    // Summernote
-    $('#summernote').summernote({
-        height:500,
-    })
     //Date picker
     $('#reservationdate').datetimepicker({
         format: 'L'

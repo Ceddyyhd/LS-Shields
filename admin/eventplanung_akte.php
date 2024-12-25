@@ -178,29 +178,31 @@
                       <textarea id="summernote"></textarea>
                   </div>
                   <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
-                        </div>
+                      <div class="offset-sm-2 col-sm-10">
+                          <button type="button" id="submitForm" class="btn btn-danger">Submit</button> <!-- ID hier hinzufügen -->
                       </div>
-                  <script>$(document).ready(function() {
-                    // Formular absenden
-                    $('#submitForm').on('click', function() {
-                        var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
-                        $.ajax({
-                            url: 'include/speichern_eventplanung_summernote.php', // PHP-Skript zum Speichern
-                            type: 'POST',
-                            data: {
-                                summernoteContent: summernoteContent
-                            },
-                            success: function(response) {
-                                alert('Daten wurden gespeichert!');
-                            },
-                            error: function() {
-                                alert('Fehler beim Speichern der Daten!');
-                            }
-                        });
-                    });
-                });</script>
+                  </div>
+                  <script>
+                  $(document).ready(function() {
+                      // Formular absenden
+                      $('#submitForm').on('click', function() {
+                          var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
+                          $.ajax({
+                              url: 'include/speichern_eventplanung_summernote.php', // PHP-Skript zum Speichern
+                              type: 'POST',
+                              data: {
+                                  summernoteContent: summernoteContent
+                              },
+                              success: function(response) {
+                                  alert('Daten wurden gespeichert!');
+                              },
+                              error: function() {
+                                  alert('Fehler beim Speichern der Daten!');
+                              }
+                          });
+                      });
+                  });
+                  </script>
 
                   <div class="tab-pane" id="anmeldung">
                    <!-- /.card-header -->

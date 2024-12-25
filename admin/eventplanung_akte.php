@@ -195,11 +195,11 @@ try {
                             <label for="mitarbeiter">Mitarbeiter</label>
                             <!-- Festes Mitarbeiterfeld für Team Lead -->
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
+                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_1[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                             </div>
                             <!-- Dynamisches Mitarbeiterfeld -->
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_1[][name]" placeholder="Mitarbeiter">
                             </div>
                         </div>
                     </div>
@@ -228,9 +228,10 @@ try {
 
         // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
         if (lastEmployeeField.find('input').val() !== '') {
+            const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
             const newEmployeeField = `
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${parentTeamForm.attr('id')}[][name]" placeholder="Mitarbeiter">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
                 </div>
             `;
             parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
@@ -285,7 +286,7 @@ try {
             const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
             const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
 
-            // Speichern der Mitarbeiter in das TeamData Array
+            // Speichern der Mitarbeiter in das teamData Array
             const employeeName = $(this).val();
             const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter des Teams ist der Team Lead
 
@@ -315,6 +316,7 @@ try {
         });
     });
 });
+
 
 
 

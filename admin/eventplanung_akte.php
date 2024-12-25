@@ -405,22 +405,27 @@ try {
 <script>
   $(document).ready(function() {
     // Submit-Button für den Dienstplan
-    $('#submitFormDienstplanung').on('click', function() {
+    $('#submitForm').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob alle erforderlichen Felder ausgefüllt sind
-        $('input[name^="max_time_"]').each(function() {
-            if ($(this).val() === '') {
-                valid = false;
-                alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
-                return false;
-            }
-        });
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
         $('input[name^="work_time_"]').each(function() {
             if ($(this).val() === '') {
                 valid = false;
                 alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
-                return false;
+                return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
+            }
+        });
+
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+        $('input[name^="max_time_"]').each(function() {
+            if ($(this).val() !== '') {
+                // Falls max_time ausgefüllt wurde, aber leer ist, Fehler anzeigen
+                if ($(this).val() === '') {
+                    valid = false;
+                    alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
+                    return false;
+                }
             }
         });
 

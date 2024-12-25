@@ -16,25 +16,11 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     try {
         $insertEmployees = [];
         $updateEmployees = [];
-        $newTeams = [];
 
         // Durch jedes Team in den empfangenen Daten iterieren
         foreach ($teamData as $team) {
             $teamName = $team['team_name']; // Teamname
             $areaName = $team['bereich']; // Bereichname
-            $teamId = isset($team['team_id']) ? $team['team_id'] : null; // Team ID, falls vorhanden
-
-            // Wenn das Team nicht existiert, füge es hinzu
-            if (!$teamId) {
-                $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
-                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-                $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
-                $stmt->execute();
-                // Die ID des neu erstellten Teams
-                $teamId = $conn->lastInsertId();
-                $newTeams[] = $teamId; // Speichern der neuen Team-ID
-            }
 
             // Gehe durch alle Mitarbeiter und aktualisiere oder füge sie hinzu
             foreach ($team['employee_names'] as $index => $employeeName) {
@@ -43,7 +29,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 if ($employeeId) {
                     // Wenn der Mitarbeiter existiert, füge ihn zum Update-Array hinzu
                     $updateEmployees[] = [
-                        'id' => $employeeId,
+                        'id' => $employeeId, // Die ID des Mitarbeiters
                         'employee_name' => $employeeName,
                         'is_team_lead' => $index == 0 ? 1 : 0,
                     ];
@@ -55,7 +41,6 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                         'area_name' => $areaName,
                         'employee_name' => $employeeName,
                         'is_team_lead' => $index == 0 ? 1 : 0,
-                        'team_id' => $teamId, // Das Team ID für den neuen Mitarbeiter
                     ];
                 }
             }
@@ -77,10 +62,10 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
         // 2. INSERT-Mitarbeiter in einem einzigen Schritt
         if (count($insertEmployees) > 0) {
-            $insertQuery = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead, team_id) VALUES ";
+            $insertQuery = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES ";
             $values = [];
             foreach ($insertEmployees as $employee) {
-                $values[] = "({$employee['event_id']}, '{$employee['team_name']}', '{$employee['area_name']}', '{$employee['employee_name']}', {$employee['is_team_lead']}, {$employee['team_id']})";
+                $values[] = "({$employee['event_id']}, '{$employee['team_name']}', '{$employee['area_name']}', '{$employee['employee_name']}', {$employee['is_team_lead']})";
             }
             $insertQuery .= implode(", ", $values);
             $conn->exec($insertQuery);

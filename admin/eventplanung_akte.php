@@ -230,7 +230,7 @@ try {
         if (lastEmployeeField.find('input').val() !== '') {
             const newEmployeeField = `
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${parentTeamForm.attr('id')}[][name]" placeholder="Mitarbeiter">
                 </div>
             `;
             parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
@@ -256,10 +256,10 @@ try {
                 <div class="form-group" id="mitarbeiter-container">
                     <label for="mitarbeiter">Mitarbeiter</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter">
                     </div>
                 </div>
             </div>
@@ -279,23 +279,21 @@ try {
             return $(this).val();
         }).get();
 
-        const mitarbeiter = [];
-        // Wir sammeln alle Mitarbeiter pro Team
-        $('input[name="mitarbeiter[][name]"]').each(function() {
-            mitarbeiter.push($(this).val());
-        });
-
-        // Team Lead festlegen: Der erste Mitarbeiter jedes Teams ist der Team Lead
         const teamData = [];
-        teamNames.forEach((teamName, index) => {
-            const teamMitarbeiter = mitarbeiter.slice(index * 2, index * 2 + 2); // Zwei Mitarbeiter pro Team
-            teamMitarbeiter.forEach((employee, empIndex) => {
-                teamData.push({
-                    team_name: teamName,
-                    bereich: bereiche[index],
-                    employee_name: employee,
-                    is_team_lead: empIndex === 0 ? true : false // Der erste Mitarbeiter ist der Team Lead
-                });
+        $('input[name^="mitarbeiter_"]').each(function(index) {
+            const parentForm = $(this).closest('.team-form'); // Das Teamformular
+            const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
+            const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
+
+            // Speichern der Mitarbeiter in das TeamData Array
+            const employeeName = $(this).val();
+            const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter des Teams ist der Team Lead
+
+            teamData.push({
+                team_name: teamName,
+                bereich: teamArea,
+                employee_name: employeeName,
+                is_team_lead: isTeamLead
             });
         });
 

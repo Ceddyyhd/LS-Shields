@@ -181,7 +181,7 @@ try {
             </div>
             <div class="modal-body">
                 <div id="teams-container">
-                    <!-- Dynamisch hinzugefügte Teams kommen hierhin -->
+                    <!-- Festes Teamformular für das erste Team -->
                     <div class="team-form" id="team-form-1">
                         <div class="form-group">
                             <label for="team_name">Team Name 1</label>
@@ -194,15 +194,12 @@ try {
                         <div class="form-group">
                             <label for="mitarbeiter">Mitarbeiter</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter" required>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <!-- Button zum Erstellen eines neuen Teamformulars -->
                 <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
             </div>
 
@@ -218,7 +215,7 @@ try {
  $(document).ready(function() {
     let teamCount = 1; // Starten mit Team 1
 
-    // Dynamisches Hinzufügen von Mitarbeiterfeldern, wenn das letzte nicht leere Feld bearbeitet wird
+    // Das erste Mitarbeiterfeld ist immer fest und als Team Lead markiert
     $(document).on('input', '.mitarbeiter', function() {
         const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
         
@@ -251,7 +248,7 @@ try {
                 <div class="form-group">
                     <label for="mitarbeiter">Mitarbeiter</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter" required>
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
@@ -311,6 +308,7 @@ try {
         });
     });
 });
+
 
 
 </script>

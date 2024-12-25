@@ -17,17 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $gestartetUm = isset($_POST['gestartet_um_' . $employeeId]) ? $_POST['gestartet_um_' . $employeeId] : null;
                 $gegangenUm = isset($_POST['gegangen_um_' . $employeeId]) ? $_POST['gegangen_um_' . $employeeId] : null;
 
-                // Überprüfen, ob der Wert leer ist und als NULL setzen
+                // Wenn max_time leer ist, NULL setzen
+                if ($maxTime === '') {
+                    $maxTime = null;
+                }
+
+                // Überprüfen, ob gestartet_um und gegangen_um leer sind und NULL zuweisen
                 if ($gestartetUm === '') {
                     $gestartetUm = null;
                 }
                 if ($gegangenUm === '') {
                     $gegangenUm = null;
-                }
-
-                // Wenn max_time leer ist, NULL setzen
-                if ($maxTime === '') {
-                    $maxTime = null;
                 }
 
                 // SQL-Abfrage zum Aktualisieren oder Einfügen der Daten
@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
                         WHERE id = :id
                     ");
-                    // Parameter binden
                     $stmt->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
@@ -81,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);  // Wenn nicht NULL, dann String
                 }
 
-                // Execute the query
+                // SQL-Abfrage ausführen
                 $stmt->execute();
             }
         }

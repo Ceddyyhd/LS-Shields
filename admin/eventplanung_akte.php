@@ -272,49 +272,53 @@ try {
 
     // Speichern der Teamdaten
     $('#saveTeam').click(function() {
-        const teamNames = $('input[name="team_name[]"]').map(function() {
-            return $(this).val();
-        }).get();
+    const teamNames = $('input[name="team_name[]"]').map(function() {
+        return $(this).val();
+    }).get();
 
-        const bereiche = $('input[name="bereich[]"]').map(function() {
-            return $(this).val();
-        }).get();
+    const bereiche = $('input[name="bereich[]"]').map(function() {
+        return $(this).val();
+    }).get();
 
-        const teamData = [];
-        $('input[name^="mitarbeiter_"]').each(function(index) {
-            const parentForm = $(this).closest('.team-form'); // Das Teamformular
-            const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
-            const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
+    const teamData = [];
+    $('input[name^="mitarbeiter_"]').each(function(index) {
+        const parentForm = $(this).closest('.team-form'); // Das Teamformular
+        const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
+        const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
 
-            // Speichern der Mitarbeiter in das teamData Array
-            const employeeName = $(this).val();
-            const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter des Teams ist der Team Lead
+        // Speichern der Mitarbeiter in das teamData Array
+        const employeeName = $(this).val();
+        const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter des Teams ist der Team Lead
 
-            teamData.push({
+        // Wir sammeln alle Mitarbeiter eines Teams
+        if (!teamData[teamName]) {
+            teamData[teamName] = {
                 team_name: teamName,
                 bereich: teamArea,
-                employee_name: employeeName,
-                is_team_lead: isTeamLead
-            });
-        });
-
-        // Sende die Team-Daten an den Server
-        $.ajax({
-            url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
-            method: 'POST',
-            data: {
-                team_data: teamData,
-                event_id: <?php echo $_GET['id']; ?> // Event ID
-            },
-            success: function(response) {
-                alert('Teams erfolgreich gespeichert');
-                $('#teams-bearbeiten').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                console.log('Fehler beim Speichern der Teams:', error);
-            }
-        });
+                employee_names: []
+            };
+        }
+        
+        teamData[teamName].employee_names.push(employeeName);
     });
+
+    // Sende die Team-Daten an den Server
+    $.ajax({
+        url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
+        method: 'POST',
+        data: {
+            team_data: Object.values(teamData), // Teamdaten als Array von Objekten
+            event_id: <?php echo $_GET['id']; ?> // Event ID
+        },
+        success: function(response) {
+            alert('Teams erfolgreich gespeichert');
+            $('#teams-bearbeiten').modal('hide');
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler beim Speichern der Teams:', error);
+        }
+    });
+});
 });
 
 

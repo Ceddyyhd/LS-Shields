@@ -174,6 +174,7 @@
                   <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
                   <li class="nav-item"><a class="nav-link" href="#anmeldung" data-toggle="tab">Anmeldung</a></li>
                   <li class="nav-item"><a class="nav-link" href="#dienstplan" data-toggle="tab">Dienstplan</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#externes-dokument1" data-toggle="tab">Externes Dokument (Benennbar)</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -299,6 +300,11 @@
                         </div>
                       </div>
                     </form>
+                  </div>
+
+
+                  <div class="tab-pane" id="externes-dokument1">
+                  <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>
                   </div>
                   <!-- /.tab-pane -->
                 </div>

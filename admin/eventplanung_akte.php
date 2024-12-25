@@ -349,11 +349,12 @@ try {
         $eventId = $_GET['id'];
 
         try {
-            // Alle Mitarbeiter holen, die sich für das Event angemeldet haben
+            // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-                SELECT u.id, u.name
+                SELECT u.id, u.name, d.max_time, d.work_time
                 FROM users u
                 JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+                LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
                 WHERE em.event_id = :event_id
             ");
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
@@ -369,7 +370,8 @@ try {
                         <div class="form-group">
                             <label>Maximal da bis:</label>
                             <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"/>
+                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
                                 <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                 </div>
@@ -382,7 +384,8 @@ try {
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="far fa-clock"></i></span>
                                 </div>
-                                <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>">
+                                <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
+                                value="<?php echo htmlspecialchars($employee['work_time']); ?>">
                             </div>
                         </div>
                     </div>
@@ -396,7 +399,7 @@ try {
 
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-10">
-            <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
+                <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
             </div>
         </div>
     </form>

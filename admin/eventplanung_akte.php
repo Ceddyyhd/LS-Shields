@@ -370,7 +370,6 @@ try {
                         <div class="form-group">
                             <label>Maximal da bis:</label>
                             <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                                <!-- Formatieren von max_time falls vorhanden -->
                                 <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
                                 value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
                                 <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
@@ -379,14 +378,16 @@ try {
                             </div>
                         </div>
 
+
+
                         <div class="form-group">
                           <label>Gearbeitete Zeit:</label>
+
                           <div class="input-group">
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
-                            <!-- Formatieren von work_time falls vorhanden -->
-                            <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
+                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
                             value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
                           </div>
                           <!-- /.input group -->
@@ -409,67 +410,65 @@ try {
 </div>
 
 <script>
-    $(document).ready(function() {
-        // Initialisiere datetimepicker für das "Maximal da bis"-Feld
-        <?php foreach ($employees as $employee) { ?>
-            $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-                format: 'HH:mm', // Nur Stunden und Minuten
-                useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-            });
+ $(document).ready(function() {
+    // Initialisiere datetimepicker für das "Maximal da bis"-Feld
+    <?php foreach ($employees as $employee) { ?>
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm', // Nur Stunden und Minuten
+            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+        });
 
-            // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
-            $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-                format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
-                useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-            });
-        <?php } ?>
+        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
+            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+        });
+    <?php } ?>
 
-        // Submit-Button für den Dienstplan
-        $('#submitFormDienstplanung').on('click', function() {
-            var valid = true;
+    // Submit-Button für den Dienstplan
+    $('#submitFormDienstplanung').on('click', function() {
+        var valid = true;
 
-            // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
-            $('input[name^="work_time_"]').each(function() {
-                var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-                // Wenn der Wert leer ist, überspringen wir die Validierung
-                if (workTimeValue === '') {
-                    $(this).val(null); // Wenn leer, als null setzen
-                }
-            });
-
-            // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-            $('input[name^="max_time_"]').each(function() {
-                var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
-                if (maxTimeValue === '') {
-                    $(this).val(null); // Wenn leer, als null setzen
-                }
-            });
-
-            // Wenn alle Felder validiert sind, Formular absenden
-            if (valid) {
-                var formData = $('form').serialize();  // Alle Formulardaten sammeln
-
-                $.ajax({
-                    url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
-                    type: 'POST',
-                    data: formData,  // Alle Formulardaten senden
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status == 'success') {
-                            alert(response.message);  // Erfolgsmeldung anzeigen
-                        } else {
-                            alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Fehler bei der Anfrage!');
-                    }
-                });
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+        $('input[name^="work_time_"]').each(function() {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            if (workTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
             }
         });
-    });
-</script>
 
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+        $('input[name^="max_time_"]').each(function() {
+            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+            if (maxTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
+
+        // Wenn alle Felder validiert sind, Formular absenden
+        if (valid) {
+            var formData = $('form').serialize();  // Alle Formulardaten sammeln
+
+            $.ajax({
+                url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
+                type: 'POST',
+                data: formData,  // Alle Formulardaten senden
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'success') {
+                        alert(response.message);  // Erfolgsmeldung anzeigen
+                    } else {
+                        alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler bei der Anfrage!');
+                }
+            });
+        }
+    });
+});
+</script>
 
                   <div class="tab-pane" id="externes-dokument1">
                   <iframe src=""width="100%" height="700px"></iframe>                  

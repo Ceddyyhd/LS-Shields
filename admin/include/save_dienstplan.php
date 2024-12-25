@@ -32,7 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Wenn die Gearbeitete Zeit leer ist, auf NULL setzen
                 if ($workTime) {
-                    $workTime = date('m/d/Y h:i A', strtotime($workTime));  // Format: MM/DD/YYYY hh:mm AM/PM
+                    // Versuche, das Datum korrekt zu parsen, und setze es nur, wenn es gültig ist
+                    $parsedWorkTime = strtotime($workTime);
+                    if ($parsedWorkTime !== false) {
+                        $workTime = date('Y-m-d H:i:s', $parsedWorkTime);  // Format: Y-m-d H:i:s für die DB
+                    } else {
+                        $workTime = NULL; // Wenn ungültig, setze auf NULL
+                    }
                 } else {
                     $workTime = NULL; // Setze auf NULL, wenn leer
                 }

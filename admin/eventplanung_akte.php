@@ -432,6 +432,7 @@ try {
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
         $('input[name^="work_time_"]').each(function() {
             var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            // Wenn der Wert leer ist, überspringen wir die Validierung
             if (workTimeValue === '') {
                 $(this).val(null); // Wenn leer, als null setzen
             }
@@ -468,6 +469,7 @@ try {
         }
     });
 });
+
 </script>
 
                   <div class="tab-pane" id="externes-dokument1">

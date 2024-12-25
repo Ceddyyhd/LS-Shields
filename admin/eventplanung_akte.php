@@ -421,7 +421,7 @@ $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+            format: 'HH:mm', // Format für Datum und Uhrzeit
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
         });
 

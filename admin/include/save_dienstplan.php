@@ -45,9 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt = $conn->prepare("
                         UPDATE dienstplan
                         SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
-                        WHERE id = :id
+                        WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
-                    $stmt->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
+                    // Parameter binden
+                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                    $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
                     $stmt = $conn->prepare("
@@ -56,28 +58,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ");
                 }
 
-                // Parameter binden und sicherstellen, dass NULL für leere Felder übergeben wird
+                // Alle Parameter binden
                 $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
 
-                // Wenn max_time null ist, sicherstellen, dass NULL übergeben wird
+                // Binde max_time, gestartet_um, gegangen_um nur, wenn sie nicht NULL sind
                 if ($maxTime === null) {
-                    $stmt->bindValue(':max_time', null, PDO::PARAM_NULL);  // NULL für max_time
+                    $stmt->bindValue(':max_time', null, PDO::PARAM_NULL);
                 } else {
-                    $stmt->bindValue(':max_time', $maxTime, PDO::PARAM_STR);  // Wenn nicht NULL, dann String
+                    $stmt->bindValue(':max_time', $maxTime, PDO::PARAM_STR);
                 }
 
-                // Wenn gestartet_um oder gegangen_um null ist, sicherstellen, dass NULL übergeben wird
                 if ($gestartetUm === null) {
-                    $stmt->bindValue(':gestartet_um', null, PDO::PARAM_NULL);  // NULL für gestartet_um
+                    $stmt->bindValue(':gestartet_um', null, PDO::PARAM_NULL);
                 } else {
-                    $stmt->bindValue(':gestartet_um', $gestartetUm, PDO::PARAM_STR);  // Wenn nicht NULL, dann String
+                    $stmt->bindValue(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
                 }
 
                 if ($gegangenUm === null) {
-                    $stmt->bindValue(':gegangen_um', null, PDO::PARAM_NULL);  // NULL für gegangen_um
+                    $stmt->bindValue(':gegangen_um', null, PDO::PARAM_NULL);
                 } else {
-                    $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);  // Wenn nicht NULL, dann String
+                    $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
                 }
 
                 // SQL-Abfrage ausführen

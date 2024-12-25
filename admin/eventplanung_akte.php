@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="plugins/dropzone/min/dropzone.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <?php include 'include/header.php'; ?>
@@ -179,29 +180,32 @@
                   </div>
                   <div class="form-group row">
                       <div class="offset-sm-2 col-sm-10">
-                          <button type="button" id="submitForm" class="btn btn-danger">Submit</button> <!-- ID hier hinzufügen -->
-                      </div>
+                      <button type="button" id="submitForm" class="btn btn-danger">Submit</button>
+                  </div>
                   </div>
                   <script>
                   $(document).ready(function() {
-                      // Formular absenden
-                      $('#submitForm').on('click', function() {
-                          var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
-                          $.ajax({
-                              url: 'include/speichern_eventplanung_summernote.php', // PHP-Skript zum Speichern
-                              type: 'POST',
-                              data: {
-                                  summernoteContent: summernoteContent
-                              },
-                              success: function(response) {
-                                  alert('Daten wurden gespeichert!');
-                              },
-                              error: function() {
-                                  alert('Fehler beim Speichern der Daten!');
-                              }
-                          });
+                    $('#submitForm').on('click', function() {
+                        console.log("Button wurde geklickt!");  // Debugging-Ausgabe
+                        var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
+                        $.ajax({
+                          url: 'include/speichern_eventplanung_summernote.php',
+                          type: 'POST',
+                          data: {
+                              summernoteContent: $('#summernote').val()
+                          },
+                          success: function(response) {
+                              console.log(response);  // Prüfe die Antwort des Servers in der Konsole
+                              alert('Daten wurden gespeichert!');
+                          },
+                          error: function(xhr, status, error) {
+                              console.log('Fehler:', error); // Fehler in der Konsole ausgeben
+                              alert('Fehler beim Speichern der Daten!');
+                          }
                       });
-                  });
+                    });
+                });
+
                   </script>
 
                   <div class="tab-pane" id="anmeldung">

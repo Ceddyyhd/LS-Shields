@@ -341,6 +341,18 @@ try {
 
 <div class="tab-pane" id="dienstplan">
     <form class="form-horizontal" id="dienstplanForm">
+        <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Moment.js (optional, aber notwendig, wenn du das Standard-Format von Tempus Dominus verwendest) -->
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+
+<!-- Tempus Dominus -->
+<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Bootstrap 4 CSS (wenn noch nicht eingebunden) -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
         <?php
         // Verbindung zur Datenbank
         include('db.php');
@@ -416,10 +428,11 @@ try {
 </div>
 <script>
   $(document).ready(function() {
-    // Initialisierung der Timepicker
+    // Initialisierung der Timepicker für jedes Eingabefeld
     $('[data-toggle="datetimepicker"]').datetimepicker({
         format: 'YYYY-MM-DD HH:mm'
     });
+});
 
     // Formular absenden
     $('#submitFormDienstplanung').click(function() {

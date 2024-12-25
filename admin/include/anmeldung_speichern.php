@@ -8,6 +8,12 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
     $eventId = $_POST['event_id'];
     $employeeIds = $_POST['employees'];
 
+    // Überprüfen, ob $employeeIds ein Array ist
+    if (!is_array($employeeIds)) {
+        // Falls es kein Array ist, in ein Array umwandeln
+        $employeeIds = explode(',', $employeeIds);
+    }
+
     // Ausgabe der übermittelten Daten zur Fehlerbehebung
     var_dump($eventId, $employeeIds);
 

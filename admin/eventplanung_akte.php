@@ -293,7 +293,7 @@ try {
 <script>
   $(document).ready(function() {
     // Anmeldung abschicken
-    $('#submitFormAnmeldung').on('click', function() {
+    $('#submitForm').on('click', function() {
         var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
         console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 
@@ -301,7 +301,11 @@ try {
         if (selectedEmployees && selectedEmployees.length > 0) {
             console.log('Mitarbeiter werden gesendet');
 
-            // AJAX-Anfrage
+            // Sicherstellen, dass selectedEmployees ein Array ist
+            if (typeof selectedEmployees === 'string') {
+                selectedEmployees = [selectedEmployees]; // Falls es nur eine Auswahl ist, in ein Array umwandeln
+            }
+
             $.ajax({
                 url: 'include/anmeldung_speichern.php', // PHP-Skript zum Speichern
                 type: 'POST',

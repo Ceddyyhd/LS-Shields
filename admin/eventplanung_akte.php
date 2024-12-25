@@ -387,8 +387,12 @@ try {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
+                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
+                            value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                            
                             <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
                             value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+
                           </div>
                           <!-- /.input group -->
                         </div>
@@ -413,19 +417,15 @@ try {
  $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
-        // Stelle sicher, dass der datetimepicker für "Maximal da bis" richtig funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm', // Nur Stunden und Minuten
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Stelle sicher, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
+        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
-            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
-            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
-            showClear: true, // Möglichkeit, das Datum zu löschen
-            showClose: true // Möglichkeit, das Picker-Menü zu schließen
+            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
     <?php } ?>
 
@@ -433,13 +433,13 @@ try {
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
-        $('input[name^="work_time_"]').each(function() {
-            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            if (workTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+      $('input[name^="work_time_"]').each(function() {
+          var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+          if (workTimeValue === '') {
+              $(this).val(null); // Wenn leer, als null setzen
+          }
+      });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {

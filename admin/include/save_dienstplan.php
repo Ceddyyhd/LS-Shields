@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
                         WHERE id = :id
                     ");
-                    $stmt->bindParam(':id', $existingEntry['id'], PDO::PARAM_INT);
+                    $stmt->bindValue(':id', $existingEntry['id'], PDO::PARAM_INT);
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
                     $stmt = $conn->prepare("
@@ -57,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Parameter binden und ausführen
-                $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
-                $stmt->bindParam(':max_time', $maxTime, PDO::PARAM_STR);
-                $stmt->bindParam(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
-                $stmt->bindParam(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
+                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
+                $stmt->bindValue(':max_time', $maxTime, PDO::PARAM_STR);
+                $stmt->bindValue(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
+                $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
 
                 // Execute the query
                 $stmt->execute();

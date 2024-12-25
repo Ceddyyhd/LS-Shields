@@ -13,9 +13,8 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Summernote -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+  <!-- summernote -->
+  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
 
 
   <!-- Content Wrapper. Contains page content -->
@@ -174,22 +173,31 @@
                   </div>
 
                   <div class="active tab-pane" id="plan-bearbeiten">
-                    
 
-<!-- Textarea für den Editor -->
-<textarea id="summernote">Place <em>some</em> <u>text</u> <strong>here</strong></textarea>
-
-<!-- Summernote Script -->
+                  <div class="card card-outline card-info">
+                    <div class="card-header">
+                    <h3 class="card-title">
+                        Summernote
+                    </h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <textarea id="summernote">
+                        Place <em>some</em> <u>text</u> <strong>here</strong>
+                    </textarea>
+                    </div>
+                    <div class="card-footer">
+                    Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
+                    </div>
+                </div>
+<!-- Summernote -->
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
 <script>
-  $(document).ready(function() {
-    $('#summernote').summernote({
-      height: 300, // Höhe des Editors
-      placeholder: 'Write your content here...', // Platzhaltertext
-      tabsize: 2, // Indentation für Codeblocks
-    });
-  });
+  $(function () {
+    // Summernote
+    $('#summernote').summernote()
+  })
 </script>
-
                   </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">

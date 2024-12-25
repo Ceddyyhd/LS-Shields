@@ -10,18 +10,12 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
-    // Debugging: Gib die empfangenen Daten aus
-    error_log("Team Data: " . print_r($teamData, true)); // Gibt die Team-Daten aus
-
     // Transaktion starten (um alle Änderungen in einem Schritt zu machen)
     $conn->beginTransaction();
 
     try {
         // Durch jedes Team in den empfangenen Daten iterieren
         foreach ($teamData as $team) {
-            // Debugging: Gib das Team aus
-            error_log("Team: " . print_r($team, true)); // Gibt jedes Team aus
-
             $teamName = $team['team_name']; // Teamname
             $areaName = $team['bereich']; // Bereichname
             $teamId = isset($team['team_id']) ? $team['team_id'] : null; // Wenn Team ID vorhanden ist, holen wir sie
@@ -59,15 +53,10 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             }
 
             // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu
-            foreach ($team['employee_names'] as $index => $employee) {
-                // Sicherstellen, dass employee ein Array ist
-                if (!is_array($employee)) {
-                    error_log("Fehler: $employee ist kein Array!");
-                }
-            
+            foreach ($team['employee_names'] as $employee) {
                 $employeeName = $employee['name']; // Mitarbeitername
                 $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter ID, wenn vorhanden
-            
+
                 // Prüfen, ob der Mitarbeiter bereits existiert
                 if ($employeeId) {
                     // Mitarbeiter existiert, also updaten wir ihn

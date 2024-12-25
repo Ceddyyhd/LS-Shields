@@ -368,12 +368,18 @@ function generateTeamForm(team, index) {
 
         // Füge nur nicht-leere Mitarbeiter hinzu
         if (employeeName.trim() !== "") {
-            teamData[teamName].employee_names.push(employeeName);
+            // Hier erstellen wir das Objekt für jeden Mitarbeiter
+            const employee = {
+                name: employeeName,
+                is_team_lead: isTeamLead ? "1" : "0",  // 1 für Team Lead, 0 für normalen Mitarbeiter
+                id: ""  // Hier kann die Mitarbeiter-ID eingefügt werden, wenn vorhanden
+            };
+            teamData[teamName].employee_names.push(employee);
         }
     });
 
     // Debugging: Daten ausgeben, bevor sie gesendet werden
-    console.log(teamData);
+    console.log("Team Data to be sent:", teamData);
 
     // Sende die Team-Daten an den Server
     $.ajax({

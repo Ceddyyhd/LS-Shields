@@ -310,10 +310,6 @@ try {
             team_data: Object.values(teamData),
             event_id: <?php echo $_GET['id']; ?>
         },
-        success: function(response) {
-            alert('Teams erfolgreich gespeichert');
-            $('#teams-bearbeiten').modal('hide');
-        },
         error: function(xhr, status, error) {
           console.log('Fehler beim Speichern der Teams:', error);
           console.log('Serverantwort:', xhr.responseText); // Gibt die vollständige Antwort des Servers aus

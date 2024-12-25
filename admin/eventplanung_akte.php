@@ -30,7 +30,7 @@
 
   <?php
 // Verbindung zur Datenbank einbinden
-include('db.php');
+include('include/db.php');
 
 // ID aus der URL holen
 if (isset($_GET['id'])) {

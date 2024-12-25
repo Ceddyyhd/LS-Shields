@@ -1,9 +1,12 @@
 <?php
+// Fehleranzeigen aktivieren
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // Datenbankverbindung einbinden
 include('db.php');
 
-// Überprüfen, ob die Team-Daten und die Event-ID übermittelt wurden
+// Überprüfen, ob die richtigen Daten empfangen wurden
 if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
@@ -22,6 +25,13 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             $stmt->bindParam(':event_id', $eventId);
             $stmt->bindParam(':team_name', $teamName);
             $stmt->execute();
+
+            // Fehlerprotokollierung hinzufügen, falls die Abfrage fehlschlägt
+            if (!$stmt) {
+                echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+                exit;
+            }
+
             $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($existingTeam) {
@@ -36,6 +46,12 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                     $stmt->bindParam(':team_name', $teamName);
                     $stmt->bindParam(':employee_name', $employeeName);
                     $stmt->execute();
+
+                    if (!$stmt) {
+                        echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+                        exit;
+                    }
+
                     $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     if ($existingEmployee) {
@@ -63,6 +79,12 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 $stmt->bindParam(':team_name', $teamName);
                 $stmt->bindParam(':area_name', $areaName);
                 $stmt->execute();
+
+                // Fehlerprotokollierung hinzufügen, falls die Abfrage fehlschlägt
+                if (!$stmt) {
+                    echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+                    exit;
+                }
 
                 // Hole die ID des neuen Teams
                 $teamId = $conn->lastInsertId();

@@ -30,6 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $gegangenUm = null;
                 }
 
+                // Arbeitszeit berechnen, wenn sowohl gestartet_um als auch gegangen_um vorhanden sind
+                $arbeitszeit = null;
+                if ($gestartetUm !== null && $gegangenUm !== null) {
+                    $startTime = new DateTime($gestartetUm);
+                    $endTime = new DateTime($gegangenUm);
+                    $interval = $startTime->diff($endTime);
+                    // Die Arbeitszeit in Stunden (Dezimalformat) berechnen
+                    $arbeitszeit = $interval->h + $interval->i / 60;
+                }
+
                 // SQL-Abfrage zum Aktualisieren oder Einfügen der Daten
                 $stmt = $conn->prepare("
                     SELECT id FROM dienstplan 
@@ -44,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Datensatz existiert, also ein UPDATE ausführen
                     $stmt = $conn->prepare("
                         UPDATE dienstplan
-                        SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
+                        SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um, arbeitszeit = :arbeitszeit
                         WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
                     // Parameter binden
@@ -53,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
                     $stmt = $conn->prepare("
-                        INSERT INTO dienstplan (event_id, employee_id, max_time, gestartet_um, gegangen_um)
-                        VALUES (:event_id, :employee_id, :max_time, :gestartet_um, :gegangen_um)
+                        INSERT INTO dienstplan (event_id, employee_id, max_time, gestartet_um, gegangen_um, arbeitszeit)
+                        VALUES (:event_id, :employee_id, :max_time, :gestartet_um, :gegangen_um, :arbeitszeit)
                     ");
                 }
 
@@ -79,6 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt->bindValue(':gegangen_um', null, PDO::PARAM_NULL);
                 } else {
                     $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
+                }
+
+                // Binde die berechnete Arbeitszeit, wenn sie vorhanden ist
+                if ($arbeitszeit !== null) {
+                    $stmt->bindValue(':arbeitszeit', $arbeitszeit, PDO::PARAM_STR);
+                } else {
+                    $stmt->bindValue(':arbeitszeit', null, PDO::PARAM_NULL);
                 }
 
                 // SQL-Abfrage ausführen

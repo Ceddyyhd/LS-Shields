@@ -405,7 +405,7 @@ try {
 <script>
   $(document).ready(function() {
     // Submit-Button für den Dienstplan
-    $('#submitForm').on('click', function() {
+    $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist

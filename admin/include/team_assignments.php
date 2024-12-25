@@ -2,21 +2,22 @@
 include('db.php');
 
 // Eingabedaten aus POST
-$eventId = $_GET['id'];  // Event-ID (wird mit dem Event verknüpft)
-$bereich = $_POST['bereich'];  // Bereich (z. B. Haupteingang, Nebeneingang)
-$mitarbeiter = $_POST['mitarbeiter'];  // Array von Mitarbeitern
-$teamName = $_POST['team_name'];  // Der Name des Teams
+$eventId = $_POST['event_id']; // Event ID
+$bereich = $_POST['bereich']; // Bereich (z. B. Haupteingang)
+$mitarbeiter = $_POST['mitarbeiter']; // Array von Mitarbeitern
+$teamName = $_POST['team_name']; // Team Name
 
-// Die Mitarbeiter in die Datenbank einfügen
+// Team bearbeiten
+$query = "UPDATE team_assignments 
+          SET team_name = :team_name, area_name = :area_name, employee_name = :employee_name, is_team_lead = :is_team_lead
+          WHERE event_id = :event_id";
+$stmt = $conn->prepare($query);
+
 foreach ($mitarbeiter as $index => $employee) {
     // Falls der Mitarbeiter der Team Lead ist
     $isTeamLead = ($index == 0) ? true : false;  // Angenommen, der erste Mitarbeiter ist der Team Lead
-    
-    // SQL-Abfrage zum Einfügen der Daten
-    $query = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead)
-              VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)";
-    
-    $stmt = $conn->prepare($query);
+
+    // SQL-Abfrage zum Bearbeiten der Daten
     $stmt->bindParam(':event_id', $eventId);
     $stmt->bindParam(':team_name', $teamName);
     $stmt->bindParam(':area_name', $bereich);
@@ -25,5 +26,5 @@ foreach ($mitarbeiter as $index => $employee) {
     $stmt->execute();
 }
 
-echo json_encode(['status' => 'success', 'message' => 'Team erfolgreich erstellt!']);
+echo json_encode(['status' => 'success', 'message' => 'Team erfolgreich bearbeitet!']);
 ?>

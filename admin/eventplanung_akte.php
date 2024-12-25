@@ -169,12 +169,12 @@ try {
                   Teams Bearbeiten
                 </button>
 
-                <!-- Modal für Team-Erstellung -->
+<!-- Modal für Team-Erstellung -->
 <div class="modal fade" id="teams-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Team erstellen</h4>
+                <h4 class="modal-title" id="modalTitle">Neues Team erstellen</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -193,15 +193,15 @@ try {
                 <div id="mitarbeiter-container">
                     <label for="mitarbeiter">Mitarbeiter</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
+                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
                     </div>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
+                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
                     </div>
                 </div>
 
                 <button type="button" class="btn btn-primary" id="addEmployee">Neuen Mitarbeiter hinzufügen</button>
-                <button type="button" class="btn btn-primary" id="saveTeam">Team erstellen</button>
+                <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
             </div>
 
             <div class="modal-footer justify-content-between">
@@ -214,20 +214,61 @@ try {
 
 <script>
   $(document).ready(function() {
-    let employeeCount = 2; // Anfangszahl der Mitarbeiterfelder
+    let employeeCount = 2; // Initial zwei Mitarbeiterfelder
+
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern
+    $(document).on('input', '.mitarbeiter', function() {
+        if ($(this).val() !== '') {
+            const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
+            if (lastEmployeeField.find('input').val() !== '') {
+                const newEmployeeField = `
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
+                    </div>
+                `;
+                $('#mitarbeiter-container').append(newEmployeeField);
+            }
+        }
+    });
 
     // Neuen Mitarbeiter hinzufügen
     $('#addEmployee').click(function() {
-        employeeCount++;
         const newEmployeeField = `
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
+                <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
             </div>
         `;
         $('#mitarbeiter-container').append(newEmployeeField);
     });
 
     // Team erstellen
+    $('#createTeam').click(function() {
+        const teamName = $('#team_name').val();
+        const bereich = $('#bereich').val();
+        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            url: 'create_team.php', // PHP-Skript zum Erstellen des Teams
+            method: 'POST',
+            data: {
+                team_name: teamName,
+                bereich: bereich,
+                mitarbeiter: mitarbeiter,
+                event_id: <?php echo $_GET['id']; ?> // Event ID, die über die URL übergeben wird
+            },
+            success: function(response) {
+                alert('Team erfolgreich erstellt');
+                $('#teams-bearbeiten').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                console.log('Fehler beim Erstellen des Teams:', error);
+            }
+        });
+    });
+
+    // Team bearbeiten
     $('#saveTeam').click(function() {
         const teamName = $('#team_name').val();
         const bereich = $('#bereich').val();
@@ -236,19 +277,20 @@ try {
         }).get();
 
         $.ajax({
-            url: 'include/team_assignments.php', // PHP-Skript zum Erstellen des Teams
+            url: 'edit_team.php', // PHP-Skript zum Bearbeiten des Teams
             method: 'POST',
             data: {
                 team_name: teamName,
                 bereich: bereich,
-                mitarbeiter: mitarbeiter
+                mitarbeiter: mitarbeiter,
+                event_id: <?php echo $_GET['id']; ?> // Event ID
             },
             success: function(response) {
-                alert('Team erfolgreich erstellt');
+                alert('Team erfolgreich bearbeitet');
                 $('#teams-bearbeiten').modal('hide');
             },
             error: function(xhr, status, error) {
-                console.log('Fehler beim Erstellen des Teams:', error);
+                console.log('Fehler beim Bearbeiten des Teams:', error);
             }
         });
     });

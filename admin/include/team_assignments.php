@@ -29,15 +29,27 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
                 $stmt->execute();
             } else {
-                // Wenn das Team nicht existiert, fügen wir es hinzu
-                $stmt = $conn->prepare("INSERT INTO teams (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
+                // Überprüfen, ob das Team mit der gleichen event_id und team_name bereits existiert
+                $stmt = $conn->prepare("SELECT id FROM teams WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
                 $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-                $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
                 $stmt->execute();
+                $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Hole die ID des neu erstellten Teams
-                $teamId = $conn->lastInsertId();  // ID des neu erstellten Teams holen
+                if ($existingTeam) {
+                    // Team existiert, hole die ID des bestehenden Teams
+                    $teamId = $existingTeam['id'];
+                } else {
+                    // Wenn das Team nicht existiert, fügen wir es hinzu
+                    $stmt = $conn->prepare("INSERT INTO teams (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
+                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                    $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                    $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
+                    $stmt->execute();
+
+                    // Hole die ID des neu erstellten Teams
+                    $teamId = $conn->lastInsertId();  // ID des neu erstellten Teams holen
+                }
             }
 
             // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu

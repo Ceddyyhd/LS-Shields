@@ -394,6 +394,8 @@ try {
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
+                    <label>Std. Gearbeitet:</label>
+                    <p>XX Stunden</p>
                 </div>
                 <?php
             }

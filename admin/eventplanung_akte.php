@@ -298,34 +298,6 @@ try {
         });
     });
 });
-
-    // Team speichern (hier könnte die ursprüngliche Speicherung in der DB erfolgen)
-    $('#saveTeam').click(function() {
-        const teamName = $('#team_name').val();
-        const bereich = $('#bereich').val();
-        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
-            return $(this).val();
-        }).get();
-
-        $.ajax({
-            url: 'include/team_assignments.php', // PHP-Skript zum Erstellen des Teams
-            method: 'POST',
-            data: {
-                team_name: teamName,
-                bereich: bereich,
-                mitarbeiter: mitarbeiter,
-                event_id: <?php echo $_GET['id']; ?> // Event ID, die über die URL übergeben wird
-            },
-            success: function(response) {
-                alert('Team erfolgreich gespeichert');
-                $('#teams-bearbeiten').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                console.log('Fehler beim Speichern des Teams:', error);
-            }
-        });
-    });
-});
 </script>
                 
 

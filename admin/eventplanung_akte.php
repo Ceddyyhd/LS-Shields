@@ -396,7 +396,7 @@ try {
 
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-10">
-                <button type="submit" class="btn btn-danger">Submit</button>
+            <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
             </div>
         </div>
     </form>
@@ -404,10 +404,64 @@ try {
 
 <script>
   $(document).ready(function() {
+    // Submit-Button für den Dienstplan
+    $('#submitFormDienstplanung').on('click', function() {
+        var valid = true;
+
+        // Überprüfen, ob alle erforderlichen Felder ausgefüllt sind
+        $('input[name^="max_time_"]').each(function() {
+            if ($(this).val() === '') {
+                valid = false;
+                alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
+                return false;
+            }
+        });
+        $('input[name^="work_time_"]').each(function() {
+            if ($(this).val() === '') {
+                valid = false;
+                alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
+                return false;
+            }
+        });
+
+        // Wenn alle Felder validiert sind, Formular absenden
+        if (valid) {
+            var formData = $('form').serialize();  // Alle Formulardaten sammeln
+
+            $.ajax({
+                url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
+                type: 'POST',
+                data: formData,  // Alle Formulardaten senden
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'success') {
+                        alert(response.message);  // Erfolgsmeldung anzeigen
+                    } else {
+                        alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler bei der Anfrage!');
+                }
+            });
+        }
+    });
+});
+</script>
+
+<script>
+  $(document).ready(function() {
+    // Initialisiere datetimepicker für max_time
     <?php foreach ($employees as $employee) { ?>
-        // Initialisiere datetimepicker für jedes Mitarbeiter-Feld
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm'
+        });
+    <?php } ?>
+
+    // Initialisiere datetimepicker für gearbeitete Zeit
+    <?php foreach ($employees as $employee) { ?>
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm'  // Verwende das passende Format
         });
     <?php } ?>
 });

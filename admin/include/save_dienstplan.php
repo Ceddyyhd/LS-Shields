@@ -53,11 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Bestätigung nach erfolgreichem Speichern
-        echo 'Dienstplan erfolgreich gespeichert!';
+        // Erfolgsantwort als JSON zurückgeben
+        echo json_encode(['status' => 'success', 'message' => 'Dienstplan erfolgreich gespeichert!']);
     } catch (PDOException $e) {
-        // Fehlerbehandlung, falls die Speicherung fehlschlägt
-        echo 'Fehler beim Speichern: ' . $e->getMessage();
+        // Fehlerbehandlung
+        echo json_encode(['status' => 'error', 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
     }
 }
 ?>

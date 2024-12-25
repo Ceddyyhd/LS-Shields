@@ -414,12 +414,14 @@ try {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm' // Nur Stunden und Minuten
+            format: 'HH:mm', // Nur Stunden und Minuten für das Maximal da bis
+            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
         // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'MM/DD/YYYY hh:mm A' // Format für Gearbeitete Zeit: 12/25/2024 12:00 AM
+            format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
+            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
     <?php } ?>
 
@@ -429,26 +431,18 @@ try {
 
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
         $('input[name^="work_time_"]').each(function() {
-            // Hole den Wert des Datetimepickers und formatiere ihn, falls notwendig
-            var workTimeValue = $(this).val();
-            
-            // Wenn der Wert nicht im Format HH:mm ist, dann nicht absenden
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            // Wenn der Wert leer ist, überspringen wir die Validierung
             if (workTimeValue === '') {
-                valid = false;
-                alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
-                return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
+                $(this).val(null); // Wenn leer, als null setzen
             }
-            
-            // Setze den formatierten Wert zurück in das Feld
-            $(this).val(workTimeValue);  // Optional, um sicherzustellen, dass der Wert korrekt formatiert ist
         });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {
-            if ($(this).val() === '') {
-                valid = false;
-                alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
-                return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
+            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+            if (maxTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
             }
         });
 

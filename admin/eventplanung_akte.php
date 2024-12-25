@@ -179,9 +179,9 @@ HIER SUMMERNOTE
 
 
 <script type="text/javascript">
-$(document).ready(function() {
-  $('#summernote').summernote();
-});
+$('#SummernoteID').summernote({
+    height:255,
+})
 </script>
 
                   </div>

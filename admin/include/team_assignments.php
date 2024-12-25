@@ -24,7 +24,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
             // Gehe durch alle Mitarbeiter und aktualisiere oder füge sie hinzu
             foreach ($team['employee_names'] as $index => $employeeName) {
-                $employeeId = isset($team['employee_ids'][$index]) ? $team['employee_ids'][$index] : null; // Mitarbeiter-ID
+                $employeeId = isset($team['employee_ids'][$index]) ? $team['employee_ids'][$index] : null; // ID des Mitarbeiters in der Tabelle
 
                 if ($employeeId) {
                     // Wenn der Mitarbeiter existiert, füge ihn zum Update-Array hinzu

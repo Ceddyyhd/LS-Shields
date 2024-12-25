@@ -60,8 +60,10 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
             // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu
             foreach ($team['employee_names'] as $index => $employee) {
-                // Debugging: Gib den Mitarbeiter aus
-                error_log("Employee: " . print_r($employee, true)); // Gibt den Mitarbeiter aus
+                // Sicherstellen, dass employee ein Array ist
+                if (!is_array($employee)) {
+                    error_log("Fehler: $employee ist kein Array!");
+                }
             
                 $employeeName = $employee['name']; // Mitarbeitername
                 $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter ID, wenn vorhanden

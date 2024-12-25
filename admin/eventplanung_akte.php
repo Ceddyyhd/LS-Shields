@@ -276,6 +276,13 @@ function generateTeamForm(team, index) {
         `;
     });
 
+    // Füge ein leeres Mitarbeiterfeld hinzu, um einen neuen Mitarbeiter hinzuzufügen
+    employeeFields += `
+        <div class="input-group mb-3">
+            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_new" placeholder="Mitarbeiter hinzufügen">
+        </div>
+    `;
+
     return `
         <div class="team-form" id="team-form-${index}">
             <hr>

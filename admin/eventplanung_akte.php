@@ -200,7 +200,6 @@ try {
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary" id="addEmployee">Neuen Mitarbeiter hinzufügen</button>
                 <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
             </div>
 
@@ -212,11 +211,14 @@ try {
     </div>
 </div>
 
+<!-- Anzeige der neuen Teams unterhalb -->
+<div id="teamDisplay"></div>
+
 <script>
   $(document).ready(function() {
     let employeeCount = 2; // Initial zwei Mitarbeiterfelder
 
-    // Dynamisches Hinzufügen von Mitarbeiterfeldern
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern, wenn das letzte nicht leere Feld bearbeitet wird
     $(document).on('input', '.mitarbeiter', function() {
         if ($(this).val() !== '') {
             const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
@@ -231,18 +233,47 @@ try {
         }
     });
 
-    // Neuen Mitarbeiter hinzufügen
-    $('#addEmployee').click(function() {
-        const newEmployeeField = `
+    // Neues Team erstellen und die Eingabewerte unterhalb des Formulars anzeigen (mit <hr>)
+    $('#createTeam').click(function() {
+        const teamName = $('#team_name').val();
+        const bereich = $('#bereich').val();
+        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
+            return $(this).val();
+        }).get();
+
+        // Anzeige der Team-Daten unterhalb des Formulars
+        let employeeList = '';
+        mitarbeiter.forEach(function(employee) {
+            if (employee !== '') {
+                employeeList += `<p>${employee}</p>`;
+            }
+        });
+
+        const newTeamHtml = `
+            <hr>
+            <h4>Team: ${teamName}</h4>
+            <p>Bereich: ${bereich}</p>
+            <p>Mitarbeiter: </p>
+            ${employeeList}
+        `;
+
+        $('#teamDisplay').append(newTeamHtml);
+
+        // Formular zurücksetzen
+        $('#team_name').val('');
+        $('#bereich').val('');
+        $('#mitarbeiter-container').empty().append(`
             <div class="input-group mb-3">
                 <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
             </div>
-        `;
-        $('#mitarbeiter-container').append(newEmployeeField);
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
+            </div>
+        `);
     });
 
-    // Team erstellen
-    $('#createTeam').click(function() {
+    // Team speichern (hier könnte die ursprüngliche Speicherung in der DB erfolgen)
+    $('#saveTeam').click(function() {
         const teamName = $('#team_name').val();
         const bereich = $('#bereich').val();
         const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
@@ -259,38 +290,11 @@ try {
                 event_id: <?php echo $_GET['id']; ?> // Event ID, die über die URL übergeben wird
             },
             success: function(response) {
-                alert('Team erfolgreich erstellt');
+                alert('Team erfolgreich gespeichert');
                 $('#teams-bearbeiten').modal('hide');
             },
             error: function(xhr, status, error) {
-                console.log('Fehler beim Erstellen des Teams:', error);
-            }
-        });
-    });
-
-    // Team bearbeiten
-    $('#saveTeam').click(function() {
-        const teamName = $('#team_name').val();
-        const bereich = $('#bereich').val();
-        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
-            return $(this).val();
-        }).get();
-
-        $.ajax({
-            url: 'edit_team.php', // PHP-Skript zum Bearbeiten des Teams
-            method: 'POST',
-            data: {
-                team_name: teamName,
-                bereich: bereich,
-                mitarbeiter: mitarbeiter,
-                event_id: <?php echo $_GET['id']; ?> // Event ID
-            },
-            success: function(response) {
-                alert('Team erfolgreich bearbeitet');
-                $('#teams-bearbeiten').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                console.log('Fehler beim Bearbeiten des Teams:', error);
+                console.log('Fehler beim Speichern des Teams:', error);
             }
         });
     });

@@ -351,7 +351,7 @@ try {
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-                SELECT u.id, u.name, d.max_time, d.work_time
+                SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gestartet_um 
                 FROM users u
                 JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
                 LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id

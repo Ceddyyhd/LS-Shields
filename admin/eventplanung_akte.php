@@ -250,7 +250,7 @@ try {
         }).get();
 
         $.ajax({
-            url: 'create_team.php', // PHP-Skript zum Erstellen des Teams
+            url: 'include/team_assignments.php', // PHP-Skript zum Erstellen des Teams
             method: 'POST',
             data: {
                 team_name: teamName,

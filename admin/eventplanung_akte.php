@@ -232,6 +232,24 @@ try {
     });
 
     // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
+    $(document).ready(function() {
+    let teamCount = 1; // Starten mit Team 1
+
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern, wenn das letzte nicht leere Feld bearbeitet wird
+    $(document).on('input', '.mitarbeiter', function() {
+        const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
+        
+        if (lastEmployeeField.find('input').val() !== '') {
+            const newEmployeeField = `
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                </div>
+            `;
+            $('#mitarbeiter-container').append(newEmployeeField);
+        }
+    });
+
+    // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
     $('#createTeam').click(function() {
         // Neue Team ID basierend auf dem teamCount (z.B. Team Name 2, Bereich 2 etc.)
         teamCount++;
@@ -310,6 +328,7 @@ try {
         });
     });
 });
+
 </script>
                 
 

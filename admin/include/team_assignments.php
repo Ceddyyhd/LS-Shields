@@ -1,8 +1,11 @@
 <?php
-include('db.php');
-
+// Fehleranzeige aktivieren, um die genauen Fehler zu sehen
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+
+// Datenbankverbindung einbinden
+include('db.php');
+
 // Überprüfen, ob die Team-Daten und die Event-ID übermittelt wurden
 if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten

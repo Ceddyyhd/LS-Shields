@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
 <!-- Bootstrap4 Duallistbox -->
 <link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+
 
 <?php include 'include/header.php'; ?>
 
@@ -282,6 +285,8 @@
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap4 Duallistbox -->
 <script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<!-- date-range-picker -->
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Summernote -->
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- Bootstrap 4 -->

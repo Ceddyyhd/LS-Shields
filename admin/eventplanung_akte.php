@@ -11,11 +11,9 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <!-- summernote -->
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
-  <!-- CodeMirror -->
-  <link rel="stylesheet" href="plugins/codemirror/codemirror.css">
-  <link rel="stylesheet" href="plugins/codemirror/theme/monokai.css">
-  <!-- SimpleMDE -->
-  <link rel="stylesheet" href="plugins/simplemde/simplemde.min.css"></head>
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+
 <?php include 'include/header.php'; ?>
 
 <body class="hold-transition sidebar-mini">
@@ -226,6 +224,8 @@
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+<script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 <!-- Summernote -->
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- Bootstrap 4 -->

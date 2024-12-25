@@ -202,7 +202,6 @@ try {
                   </div>
 
                   <div class="active tab-pane" id="plan-bearbeiten">
-                      <textarea id="summernote"></textarea>
                   </div>
                   <form action="speichern_eventplanung_summernote.php" method="POST">
         <div class="form-group">

@@ -63,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->bindValue(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
                 $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
 
+                // Debugging: Ausgabe der gebundenen Parameter zur Überprüfung
+                $stmt->debugDumpParams();
+
                 // Execute the query
                 $stmt->execute();
             }

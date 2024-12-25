@@ -381,16 +381,15 @@ try {
 
 
                         <div class="form-group">
-                          <label>Gearbeitete Zeit:</label>
-                          <div class="input-group">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="far fa-clock"></i></span>
-                              </div>
-                              <!-- Eindeutige ID für jedes "Gearbeitete Zeit"-Feld -->
-                              <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" 
-                              name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
-                          </div>
-                      </div>
+                            <label>Gearbeitete Zeit:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                </div>
+                                <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" 
+                                name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                            </div>
+                        </div>
                 </div>
                 <?php
             }
@@ -409,7 +408,7 @@ try {
 
 <script>
 $(document).ready(function() {
-    // Initialisiere datetimepicker für jedes "Maximal da bis"-Feld
+    // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
@@ -417,9 +416,9 @@ $(document).ready(function() {
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Sicherstellen, dass der datetimepicker für jedes "Gearbeitete Zeit"-Feld funktioniert
+        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
+            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
             stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
             showClear: true, // Möglichkeit, das Datum zu löschen
@@ -470,6 +469,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 </script>
 

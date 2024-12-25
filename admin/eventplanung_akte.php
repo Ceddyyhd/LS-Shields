@@ -377,7 +377,6 @@ try {
                                 </div>
                             </div>
                         </div>
-
                         <div class="form-group">
                           <label>Gearbeitete Zeit:</label>
                           <div class="input-group">
@@ -456,17 +455,14 @@ try {
 
 <script>
   $(document).ready(function() {
-    // Initialisiere datetimepicker für max_time
+    // Initialisiere datetimepicker für jedes max_time
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm'
         });
-    <?php } ?>
-
-    // Initialisiere datetimepicker für gearbeitete Zeit
-    <?php foreach ($employees as $employee) { ?>
+        // Initialisiere datetimepicker für gearbeitete Zeit (work_time)
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'  // Verwende das passende Format
+            format: 'HH:mm'  // Hier wird das Format auf Stunden und Minuten gesetzt
         });
     <?php } ?>
 });

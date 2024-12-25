@@ -343,8 +343,8 @@ function generateTeamForm(team, index) {
                 $('#teams-container').append(newTeamForm);
             });
 
-            // Speichern der Teamdaten
-$('#saveTeam').click(function() {
+           // Speichern der Teamdaten
+           $('#saveTeam').click(function() {
     const teamData = [];
 
     // Erfassung der Team- und Mitarbeiterdaten
@@ -355,7 +355,7 @@ $('#saveTeam').click(function() {
 
         // Speichern der Mitarbeiter in das teamData Array
         const employeeName = $(this).val();
-        const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter ist der Team Lead
+        const isTeamLead = $(this).closest('.input-group').index() === 0 ? "1" : "0"; // Der erste Mitarbeiter ist der Team Lead
 
         // Wir sammeln alle Mitarbeiter eines Teams
         if (!teamData[teamName]) {
@@ -368,17 +368,16 @@ $('#saveTeam').click(function() {
 
         // Füge nur nicht-leere Mitarbeiter hinzu
         if (employeeName.trim() !== "") {
-            // Hier erstellen wir das Objekt für jeden Mitarbeiter
             const employee = {
                 name: employeeName,
-                is_team_lead: isTeamLead ? "1" : "0",  // 1 für Team Lead, 0 für normalen Mitarbeiter
-                id: $(this).siblings('input[type="hidden"]').val() || ""  // Hier kann die Mitarbeiter-ID eingefügt werden, wenn vorhanden
+                is_team_lead: isTeamLead,  // Team Lead setzen
+                id: $(this).siblings('input[type="hidden"]').val() || ""  // Hier wird die Mitarbeiter-ID hinzugefügt, falls vorhanden
             };
             teamData[teamName].employee_names.push(employee);
         }
     });
 
-    // Debugging: Daten ausgeben, bevor sie gesendet werden
+    // Debugging: Überprüfen, welche Daten gesendet werden
     console.log("Team Data to be sent:", teamData);
 
     // Sende die Team-Daten an den Server
@@ -390,16 +389,17 @@ $('#saveTeam').click(function() {
             event_id: <?php echo $_GET['id']; ?> // Event ID
         },
         success: function(response) {
-            console.log("Serverantwort:", response);  // Gibt die Antwort des Servers aus
+            console.log("Serverantwort:", response);  // Antwort des Servers
             alert('Teams erfolgreich gespeichert');
             $('#teams-bearbeiten').modal('hide');
         },
         error: function(xhr, status, error) {
             console.log('Fehler beim Speichern der Teams:', error);
-            console.log('Antwort des Servers: ', xhr.responseText);  // Gibt die vollständige Antwort des Servers aus
+            console.log('Antwort des Servers: ', xhr.responseText);  // Antwort des Servers
         }
     });
 });
+
         });
     </script>
               

@@ -28,5 +28,7 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
     } catch (PDOException $e) {
         echo 'Fehler beim Speichern der Anmeldung: ' . $e->getMessage();
     }
+} else {
+    echo 'Fehlende Daten!';
 }
 ?>

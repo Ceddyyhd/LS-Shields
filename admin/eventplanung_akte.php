@@ -184,16 +184,8 @@ try {
                   <div class="active tab-pane" id="plan">
                     
 
-                  <h1><u>Heading Of Message</u></h1>
-                    <h4><span style="font-size: 1rem;">Folgende Regeln:</span></h4>
-                    <ul>
-                    <li>List item one</li>
-                    <li>List item two</li>
-                    <li>List item three</li>
-                    <li>List item four</li>
-                    </ul>
-                    <p>Standort Übersicht</p>
-                    <p><img src="https://img.ceddyyhd2.eu/c51bef7c956b18e5d652994cb87d7584.png" alt="Image"></p>
+                  <?= htmlspecialchars($event['summernote_content']) ?>
+
 
                     
 

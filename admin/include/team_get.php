@@ -7,10 +7,10 @@ if (isset($_GET['event_id'])) {
 
     try {
         // Abfrage, um die Team-Daten zu holen
-        $query = "SELECT t.id, t.team_name, t.area_name, t.employee_name, t.is_team_lead
+        $query = "SELECT t.team_name, t.area_name, t.employee_name, t.is_team_lead
                   FROM team_assignments t
                   WHERE t.event_id = :event_id";
-        
+
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':event_id', $eventId);
         $stmt->execute();
@@ -18,7 +18,6 @@ if (isset($_GET['event_id'])) {
         // Ergebnisse abrufen
         $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Überprüfen, ob Teams gefunden wurden
         if ($teams) {
             echo json_encode($teams);
         } else {

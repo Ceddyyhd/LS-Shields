@@ -244,24 +244,10 @@ try {
 
                     // Füge die Team-Daten in das Modal ein
                     response.forEach(function(team, index) {
-                        if (index > 0) {
-                            // Dynamisch ein neues Team hinzufügen (wenn mehr als ein Team)
-                            $('#teams-container').append(generateTeamForm(team, index + 1));
-                        } else {
-                            // Das erste Team, fülle die Felder
-                            $('#team-form-1').find('input[name="team_name[]"]').val(team.team_name);
-                            $('#team-form-1').find('input[name="bereich[]"]').val(team.area_name);
+                        const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
 
-                            // Mitarbeiter
-                            var employees = team.employee_name.split(','); // Angenommen, mehrere Mitarbeiter sind durch Komma getrennt
-                            employees.forEach(function(employee, i) {
-                                if (i === 0) {
-                                    $('#mitarbeiter_1').val(employee); // Setze den ersten Mitarbeiter (Team Lead)
-                                } else {
-                                    $('#mitarbeiter-container').append(generateEmployeeField(employee));
-                                }
-                            });
-                        }
+                        // Team-Daten einfügen
+                        $('#teams-container').append(generateTeamForm(team, teamIndex));
                     });
                 } else {
                     console.log("Keine Teams gefunden.");
@@ -279,31 +265,31 @@ try {
     });
 });
 
-    // Funktion zum Generieren des HTML für neue Teamfelder
-    function generateTeamForm(team, index) {
-        return `
-            <div class="team-form" id="team-form-${index}">
-                <hr>
-                <div class="form-group">
-                    <label for="team_name">Team Name ${index + 1}</label>
-                    <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
+// Funktion zum Generieren des HTML für Teamformular
+function generateTeamForm(team, index) {
+    return `
+        <div class="team-form" id="team-form-${index}">
+            <hr>
+            <div class="form-group">
+                <label for="team_name">Team Name ${index}</label>
+                <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
+            </div>
+            <div class="form-group">
+                <label for="bereich">Bereich</label>
+                <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
+            </div>
+            <div class="form-group" id="mitarbeiter-container">
+                <label for="mitarbeiter">Mitarbeiter</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter (Team Lead)" value="${team.employee_name}" required>
                 </div>
-                <div class="form-group">
-                    <label for="bereich">Bereich</label>
-                    <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
-                </div>
-                <div class="form-group" id="mitarbeiter-container">
-                    <label for="mitarbeiter">Mitarbeiter</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter (Team Lead)" value="${team.employee_name}" required>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter">
-                    </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter">
                 </div>
             </div>
-        `;
-    }
+        </div>
+    `;
+}
 
     // Funktion zum Generieren eines neuen Mitarbeiterfelds
     function generateEmployeeField(employee) {

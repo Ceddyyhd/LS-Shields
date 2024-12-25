@@ -381,13 +381,24 @@ try {
 
 
                         <div class="form-group">
-                            <label>Gearbeitete Zeit:</label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            <label>Gestartet Um:</label>
+                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
+                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
                                 </div>
-                                <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" 
-                                name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gegangen um:</label>
+                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
+                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                </div>
                             </div>
                         </div>
                 </div>

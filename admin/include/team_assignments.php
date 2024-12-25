@@ -5,95 +5,50 @@ error_reporting(E_ALL);
 // Datenbankverbindung einbinden
 include('db.php');
 
-// Überprüfen, ob die richtigen Daten empfangen wurden
-if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
-    $teamData = $_POST['team_data']; // Array der Teamdaten
-    $eventId = $_POST['event_id']; // Event ID
+// Überprüfung der empfangenen Teamdaten
+if (isset($_POST['teams']) && !empty($_POST['teams'])) {
+    // Empfangen der Teamdaten aus dem AJAX-Request
+    $teamData = $_POST['teams'];
 
-    // Transaktion starten (um alle Änderungen in einem Schritt zu machen)
+    // Beginne die Transaktion (für alle Teams gleichzeitig)
     $conn->beginTransaction();
 
     try {
-        // Durch jedes Team in den empfangenen Daten iterieren
+        // Durch alle Teams iterieren
         foreach ($teamData as $team) {
-            $teamName = $team['team_name']; // Teamname
-            $areaName = $team['bereich']; // Bereichname
-            $teamId = isset($team['team_id']) ? $team['team_id'] : null; // Wenn Team ID vorhanden ist, holen wir sie
+            $teamName = $team['team_name'];
+            $teamArea = $team['area_name'];
 
-            // Prüfen, ob das Team bereits existiert (basierend auf event_id und team_name)
-            if ($teamId) {
-                // Team existiert bereits, also updaten wir es
-                $stmt = $conn->prepare("UPDATE teams SET team_name = :team_name, area_name = :area_name WHERE id = :team_id");
-                $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-                $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
-                $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
-                $stmt->execute();
-            } else {
-                // Überprüfen, ob das Team mit der gleichen event_id und team_name bereits existiert
-                $stmt = $conn->prepare("SELECT id FROM teams WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
-                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-                $stmt->execute();
-                $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Team in der Datenbank speichern
+            $stmt = $conn->prepare("INSERT INTO teams (team_name, area_name) VALUES (:team_name, :area_name)");
+            $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+            $stmt->bindValue(':area_name', $teamArea, PDO::PARAM_STR);
+            $stmt->execute();
 
-                if ($existingTeam) {
-                    // Team existiert, hole die ID des bestehenden Teams
-                    $teamId = $existingTeam['id'];
-                } else {
-                    // Wenn das Team nicht existiert, fügen wir es hinzu
-                    $stmt = $conn->prepare("INSERT INTO teams (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
-                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                    $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-                    $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
-                    $stmt->execute();
+            // Team-ID des neuen Teams abrufen
+            $teamId = $conn->lastInsertId();
 
-                    // Hole die ID des neu erstellten Teams
-                    $teamId = $conn->lastInsertId();  // ID des neu erstellten Teams holen
-                }
-            }
-
-            // Gehe durch alle Mitarbeiter und überprüfe, ob sie existieren
+            // Mitarbeiterdaten speichern
             foreach ($team['employee_names'] as $employee) {
-                $employeeName = $employee['name']; // Mitarbeitername
-                $isTeamLead = $employee['is_team_lead']; // Team Lead-Status
-                $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter-ID (falls vorhanden)
+                $employeeName = $employee['name'];
+                $isTeamLead = $employee['is_team_lead'];
 
-                // Prüfen, ob der Mitarbeiter bereits im Team existiert (Basierend auf team_id und employee_name)
-                $stmt = $conn->prepare("SELECT id FROM employees WHERE team_id = :team_id AND employee_name = :employee_name LIMIT 1");
+                // Mitarbeiter in der Datenbank speichern
+                $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
                 $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
                 $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT);
                 $stmt->execute();
-                $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($existingEmployee) {
-                    // Der Mitarbeiter existiert, wir aktualisieren nur den is_team_lead-Status für diesen Mitarbeiter
-                    $stmt = $conn->prepare("UPDATE employees SET is_team_lead = :is_team_lead WHERE id = :employee_id");
-                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
-                    $stmt->bindValue(':employee_id', $existingEmployee['id'], PDO::PARAM_INT);
-                    $stmt->execute();
-                } else {
-                    // Der Mitarbeiter existiert noch nicht, also fügen wir ihn hinzu
-                    $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
-                    $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
-                    $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
-                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT);
-                    $stmt->execute();
-                }
             }
         }
 
-        // Commit der Transaktion: Alle Änderungen werden in einem Schritt gespeichert
+        // Bestätigen der Transaktion
         $conn->commit();
-
-        // Erfolgsantwort zurückgeben
-        echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich gespeichert']);
+        echo "Erfolgreich gespeichert.";
     } catch (Exception $e) {
-        // Fehler bei der Speicherung, Rollback der Transaktion
+        // Bei einem Fehler die Transaktion zurücksetzen
         $conn->rollBack();
-        echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
+        echo "Fehler: " . $e->getMessage();
     }
-} else {
-    // Fehlerantwort, wenn keine Daten empfangen wurden
-    echo json_encode(['status' => 'error', 'message' => 'Fehlende Daten']);
 }
 ?>

@@ -218,190 +218,175 @@ try {
 
 <!-- Füge das Skript am Ende der Seite ein -->
 <script>
-        $(document).ready(function() {
-            let teamCount = 1; // Starten mit Team 1
-            $('#teams-bearbeiten').on('show.bs.modal', function (e) {
-    var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+    $(document).ready(function() {
+        let teamCount = 1; // Starten mit Team 1
+        $('#teams-bearbeiten').on('show.bs.modal', function (e) {
+            var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
 
-    // AJAX-Anfrage, um die Team-Daten zu laden
-    $.ajax({
-    url: 'include/team_get.php', 
-    method: 'GET',
-    data: { event_id: eventId },
-    dataType: 'json',
-    success: function(response) {
-        console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+            // AJAX-Anfrage, um die Team-Daten zu laden
+            $.ajax({
+                url: 'include/team_get.php', 
+                method: 'GET',
+                data: { event_id: eventId },
+                dataType: 'json',
+                success: function(response) {
+                    console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
 
-        if (Array.isArray(response) && response.length > 0) {
-            // Leere das Modal
-            $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+                    if (Array.isArray(response) && response.length > 0) {
+                        // Leere das Modal
+                        $('#teams-container').empty(); // Entfernt alle vorherigen Teams
 
-            // Füge die Team-Daten in das Modal ein
-            response.forEach(function(team, index) {
-                const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
-                $('#teams-container').append(generateTeamForm(team, teamIndex));
+                        // Füge die Team-Daten in das Modal ein
+                        response.forEach(function(team, index) {
+                            const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
+                            $('#teams-container').append(generateTeamForm(team, teamIndex));
+                        });
+                    } else {
+                        console.log("Keine Teams gefunden.");
+                        alert('Keine Teams gefunden.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Fehler bei der Anfrage:', error);
+                    console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+                }
             });
-        } else {
-            console.log("Keine Teams gefunden.");
-            alert('Keine Teams gefunden.');
-        }
-    },
-    error: function(xhr, status, error) {
-        console.log('Fehler bei der Anfrage:', error);
-        console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
-    }
-});
-});
+        });
 
-// Funktion zum Generieren des HTML für Teamformular
-function generateTeamForm(team, index) {
-    let employeeFields = ''; // Variable für die Mitarbeiterfelder
+        // Funktion zum Generieren des HTML für Teamformular
+        function generateTeamForm(team, index) {
+            let employeeFields = ''; // Variable für die Mitarbeiterfelder
 
-    // Durch alle Mitarbeiter des Teams iterieren
-    team.employee_names.forEach(function(employee, empIndex) {
-        employeeFields += `
-            <div class="input-group mb-3">
-                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_${empIndex}[][name]" placeholder="Mitarbeiter" value="${employee.name}" ${empIndex === 0 ? 'required' : ''}>
-                <!-- Versteckte Eingabefelder für Mitarbeiter ID -->
-                <input type="hidden" name="employee_ids[]" value="${employee.id}">
-            </div>
-        `;
-    });
-
-    // Füge ein leeres Mitarbeiterfeld hinzu, um einen neuen Mitarbeiter hinzuzufügen
-    employeeFields += `
-        <div class="input-group mb-3">
-            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_new" placeholder="Mitarbeiter hinzufügen">
-        </div>
-    `;
-
-    return `
-        <div class="team-form" id="team-form-${index}">
-            <hr>
-            <!-- Verstecktes Feld für Team ID -->
-            <input type="hidden" name="team_id[]" value="${team.team_id}">
-            <div class="form-group">
-                <label for="team_name">Team Name ${index}</label>
-                <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
-            </div>
-            <div class="form-group">
-                <label for="bereich">Bereich</label>
-                <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
-            </div>
-            <div class="form-group" id="mitarbeiter-container">
-                <label for="mitarbeiter">Mitarbeiter</label>
-                ${employeeFields}
-            </div>
-        </div>
-    `;
-}
-
-            // Dynamisches Hinzufügen von Mitarbeiterfeldern
-            $(document).on('input', '.mitarbeiter', function() {
-    const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
-    const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
-
-    // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
-    if (lastEmployeeField.find('input').val() !== '') {
-        const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
-        const newEmployeeField = `
-            <div class="input-group mb-3">
-                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
-            </div>
-        `;
-        parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
-    }
-});
-
-            // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
-            $('#createTeam').click(function() {
-                teamCount++;
-
-                const newTeamForm = `
-                    <div class="team-form" id="team-form-${teamCount}">
-                        <hr>
-                        <div class="form-group">
-                            <label for="team_name">Team Name ${teamCount}</label>
-                            <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="bereich">Bereich</label>
-                            <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
-                        </div>
-                        <div class="form-group" id="mitarbeiter-container">
-                            <label for="mitarbeiter">Mitarbeiter</label>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter (Team Lead)" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter">
-                            </div>
-                        </div>
+            // Durch alle Mitarbeiter des Teams iterieren
+            team.employee_names.forEach(function(employee, empIndex) {
+                employeeFields += `
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_${empIndex}[][name]" placeholder="Mitarbeiter" value="${employee.name}" ${empIndex === 0 ? 'required' : ''}>
+                        <!-- Versteckte Eingabefelder für Mitarbeiter ID -->
+                        <input type="hidden" name="employee_ids[]" value="${employee.id}">
                     </div>
                 `;
-
-                $('#teams-container').append(newTeamForm);
             });
 
-           // Speichern der Teamdaten
-           $('#saveTeam').click(function() {
-    const teamData = [];
+            // Füge ein leeres Mitarbeiterfeld hinzu, um einen neuen Mitarbeiter hinzuzufügen
+            employeeFields += `
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_new" placeholder="Mitarbeiter hinzufügen">
+                </div>
+            `;
 
-    // Erfassung der Team- und Mitarbeiterdaten
-    $('input[name^="mitarbeiter_"]').each(function(index) {
-        const parentForm = $(this).closest('.team-form'); // Das Teamformular
-        const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
-        const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
-
-        // Speichern der Mitarbeiter in das teamData Array
-        const employeeName = $(this).val();
-        const isTeamLead = $(this).closest('.input-group').index() === 0 ? "1" : "0"; // Der erste Mitarbeiter ist der Team Lead
-
-        // Wir sammeln alle Mitarbeiter eines Teams
-        if (!teamData[teamName]) {
-            teamData[teamName] = {
-                team_name: teamName,
-                bereich: teamArea,
-                employee_names: []
-            };
+            return `
+                <div class="team-form" id="team-form-${index}">
+                    <hr>
+                    <!-- Verstecktes Feld für Team ID -->
+                    <input type="hidden" name="team_id[]" value="${team.team_id}">
+                    <div class="form-group">
+                        <label for="team_name">Team Name ${index}</label>
+                        <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
+                    </div>
+                    <div class="form-group">
+                        <label for="bereich">Bereich</label>
+                        <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
+                    </div>
+                    <div class="form-group" id="mitarbeiter-container">
+                        <label for="mitarbeiter">Mitarbeiter</label>
+                        ${employeeFields}
+                    </div>
+                </div>
+            `;
         }
 
-        // Füge nur nicht-leere Mitarbeiter hinzu
-        if (employeeName.trim() !== "") {
-            const employee = {
-                name: employeeName,
-                is_team_lead: isTeamLead,  // Team Lead setzen
-                id: $(this).siblings('input[type="hidden"]').val()  // Hier wird die Mitarbeiter-ID über das sibling hidden-Feld abgerufen
-            };
-            teamData[teamName].employee_names.push(employee);
-        }
-    });
+        // Dynamisches Hinzufügen von Mitarbeiterfeldern
+        $(document).on('input', '.mitarbeiter', function() {
+            const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
+            const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
 
-    // Debugging: Überprüfen, welche Daten gesendet werden
-    console.log("Team Data to be sent:", teamData);
-
-    // Sende die Team-Daten an den Server
-    $.ajax({
-        url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
-        method: 'POST',
-        data: {
-            team_data: Object.values(teamData), // Teamdaten als Array von Objekten
-            event_id: <?php echo $_GET['id']; ?> // Event ID
-        },
-        success: function(response) {
-            console.log("Serverantwort:", response);  // Antwort des Servers
-            alert('Teams erfolgreich gespeichert');
-            $('#teams-bearbeiten').modal('hide');
-        },
-        error: function(xhr, status, error) {
-            console.log('Fehler beim Speichern der Teams:', error);
-            console.log('Antwort des Servers: ', xhr.responseText);  // Antwort des Servers
-        }
-    });
-});
-
+            // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
+            if (lastEmployeeField.find('input').val() !== '') {
+                const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
+                const newEmployeeField = `
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
+                    </div>
+                `;
+                parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
+            }
         });
-    </script>
+
+        // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
+        $('#createTeam').click(function() {
+            teamCount++;
+
+            const newTeamForm = `
+                <div class="team-form" id="team-form-${teamCount}">
+                    <hr>
+                    <div class="form-group">
+                        <label for="team_name">Team Name ${teamCount}</label>
+                        <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="bereich">Bereich</label>
+                        <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
+                    </div>
+                    <div class="form-group" id="mitarbeiter-container">
+                        <label for="mitarbeiter">Mitarbeiter</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter (Team Lead)" required>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            $('#teams-container').append(newTeamForm);
+        });
+
+        // Speichern der Teamdaten
+        $('#saveTeam').click(function() {
+            const teamData = [];
+
+            // Erfassung der Team- und Mitarbeiterdaten
+            $('input[name^="mitarbeiter_"]').each(function(index) {
+                const parentForm = $(this).closest('.team-form'); // Das Teamformular
+                const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
+                const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
+
+                // Speichern der Mitarbeiter in das teamData Array
+                const employeeName = $(this).val();
+                const isTeamLead = $(this).index() === 0 ? "1" : "0"; // Teamlead-Erkennung: Der erste Mitarbeiter ist der Team Lead
+
+                const team = {
+                    team_name: teamName,
+                    area_name: teamArea,
+                    employee_names: [{
+                        name: employeeName,
+                        is_team_lead: isTeamLead
+                    }]
+                };
+
+                teamData.push(team); // Team hinzufügen
+            });
+
+            console.log(teamData); // Überprüfe die gesammelten Daten
+
+            // Sende die Daten per AJAX an den Server
+            $.ajax({
+                url: 'path/to/your/server/script.php', 
+                method: 'POST',
+                data: { teams: teamData },
+                success: function(response) {
+                    alert('Teams wurden gespeichert.');
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler beim Speichern der Teams.');
+                }
+            });
+        });
+    });
+</script>
+
               
 
 

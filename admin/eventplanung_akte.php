@@ -371,7 +371,7 @@ function generateTeamForm(team, index) {
             const employee = {
                 name: employeeName,
                 is_team_lead: isTeamLead,  // Team Lead setzen
-                id: $(this).siblings('input[type="hidden"]').val() || ""  // Hier wird die Mitarbeiter-ID hinzugefügt, falls vorhanden
+                id: $(this).siblings('input[type="hidden"]').val()  // Hier wird die Mitarbeiter-ID über das sibling hidden-Feld abgerufen
             };
             teamData[teamName].employee_names.push(employee);
         }

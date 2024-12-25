@@ -423,7 +423,12 @@ $(document).ready(function() {
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
             stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
             showClear: true, // Möglichkeit, das Datum zu löschen
-            showClose: true // Möglichkeit, das Picker-Menü zu schließen
+            showClose: true, // Möglichkeit, das Picker-Menü zu schließen
+            // Wenn es notwendig ist, dass der Picker nur bei Eingabe geöffnet wird:
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'auto'
+            }
         });
     <?php } ?>
 

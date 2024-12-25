@@ -1,5 +1,4 @@
 <?php
-// Fehleranzeige aktivieren
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -7,23 +6,23 @@ error_reporting(E_ALL);
 include('db.php');
 
 // Überprüfen, ob die richtigen Daten empfangen wurden
-if (isset($_POST['team_data'])) {
+if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
-    // Debug-Ausgabe der empfangenen Daten
+    // Debug-Ausgabe der empfangenen Daten zur Überprüfung
     var_dump($teamData);  // Überprüfen der empfangenen Daten
     exit;  // Stoppt die Ausführung, damit du die Ausgabe siehst
 
     // Die Teamdaten in die Datenbank einfügen
     foreach ($teamData as $team) {
-        $isTeamLead = false; // Standardwert für Team Lead
-
-        // Überprüfen, ob alle erforderlichen Felder vorhanden sind
         if (!isset($team['team_name'], $team['bereich'], $team['employee_names'])) {
+            // Fehlerbehandlung, falls die erwarteten Felder fehlen
             echo "Fehlende Felder: team_name, bereich oder employee_names";
             exit;
         }
+
+        $isTeamLead = false; // Standardwert für Team Lead
 
         // Gehe durch alle Mitarbeiter des Teams
         foreach ($team['employee_names'] as $index => $employeeName) {

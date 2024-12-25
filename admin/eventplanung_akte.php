@@ -288,7 +288,7 @@ try {
 
         // Speichern der Mitarbeiter in das teamData Array
         const employeeName = $(this).val();
-        const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter des Teams ist der Team Lead
+        const isTeamLead = $(this).closest('.input-group').index() === 0; // Der erste Mitarbeiter ist der Team Lead
 
         // Wir sammeln alle Mitarbeiter eines Teams
         if (!teamData[teamName]) {
@@ -298,24 +298,33 @@ try {
                 employee_names: []
             };
         }
-        
+
         teamData[teamName].employee_names.push(employeeName);
     });
 
+    // Ausgabe der Daten, die an den Server gesendet werden
+    console.log("Daten, die gesendet werden: ", teamData);
+
     // Sende die Team-Daten an den Server
     $.ajax({
-        url: 'include/team_assignments.php',
+        url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
         method: 'POST',
         data: {
-            team_data: Object.values(teamData),
-            event_id: <?php echo $_GET['id']; ?>
+            team_data: Object.values(teamData), // Teamdaten als Array von Objekten
+            event_id: <?php echo $_GET['id']; ?> // Event ID
+        },
+        success: function(response) {
+            console.log("Serverantwort: ", response); // Gibt die Antwort des Servers aus
+            alert('Teams erfolgreich gespeichert');
+            $('#teams-bearbeiten').modal('hide');
         },
         error: function(xhr, status, error) {
-          console.log('Fehler beim Speichern der Teams:', error);
-          console.log('Serverantwort:', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
-      }
-    })
+            console.log('Fehler beim Speichern der Teams:', error);
+            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+        }
+    });
 });
+
 });
 
 

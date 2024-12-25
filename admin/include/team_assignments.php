@@ -37,11 +37,6 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
         // Gehe durch alle Mitarbeiter des Teams
         foreach ($team['employee_names'] as $index => $employeeName) {
-            // Überprüfen, ob der Mitarbeitername leer ist
-            if (empty($employeeName)) {
-                continue;
-            }
-
             $isTeamLead = ($index == 0); // Der erste Mitarbeiter ist der Team Lead
 
             // SQL-Abfrage zum Einfügen der Team- und Mitarbeiterdaten

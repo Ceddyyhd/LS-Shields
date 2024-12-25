@@ -297,9 +297,9 @@ $(document).ready(function() {
                 employees: selectedEmployees
             },
             success: function(response) {
-              console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
-              alert(response);  // Antwort anzeigen
-          }
+                console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
+                alert('Anmeldung erfolgreich!');
+            },
             error: function(xhr, status, error) {
                 console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
                 console.log('Status: ', status);

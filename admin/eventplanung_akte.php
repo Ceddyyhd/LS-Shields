@@ -27,37 +27,10 @@
   <link rel="stylesheet" href="plugins/dropzone/min/dropzone.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 <?php include 'include/header.php'; ?>
-<?php
-// Verbindung zur Datenbank einbinden
-include('include/db.php');
 
-// ID aus der URL holen
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-} else {
-    die('Kein Eventplanungs-ID angegeben.');
-}
-
-// SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
-try {
-    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();
-
-    // Ergebnis abrufen
-    $event = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$event) {
-        die('Eventplanung nicht gefunden.');
-    }
-} catch (PDOException $e) {
-    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
-}
-?>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
@@ -200,11 +173,10 @@ try {
 
 
                   </div>
-
                   <div class="active tab-pane" id="plan-bearbeiten">
-                  </div>
                   <form action="speichern_eventplanung_summernote.php" method="POST">
         <div class="form-group">
+            <label for="summernote">Anfrage:</label>
             <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($event['summernote_content']) ?></textarea>
         </div>
         
@@ -249,6 +221,13 @@ try {
         });
     </script>
 
+
+
+
+
+
+                  </div>
+                  
 
                   <div class="tab-pane" id="anmeldung">
                    <!-- /.card-header -->

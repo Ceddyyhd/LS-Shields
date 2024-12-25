@@ -7,11 +7,12 @@ if (isset($_GET['event_id'])) {
 
     try {
         // Abfrage, um die Team-Daten zu holen, und alle Mitarbeiter für jedes Team zu gruppieren
-        $query = "SELECT t.id as team_id, t.team_name, t.area_name, t.employee_name, t.is_team_lead, te.id as employee_id
+        $query = "SELECT t.id as team_id, t.team_name, t.area_name, t.employee_name, t.is_team_lead, u.id as user_id
           FROM team_assignments t
-          LEFT JOIN employees te ON t.employee_name = te.name  -- Annahme: Mitarbeiter haben eine ID in einer anderen Tabelle
+          LEFT JOIN users u ON t.employee_name = u.name
           WHERE t.event_id = :event_id
           ORDER BY t.team_name";
+
 
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':event_id', $eventId);

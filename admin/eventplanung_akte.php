@@ -419,24 +419,22 @@ try {
 <script>
 $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
-    <?php foreach ($employees as $employee) { ?>
-        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm', // Format für Datum und Uhrzeit
-            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
-        });
+    $('#timepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+    });
 
-        // Initialisiere datetimepicker für "Gestartet Um"
-        $('#gestartetUm').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
-            useCurrent: false,
-        });
+    // Initialisiere datetimepicker für "Gestartet Um"
+    $('#gestartetUm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false,
+    });
 
-        // Initialisiere datetimepicker für "Gegangen Um"
-        $('#gegangenUm').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
-            useCurrent: false,
-        });
-    <?php } ?>
+    // Initialisiere datetimepicker für "Gegangen Um"
+    $('#gegangenUm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false,
+    });
 
     // Submit-Button für den Dienstplan
     $('#submitFormDienstplanung').on('click', function() {

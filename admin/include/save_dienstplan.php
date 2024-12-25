@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Extrahiere die Mitarbeiter-ID aus dem Feldnamen
                 $employeeId = substr($key, 9);
 
-                // Überprüfe, ob die gearbeitete Zeit leer ist, und setze sie auf NULL, wenn ja
+                // Überprüfe, ob die gearbeitete Zeit leer ist, und setze sie auf NULL oder '00:00:00', wenn ja
                 $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
 
                 // Hier kannst du die Daten in der Tabelle für den Dienstplan speichern

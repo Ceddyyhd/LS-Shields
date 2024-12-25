@@ -382,15 +382,16 @@ try {
 
 
                 <div class="form-group">
-                  <label>Gestartet um:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-clock"></i></span>
+                    <label>Gestartet Um:</label>
+                    <div class="input-group" id="gestartetUm" data-target-input="nearest">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                        <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um"/>
+                        <div class="input-group-append" data-target="#gestartetUm" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
                     </div>
-                    <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um"/>
-                    </div>
-                  <!-- /.input group -->
                 </div>
 
                 <div class="form-group">

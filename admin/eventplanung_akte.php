@@ -304,7 +304,7 @@
 
 
                   <div class="tab-pane" id="externes-dokument1">
-                  <iframe src="https://docs.google.com/spreadsheets/d/1sj5HHw9wTfsGk11x7vLID7bMAhHuTJC81lQRDoLKDhY/edit?usp=sharing"width="100%" height="750px"></iframe>                  
+                  <iframe src="https://docs.google.com/spreadsheets/d/1sj5HHw9wTfsGk11x7vLID7bMAhHuTJC81lQRDoLKDhY/edit?usp=sharing"width="100%" height="700px"></iframe>                  
                 </div>
                   <!-- /.tab-pane -->
                 </div>

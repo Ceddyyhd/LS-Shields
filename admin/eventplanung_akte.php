@@ -232,36 +232,44 @@ try {
         data: { event_id: eventId },
         dataType: 'json',
         success: function(response) {
-            console.log("Serverantwort:", response); // Gibt die Antwort des Servers aus
+            console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
 
-            if (response.status === 'success') {
-                // Leere das Modal
-                $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+            // Sicherstellen, dass die Daten im richtigen Format sind
+            if (Array.isArray(response)) {
+                console.log("Antwort ist ein Array mit Team-Daten:", response);
 
-                // Füge die Team-Daten in das Modal ein
-                response.forEach(function(team, index) {
-                    if (index > 0) {
-                        // Dynamisch ein neues Team hinzufügen (wenn mehr als ein Team)
-                        $('#teams-container').append(generateTeamForm(team, index + 1));
-                    } else {
-                        // Das erste Team, fülle die Felder
-                        $('#team-form-1').find('input[name="team_name[]"]').val(team.team_name);
-                        $('#team-form-1').find('input[name="bereich[]"]').val(team.area_name);
+                if (response.length > 0) {
+                    // Leere das Modal
+                    $('#teams-container').empty(); // Entfernt alle vorherigen Teams
 
-                        // Mitarbeiter
-                        var employees = team.employee_name.split(','); // Angenommen, mehrere Mitarbeiter sind durch Komma getrennt
-                        employees.forEach(function(employee, i) {
-                            if (i === 0) {
-                                $('#mitarbeiter_1').val(employee); // Setze den ersten Mitarbeiter (Team Lead)
-                            } else {
-                                $('#mitarbeiter-container').append(generateEmployeeField(employee));
-                            }
-                        });
-                    }
-                });
+                    // Füge die Team-Daten in das Modal ein
+                    response.forEach(function(team, index) {
+                        if (index > 0) {
+                            // Dynamisch ein neues Team hinzufügen (wenn mehr als ein Team)
+                            $('#teams-container').append(generateTeamForm(team, index + 1));
+                        } else {
+                            // Das erste Team, fülle die Felder
+                            $('#team-form-1').find('input[name="team_name[]"]').val(team.team_name);
+                            $('#team-form-1').find('input[name="bereich[]"]').val(team.area_name);
+
+                            // Mitarbeiter
+                            var employees = team.employee_name.split(','); // Angenommen, mehrere Mitarbeiter sind durch Komma getrennt
+                            employees.forEach(function(employee, i) {
+                                if (i === 0) {
+                                    $('#mitarbeiter_1').val(employee); // Setze den ersten Mitarbeiter (Team Lead)
+                                } else {
+                                    $('#mitarbeiter-container').append(generateEmployeeField(employee));
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log("Keine Teams gefunden.");
+                    alert('Keine Teams gefunden.');
+                }
             } else {
-                console.log("Fehler beim Laden der Team-Daten:", response.message); // Fehler in der Antwort
-                alert('Fehler beim Laden der Team-Daten: ' + response.message);
+                console.log("Fehler: Die Antwort ist kein Array", response);
+                alert('Fehler beim Laden der Team-Daten: Unerwartete Antwort vom Server');
             }
         },
         error: function(xhr, status, error) {

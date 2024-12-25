@@ -286,14 +286,14 @@ try {
             </div>
         </div>
     </div>
-    <button type="button" id="submitForm" class="btn btn-danger">Anmelden</button>
+    <button type="button" id="submitFormAnmeldung" class="btn btn-danger">Anmelden</button>
 </div>
 
 
 <script>
   $(document).ready(function() {
     // Anmeldung abschicken
-    $('#submitForm').on('click', function() {
+    $('#submitFormAnmeldung').on('click', function() {
         var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
         console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 

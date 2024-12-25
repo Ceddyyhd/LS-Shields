@@ -55,31 +55,27 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             // Gehe durch alle Mitarbeiter und überprüfe, ob sie existieren
             foreach ($team['employee_names'] as $employee) {
                 $employeeName = $employee['name']; // Mitarbeitername
-                $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter ID, wenn vorhanden
+                $isTeamLead = $employee['is_team_lead']; // Team Lead-Status
 
-                // Prüfen, ob der Mitarbeiter bereits existiert (Basierend auf employee_id und team_id)
-                if ($employeeId) {
-                    // Überprüfen, ob der Mitarbeiter bereits in diesem Team existiert
-                    $stmt = $conn->prepare("SELECT id FROM employees WHERE team_id = :team_id AND id = :employee_id");
-                    $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
-                    $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
+                // Prüfen, ob der Mitarbeiter bereits im Team existiert (Basierend auf employee_name und team_id)
+                $stmt = $conn->prepare("SELECT id FROM employees WHERE team_id = :team_id AND employee_name = :employee_name LIMIT 1");
+                $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
+                $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                $stmt->execute();
+                $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($existingEmployee) {
+                    // Mitarbeiter existiert, also updaten wir ihn
+                    $stmt = $conn->prepare("UPDATE employees SET is_team_lead = :is_team_lead WHERE id = :employee_id");
+                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
+                    $stmt->bindValue(':employee_id', $existingEmployee['id'], PDO::PARAM_INT);
                     $stmt->execute();
-                    $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($existingEmployee) {
-                        // Mitarbeiter existiert, also updaten wir ihn
-                        $stmt = $conn->prepare("UPDATE employees SET employee_name = :employee_name, is_team_lead = :is_team_lead WHERE id = :employee_id");
-                        $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
-                        $stmt->bindValue(':is_team_lead', $employee['is_team_lead'] == '1' ? 1 : 0, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
-                        $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
-                        $stmt->execute();
-                    }
                 } else {
                     // Mitarbeiter existiert nicht, also fügen wir ihn hinzu
                     $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
                     $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
                     $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
-                    $stmt->bindValue(':is_team_lead', $employee['is_team_lead'] == '1' ? 1 : 0, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
+                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
                     $stmt->execute();
                 }
             }

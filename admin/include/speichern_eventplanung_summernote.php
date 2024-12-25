@@ -4,21 +4,22 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Einbinden der Datenbankverbindung
-include('db.php'); // PDO-Verbindung einbinden
+include('db.php');
 
-// Überprüfen, ob der Summernote-Inhalt gesendet wurde
-if (isset($_POST['summernoteContent'])) {
-    // Den Inhalt von Summernote abholen
+// Überprüfen, ob das Formular abgesendet wurde
+if (isset($_POST['summernoteContent']) && isset($_POST['id'])) {
     $summernoteContent = $_POST['summernoteContent'];
+    $id = $_POST['id'];
 
     try {
-        // SQL-Abfrage zum Speichern des Inhalts mit PDO
-        $stmt = $conn->prepare("INSERT INTO eventplanung (summernote_content) VALUES (:summernoteContent)");
+        // SQL-Abfrage zum Aktualisieren der Eventplanung
+        $stmt = $conn->prepare("UPDATE Eventplanung SET summernote_content = :summernoteContent WHERE id = :id");
         $stmt->bindParam(':summernoteContent', $summernoteContent, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
         // Die Abfrage ausführen
         $stmt->execute();
-        
+
         echo "Daten wurden erfolgreich gespeichert!";
     } catch (PDOException $e) {
         echo "Fehler beim Speichern der Daten: " . $e->getMessage();

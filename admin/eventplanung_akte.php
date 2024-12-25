@@ -31,7 +31,33 @@
 
 
 <?php include 'include/header.php'; ?>
+<?php
+// Verbindung zur Datenbank einbinden
+include('include/db.php');
 
+// ID aus der URL holen
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    die('Kein Eventplanungs-ID angegeben.');
+}
+
+// SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
+try {
+    $stmt = $conn->prepare("SELECT * FROM Eventplanung WHERE id = :id");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Ergebnis abrufen
+    $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$event) {
+        die('Eventplanung nicht gefunden.');
+    }
+} catch (PDOException $e) {
+    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
+}
+?>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
@@ -178,36 +204,53 @@
                   <div class="active tab-pane" id="plan-bearbeiten">
                       <textarea id="summernote"></textarea>
                   </div>
-                  <div class="form-group row">
-                      <div class="offset-sm-2 col-sm-10">
-                      <button type="button" id="submitForm" class="btn btn-danger">Submit</button>
-                  </div>
-                  </div>
-                  <script>
-                  $(document).ready(function() {
-                    $('#submitForm').on('click', function() {
-    var summernoteContent = $('#summernote').val();
-    console.log(summernoteContent);  // Ausgabe des Inhalts in der Konsole
+                  <form action="speichern_eventplanung_summernote.php" method="POST">
+        <div class="form-group">
+            <label for="summernote">Anfrage:</label>
+            <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($event['summernote_content']) ?></textarea>
+        </div>
+        
+        <input type="hidden" name="id" value="<?= $event['id'] ?>">
+        
+        <button type="button" id="submitForm" class="btn btn-danger">Speichern</button> <!-- Submit-Button -->
+    </form>
 
-    $.ajax({
-        url: 'include/speichern_eventplanung_summernote.php',
-        type: 'POST',
-        data: {
-            summernoteContent: summernoteContent
-        },
-        success: function(response) {
-            console.log(response);  // Antwort des Servers in der Konsole
-            alert('Daten wurden gespeichert!');
-        },
-        error: function(xhr, status, error) {
-            console.log('Fehler:', error);  // Fehlerdetails in der Konsole
-            alert('Fehler beim Speichern der Daten!');
-        }
-    });
-});
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Summernote initialisieren
+            $('#summernote').summernote({
+                height: 300,   // Höhe von Summernote anpassen
+                focus: true     // Fokus auf das Summernote-Feld setzen
+            });
+
+            // Submit-Button-Funktionalität
+            $('#submitForm').on('click', function() {
+                var summernoteContent = $('#summernote').val();  // Den Inhalt von Summernote holen
+                console.log(summernoteContent);  // Ausgabe des Inhalts in der Konsole
+
+                // AJAX-Anfrage zum Speichern der Daten
+                $.ajax({
+                    url: 'include/speichern_eventplanung_summernote.php',  // Das PHP-Skript zum Speichern
+                    type: 'POST',
+                    data: {
+                        summernoteContent: summernoteContent,
+                        id: <?= $event['id'] ?>  // ID des Events übergeben
+                    },
+                    success: function(response) {
+                        console.log(response);  // Antwort des Servers in der Konsole
+                        alert('Daten wurden gespeichert!');
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Fehler:', error);  // Fehlerdetails in der Konsole
+                        alert('Fehler beim Speichern der Daten!');
+                    }
                 });
+            });
+        });
+    </script>
 
-                  </script>
 
                   <div class="tab-pane" id="anmeldung">
                    <!-- /.card-header -->

@@ -315,9 +315,9 @@ try {
             $('#teams-bearbeiten').modal('hide');
         },
         error: function(xhr, status, error) {
-            console.log('Fehler beim Speichern der Teams:', error);
-            console.log(xhr.responseText); // Logge die vollständige Fehlerantwort
-        }
+          console.log('Fehler beim Speichern der Teams:', error);
+          console.log('Serverantwort:', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+      }
     })
 });
 });

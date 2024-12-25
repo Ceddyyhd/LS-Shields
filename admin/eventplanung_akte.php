@@ -290,7 +290,7 @@ $(document).ready(function() {
         console.log('Mitarbeiter werden gesendet');
         
         $.ajax({
-            url: 'anmeldung_speichern.php', // PHP-Skript zum Speichern
+            url: ' include/anmeldung_speichern.php', // PHP-Skript zum Speichern
             type: 'POST',
             data: {
                 event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL

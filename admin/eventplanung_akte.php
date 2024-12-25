@@ -373,7 +373,7 @@ try {
 
             // Sende die Daten per AJAX an den Server
             $.ajax({
-                url: 'path/to/your/server/script.php', 
+                url: 'include/team_assignments.php', 
                 method: 'POST',
                 data: { teams: teamData },
                 success: function(response) {

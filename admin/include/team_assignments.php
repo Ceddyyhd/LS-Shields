@@ -30,8 +30,16 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC); // Wenn das Team existiert, wird es hier geladen
             }
 
+            // Sicherstellen, dass $existingTeam immer definiert ist, auch wenn es null ist
+            if (!$existingTeam) {
+                $existingTeam = null;
+            }
+
+            // Wenn das Team existiert, dann Mitarbeiter aktualisieren
             if ($existingTeam) {
-                // Wenn das Team existiert, dann Mitarbeiter aktualisieren
+                $teamId = $existingTeam['id']; // Die ID des existierenden Teams holen
+
+                // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu
                 foreach ($team['employee_names'] as $index => $employeeName) {
                     $employeeId = isset($team['employee_ids'][$index]) ? $team['employee_ids'][$index] : null; // Mitarbeiter-ID
 

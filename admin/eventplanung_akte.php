@@ -494,7 +494,9 @@ $(document).ready(function() {
       format: 'LT'
     })
     //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
+    $('select.duallistbox').bootstrapDualListbox({
+        moveOnSelect: false
+    });
   })
 </script>
 </body>

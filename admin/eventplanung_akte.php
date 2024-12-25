@@ -218,6 +218,19 @@ try {
  $(document).ready(function() {
     let teamCount = 1; // Starten mit Team 1
 
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern, wenn das letzte nicht leere Feld bearbeitet wird
+    $(document).on('input', '.mitarbeiter', function() {
+        const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
+        if (lastEmployeeField.find('input').val() !== '') {
+            const newEmployeeField = `
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                </div>
+            `;
+            $('#mitarbeiter-container').append(newEmployeeField);
+        }
+    });
+
     // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
     $('#createTeam').click(function() {
         // Neue Team ID basierend auf dem teamCount (z.B. Team Name 2, Bereich 2 etc.)
@@ -265,13 +278,26 @@ try {
             mitarbeiter.push($(this).val());
         });
 
+        // Team Lead festlegen: Der erste Mitarbeiter jedes Teams ist der Team Lead
+        const teamData = [];
+        teamNames.forEach((teamName, index) => {
+            const teamMitarbeiter = mitarbeiter.slice(index * 2, index * 2 + 2); // Zwei Mitarbeiter pro Team
+            teamMitarbeiter.forEach((employee, empIndex) => {
+                teamData.push({
+                    team_name: teamName,
+                    bereich: bereiche[index],
+                    employee_name: employee,
+                    is_team_lead: empIndex === 0 ? true : false // Der erste Mitarbeiter ist der Team Lead
+                });
+            });
+        });
+
+        // Sende die Team-Daten an den Server
         $.ajax({
             url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
             method: 'POST',
             data: {
-                team_name: teamNames,
-                bereich: bereiche,
-                mitarbeiter: mitarbeiter,
+                team_data: teamData,
                 event_id: <?php echo $_GET['id']; ?> // Event ID
             },
             success: function(response) {

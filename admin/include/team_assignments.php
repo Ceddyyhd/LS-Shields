@@ -18,23 +18,23 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
         foreach ($teamData as $team) {
             $teamName = $team['team_name']; // Teamname
             $areaName = $team['bereich']; // Bereichname
+            $teamId = isset($team['team_id']) ? $team['team_id'] : null; // Team ID, falls vorhanden
 
             // Prüfen, ob das Team bereits existiert (basierend auf event_id und team_name)
-            $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
-            $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-            $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
-            $stmt->execute();
-            $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC); // Wenn das Team existiert, wird es hier geladen
+            if ($teamId) {
+                // Wenn Team ID vorhanden, dann UPDATE, andernfalls INSERT
+                $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND id = :team_id LIMIT 1");
+                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
+                $stmt->execute();
+                $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC); // Wenn das Team existiert, wird es hier geladen
+            }
 
-            // Wenn das Team existiert, dann Mitarbeiter aktualisieren
             if ($existingTeam) {
-                $teamId = $existingTeam['id']; // Die ID des existierenden Teams holen
-
-                // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu
+                // Wenn das Team existiert, dann Mitarbeiter aktualisieren
                 foreach ($team['employee_names'] as $index => $employeeName) {
                     $employeeId = isset($team['employee_ids'][$index]) ? $team['employee_ids'][$index] : null; // Mitarbeiter-ID
 
-                    // Überprüfen, ob der Mitarbeiter bereits im Team existiert
                     if ($employeeId) {
                         // Wenn der Mitarbeiter existiert, aktualisiere den Datensatz
                         $stmt = $conn->prepare("UPDATE team_assignments SET employee_name = :employee_name, is_team_lead = :is_team_lead WHERE id = :id");

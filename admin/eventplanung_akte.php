@@ -293,7 +293,7 @@ try {
 <script>
   $(document).ready(function() {
     // Anmeldung abschicken
-    $('#submitForm').on('click', function() {
+    $('#submitFormAnmeldung').on('click', function() {
         var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
         console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 

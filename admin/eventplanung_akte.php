@@ -186,24 +186,25 @@
                   <script>
                   $(document).ready(function() {
                     $('#submitForm').on('click', function() {
-                        console.log("Button wurde geklickt!");  // Debugging-Ausgabe
-                        var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
-                        $.ajax({
-                          url: 'include/speichern_eventplanung_summernote.php',
-                          type: 'POST',
-                          data: {
-                              summernoteContent: $('#summernote').val()
-                          },
-                          success: function(response) {
-                              console.log(response);  // Prüfe die Antwort des Servers in der Konsole
-                              alert('Daten wurden gespeichert!');
-                          },
-                          error: function(xhr, status, error) {
-                              console.log('Fehler:', error); // Fehler in der Konsole ausgeben
-                              alert('Fehler beim Speichern der Daten!');
-                          }
-                      });
-                    });
+    var summernoteContent = $('#summernote').val();
+    console.log(summernoteContent);  // Ausgabe des Inhalts in der Konsole
+
+    $.ajax({
+        url: 'include/speichern_eventplanung_summernote.php',
+        type: 'POST',
+        data: {
+            summernoteContent: summernoteContent
+        },
+        success: function(response) {
+            console.log(response);  // Antwort des Servers in der Konsole
+            alert('Daten wurden gespeichert!');
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler:', error);  // Fehlerdetails in der Konsole
+            alert('Fehler beim Speichern der Daten!');
+        }
+    });
+});
                 });
 
                   </script>

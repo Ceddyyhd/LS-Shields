@@ -415,9 +415,9 @@ $(document).ready(function() {
     // Initialisiere datetimepicker für jedes Eingabefeld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'hh:mm', // Richtiges Datums- und Zeitformat
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-        });
+          format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
+          useCurrent: false
+                });
 
         $('#gestartetUm<?php echo $employee['id']; ?>').datetimepicker({
             format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format

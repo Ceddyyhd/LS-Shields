@@ -80,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
                 }
+                $stmt->debugDumpParams(); // Entkommentieren, um zu sehen, wie die Parameter gebunden werden.
 
                 // Execute the query
                 $stmt->execute();

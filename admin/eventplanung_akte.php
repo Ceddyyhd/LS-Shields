@@ -3,11 +3,19 @@
 
 <head>
 
-<!-- include libraries(jQuery, bootstrap) -->
-<script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
-<script type="text/javascript" src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+  <!-- CodeMirror -->
+  <link rel="stylesheet" href="plugins/codemirror/codemirror.css">
+  <link rel="stylesheet" href="plugins/codemirror/theme/monokai.css">
+  <!-- SimpleMDE -->
+  <link rel="stylesheet" href="plugins/simplemde/simplemde.min.css"></head>
 <?php include 'include/header.php'; ?>
 
 <body class="hold-transition sidebar-mini">
@@ -176,16 +184,44 @@
                   </div>
 
                   <div class="active tab-pane" id="plan-bearbeiten">
-                  <div id="summernote">Hello Summernote</div>
+                  <div class="row">
+        <div class="col-md-12">
+          <div class="card card-outline card-info">
+            <div class="card-header">
+              <h3 class="card-title">
+                Summernote
+              </h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <textarea id="summernote">
+                Place <em>some</em> <u>text</u> <strong>here</strong>
+              </textarea>
+            </div>
+            <div class="card-footer">
+              Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
+            </div>
+          </div>
+        </div>
+        <!-- /.col-->
+      </div>
 
-HIER SUMMERNOTE
+<!-- Summernote -->
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
 
+<script>
+  $(function () {
+    // Summernote
+    $('#summernote').summernote()
 
-<script type="text/javascript">
-$(document).ready(function() {
-  $('#summernote').summernote();
-});
+    // CodeMirror
+    CodeMirror.fromTextArea(document.getElementById("codeMirrorDemo"), {
+      mode: "htmlmixed",
+      theme: "monokai"
+    });
+  })
 </script>
+
 
                   </div>
                   <!-- /.tab-pane -->

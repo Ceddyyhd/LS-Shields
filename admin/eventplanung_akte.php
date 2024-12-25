@@ -419,53 +419,43 @@ try {
 <script>
 $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
-    <?php foreach ($employees as $employee) { ?>
-        // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
-        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-          format: 'hh:mm', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
-          useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-        });
+    $('#timepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+    });
 
-        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
-        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
-            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
-            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
-            showClear: true, // Möglichkeit, das Datum zu löschen
-            showClose: true // Möglichkeit, das Picker-Menü zu schließen
-        });
+    // Initialisiere datetimepicker für "Gestartet Um"
+    $('#gestartetUm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false,
+    });
 
-        // Sicherstellen, dass der datetimepicker für "Date and Time" funktioniert
-        $('#reservationdatetime').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm', // Richtiges Datums- und Zeitformat
-            useCurrent: false
-        });
-    <?php } ?>
+    // Initialisiere datetimepicker für "Gegangen Um"
+    $('#gegangenUm').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
+        useCurrent: false,
+    });
 
     // Submit-Button für den Dienstplan
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
-        $('input[name^="work_time_"]').each(function() {
-            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            if (workTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
+        // Überprüfen, ob das "Maximal da bis"-Feld ausgefüllt wurde
+        var maxTimeValue = $('input[name="max_time"]').val();
+        if (maxTimeValue === '') {
+            $('input[name="max_time"]').val(null); // Wenn leer, als null setzen
+        }
 
-        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-        $('input[name^="max_time_"]').each(function() {
-            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
-            if (maxTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
+        // Überprüfen, ob das "Gestartet Um"-Feld ausgefüllt wurde
+        var gestartetUmValue = $('input[name="gestartet_um"]').val();
+        if (gestartetUmValue === '') {
+            $('input[name="gestartet_um"]').val(null); // Wenn leer, als null setzen
+        }
 
-        // Überprüfen, ob das "Date and time"-Feld ausgefüllt wurde
-        var reservationdatetimeValue = $('input[name="reservationdatetime"]').val();  // Wert des Date-Time Felds
-        if (reservationdatetimeValue === '') {
-            $('input[name="reservationdatetime"]').val(null); // Wenn leer, als null setzen
+        // Überprüfen, ob das "Gegangen Um"-Feld ausgefüllt wurde
+        var gegangenUmValue = $('input[name="gegangen_um"]').val();
+        if (gegangenUmValue === '') {
+            $('input[name="gegangen_um"]').val(null); // Wenn leer, als null setzen
         }
 
         // Wenn alle Felder validiert sind, Formular absenden
@@ -491,6 +481,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 
 </script>

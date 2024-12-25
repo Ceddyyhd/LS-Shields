@@ -204,6 +204,15 @@ try {
                   </div>
                 </div>
                 <div class="row">
+                <div class="row">
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder="Bereich">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
+                  </div>
+                </div>
+                <div class="row">
                 <div class="col-5">
                   </div>
                   <div class="col-5">
@@ -230,6 +239,9 @@ try {
                   </div>
                   <!-- /.modal-dialog -->
                 </div>
+
+
+
               </div>
               </div>
               <!-- /.card-body -->

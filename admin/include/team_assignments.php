@@ -14,60 +14,71 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     var_dump($teamData);  // Überprüfen der empfangenen Daten
     exit;  // Stoppt die Ausführung, damit du die Ausgabe siehst
 
-    // Die Teamdaten in die Datenbank einfügen
-    foreach ($teamData as $team) {
-        if (!isset($team['team_name'], $team['bereich'], $team['employee_names'])) {
-            // Fehlerbehandlung, falls die erwarteten Felder fehlen
-            echo "Fehlende Felder: team_name, bereich oder employee_names";
-            exit;
-        }
-
-        // Leere Mitarbeiterfelder entfernen
-        $team['employee_names'] = array_filter($team['employee_names'], function($employeeName) {
-            return !empty($employeeName); // Entfernt leere Mitarbeiter
-        });
-
-        // Fehlerbehandlung, falls nach dem Filtern keine Mitarbeiter übrig bleiben
-        if (empty($team['employee_names'])) {
-            echo "Fehler: Keine Mitarbeiter für das Team " . $team['team_name'] . " vorhanden.";
-            exit;
-        }
-
-        $isTeamLead = false; // Standardwert für Team Lead
-
-        // Gehe durch alle Mitarbeiter des Teams
-        foreach ($team['employee_names'] as $index => $employeeName) {
-            $isTeamLead = ($index == 0); // Der erste Mitarbeiter ist der Team Lead
-
-            // SQL-Abfrage zum Einfügen der Team- und Mitarbeiterdaten
-            $query = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead)
-                      VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)";
-
-            // Vorbereiten der SQL-Abfrage
-            $stmt = $conn->prepare($query);
-            if (!$stmt) {
-                // Fehler bei der Vorbereitung der SQL-Abfrage
-                echo "Fehler bei der Vorbereitung der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+    try {
+        // Die Teamdaten in die Datenbank einfügen
+        foreach ($teamData as $team) {
+            if (!isset($team['team_name'], $team['bereich'], $team['employee_names'])) {
+                // Fehlerbehandlung, falls die erwarteten Felder fehlen
+                echo "Fehlende Felder: team_name, bereich oder employee_names";
                 exit;
             }
 
-            // Binden der Parameter
-            $stmt->bindParam(':event_id', $eventId);
-            $stmt->bindParam(':team_name', $team['team_name']);
-            $stmt->bindParam(':area_name', $team['bereich']);
-            $stmt->bindParam(':employee_name', $employeeName);
-            $stmt->bindParam(':is_team_lead', $isTeamLead, PDO::PARAM_BOOL);
+            // Leere Mitarbeiterfelder entfernen
+            $team['employee_names'] = array_filter($team['employee_names'], function($employeeName) {
+                return !empty($employeeName); // Entfernt leere Mitarbeiter
+            });
 
-            // Führe die SQL-Abfrage aus, um das Team und den Mitarbeiter zu speichern
-            if (!$stmt->execute()) {
-                // Fehler bei der Ausführung der SQL-Abfrage
-                echo "SQL Fehler: " . implode(", ", $stmt->errorInfo());
+            // Fehlerbehandlung, falls nach dem Filtern keine Mitarbeiter übrig bleiben
+            if (empty($team['employee_names'])) {
+                echo "Fehler: Keine Mitarbeiter für das Team " . $team['team_name'] . " vorhanden.";
                 exit;
             }
+
+            $isTeamLead = false; // Standardwert für Team Lead
+
+            // Gehe durch alle Mitarbeiter des Teams
+            foreach ($team['employee_names'] as $index => $employeeName) {
+                $isTeamLead = ($index == 0); // Der erste Mitarbeiter ist der Team Lead
+
+                // SQL-Abfrage zum Einfügen der Team- und Mitarbeiterdaten
+                $query = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead)
+                          VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)";
+
+                try {
+                    // Vorbereiten der SQL-Abfrage
+                    $stmt = $conn->prepare($query);
+                    if (!$stmt) {
+                        // Fehler bei der Vorbereitung der SQL-Abfrage
+                        echo "Fehler bei der Vorbereitung der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+                        exit;
+                    }
+
+                    // Binden der Parameter
+                    $stmt->bindParam(':event_id', $eventId);
+                    $stmt->bindParam(':team_name', $team['team_name']);
+                    $stmt->bindParam(':area_name', $team['bereich']);
+                    $stmt->bindParam(':employee_name', $employeeName);
+                    $stmt->bindParam(':is_team_lead', $isTeamLead, PDO::PARAM_BOOL);
+
+                    // Führe die SQL-Abfrage aus, um das Team und den Mitarbeiter zu speichern
+                    if (!$stmt->execute()) {
+                        // Fehler bei der Ausführung der SQL-Abfrage
+                        echo "SQL Fehler: " . implode(", ", $stmt->errorInfo());
+                        exit;
+                    }
+
+                } catch (PDOException $e) {
+                    echo "Fehler bei der SQL-Abfrage: " . $e->getMessage();
+                    exit;
+                }
+            }
         }
+
+        echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich erstellt!']);
+    } catch (Exception $e) {
+        echo "Fehler: " . $e->getMessage();
+        exit;
     }
-
-    echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich erstellt!']);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Keine Team-Daten empfangen']);
 }

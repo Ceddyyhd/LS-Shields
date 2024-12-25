@@ -304,20 +304,20 @@ function generateTeamForm(team, index) {
 
             // Dynamisches Hinzufügen von Mitarbeiterfeldern
             $(document).on('input', '.mitarbeiter', function() {
-                const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
-                const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
+    const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
+    const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
 
-                // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
-                if (lastEmployeeField.find('input').val() !== '') {
-                    const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
-                    const newEmployeeField = `
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
-                        </div>
-                    `;
-                    parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
-                }
-            });
+    // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
+    if (lastEmployeeField.find('input').val() !== '') {
+        const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
+        const newEmployeeField = `
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
+            </div>
+        `;
+        parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
+    }
+});
 
             // Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
             $('#createTeam').click(function() {

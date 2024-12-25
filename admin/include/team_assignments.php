@@ -1,5 +1,4 @@
 <?php
-// Fehleranzeige aktivieren, um die genauen Fehler zu sehen
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -20,7 +19,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             $teamName = $team['team_name'];
             $areaName = $team['bereich'];
 
-            // Prüfen, ob das Team bereits existiert (d.h., ein Team mit diesem Namen für das Event)
+            // Prüfen, ob das Team bereits existiert
             $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
             $stmt->bindParam(':event_id', $eventId);
             $stmt->bindParam(':team_name', $teamName);

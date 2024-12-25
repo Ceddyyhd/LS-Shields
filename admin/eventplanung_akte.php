@@ -379,27 +379,15 @@ try {
                         </div>
 
                         <div class="form-group">
-                              <label>Date and time range:</label>
-
-                              <div class="input-group">
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                </div>
-                                <input type="text" class="form-control float-right" id="reservationtime">
-                              </div>
-                              <!-- /.input group -->
-                            </div> 
-
-                            <div class="form-group">
-                              <label>Gearbeitete Zeit:</label>
-                              <div class="input-group">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                  </div>
-                                  <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
-                                  value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
-                              </div>
-                          </div>
+                        <label>Gearbeitete Zeit:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
+                            value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                        </div>
+                    </div>
                     </div>
                 </div>
                 <?php
@@ -468,12 +456,17 @@ try {
 
 <script>
   $(document).ready(function() {
-    // Initialisiere datetimepicker für das erste "Maximal da bis"-Feld
+    // Initialisiere datetimepicker für max_time
     <?php foreach ($employees as $employee) { ?>
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm'
+        });
+    <?php } ?>
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+    // Initialisiere datetimepicker für gearbeitete Zeit
+    <?php foreach ($employees as $employee) { ?>
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'  // Verwende das gleiche Format für gearbeitete Zeit
+            format: 'HH:mm'  // Verwende das passende Format
         });
     <?php } ?>
 });

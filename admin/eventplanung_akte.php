@@ -344,7 +344,8 @@ function generateTeamForm(team, index) {
             });
 
             // Speichern der Teamdaten
-            $('#saveTeam').click(function() {
+            // Speichern der Teamdaten
+$('#saveTeam').click(function() {
     const teamData = [];
 
     // Erfassung der Team- und Mitarbeiterdaten

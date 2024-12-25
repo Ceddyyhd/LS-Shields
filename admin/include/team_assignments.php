@@ -53,7 +53,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             }
 
             // Gehe durch alle Mitarbeiter und überprüfe, ob sie existieren
-            foreach ($team['employee_names'] as $index => $employee) {
+            foreach ($team['employee_names'] as $employee) {
                 $employeeName = $employee['name']; // Mitarbeitername
                 $isTeamLead = $employee['is_team_lead']; // Team Lead-Status
                 $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter-ID (falls vorhanden)
@@ -68,7 +68,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 if ($existingEmployee) {
                     // Der Mitarbeiter existiert, wir aktualisieren nur den is_team_lead-Status für diesen Mitarbeiter
                     $stmt = $conn->prepare("UPDATE employees SET is_team_lead = :is_team_lead WHERE id = :employee_id");
-                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT);
+                    $stmt->bindValue(':is_team_lead', $isTeamLead, PDO::PARAM_INT); // Der Mitarbeiter ist Team Lead, wenn `is_team_lead` 1 ist
                     $stmt->bindValue(':employee_id', $existingEmployee['id'], PDO::PARAM_INT);
                     $stmt->execute();
                 } else {

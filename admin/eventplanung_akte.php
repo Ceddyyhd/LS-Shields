@@ -38,23 +38,6 @@ if (isset($_GET['id'])) {
 } else {
     die('Kein Eventplanungs-ID angegeben.');
 }
-try {
-  // Alle Mitarbeiter holen, die sich noch nicht für das Event angemeldet haben
-  $stmt = $conn->prepare("
-      SELECT u.id, u.name
-      FROM users u
-      WHERE u.gekuendigt = 'no_kuendigung'
-      AND NOT EXISTS (
-          SELECT 1 FROM event_mitarbeiter_anmeldung em
-          WHERE em.employee_id = u.id AND em.event_id = :event_id
-      )
-  ");
-  $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-  $stmt->execute();
-  $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  echo 'Fehler: ' . $e->getMessage();
-}
 
 // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
 try {
@@ -266,59 +249,21 @@ try {
                 <div class="form-group">
                     <label>Eintragen wer kann</label>
                     <div class="form-group">
-                        <select class="form-control" name="employee_list[]" multiple="multiple">
-                            <?php
-                            // Mitarbeiter, die sich noch nicht angemeldet haben, in die Liste einfügen
-                            foreach ($employees as $employee) {
-                                echo '<option value="' . $employee['id'] . '">' . htmlspecialchars($employee['name']) . '</option>';
-                            }
-                            ?>
+                  <select class="form-control">
+                          <option>Cedric Schmidt</option>
+                          <option>John Schmidt</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
                         </select>
-                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
     <button type="button" id="submitForm" class="btn btn-danger">Anmelden</button>
 </div>
-<script>
-  $(document).ready(function() {
-    // Anmeldung abschicken
-    $('#submitForm').on('click', function() {
-        var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
-        console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 
-        // Überprüfen, ob Mitarbeiter ausgewählt wurden
-        if (selectedEmployees.length > 0) {
-            console.log('Mitarbeiter werden gesendet');
-            
-            $.ajax({
-                url: 'include/anmeldung_speichern.php', // PHP-Skript zum Speichern
-                type: 'POST',
-                data: {
-                    event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL
-                    employees: selectedEmployees
-                },
-                success: function(response) {
-                    console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
-                    alert('Anmeldung erfolgreich!');
-
-                    // Nach erfolgreicher Anmeldung den Mitarbeiter aus der Liste entfernen
-                    selectedEmployees.forEach(function(employeeId) {
-                        $('option[value="' + employeeId + '"]').remove();
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
-                    alert('Fehler bei der Anmeldung!');
-                }
-            });
-        } else {
-            alert('Bitte wählen Sie mindestens einen Mitarbeiter aus!');
-        }
-    });
-});
-</script>
 
 
                   <div class="tab-pane" id="dienstplan">

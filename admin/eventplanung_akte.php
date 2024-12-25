@@ -157,7 +157,8 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#plan" data-toggle="tab">Plan</a></li>
                   <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#anmeldung" data-toggle="tab">Anmeldung</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#dienstplan" data-toggle="tab">Dienstplan</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
@@ -187,31 +188,65 @@
                   </div>
                   
 
-                  <div class="tab-pane" id="settings">
+                  <div class="tab-pane" id="anmeldung">
                    <!-- /.card-header -->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-12">
-                <div class="form-group">
-                  <label>Eintragen wer kann</label>
-                  <select class="duallistbox" multiple="multiple">
-                    <option selected>Alabama</option>
-                    <option>Alaska</option>
-                    <option>California</option>
-                    <option>Delaware</option>
-                    <option>Tennessee</option>
-                    <option>Texas</option>
-                    <option>Washington</option>
-                  </select>
-                </div>
-                <!-- /.form-group -->
-              </div>
-              <!-- /.col -->
-            </div>
-            <!-- /.row -->
-          </div>
+                    <div class="card-body">
+                        <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                            <label>Eintragen wer kann</label>
+                            <select class="duallistbox" multiple="multiple">
+                                <option selected>Alabama</option>
+                                <option>Alaska</option>
+                                <option>California</option>
+                                <option>Delaware</option>
+                                <option>Tennessee</option>
+                                <option>Texas</option>
+                                <option>Washington</option>
+                            </select>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                  </div>
 
-
+                  <div class="tab-pane" id="dienstplan">
+                    <form class="form-horizontal">
+                        <h4>Cedric Schmidt</h4>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"/>
+                                            <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script type="text/javascript">
+                                    $(function () {
+                                        $('#datetimepicker3').datetimepicker({
+                                            format: 'LT'
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                      
+                      
+                      
+                      
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                   <!-- /.tab-pane -->
                 </div>

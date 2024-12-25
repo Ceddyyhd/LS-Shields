@@ -7,12 +7,10 @@ if (isset($_GET['event_id'])) {
 
     try {
         // Abfrage, um die Team-Daten zu holen, und alle Mitarbeiter für jedes Team zu gruppieren
-        $query = "SELECT t.id as team_id, t.team_name, t.area_name, t.employee_name, t.is_team_lead, u.id as user_id
-          FROM team_assignments t
-          LEFT JOIN users u ON t.employee_name = u.name
-          WHERE t.event_id = :event_id
-          ORDER BY t.team_name";
-
+        $query = "SELECT t.id AS team_id, t.team_name, t.area_name, t.employee_name, t.is_team_lead, t.id AS employee_id
+                  FROM team_assignments t
+                  WHERE t.event_id = :event_id
+                  ORDER BY t.team_name";
 
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':event_id', $eventId);
@@ -36,7 +34,8 @@ if (isset($_GET['event_id'])) {
             // Füge den Mitarbeiter zum entsprechenden Team hinzu
             $groupedTeams[$team['team_name']]['employee_names'][] = [
                 'name' => $team['employee_name'],
-                'is_team_lead' => $team['is_team_lead']
+                'is_team_lead' => $team['is_team_lead'],
+                'id' => $team['employee_id'], // Mitarbeiter ID
             ];
         }
 

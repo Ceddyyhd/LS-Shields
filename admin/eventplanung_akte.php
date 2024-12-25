@@ -183,17 +183,38 @@ try {
                       <div class="card-body">
                 <div class="row">
                   <div class="col-5">
-                    <input type="text" class="form-control" placeholder=".col-5">
+                    <input type="text" class="form-control" placeholder="Bereich">
                   </div>
                   <div class="col-5">
-                    <input type="text" class="form-control" placeholder=".col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
                   </div>
                 </div>
                 <div class="row">
                 <div class="col-5">
                   </div>
                   <div class="col-5">
-                    <input type="text" class="form-control" placeholder=".col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
+                  </div>
+                </div>
+                <div class="row">
+                <div class="col-5">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
+                  </div>
+                </div>
+                <div class="row">
+                <div class="col-5">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
+                  </div>
+                </div>
+                <div class="row">
+                <div class="col-5">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder="Mitarbeiter">
                   </div>
                 </div>
               </div>

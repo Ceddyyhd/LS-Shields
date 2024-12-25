@@ -413,15 +413,19 @@ try {
  $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
+        // Stelle sicher, dass der datetimepicker für "Maximal da bis" richtig funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm', // Nur Stunden und Minuten
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+        // Stelle sicher, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
+            showClear: true, // Möglichkeit, das Datum zu löschen
+            showClose: true // Möglichkeit, das Picker-Menü zu schließen
         });
     <?php } ?>
 

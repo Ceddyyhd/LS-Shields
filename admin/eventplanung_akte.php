@@ -377,31 +377,21 @@ try {
                                 </div>
                             </div>
                         </div>
-
-
-
-                        <div class="form-group">
-                            <label>Gestartet Um:</label>
-                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
-                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
-                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Gegangen um:</label>
-                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
-                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
-                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                </div>
-                            </div>
-                        </div>
                 </div>
+                
+
+
+
+                <div class="form-group">
+                          <label>Gearbeitete Zeit:</label>
+                          <div class="input-group">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="far fa-clock"></i></span>
+                              </div>
+                              <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" 
+                              name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                          </div>
+                      </div>
                 <?php
             }
         } catch (PDOException $e) {
@@ -423,14 +413,17 @@ $(document).ready(function() {
     <?php foreach ($employees as $employee) { ?>
         // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm', // Nur Stunden und Minuten
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+          format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+          useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" genauso funktioniert
+        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm', // Nur Stunden und Minuten
+            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
+            showClear: true, // Möglichkeit, das Datum zu löschen
+            showClose: true // Möglichkeit, das Picker-Menü zu schließen
         });
     <?php } ?>
 

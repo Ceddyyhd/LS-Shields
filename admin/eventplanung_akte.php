@@ -387,9 +387,6 @@ try {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
-                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
-                            value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
-
                             <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
                             value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
                           </div>
@@ -416,13 +413,13 @@ try {
 $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
-        // Stelle sicher, dass der datetimepicker für "Maximal da bis" richtig funktioniert
+        // Initialisiere datetimepicker für "Maximal da bis"
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm', // Nur Stunden und Minuten
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Stelle sicher, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
+        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums

@@ -414,7 +414,7 @@ try {
     // Initialisiere datetimepicker für das erste "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'
+            format: 'HH:mm' // Format für die Uhrzeit
         });
 
         // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
@@ -440,7 +440,8 @@ try {
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {
-            if ($(this).val() === '') {
+            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+            if (maxTimeValue !== '' && maxTimeValue === '') {
                 valid = false;
                 alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
                 return false; // Stoppt die Schleife, wenn eine Eingabe fehlt

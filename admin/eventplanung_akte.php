@@ -41,6 +41,20 @@ if (isset($_GET['id'])) {
     die('Kein Eventplanungs-ID angegeben.');
 }
 
+try {
+  // Alle Mitarbeiter holen, die sich für das Event angemeldet haben
+  $stmt = $conn->prepare("
+      SELECT u.id, u.name
+      FROM users u
+      JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+      WHERE em.event_id = :event_id
+  ");
+  $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+  $stmt->execute();
+  $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  echo 'Fehler: ' . $e->getMessage();
+}
 // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
 try {
     $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
@@ -337,78 +351,58 @@ try {
 </script>
 
 
-                  <div class="tab-pane" id="dienstplan">
-                    <form class="form-horizontal">
-                        <h4>Cedric Schmidt</h4>
-                        <div class="form-group">
-                                    <div class="bootstrap-timepicker">
-                            <div class="form-group">
-                                <label>Maximal da bis:</label>
-
-                                <div class="input-group date" id="timepicker" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
-                                <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                </div>
-                                </div>
-                                <!-- /.input group -->
+<div class="tab-pane" id="dienstplan">
+    <form class="form-horizontal" method="POST" action="include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>">
+        <?php
+        // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
+        foreach ($employees as $employee) {
+            ?>
+            <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
+            <div class="form-group">
+                <div class="bootstrap-timepicker">
+                    <div class="form-group">
+                        <label>Maximal da bis:</label>
+                        <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"/>
+                            <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
                             </div>
-                            <!-- /.form group -->
-                            </div>
-
-                            <div class="form-group">
-                  <label>Gearbeitete Zeit:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-clock"></i></span>
-                    </div>
-                    <input type="text" class="form-control float-right" id="reservationtime">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                </div>
-
-                <h4>John Schmidt</h4>
-                        <div class="form-group">
-                                    <div class="bootstrap-timepicker">
-                            <div class="form-group">
-                                <label>Maximal da bis:</label>
-
-                                <div class="input-group date" id="timepicker" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
-                                <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                </div>
-                                </div>
-                                <!-- /.input group -->
-                            </div>
-                            <!-- /.form group -->
-                            </div>
-
-                            <div class="form-group">
-                  <label>Gearbeitete Zeit:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="far fa-clock"></i></span>
-                    </div>
-                    <input type="text" class="form-control float-right" id="reservationtime">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                </div>
-                      
-                      
-                      
-                      
-                      <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
                         </div>
-                      </div>
-                    </form>
-                  </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gearbeitete Zeit:</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10">
+                <button type="submit" class="btn btn-danger">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+  $(document).ready(function() {
+    <?php foreach ($employees as $employee) { ?>
+        // Initialisiere datetimepicker für jedes Mitarbeiter-Feld
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm'
+        });
+    <?php } ?>
+});
+</script>
 
 
                   <div class="tab-pane" id="externes-dokument1">

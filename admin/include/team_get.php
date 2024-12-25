@@ -1,7 +1,7 @@
 <?php
 include('db.php');
 
-// Überprüfen, ob eine Event-ID übergeben wurde
+// Überprüfen, ob die Event-ID übergeben wurde
 if (isset($_GET['event_id'])) {
     $eventId = $_GET['event_id'];
 

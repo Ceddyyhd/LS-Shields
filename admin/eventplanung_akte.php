@@ -220,6 +220,74 @@ try {
 <script>
         $(document).ready(function() {
             let teamCount = 1; // Starten mit Team 1
+            $('#teams-bearbeiten').on('show.bs.modal', function (e) {
+    var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+
+    // AJAX-Anfrage, um die Team-Daten zu laden
+    $.ajax({
+        url: 'include/team_get.php', // PHP-Datei, die die Team-Daten abruft
+        method: 'GET',
+        data: { event_id: eventId },
+        dataType: 'json',
+        success: function(response) {
+            console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+
+            // Sicherstellen, dass die Antwort ein Array ist
+            if (Array.isArray(response)) {
+                console.log("Antwort ist ein Array mit Team-Daten:", response);
+
+                if (response.length > 0) {
+                    // Leere das Modal
+                    $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+
+                    // Füge die Team-Daten in das Modal ein
+                    response.forEach(function(team, index) {
+                        const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
+
+                        // Team-Daten einfügen
+                        $('#teams-container').append(generateTeamForm(team, teamIndex));
+                    });
+                } else {
+                    console.log("Keine Teams gefunden.");
+                    alert('Keine Teams gefunden.');
+                }
+            } else {
+                console.log("Fehler: Die Antwort ist kein Array", response);
+                alert('Fehler beim Laden der Team-Daten: Unerwartete Antwort vom Server');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler bei der Anfrage:', error);
+            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+        }
+    });
+});
+
+// Funktion zum Generieren des HTML für Teamformular
+function generateTeamForm(team, index) {
+    return `
+        <div class="team-form" id="team-form-${index}">
+            <hr>
+            <div class="form-group">
+                <label for="team_name">Team Name ${index}</label>
+                <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
+            </div>
+            <div class="form-group">
+                <label for="bereich">Bereich</label>
+                <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
+            </div>
+            <div class="form-group" id="mitarbeiter-container">
+                <label for="mitarbeiter">Mitarbeiter</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter (Team Lead)" value="${team.employee_name}" required>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter">
+                </div>
+            </div>
+        </div>
+    `;
+}
 
             // Dynamisches Hinzufügen von Mitarbeiterfeldern
             $(document).on('input', '.mitarbeiter', function() {

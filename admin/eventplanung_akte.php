@@ -257,13 +257,14 @@ try {
                             });
                         }
                     });
-                } else {
-                    alert('Fehler beim Laden der Team-Daten');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log('Fehler: ', error);
+                  } else {
+                alert('Fehler beim Laden der Team-Daten: ' + response.message);
             }
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler bei der Anfrage:', error);
+            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+        }
         });
     });
 

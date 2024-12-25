@@ -344,7 +344,6 @@ function generateTeamForm(team, index) {
             });
 
             // Speichern der Teamdaten
-            // Speichern der Teamdaten
 $('#saveTeam').click(function() {
     const teamData = [];
 
@@ -373,7 +372,7 @@ $('#saveTeam').click(function() {
             const employee = {
                 name: employeeName,
                 is_team_lead: isTeamLead ? "1" : "0",  // 1 für Team Lead, 0 für normalen Mitarbeiter
-                id: ""  // Hier kann die Mitarbeiter-ID eingefügt werden, wenn vorhanden
+                id: $(this).siblings('input[type="hidden"]').val() || ""  // Hier kann die Mitarbeiter-ID eingefügt werden, wenn vorhanden
             };
             teamData[teamName].employee_names.push(employee);
         }

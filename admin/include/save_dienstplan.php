@@ -7,18 +7,30 @@ $eventId = $_GET['id'];
 
 // Überprüfen, ob die erforderlichen Daten über POST übermittelt wurden
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Alle Mitarbeiter aus dem Formular durchlaufen
-    foreach ($_POST as $key => $value) {
-        // Nur die relevanten Felder bearbeiten (max_time, gestartet_um, gegangen_um)
-        if (strpos($key, 'max_time_') !== false) {
-            $employeeId = str_replace('max_time_', '', $key); // Mitarbeiter-ID extrahieren
-            $maxTime = $value;
-            $gestartetUm = isset($_POST['gestartet_um_' . $employeeId]) ? $_POST['gestartet_um_' . $employeeId] : null;
-            $gegangenUm = isset($_POST['gegangen_um_' . $employeeId]) ? $_POST['gegangen_um_' . $employeeId] : null;
+    try {
+        // Alle Mitarbeiter aus dem Formular durchlaufen
+        foreach ($_POST as $key => $value) {
+            // Nur die relevanten Felder bearbeiten (max_time, gestartet_um, gegangen_um)
+            if (strpos($key, 'max_time_') !== false) {
+                $employeeId = str_replace('max_time_', '', $key); // Mitarbeiter-ID extrahieren
+                $maxTime = $value;
+                $gestartetUm = isset($_POST['gestartet_um_' . $employeeId]) ? $_POST['gestartet_um_' . $employeeId] : null;
+                $gegangenUm = isset($_POST['gegangen_um_' . $employeeId]) ? $_POST['gegangen_um_' . $employeeId] : null;
 
-            // SQL-Abfrage zum Aktualisieren oder Einfügen der Daten
-            try {
-                // Prüfen, ob bereits ein Datensatz für diesen Mitarbeiter und Event existiert
+                // Überprüfen, ob der Wert leer ist und als NULL setzen
+                if ($gestartetUm === '') {
+                    $gestartetUm = null;
+                }
+                if ($gegangenUm === '') {
+                    $gegangenUm = null;
+                }
+
+                // Wenn max_time leer ist, NULL setzen
+                if ($maxTime === '') {
+                    $maxTime = null;
+                }
+
+                // SQL-Abfrage zum Aktualisieren oder Einfügen der Daten
                 $stmt = $conn->prepare("
                     SELECT id FROM dienstplan 
                     WHERE event_id = :event_id AND employee_id = :employee_id
@@ -53,13 +65,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Execute the query
                 $stmt->execute();
-            } catch (PDOException $e) {
-                echo 'Fehler: ' . $e->getMessage();
             }
         }
-    }
 
-    // JSON-Antwort zurückgeben
-    echo json_encode(['status' => 'success', 'message' => 'Daten wurden erfolgreich gespeichert!']);
+        // Erfolgsantwort zurückgeben
+        echo json_encode(['status' => 'success', 'message' => 'Daten wurden erfolgreich gespeichert!']);
+    } catch (PDOException $e) {
+        // Fehler im SQL-Code
+        echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+    } catch (Exception $e) {
+        // Allgemeiner Fehler
+        echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
+    }
 }
 ?>

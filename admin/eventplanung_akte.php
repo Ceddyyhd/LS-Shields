@@ -420,12 +420,12 @@ $(document).ready(function() {
         });
 
         $('#gestartetUm<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat
+            format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
             useCurrent: false
         });
 
         $('#gegangenUm<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat
+            format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
             useCurrent: false
         });
     <?php } ?>

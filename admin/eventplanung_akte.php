@@ -181,7 +181,7 @@ try {
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="team_name">Team Name</label>
+                    <label for="team_name">Team Name 1</label>
                     <input type="text" id="team_name" class="form-control" placeholder="Team Name">
                 </div>
 
@@ -211,29 +211,14 @@ try {
     </div>
 </div>
 
-<!-- Anzeige der neuen Teams unterhalb -->
+<!-- Anzeige neuer Teams unterhalb -->
 <div id="teamDisplay"></div>
 
 <script>
   $(document).ready(function() {
-    let employeeCount = 2; // Initial zwei Mitarbeiterfelder
+    let teamCount = 1; // Starten mit Team 1
 
-    // Dynamisches Hinzufügen von Mitarbeiterfeldern, wenn das letzte nicht leere Feld bearbeitet wird
-    $(document).on('input', '.mitarbeiter', function() {
-        if ($(this).val() !== '') {
-            const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
-            if (lastEmployeeField.find('input').val() !== '') {
-                const newEmployeeField = `
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
-                    </div>
-                `;
-                $('#mitarbeiter-container').append(newEmployeeField);
-            }
-        }
-    });
-
-    // Neues Team erstellen und die Eingabewerte unterhalb des Formulars anzeigen (mit <hr>)
+    // Neues Team erstellen und Formular unterhalb des aktuellen Formulars anzeigen
     $('#createTeam').click(function() {
         const teamName = $('#team_name').val();
         const bereich = $('#bereich').val();
@@ -241,7 +226,7 @@ try {
             return $(this).val();
         }).get();
 
-        // Display the team data below the form
+        // Nur nicht leere Mitarbeiter speichern
         let employeeList = '';
         mitarbeiter.forEach(function(employee) {
             if (employee !== '') {
@@ -251,16 +236,28 @@ try {
 
         const newTeamHtml = `
             <hr>
-            <h4>Team: ${teamName}</h4>
-            <p>Bereich: ${bereich}</p>
-            <p>Mitarbeiter: </p>
-            ${employeeList}
+            <div class="form-group">
+                <label for="team_name">Team Name ${teamCount + 1}</label>
+                <input type="text" class="form-control" value="${teamName}" placeholder="Team Name">
+            </div>
+
+            <div class="form-group">
+                <label for="bereich">Bereich</label>
+                <input type="text" class="form-control" value="${bereich}" placeholder="Bereich">
+            </div>
+
+            <div id="mitarbeiter-container">
+                <label for="mitarbeiter">Mitarbeiter</label>
+                ${employeeList}
+            </div>
+
+            <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
         `;
 
-        // Append the new team info below the form
+        // Füge das neue Team unterhalb des Formulars ein
         $('#teamDisplay').append(newTeamHtml);
 
-        // Reset the form fields after displaying the team
+        // Formular zurücksetzen
         $('#team_name').val('');
         $('#bereich').val('');
         $('#mitarbeiter-container').empty().append(`
@@ -271,7 +268,36 @@ try {
                 <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
             </div>
         `);
+        teamCount++; // Zähle die Teams hoch
     });
+
+    // Speichern des Teams
+    $('#saveTeam').click(function() {
+        const teamName = $('#team_name').val();
+        const bereich = $('#bereich').val();
+        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            url: 'include/team_assignments.php', // PHP-Skript zum Erstellen des Teams
+            method: 'POST',
+            data: {
+                team_name: teamName,
+                bereich: bereich,
+                mitarbeiter: mitarbeiter,
+                event_id: <?php echo $_GET['id']; ?> // Event ID, die über die URL übergeben wird
+            },
+            success: function(response) {
+                alert('Team erfolgreich gespeichert');
+                $('#teams-bearbeiten').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                console.log('Fehler beim Speichern des Teams:', error);
+            }
+        });
+    });
+});
 
     // Team speichern (hier könnte die ursprüngliche Speicherung in der DB erfolgen)
     $('#saveTeam').click(function() {

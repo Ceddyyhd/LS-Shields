@@ -248,26 +248,14 @@ try {
             <div class="col-12">
                 <div class="form-group">
                     <label>Eintragen wer kann</label>
-                    <select class="duallistbox" name="employee_list[]" multiple="multiple">
-                        <?php
-                        // Verbindung zur Datenbank
-                        include('db.php');
-
-                        // Abfrage, um alle Mitarbeiter aus der users-Tabelle zu holen
-                        try {
-                            $stmt = $conn->prepare("SELECT id, name FROM users WHERE gekuendigt = 'no_kuendigung'");
-                            $stmt->execute();
-                            $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                            // Mitarbeiter in die Duallistbox einfügen
-                            foreach ($employees as $employee) {
-                                echo '<option value="' . $employee['id'] . '">' . htmlspecialchars($employee['name']) . '</option>';
-                            }
-                        } catch (PDOException $e) {
-                            echo 'Fehler: ' . $e->getMessage();
-                        }
-                        ?>
-                    </select>
+                    <div class="form-group">
+                  <label for="exampleSelectBorder">Bottom Border only <code>.form-control-border</code></label>
+                  <select class="custom-select form-control-border" id="exampleSelectBorder">
+                    <option>Value 1</option>
+                    <option>Value 2</option>
+                    <option>Value 3</option>
+                  </select>
+                </div>
                 </div>
             </div>
         </div>
@@ -275,44 +263,7 @@ try {
     <button type="button" id="submitForm" class="btn btn-danger">Anmelden</button>
 </div>
 
-<script>
-$(document).ready(function() {
-    // Duallistbox initialisieren
-    $('select.duallistbox').bootstrapDualListbox();
 
-    // Anmeldung abschicken
-    $('#submitForm').on('click', function() {
-    var selectedEmployees = $('select.duallistbox').val(); // Ausgewählte Mitarbeiter
-    console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
-
-    // Überprüfen, ob Mitarbeiter ausgewählt wurden
-    if (selectedEmployees.length > 0) {
-        console.log('Mitarbeiter werden gesendet');
-        
-        $.ajax({
-            url: 'include/anmeldung_speichern.php', // PHP-Skript zum Speichern
-            type: 'POST',
-            data: {
-                event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL
-                employees: selectedEmployees
-            },
-            success: function(response) {
-                console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
-                alert('Anmeldung erfolgreich!');
-            },
-            error: function(xhr, status, error) {
-                console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
-                console.log('Status: ', status);
-                console.log('XHR-Objekt: ', xhr);
-                alert('Fehler bei der Anmeldung!');
-            }
-        });
-    } else {
-        alert('Bitte wählen Sie mindestens einen Mitarbeiter aus!');
-    }
-});
-});
-</script>
 
                   <div class="tab-pane" id="dienstplan">
                     <form class="form-horizontal">

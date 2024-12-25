@@ -1,26 +1,30 @@
 <?php
-// Fehler anzeigen (nur zu Debugging-Zwecken)
+// Fehleranzeige für Debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include('db.php'); // Datenbankverbindung einbinden
+// Einbinden der Datenbankverbindung
+include('db.php'); // PDO-Verbindung einbinden
 
+// Überprüfen, ob der Summernote-Inhalt gesendet wurde
 if (isset($_POST['summernoteContent'])) {
-    // Sicherstellen, dass die Daten vorhanden und korrekt sind
-    $summernoteContent = $mysqli->real_escape_string($_POST['summernoteContent']);
-    
-    // SQL-Abfrage zum Speichern des Inhalts
-    $sql = "INSERT INTO Eventplanung (summernote_content) VALUES ('$summernoteContent')";
+    // Den Inhalt von Summernote abholen
+    $summernoteContent = $_POST['summernoteContent'];
 
-    // Fehlerbehandlung
-    if ($mysqli->query($sql) === TRUE) {
+    try {
+        // SQL-Abfrage zum Speichern des Inhalts mit PDO
+        $stmt = $conn->prepare("INSERT INTO Eventplanung (summernote_content) VALUES (:summernoteContent)");
+        $stmt->bindParam(':summernoteContent', $summernoteContent, PDO::PARAM_STR);
+
+        // Die Abfrage ausführen
+        $stmt->execute();
+        
         echo "Daten wurden erfolgreich gespeichert!";
-    } else {
-        echo "Fehler beim Speichern der Daten: " . $mysqli->error;
+    } catch (PDOException $e) {
+        echo "Fehler beim Speichern der Daten: " . $e->getMessage();
     }
 } else {
     echo "Fehlende Daten!";
 }
 
-$mysqli->close(); // Verbindung schließen
 ?>

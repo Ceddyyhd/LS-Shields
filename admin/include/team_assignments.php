@@ -10,7 +10,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
-    // Debug-Ausgabe der empfangenen Daten zur Überprüfung
+    // Ausgabe der empfangenen Daten zur Überprüfung
     var_dump($teamData);  // Überprüfen der empfangenen Daten
     exit;  // Stoppt die Ausführung, damit du die Ausgabe siehst
 
@@ -22,11 +22,22 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             exit;
         }
 
+        // Leere Mitarbeiterfelder entfernen
+        $team['employee_names'] = array_filter($team['employee_names'], function($employeeName) {
+            return !empty($employeeName); // Entfernt leere Mitarbeiter
+        });
+
+        // Fehlerbehandlung, falls nach dem Filtern keine Mitarbeiter übrig bleiben
+        if (empty($team['employee_names'])) {
+            echo "Fehler: Keine Mitarbeiter für das Team " . $team['team_name'] . " vorhanden.";
+            exit;
+        }
+
         $isTeamLead = false; // Standardwert für Team Lead
 
         // Gehe durch alle Mitarbeiter des Teams
         foreach ($team['employee_names'] as $index => $employeeName) {
-            // Überspringe leere Mitarbeiterfelder
+            // Überprüfen, ob der Mitarbeitername leer ist
             if (empty($employeeName)) {
                 continue;
             }

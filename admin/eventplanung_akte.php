@@ -466,21 +466,7 @@ try {
 });
 </script>
 
-<script>
-  $(document).ready(function() {
-    // Initialisiere datetimepicker für das erste "Maximal da bis"-Feld
-    <?php foreach ($employees as $employee) { ?>
-        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'
-        });
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
-        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'  // Verwende das gleiche Format für gearbeitete Zeit
-        });
-    <?php } ?>
-});
-</script>
 
 
                   <div class="tab-pane" id="externes-dokument1">

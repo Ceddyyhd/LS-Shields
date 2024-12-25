@@ -10,12 +10,18 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
+    // Debugging: Gib die empfangenen Daten aus
+    error_log("Team Data: " . print_r($teamData, true)); // Gibt die Team-Daten aus
+
     // Transaktion starten (um alle Änderungen in einem Schritt zu machen)
     $conn->beginTransaction();
 
     try {
         // Durch jedes Team in den empfangenen Daten iterieren
         foreach ($teamData as $team) {
+            // Debugging: Gib das Team aus
+            error_log("Team: " . print_r($team, true)); // Gibt jedes Team aus
+
             $teamName = $team['team_name']; // Teamname
             $areaName = $team['bereich']; // Bereichname
             $teamId = isset($team['team_id']) ? $team['team_id'] : null; // Wenn Team ID vorhanden ist, holen wir sie
@@ -54,6 +60,9 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
             // Gehe durch alle Mitarbeiter und aktualisiere sie oder füge sie hinzu
             foreach ($team['employee_names'] as $index => $employee) {
+                // Debugging: Gib den Mitarbeiter aus
+                error_log("Employee: " . print_r($employee, true)); // Gibt den Mitarbeiter aus
+
                 $employeeName = $employee['name']; // Mitarbeitername
                 $employeeId = isset($employee['id']) ? $employee['id'] : null; // Mitarbeiter ID, wenn vorhanden
 

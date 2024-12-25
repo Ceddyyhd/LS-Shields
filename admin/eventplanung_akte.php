@@ -339,121 +339,137 @@ try {
 </script>
 
 
-<?php
-// Event ID aus der URL holen
-$eventId = $_GET['id'];
+<div class="tab-pane" id="dienstplan">
+    <form class="form-horizontal" method="POST" action="include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>">
+        <?php
+        // Verbindung zur Datenbank
+        include('db.php');
 
-try {
-    // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
-    $stmt = $conn->prepare("
-        SELECT u.id, u.name, d.max_time, d.work_time
-        FROM users u
-        JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
-        LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
-        WHERE em.event_id = :event_id
-    ");
-    $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-    $stmt->execute();
-    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Event ID aus der URL holen
+        $eventId = $_GET['id'];
 
-    // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
-    foreach ($employees as $employee) {
+        try {
+            // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
+            $stmt = $conn->prepare("
+                SELECT u.id, u.name, d.max_time, d.work_time
+                FROM users u
+                JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+                LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
+                WHERE em.event_id = :event_id
+            ");
+            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->execute();
+            $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
+            foreach ($employees as $employee) {
+                ?>
+                <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
+                <div class="form-group">
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                            <label>Maximal da bis:</label>
+                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                <!-- Formatieren von max_time falls vorhanden -->
+                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
+                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label>Gearbeitete Zeit:</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            </div>
+                            <!-- Formatieren von work_time falls vorhanden -->
+                            <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
+                            value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                          </div>
+                          <!-- /.input group -->
+                        </div>
+                    </div>
+                </div>
+                <?php
+            }
+        } catch (PDOException $e) {
+            echo 'Fehler: ' . $e->getMessage();
+        }
         ?>
-        <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
-        <div class="form-group">
-            <div class="bootstrap-timepicker">
-                <div class="form-group">
-                    <label>Maximal da bis:</label>
-                    <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
-                        value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
-                        <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="far fa-clock"></i></div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Gearbeitete Zeit:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-clock"></i></span>
-                        </div>
-                        <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
-                        value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
-                    </div>
-                </div>
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10">
+                <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
             </div>
         </div>
-        <?php
-    }
-} catch (PDOException $e) {
-    echo 'Fehler: ' . $e->getMessage();
-}
-?>
+    </form>
+</div>
 
 <script>
- $(document).ready(function() {
-    // Initialisiere datetimepicker für das "Maximal da bis"-Feld
-    <?php foreach ($employees as $employee) { ?>
-        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm', // Nur Stunden und Minuten
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-        });
+    $(document).ready(function() {
+        // Initialisiere datetimepicker für das "Maximal da bis"-Feld
+        <?php foreach ($employees as $employee) { ?>
+            $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+                format: 'HH:mm', // Nur Stunden und Minuten
+                useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+            });
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
-        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
-        });
-    <?php } ?>
+            // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+            $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+                format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
+                useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+            });
+        <?php } ?>
 
-    // Submit-Button für den Dienstplan
-    $('#submitFormDienstplanung').on('click', function() {
-        var valid = true;
+        // Submit-Button für den Dienstplan
+        $('#submitFormDienstplanung').on('click', function() {
+            var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
-        $('input[name^="work_time_"]').each(function() {
-            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            // Wenn der Wert leer ist, überspringen wir die Validierung
-            if (workTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
-
-        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-        $('input[name^="max_time_"]').each(function() {
-            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
-            if (maxTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
-
-        // Wenn alle Felder validiert sind, Formular absenden
-        if (valid) {
-            var formData = $('form').serialize();  // Alle Formulardaten sammeln
-
-            $.ajax({
-                url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
-                type: 'POST',
-                data: formData,  // Alle Formulardaten senden
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status == 'success') {
-                        alert(response.message);  // Erfolgsmeldung anzeigen
-                    } else {
-                        alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert('Fehler bei der Anfrage!');
+            // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+            $('input[name^="work_time_"]').each(function() {
+                var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+                // Wenn der Wert leer ist, überspringen wir die Validierung
+                if (workTimeValue === '') {
+                    $(this).val(null); // Wenn leer, als null setzen
                 }
             });
-        }
-    });
-});
 
+            // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+            $('input[name^="max_time_"]').each(function() {
+                var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+                if (maxTimeValue === '') {
+                    $(this).val(null); // Wenn leer, als null setzen
+                }
+            });
+
+            // Wenn alle Felder validiert sind, Formular absenden
+            if (valid) {
+                var formData = $('form').serialize();  // Alle Formulardaten sammeln
+
+                $.ajax({
+                    url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
+                    type: 'POST',
+                    data: formData,  // Alle Formulardaten senden
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            alert(response.message);  // Erfolgsmeldung anzeigen
+                        } else {
+                            alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Fehler bei der Anfrage!');
+                    }
+                });
+            }
+        });
+    });
 </script>
+
 
                   <div class="tab-pane" id="externes-dokument1">
                   <iframe src=""width="100%" height="700px"></iframe>                  

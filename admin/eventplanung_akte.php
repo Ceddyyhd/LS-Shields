@@ -300,7 +300,8 @@ try {
         // Überprüfen, ob Mitarbeiter ausgewählt wurden
         if (selectedEmployees && selectedEmployees.length > 0) {
             console.log('Mitarbeiter werden gesendet');
-            
+
+            // AJAX-Anfrage
             $.ajax({
                 url: 'include/anmeldung_speichern.php', // PHP-Skript zum Speichern
                 type: 'POST',
@@ -319,6 +320,8 @@ try {
                 },
                 error: function(xhr, status, error) {
                     console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
+                    console.log('Status: ', status);
+                    console.log('XHR-Objekt: ', xhr);
                     alert('Fehler bei der Anmeldung!');
                 }
             });

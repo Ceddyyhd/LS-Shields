@@ -8,6 +8,9 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
     $eventId = $_POST['event_id'];
     $employeeIds = $_POST['employees'];
 
+    // Ausgabe der übermittelten Daten zur Fehlerbehebung
+    var_dump($eventId, $employeeIds);
+
     try {
         // Verbindung zur Datenbank
         include('db.php');

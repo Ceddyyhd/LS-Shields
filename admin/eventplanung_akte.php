@@ -169,78 +169,91 @@ try {
                   Teams Bearbeiten
                 </button>
 
-                <div class="modal fade" id="teams-bearbeiten">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h4 class="modal-title">Default Modal</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Bereich">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
+                <!-- Modal für Team-Erstellung -->
+<div class="modal fade" id="teams-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Team erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="team_name">Team Name</label>
+                    <input type="text" id="team_name" class="form-control" placeholder="Team Name">
                 </div>
-                <div class="row">
-                <div class="col-5">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
-                </div>
-                <div class="row">
-                <div class="col-5">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Bereich">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
-                </div>
-                <div class="row">
-                <div class="col-5">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
-                </div>
-                <div class="row">
-                <div class="col-5">
-                  </div>
-                  <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Mitarbeiter">
-                  </div>
-                </div>
-              </div>
-              <button type="button" class="btn btn-block btn-primary">Neuen Bereich erstellen</button>
 
-                      </div>
-                      <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                      </div>
+                <div class="form-group">
+                    <label for="bereich">Bereich</label>
+                    <input type="text" id="bereich" class="form-control" placeholder="Bereich">
+                </div>
+
+                <div id="mitarbeiter-container">
+                    <label for="mitarbeiter">Mitarbeiter</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
                     </div>
-                    <!-- /.modal-content -->
-                  </div>
-                  <!-- /.modal-dialog -->
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
+                    </div>
                 </div>
 
+                <button type="button" class="btn btn-primary" id="addEmployee">Neuen Mitarbeiter hinzufügen</button>
+                <button type="button" class="btn btn-primary" id="saveTeam">Team erstellen</button>
+            </div>
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveTeam">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    let employeeCount = 2; // Anfangszahl der Mitarbeiterfelder
+
+    // Neuen Mitarbeiter hinzufügen
+    $('#addEmployee').click(function() {
+        employeeCount++;
+        const newEmployeeField = `
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Mitarbeiter" name="mitarbeiter[]">
+            </div>
+        `;
+        $('#mitarbeiter-container').append(newEmployeeField);
+    });
+
+    // Team erstellen
+    $('#saveTeam').click(function() {
+        const teamName = $('#team_name').val();
+        const bereich = $('#bereich').val();
+        const mitarbeiter = $('input[name="mitarbeiter[]"]').map(function() {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            url: 'create_team.php', // PHP-Skript zum Erstellen des Teams
+            method: 'POST',
+            data: {
+                team_name: teamName,
+                bereich: bereich,
+                mitarbeiter: mitarbeiter
+            },
+            success: function(response) {
+                alert('Team erfolgreich erstellt');
+                $('#teams-bearbeiten').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                console.log('Fehler beim Erstellen des Teams:', error);
+            }
+        });
+    });
+});
+</script>
                 
               </div>
               </div>

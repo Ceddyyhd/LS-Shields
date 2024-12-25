@@ -471,10 +471,6 @@ $(document).ready(function() {
 });
 
 </script>
-
-                  <div class="tab-pane" id="externes-dokument1">
-                  <iframe src=""width="100%" height="700px"></iframe>                  
-                </div>
                   <!-- /.tab-pane -->
                 </div>
                 <!-- /.tab-content -->

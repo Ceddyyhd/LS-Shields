@@ -33,7 +33,6 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
@@ -135,7 +134,7 @@
 
 <script>
   $(document).ready(function () {
-    // Initialisiere Summernote
+    // Summernote Initialisierung
     $('#summernote').summernote({
       height: 200,  // Höhe des Editors
       codemirror: { // CodeMirror Optionen für den HTML-Editor

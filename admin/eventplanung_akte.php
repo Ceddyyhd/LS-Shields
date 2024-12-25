@@ -181,7 +181,7 @@ try {
             </div>
             <div class="modal-body">
                 <div id="teams-container">
-                    <!-- Festes Teamformular für das erste Team -->
+                    <!-- Standard-Teamformular -->
                     <div class="team-form" id="team-form-1">
                         <div class="form-group">
                             <label for="team_name">Team Name 1</label>
@@ -191,11 +191,13 @@ try {
                             <label for="bereich">Bereich</label>
                             <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="mitarbeiter-container">
                             <label for="mitarbeiter">Mitarbeiter</label>
+                            <!-- Festes Mitarbeiterfeld für Team Lead -->
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter" required>
+                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                             </div>
+                            <!-- Dynamisches Mitarbeiterfeld -->
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
                             </div>
@@ -250,10 +252,10 @@ try {
                     <label for="bereich">Bereich</label>
                     <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="mitarbeiter-container">
                     <label for="mitarbeiter">Mitarbeiter</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter" required>
+                        <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                     </div>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">

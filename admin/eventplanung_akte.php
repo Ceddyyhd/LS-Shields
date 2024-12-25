@@ -217,8 +217,8 @@ try {
                     <input type="text" class="form-control" placeholder="Mitarbeiter">
                   </div>
                 </div>
-                <button type="button" class="btn btn-block btn-primary">Neuen Bereich erstellen</button>
               </div>
+              <button type="button" class="btn btn-block btn-primary">Neuen Bereich erstellen</button>
 
                       </div>
                       <div class="modal-footer justify-content-between">

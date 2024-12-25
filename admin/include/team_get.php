@@ -18,15 +18,18 @@ if (isset($_GET['event_id'])) {
         // Ergebnisse abrufen
         $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Überprüfen, ob Teams gefunden wurden
         if ($teams) {
             echo json_encode($teams);
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Keine Teams gefunden']);
         }
     } catch (PDOException $e) {
+        // Fehler bei der Datenbankabfrage
         echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
 } else {
+    // Keine Event-ID übergeben
     echo json_encode(['status' => 'error', 'message' => 'Keine Event-ID angegeben']);
 }
 ?>

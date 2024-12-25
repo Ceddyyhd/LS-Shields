@@ -223,41 +223,44 @@ try {
 
     // Wenn das Modal geöffnet wird, laden die bestehenden Daten für das Event
     $('#teams-bearbeiten').on('show.bs.modal', function (e) {
-        var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+    var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
 
-        // AJAX-Anfrage, um die Team-Daten zu laden
-        $.ajax({
-            url: 'include/team_get.php', // PHP-Datei, die die Team-Daten abruft
-            method: 'GET',
-            data: { event_id: eventId },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    // Leere das Modal
-                    $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+    // AJAX-Anfrage, um die Team-Daten zu laden
+    $.ajax({
+        url: 'include/team_get.php', // PHP-Datei, die die Team-Daten abruft
+        method: 'GET',
+        data: { event_id: eventId },
+        dataType: 'json',
+        success: function(response) {
+            console.log("Serverantwort:", response); // Gibt die Antwort des Servers aus
 
-                    // Füge die Team-Daten in das Modal ein
-                    response.forEach(function(team, index) {
-                        if (index > 0) {
-                            // Dynamisch ein neues Team hinzufügen (wenn mehr als ein Team)
-                            $('#teams-container').append(generateTeamForm(team, index + 1));
-                        } else {
-                            // Das erste Team, fülle die Felder
-                            $('#team-form-1').find('input[name="team_name[]"]').val(team.team_name);
-                            $('#team-form-1').find('input[name="bereich[]"]').val(team.area_name);
+            if (response.status === 'success') {
+                // Leere das Modal
+                $('#teams-container').empty(); // Entfernt alle vorherigen Teams
 
-                            // Mitarbeiter
-                            var employees = team.employee_name.split(','); // Angenommen, mehrere Mitarbeiter sind durch Komma getrennt
-                            employees.forEach(function(employee, i) {
-                                if (i === 0) {
-                                    $('#mitarbeiter_1').val(employee); // Setze den ersten Mitarbeiter (Team Lead)
-                                } else {
-                                    $('#mitarbeiter-container').append(generateEmployeeField(employee));
-                                }
-                            });
-                        }
-                    });
-                  } else {
+                // Füge die Team-Daten in das Modal ein
+                response.forEach(function(team, index) {
+                    if (index > 0) {
+                        // Dynamisch ein neues Team hinzufügen (wenn mehr als ein Team)
+                        $('#teams-container').append(generateTeamForm(team, index + 1));
+                    } else {
+                        // Das erste Team, fülle die Felder
+                        $('#team-form-1').find('input[name="team_name[]"]').val(team.team_name);
+                        $('#team-form-1').find('input[name="bereich[]"]').val(team.area_name);
+
+                        // Mitarbeiter
+                        var employees = team.employee_name.split(','); // Angenommen, mehrere Mitarbeiter sind durch Komma getrennt
+                        employees.forEach(function(employee, i) {
+                            if (i === 0) {
+                                $('#mitarbeiter_1').val(employee); // Setze den ersten Mitarbeiter (Team Lead)
+                            } else {
+                                $('#mitarbeiter-container').append(generateEmployeeField(employee));
+                            }
+                        });
+                    }
+                });
+            } else {
+                console.log("Fehler beim Laden der Team-Daten:", response.message); // Fehler in der Antwort
                 alert('Fehler beim Laden der Team-Daten: ' + response.message);
             }
         },
@@ -265,8 +268,8 @@ try {
             console.log('Fehler bei der Anfrage:', error);
             console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
         }
-        });
     });
+});
 
     // Funktion zum Generieren des HTML für neue Teamfelder
     function generateTeamForm(team, index) {

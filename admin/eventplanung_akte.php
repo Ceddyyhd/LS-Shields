@@ -183,11 +183,6 @@
                         </div>
                       </div>
                   <script>$(document).ready(function() {
-                    $('#summernote').summernote({
-                        height: 300,   // Höhe von Summernote anpassen
-                        focus: true     // Fokus auf das Summernote-Feld setzen
-                    });
-                    
                     // Formular absenden
                     $('#submitForm').on('click', function() {
                         var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
@@ -366,6 +361,10 @@
 <script src="plugins/dropzone/min/dropzone.min.js"></script>
 <script>
   $(function () {
+    // Summernote
+    $('#summernote').summernote({
+        height:500,
+    })
     //Date picker
     $('#reservationdate').datetimepicker({
         format: 'L'

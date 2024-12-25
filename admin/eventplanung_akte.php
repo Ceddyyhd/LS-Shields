@@ -384,13 +384,14 @@ try {
 
                 <div class="form-group">
                   <label>Date and time:</label>
-                    <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime"/>
-                        <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
+                  <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" name="reservationdatetime" 
+                      value="<?php echo isset($employee['reservationdatetime']) ? $employee['reservationdatetime'] : ''; ?>"/> <!-- Falls Daten vorhanden sind, diese laden -->
+                      <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
                 <?php
             }
         } catch (PDOException $e) {
@@ -412,7 +413,7 @@ $(document).ready(function() {
     <?php foreach ($employees as $employee) { ?>
         // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-          format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+          format: 'hh:mm', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
           useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
@@ -423,6 +424,12 @@ $(document).ready(function() {
             stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
             showClear: true, // Möglichkeit, das Datum zu löschen
             showClose: true // Möglichkeit, das Picker-Menü zu schließen
+        });
+
+        // Sicherstellen, dass der datetimepicker für "Date and Time" funktioniert
+        $('#reservationdatetime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm', // Richtiges Datums- und Zeitformat
+            useCurrent: false
         });
     <?php } ?>
 
@@ -445,6 +452,12 @@ $(document).ready(function() {
                 $(this).val(null); // Wenn leer, als null setzen
             }
         });
+
+        // Überprüfen, ob das "Date and time"-Feld ausgefüllt wurde
+        var reservationdatetimeValue = $('input[name="reservationdatetime"]').val();  // Wert des Date-Time Felds
+        if (reservationdatetimeValue === '') {
+            $('input[name="reservationdatetime"]').val(null); // Wenn leer, als null setzen
+        }
 
         // Wenn alle Felder validiert sind, Formular absenden
         if (valid) {

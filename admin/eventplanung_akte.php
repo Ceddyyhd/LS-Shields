@@ -429,13 +429,13 @@ try {
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
-        $('input[name^="work_time_"]').each(function() {
-            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            if (workTimeValue === '') {
-                $(this).val(null); // Wenn leer, als null setzen
-            }
-        });
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+      $('input[name^="work_time_"]').each(function() {
+          var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+          if (workTimeValue === '') {
+              $(this).val(null); // Wenn leer, als null setzen
+          }
+      });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {

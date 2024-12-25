@@ -297,11 +297,13 @@ $(document).ready(function() {
                 employees: selectedEmployees
             },
             success: function(response) {
-                console.log(response); // Serverantwort in der Konsole anzeigen
+                console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
                 alert('Anmeldung erfolgreich!');
             },
             error: function(xhr, status, error) {
-                console.log('Fehler:', error);  // Fehlerdetails in der Konsole
+                console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
+                console.log('Status: ', status);
+                console.log('XHR-Objekt: ', xhr);
                 alert('Fehler bei der Anmeldung!');
             }
         });

@@ -24,11 +24,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Überprüfe, ob die gearbeitete Zeit leer ist und setze sie auf NULL, wenn ja
                 $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
 
-                // Hier kannst du die Daten in der Tabelle für den Dienstplan speichern
-                $stmt = $conn->prepare("
-                    INSERT INTO dienstplan (event_id, employee_id, max_time, work_time)
-                    VALUES (:event_id, :employee_id, :max_time, :work_time)
-                ");
+                // Prüfen, ob bereits ein Dienstplan-Eintrag für diesen Mitarbeiter existiert
+                $stmt = $conn->prepare("SELECT * FROM dienstplan WHERE event_id = :event_id AND employee_id = :employee_id");
+                $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
+                $stmt->execute();
+
+                if ($stmt->rowCount() > 0) {
+                    // Update, falls bereits ein Eintrag existiert
+                    $stmt = $conn->prepare("
+                        UPDATE dienstplan 
+                        SET max_time = :max_time, work_time = :work_time
+                        WHERE event_id = :event_id AND employee_id = :employee_id
+                    ");
+                } else {
+                    // Insert, falls noch kein Eintrag existiert
+                    $stmt = $conn->prepare("
+                        INSERT INTO dienstplan (event_id, employee_id, max_time, work_time)
+                        VALUES (:event_id, :employee_id, :max_time, :work_time)
+                    ");
+                }
+
                 $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
                 $stmt->bindParam(':max_time', $maxTime, PDO::PARAM_STR);

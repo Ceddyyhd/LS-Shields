@@ -44,7 +44,7 @@ if (isset($_GET['id'])) {
 
 // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
 try {
-    $stmt = $conn->prepare("SELECT * FROM Eventplanung WHERE id = :id");
+    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 

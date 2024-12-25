@@ -13,7 +13,7 @@ if (isset($_POST['summernoteContent']) && isset($_POST['id'])) {
 
     try {
         // SQL-Abfrage zum Aktualisieren der Eventplanung
-        $stmt = $conn->prepare("UPDATE Eventplanung SET summernote_content = :summernoteContent WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE eventplanung SET summernote_content = :summernoteContent WHERE id = :id");
         $stmt->bindParam(':summernoteContent', $summernoteContent, PDO::PARAM_STR);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 

@@ -57,17 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ");
                 }
 
-                // Parameter binden und sicherstellen, dass NULL für leere Felder übergeben wird
+                // Alle Parameter binden und sicherstellen, dass NULL für leere Felder übergeben wird
                 $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
-                
+
                 // Wenn max_time null ist, sicherstellen, dass NULL übergeben wird
                 if ($maxTime === null) {
                     $stmt->bindValue(':max_time', null, PDO::PARAM_NULL);
                 } else {
                     $stmt->bindValue(':max_time', $maxTime, PDO::PARAM_STR);
                 }
-                
+
                 // Wenn gestartet_um oder gegangen_um null ist, sicherstellen, dass NULL übergeben wird
                 if ($gestartetUm === null) {
                     $stmt->bindValue(':gestartet_um', null, PDO::PARAM_NULL);
@@ -80,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
                 }
-                $stmt->debugDumpParams(); // Entkommentieren, um zu sehen, wie die Parameter gebunden werden.
 
                 // Execute the query
                 $stmt->execute();

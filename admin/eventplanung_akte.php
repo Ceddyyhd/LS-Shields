@@ -221,18 +221,19 @@ try {
  $(document).ready(function() {
     let teamCount = 1; // Starten mit Team 1
 
-    // Dynamisches Hinzufügen von Mitarbeiterfeldern
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern, aber nur für das aktive Team
     $(document).on('input', '.mitarbeiter', function() {
-        const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
-        
-        // Wenn das zweite Mitarbeiterfeld ausgefüllt wird, füge ein drittes hinzu
+        const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
+        const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
+
+        // Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
         if (lastEmployeeField.find('input').val() !== '') {
             const newEmployeeField = `
                 <div class="input-group mb-3">
                     <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
                 </div>
             `;
-            $('#mitarbeiter-container').append(newEmployeeField);
+            parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
         }
     });
 
@@ -254,9 +255,11 @@ try {
                 </div>
                 <div class="form-group" id="mitarbeiter-container">
                     <label for="mitarbeiter">Mitarbeiter</label>
+                    <!-- Festes Mitarbeiterfeld für Team Lead -->
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                     </div>
+                    <!-- Dynamisches Mitarbeiterfeld -->
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
                     </div>
@@ -315,6 +318,7 @@ try {
         });
     });
 });
+
 
 
 

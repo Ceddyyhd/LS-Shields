@@ -200,28 +200,6 @@ try {
                     </div>
                 </div>
 
-                <hr>
-
-                <div class="form-group">
-                    <label for="team_name">Team Name</label>
-                    <input type="text" id="team_name" class="form-control" placeholder="Team Name">
-                </div>
-
-                <div class="form-group">
-                    <label for="bereich">Bereich</label>
-                    <input type="text" id="bereich" class="form-control" placeholder="Bereich">
-                </div>
-
-                <div id="mitarbeiter-container">
-                    <label for="mitarbeiter">Mitarbeiter</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
-                    </div>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control mitarbeiter" placeholder="Mitarbeiter" name="mitarbeiter[]">
-                    </div>
-                </div>
-
                 <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
             </div>
 
@@ -263,7 +241,7 @@ try {
             return $(this).val();
         }).get();
 
-        // Anzeige der Team-Daten unterhalb des Formulars
+        // Display the team data below the form
         let employeeList = '';
         mitarbeiter.forEach(function(employee) {
             if (employee !== '') {
@@ -279,9 +257,10 @@ try {
             ${employeeList}
         `;
 
+        // Append the new team info below the form
         $('#teamDisplay').append(newTeamHtml);
 
-        // Formular zurücksetzen
+        // Reset the form fields after displaying the team
         $('#team_name').val('');
         $('#bereich').val('');
         $('#mitarbeiter-container').empty().append(`

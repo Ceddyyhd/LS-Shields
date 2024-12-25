@@ -60,6 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // JSON-Antwort zurückgeben
-    echo json_encode(['status' => 'success']);
+    echo json_encode(['status' => 'success', 'message' => 'Daten wurden erfolgreich gespeichert!']);
 }
 ?>

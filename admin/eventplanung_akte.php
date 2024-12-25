@@ -340,19 +340,7 @@ try {
 
 
 <div class="tab-pane" id="dienstplan">
-    <form class="form-horizontal" id="dienstplanForm">
-        <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Moment.js (optional, aber notwendig, wenn du das Standard-Format von Tempus Dominus verwendest) -->
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-
-<!-- Tempus Dominus -->
-<script src="https://cdn.jsdelivr.net/npm/tempusdominus-bootstrap-4@5.1.2/build/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<!-- Bootstrap 4 CSS (wenn noch nicht eingebunden) -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
+    <form class="form-horizontal" method="POST" action="include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>">
         <?php
         // Verbindung zur Datenbank
         include('db.php');
@@ -363,7 +351,7 @@ try {
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-                SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um
+                SELECT u.id, u.name, d.max_time
                 FROM users u
                 JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
                 LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
@@ -389,36 +377,37 @@ try {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
+                
 
-                    <div class="form-group">
-                        <label>Gestartet Um:</label>
-                        <div class="input-group date" id="gestartetUm<?php echo $employee['id']; ?>" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm<?php echo $employee['id']; ?>" name="gestartet_um_<?php echo $employee['id']; ?>"
-                            value="<?php echo isset($employee['gestartet_um']) ? $employee['gestartet_um'] : ''; ?>"/>
-                            <div class="input-group-append" data-target="#gestartetUm<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+
+
+                <div class="form-group">
+                    <label>Gestartet Um:</label>
+                    <div class="input-group date" id="gestartetUm" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um" value="<?php echo isset($employee['gestartet_um']) ? $employee['gestartet_um'] : ''; ?>"/>
+                        <div class="input-group-append" data-target="#gestartetUm" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Gegangen Um:</label>
-                        <div class="input-group date" id="gegangenUm<?php echo $employee['id']; ?>" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm<?php echo $employee['id']; ?>" name="gegangen_um_<?php echo $employee['id']; ?>"
-                            value="<?php echo isset($employee['gegangen_um']) ? $employee['gegangen_um'] : ''; ?>"/>
-                            <div class="input-group-append" data-target="#gegangenUm<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
+                <div class="form-group">
+                    <label>Gegangen Um:</label>
+                    <div class="input-group date" id="gegangenUm" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm" name="gegangen_um" value="<?php echo isset($employee['gegangen_um']) ? $employee['gegangen_um'] : ''; ?>"/>
+                        <div class="input-group-append" data-target="#gegangenUm" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
+                </div>
                 <?php
             }
         } catch (PDOException $e) {
             echo 'Fehler: ' . $e->getMessage();
         }
         ?>
-        
+
         <div class="form-group row">
             <div class="offset-sm-2 col-sm-10">
                 <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
@@ -426,36 +415,85 @@ try {
         </div>
     </form>
 </div>
-<script>
-  $(document).ready(function() {
-    // Initialisierung der Timepicker für jedes Eingabefeld
-    $('[data-toggle="datetimepicker"]').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm'
-    });
-});
 
-    // Formular absenden
-    $('#submitFormDienstplanung').click(function() {
-        var formData = $('#dienstplanForm').serialize(); // Alle Formulardaten serialisieren
-        
-        $.ajax({
-            url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                alert('Daten wurden erfolgreich gespeichert!');
-                console.log(response); // Optional für Debugging
-            },
-            error: function(xhr, status, error) {
-                alert('Es gab einen Fehler beim Speichern der Daten.');
-                console.log(xhr.responseText); // Optional für Debugging
+<script>
+$(document).ready(function() {
+    // Initialisiere datetimepicker für das "Maximal da bis"-Feld
+    <?php foreach ($employees as $employee) { ?>
+        // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+          format: 'hh:mm', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+          useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+        });
+
+        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
+            showClear: true, // Möglichkeit, das Datum zu löschen
+            showClose: true // Möglichkeit, das Picker-Menü zu schließen
+        });
+
+        // Sicherstellen, dass der datetimepicker für "Date and Time" funktioniert
+        $('#reservationdatetime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm', // Richtiges Datums- und Zeitformat
+            useCurrent: false
+        });
+    <?php } ?>
+
+    // Submit-Button für den Dienstplan
+    $('#submitFormDienstplanung').on('click', function() {
+        var valid = true;
+
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+        $('input[name^="work_time_"]').each(function() {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            if (workTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
             }
         });
+
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+        $('input[name^="max_time_"]').each(function() {
+            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+            if (maxTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
+
+        // Überprüfen, ob das "Date and time"-Feld ausgefüllt wurde
+        var reservationdatetimeValue = $('input[name="reservationdatetime"]').val();  // Wert des Date-Time Felds
+        if (reservationdatetimeValue === '') {
+            $('input[name="reservationdatetime"]').val(null); // Wenn leer, als null setzen
+        }
+
+        // Wenn alle Felder validiert sind, Formular absenden
+        if (valid) {
+            var formData = $('form').serialize();  // Alle Formulardaten sammeln
+
+            $.ajax({
+                url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',  // PHP-Skript zum Speichern
+                type: 'POST',
+                data: formData,  // Alle Formulardaten senden
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status == 'success') {
+                        alert(response.message);  // Erfolgsmeldung anzeigen
+                    } else {
+                        alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler bei der Anfrage!');
+                }
+            });
+        }
     });
 });
 
-</script>
 
+</script>
 
                   <!-- /.tab-pane -->
                 </div>

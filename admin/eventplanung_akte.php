@@ -240,6 +240,8 @@
     $('#summernote').summernote({
         height:500,
     })
+    //Bootstrap Duallistbox
+    $('.duallistbox').bootstrapDualListbox()
   })
 </script>
 </body>

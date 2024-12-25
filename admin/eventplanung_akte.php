@@ -7,10 +7,6 @@
 <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- include summernote css/js-->
-<link href="summernote-bs5.css" rel="stylesheet">
-<script src="summernote-bs5.js"></script>
 </head>
 <?php include 'include/header.php'; ?>
 
@@ -180,15 +176,15 @@
                   </div>
 
                   <div class="active tab-pane" id="plan-bearbeiten">
-                    <textarea id="Summernote" name="description" class="form-control"></textarea>
+                  <div id="summernote">Hello Summernote</div>
 
 HIER SUMMERNOTE
 
 
 <script type="text/javascript">
-$('#Summernote').summernote({
-    height:255,
-})
+$(document).ready(function() {
+  $('#summernote').summernote();
+});
 </script>
 
                   </div>

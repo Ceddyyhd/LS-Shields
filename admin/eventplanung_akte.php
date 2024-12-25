@@ -234,7 +234,7 @@
                         <div class="form-group">
                                     <div class="bootstrap-timepicker">
                             <div class="form-group">
-                                <label>Time picker:</label>
+                                <label>Maximal da bis:</label>
 
                                 <div class="input-group date" id="timepicker" data-target-input="nearest">
                                 <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
@@ -246,6 +246,18 @@
                             </div>
                             <!-- /.form group -->
                             </div>
+
+                            <div class="form-group">
+                  <label>Gearbeitete Zeit:</label>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="far fa-clock"></i></span>
+                    </div>
+                    <input type="text" class="form-control float-right" id="reservationtime">
+                  </div>
+                  <!-- /.input group -->
+                </div>
                 </div>
                       
                       

@@ -27,6 +27,8 @@
   <link rel="stylesheet" href="plugins/dropzone/min/dropzone.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
 
   <?php
 // Verbindung zur Datenbank einbinden
@@ -198,8 +200,6 @@ try {
         <button type="button" id="submitForm" class="btn btn-danger">Speichern</button> <!-- Submit-Button -->
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
     <script>
         $(document).ready(function() {
             // Summernote initialisieren

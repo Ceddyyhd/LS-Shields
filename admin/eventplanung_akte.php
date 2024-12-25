@@ -351,11 +351,11 @@ try {
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-                SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um
-                FROM users u
-                JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
-                LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
-                WHERE em.event_id = :event_id
+              SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um, d.arbeitszeit
+              FROM users u
+              JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+              LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
+              WHERE em.event_id = :event_id
             ");
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
             $stmt->execute();
@@ -394,8 +394,11 @@ try {
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                     </div>
+                    <!-- Hier die Arbeitszeit anzeigen -->
                     <label>Std. Gearbeitet:</label>
-                    <p>XX Stunden</p>
+                    <p>
+                        <?php echo ($employee['arbeitszeit'] !== null) ? number_format($employee['arbeitszeit'], 2) . ' Stunden' : 'Noch nicht berechnet'; ?>
+                    </p>
                 </div>
                 <?php
             }

@@ -250,11 +250,13 @@ try {
                     <label>Eintragen wer kann</label>
                     <div class="form-group">
                   <label for="exampleSelectBorder">Bottom Border only <code>.form-control-border</code></label>
-                  <select class="custom-select form-control-border" id="exampleSelectBorder">
-                    <option>Value 1</option>
-                    <option>Value 2</option>
-                    <option>Value 3</option>
-                  </select>
+                  <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
                 </div>
                 </div>
             </div>

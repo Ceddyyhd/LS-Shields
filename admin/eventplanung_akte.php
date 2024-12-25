@@ -268,10 +268,6 @@ function generateTeamForm(team, index) {
     let employeeFields = ''; // Variable für die Mitarbeiterfelder
 
     // Durch alle Mitarbeiter des Teams iterieren
-    function generateTeamForm(team, index) {
-    let employeeFields = ''; // Variable für die Mitarbeiterfelder
-
-    // Durch alle Mitarbeiter des Teams iterieren
     team.employee_names.forEach(function(employee, empIndex) {
         employeeFields += `
             <div class="input-group mb-3">

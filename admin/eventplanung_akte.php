@@ -339,75 +339,58 @@ try {
 </script>
 
 
-<div class="tab-pane" id="dienstplan">
-    <form class="form-horizontal" method="POST" action="include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>">
-        <?php
-        // Verbindung zur Datenbank
-        include('db.php');
+<?php
+// Event ID aus der URL holen
+$eventId = $_GET['id'];
 
-        // Event ID aus der URL holen
-        $eventId = $_GET['id'];
+try {
+    // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
+    $stmt = $conn->prepare("
+        SELECT u.id, u.name, d.max_time, d.work_time
+        FROM users u
+        JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+        LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
+        WHERE em.event_id = :event_id
+    ");
+    $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+    $stmt->execute();
+    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        try {
-            // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
-            $stmt = $conn->prepare("
-                SELECT u.id, u.name, d.max_time, d.work_time
-                FROM users u
-                JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
-                LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
-                WHERE em.event_id = :event_id
-            ");
-            $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
-            $stmt->execute();
-            $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
-            foreach ($employees as $employee) {
-                ?>
-                <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
+    // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
+    foreach ($employees as $employee) {
+        ?>
+        <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
+        <div class="form-group">
+            <div class="bootstrap-timepicker">
                 <div class="form-group">
-                    <div class="bootstrap-timepicker">
-                        <div class="form-group">
-                            <label>Maximal da bis:</label>
-                            <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
-                                <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
-                                value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
-                                <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="form-group">
-                          <label>Gearbeitete Zeit:</label>
-
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="far fa-clock"></i></span>
-                            </div>
-                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
-                            value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
-                          </div>
-                          <!-- /.input group -->
+                    <label>Maximal da bis:</label>
+                    <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                        value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
+                        <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="far fa-clock"></i></div>
                         </div>
                     </div>
                 </div>
-                <?php
-            }
-        } catch (PDOException $e) {
-            echo 'Fehler: ' . $e->getMessage();
-        }
-        ?>
 
-        <div class="form-group row">
-            <div class="offset-sm-2 col-sm-10">
-                <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
+                <div class="form-group">
+                    <label>Gearbeitete Zeit:</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                        </div>
+                        <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
+                        value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
-</div>
+        <?php
+    }
+} catch (PDOException $e) {
+    echo 'Fehler: ' . $e->getMessage();
+}
+?>
 
 <script>
  $(document).ready(function() {

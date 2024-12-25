@@ -412,18 +412,22 @@ value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
 </div>
 
 <script>
- $(document).ready(function() {
+$(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
+        // Stelle sicher, dass der datetimepicker für "Maximal da bis" richtig funktioniert
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
             format: 'HH:mm', // Nur Stunden und Minuten
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+        // Stelle sicher, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
         $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
-            useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
+            showClear: true, // Möglichkeit, das Datum zu löschen
+            showClose: true // Möglichkeit, das Picker-Menü zu schließen
         });
     <?php } ?>
 
@@ -431,13 +435,13 @@ value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-      $('input[name^="work_time_"]').each(function() {
-          var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-          if (workTimeValue === '') {
-              $(this).val(null); // Wenn leer, als null setzen
-          }
-      });
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+        $('input[name^="work_time_"]').each(function() {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            if (workTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {
@@ -470,6 +474,7 @@ value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
         }
     });
 });
+
 </script>
 
                   <div class="tab-pane" id="externes-dokument1">

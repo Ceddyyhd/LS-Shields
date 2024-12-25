@@ -414,7 +414,7 @@ try {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm', // Nur Stunden und Minuten für das Maximal da bis
+            format: 'HH:mm', // Nur Stunden und Minuten
             useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
         });
 
@@ -429,7 +429,7 @@ try {
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
         $('input[name^="work_time_"]').each(function() {
             var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
             if (workTimeValue === '') {

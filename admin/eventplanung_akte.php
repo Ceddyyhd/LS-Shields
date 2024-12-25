@@ -121,8 +121,9 @@
                   </div>
 
                   <div class="tab-pane" id="plan-bearbeiten">
-                    <textarea id="summernote"></textarea>
-                  </div>
+                        <textarea id="summernote"></textarea>
+                    </div>
+
 
                   <div class="tab-pane" id="settings">
                     <form class="form-horizontal">

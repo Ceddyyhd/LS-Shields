@@ -180,7 +180,7 @@ try {
                       </div>
                       <div class="modal-body">
                         
-                      <div class="card-body">
+              <div class="card-body">
                 <div class="row">
                   <div class="col-5">
                     <input type="text" class="form-control" placeholder="Bereich">
@@ -203,7 +203,8 @@ try {
                     <input type="text" class="form-control" placeholder="Mitarbeiter">
                   </div>
                 </div>
-                <div class="row">
+              </div>
+              <div class="card-body">
                 <div class="row">
                   <div class="col-5">
                     <input type="text" class="form-control" placeholder="Bereich">
@@ -240,8 +241,7 @@ try {
                   <!-- /.modal-dialog -->
                 </div>
 
-
-
+                
               </div>
               </div>
               <!-- /.card-body -->

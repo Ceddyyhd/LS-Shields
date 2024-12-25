@@ -1,5 +1,4 @@
 <?php
-// Fehleranzeigen aktivieren
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -22,15 +21,9 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
             // Prüfen, ob das Team bereits existiert
             $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
-            $stmt->bindParam(':event_id', $eventId);
-            $stmt->bindParam(':team_name', $teamName);
+            $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+            $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
             $stmt->execute();
-
-            // Fehlerprotokollierung hinzufügen, falls die Abfrage fehlschlägt
-            if (!$stmt) {
-                echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
-                exit;
-            }
 
             $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -42,49 +35,38 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 foreach ($team['employee_names'] as $index => $employeeName) {
                     // Überprüfen, ob der Mitarbeiter bereits im Team existiert
                     $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name AND employee_name = :employee_name LIMIT 1");
-                    $stmt->bindParam(':event_id', $eventId);
-                    $stmt->bindParam(':team_name', $teamName);
-                    $stmt->bindParam(':employee_name', $employeeName);
+                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                    $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                    $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
                     $stmt->execute();
-
-                    if (!$stmt) {
-                        echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
-                        exit;
-                    }
 
                     $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     if ($existingEmployee) {
                         // Wenn der Mitarbeiter existiert, aktualisiere den Datensatz
                         $stmt = $conn->prepare("UPDATE team_assignments SET employee_name = :employee_name, is_team_lead = :is_team_lead WHERE id = :id");
-                        $stmt->bindParam(':employee_name', $employeeName);
-                        $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
-                        $stmt->bindParam(':id', $existingEmployee['id']);
+                        $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                        $stmt->bindValue(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                        $stmt->bindValue(':id', $existingEmployee['id'], PDO::PARAM_INT);
                         $stmt->execute();
                     } else {
                         // Wenn der Mitarbeiter nicht existiert, füge ihn hinzu
                         $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)");
-                        $stmt->bindParam(':event_id', $eventId);
-                        $stmt->bindParam(':team_name', $teamName);
-                        $stmt->bindParam(':area_name', $areaName);
-                        $stmt->bindParam(':employee_name', $employeeName);
-                        $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT);
+                        $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                        $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                        $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
+                        $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                        $stmt->bindValue(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT);
                         $stmt->execute();
                     }
                 }
             } else {
                 // Wenn das Team nicht existiert, erstelle es
                 $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
-                $stmt->bindParam(':event_id', $eventId);
-                $stmt->bindParam(':team_name', $teamName);
-                $stmt->bindParam(':area_name', $areaName);
+                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
                 $stmt->execute();
-
-                // Fehlerprotokollierung hinzufügen, falls die Abfrage fehlschlägt
-                if (!$stmt) {
-                    echo "Fehler bei der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
-                    exit;
-                }
 
                 // Hole die ID des neuen Teams
                 $teamId = $conn->lastInsertId();
@@ -92,11 +74,11 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 // Füge alle Mitarbeiter für das neue Team hinzu
                 foreach ($team['employee_names'] as $index => $employeeName) {
                     $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)");
-                    $stmt->bindParam(':event_id', $eventId);
-                    $stmt->bindParam(':team_name', $teamName);
-                    $stmt->bindParam(':area_name', $areaName);
-                    $stmt->bindParam(':employee_name', $employeeName);
-                    $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
+                    $stmt->bindValue(':team_name', $teamName, PDO::PARAM_STR);
+                    $stmt->bindValue(':area_name', $areaName, PDO::PARAM_STR);
+                    $stmt->bindValue(':employee_name', $employeeName, PDO::PARAM_STR);
+                    $stmt->bindValue(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
                     $stmt->execute();
                 }
             }

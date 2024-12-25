@@ -387,7 +387,11 @@ try {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
-                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>                            <!-- /.input group -->
+<!-- Für das erste Eingabefeld (wird manuell gesetzt) -->
+<input type="text" class="form-control float-right" id="reservationtime" name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+
+<!-- Für alle anderen Eingabefelder (dynamisch generiert) -->
+<input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>" value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
                         </div>
                     </div>
                 </div>
@@ -417,7 +421,7 @@ $(document).ready(function() {
         });
 
         // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
-        ('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
             format: 'MM/DD/YYYY hh:mm A', // Format für Gearbeitete Zeit
             useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
             stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
@@ -469,7 +473,6 @@ $(document).ready(function() {
         }
     });
 });
-
 </script>
 
                   <div class="tab-pane" id="externes-dokument1">

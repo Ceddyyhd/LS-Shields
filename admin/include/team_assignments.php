@@ -1,77 +1,93 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// Datenbankverbindung einbinden
 include('db.php');
 
-// Überprüfen, ob die richtigen Daten empfangen wurden
+// Überprüfen, ob die Team-Daten und die Event-ID übermittelt wurden
 if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
-    // Die Teamdaten in die Datenbank einfügen
+    // Transaktion starten (um alle Änderungen in einem Schritt zu machen)
+    $conn->beginTransaction();
+
     try {
+        // Gehe durch jedes Team
         foreach ($teamData as $team) {
-            if (!isset($team['team_name'], $team['bereich'], $team['employee_names'])) {
-                // Fehlerbehandlung, falls die erwarteten Felder fehlen
-                echo json_encode(['status' => 'error', 'message' => 'Fehlende Felder: team_name, bereich oder employee_names']);
-                exit;
-            }
+            $teamName = $team['team_name'];
+            $areaName = $team['bereich'];
 
-            // Leere Mitarbeiterfelder entfernen
-            $team['employee_names'] = array_filter($team['employee_names'], function($employeeName) {
-                return !empty($employeeName); // Entfernt leere Mitarbeiter
-            });
+            // Prüfen, ob das Team bereits existiert (d.h., ein Team mit diesem Namen für das Event)
+            $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name LIMIT 1");
+            $stmt->bindParam(':event_id', $eventId);
+            $stmt->bindParam(':team_name', $teamName);
+            $stmt->execute();
+            $existingTeam = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Fehlerbehandlung, falls nach dem Filtern keine Mitarbeiter übrig bleiben
-            if (empty($team['employee_names'])) {
-                echo json_encode(['status' => 'error', 'message' => 'Fehler: Keine Mitarbeiter für das Team ' . $team['team_name'] . ' vorhanden.']);
-                exit;
-            }
+            if ($existingTeam) {
+                // Team existiert, also Mitarbeiter aktualisieren
+                $teamId = $existingTeam['id'];
 
-            $isTeamLead = false; // Standardwert für Team Lead
+                // Gehe durch alle Mitarbeiter und aktualisiere sie
+                foreach ($team['employee_names'] as $index => $employeeName) {
+                    // Überprüfen, ob der Mitarbeiter bereits im Team existiert
+                    $stmt = $conn->prepare("SELECT id FROM team_assignments WHERE event_id = :event_id AND team_name = :team_name AND employee_name = :employee_name LIMIT 1");
+                    $stmt->bindParam(':event_id', $eventId);
+                    $stmt->bindParam(':team_name', $teamName);
+                    $stmt->bindParam(':employee_name', $employeeName);
+                    $stmt->execute();
+                    $existingEmployee = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Gehe durch alle Mitarbeiter des Teams
-            foreach ($team['employee_names'] as $index => $employeeName) {
-                $isTeamLead = ($index == 0); // Der erste Mitarbeiter ist der Team Lead
-
-                // SQL-Abfrage zum Einfügen der Team- und Mitarbeiterdaten
-                $query = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead)
-                          VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)";
-
-                // Vorbereiten der SQL-Abfrage
-                $stmt = $conn->prepare($query);
-                if (!$stmt) {
-                    // Fehler bei der Vorbereitung der SQL-Abfrage
-                    echo json_encode(['status' => 'error', 'message' => 'Fehler bei der Vorbereitung der SQL-Abfrage: ' . implode(", ", $conn->errorInfo())]);
-                    exit;
+                    if ($existingEmployee) {
+                        // Wenn der Mitarbeiter existiert, aktualisiere den Datensatz
+                        $stmt = $conn->prepare("UPDATE team_assignments SET employee_name = :employee_name, is_team_lead = :is_team_lead WHERE id = :id");
+                        $stmt->bindParam(':employee_name', $employeeName);
+                        $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                        $stmt->bindParam(':id', $existingEmployee['id']);
+                        $stmt->execute();
+                    } else {
+                        // Wenn der Mitarbeiter nicht existiert, füge ihn hinzu
+                        $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)");
+                        $stmt->bindParam(':event_id', $eventId);
+                        $stmt->bindParam(':team_name', $teamName);
+                        $stmt->bindParam(':area_name', $areaName);
+                        $stmt->bindParam(':employee_name', $employeeName);
+                        $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT);
+                        $stmt->execute();
+                    }
                 }
-
-                // Binden der Parameter
+            } else {
+                // Wenn das Team nicht existiert, erstelle es
+                $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name) VALUES (:event_id, :team_name, :area_name)");
                 $stmt->bindParam(':event_id', $eventId);
-                $stmt->bindParam(':team_name', $team['team_name']);
-                $stmt->bindParam(':area_name', $team['bereich']);
-                $stmt->bindParam(':employee_name', $employeeName);
-                $stmt->bindParam(':is_team_lead', $isTeamLead, PDO::PARAM_BOOL);
+                $stmt->bindParam(':team_name', $teamName);
+                $stmt->bindParam(':area_name', $areaName);
+                $stmt->execute();
 
-                // Führe die SQL-Abfrage aus, um das Team und den Mitarbeiter zu speichern
-                if (!$stmt->execute()) {
-                    // Fehler bei der Ausführung der SQL-Abfrage
-                    echo json_encode(['status' => 'error', 'message' => 'SQL Fehler: ' . implode(", ", $stmt->errorInfo())]);
-                    exit;
+                // Hole die ID des neuen Teams
+                $teamId = $conn->lastInsertId();
+
+                // Füge alle Mitarbeiter für das neue Team hinzu
+                foreach ($team['employee_names'] as $index => $employeeName) {
+                    $stmt = $conn->prepare("INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead) VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)");
+                    $stmt->bindParam(':event_id', $eventId);
+                    $stmt->bindParam(':team_name', $teamName);
+                    $stmt->bindParam(':area_name', $areaName);
+                    $stmt->bindParam(':employee_name', $employeeName);
+                    $stmt->bindParam(':is_team_lead', $index == 0 ? 1 : 0, PDO::PARAM_INT); // Der erste Mitarbeiter ist der Team Lead
+                    $stmt->execute();
                 }
             }
         }
 
-        // Erfolgsnachricht zurückgeben
-        echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich erstellt!']);
+        // Commit der Transaktion
+        $conn->commit();
+
+        echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich gespeichert']);
     } catch (Exception $e) {
-        // Fehler bei der Verarbeitung
+        // Fehler bei der Speicherung, Rollback der Transaktion
+        $conn->rollBack();
         echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
-        exit;
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Keine Team-Daten empfangen']);
+    echo json_encode(['status' => 'error', 'message' => 'Fehlende Daten']);
 }
 ?>

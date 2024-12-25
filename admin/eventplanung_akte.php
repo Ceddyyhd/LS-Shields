@@ -10,11 +10,12 @@
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <!-- summernote -->
-  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  
+  <!-- Summernote CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css">
 
 
   <!-- Content Wrapper. Contains page content -->
@@ -173,31 +174,44 @@
                   </div>
 
                   <div class="active tab-pane" id="plan-bearbeiten">
+                    
 
-                  <div class="card card-outline card-info">
-                    <div class="card-header">
-                    <h3 class="card-title">
-                        Summernote
-                    </h3>
+                  <section class="content">
+                    <div class="container-fluid">
+                        <div class="card card-outline card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Summernote</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <!-- Summernote Editor -->
+                            <textarea id="summernote" name="summernote_data"></textarea>
+                        </div>
+                        </div>
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                    <textarea id="summernote">
-                        Place <em>some</em> <u>text</u> <strong>here</strong>
-                    </textarea>
-                    </div>
-                    <div class="card-footer">
-                    Visit <a href="https://github.com/summernote/summernote/">Summernote</a> documentation for more examples and information about the plugin.
-                    </div>
-                </div>
-<!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
-<script>
-  $(function () {
-    // Summernote
-    $('#summernote').summernote()
-  })
-</script>
+                    </section>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <!-- Summernote JS -->
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+  
+  <!-- Optional: AdminLTE JS -->
+  <script src="https://adminlte.io/themes/v3/dist/js/adminlte.min.js"></script>
+  
+  <script>
+    $(document).ready(function () {
+      // Summernote Initialisierung
+      $('#summernote').summernote({
+        height: 200,  // Höhe des Editors
+        codemirror: { // CodeMirror Optionen für den HTML-Editor
+          theme: 'monokai'
+        }
+      });
+    });
+  </script>
+
+
                   </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="timeline">

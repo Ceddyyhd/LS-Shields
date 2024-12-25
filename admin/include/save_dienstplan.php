@@ -21,8 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Überprüfe, ob die maximalen Zeiten leer sind und setze sie auf NULL, wenn ja
                 $maxTime = !empty($_POST['max_time_' . $employeeId]) ? $_POST['max_time_' . $employeeId] : NULL;
+                
                 // Überprüfe, ob die gearbeitete Zeit leer ist und setze sie auf NULL, wenn ja
                 $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
+                
+                // Sicherstellen, dass das Datum im richtigen Format ist
+                if ($workTime) {
+                    $workTime = date('H:i', strtotime($workTime));  // Formatieren der Zeit (HH:mm)
+                }
 
                 // Prüfen, ob bereits ein Dienstplan-Eintrag für diesen Mitarbeiter existiert
                 $stmt = $conn->prepare("SELECT * FROM dienstplan WHERE event_id = :event_id AND employee_id = :employee_id");
@@ -53,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
-        // Erfolgsantwort als JSON zurückgeben
+        // Erfolgsantwort zurückgeben
         echo json_encode(['status' => 'success', 'message' => 'Dienstplan erfolgreich gespeichert!']);
     } catch (PDOException $e) {
         // Fehlerbehandlung

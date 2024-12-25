@@ -429,18 +429,13 @@ try {
 
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
         $('input[name^="work_time_"]').each(function() {
-            // Hole den Wert des Datetimepickers und formatiere ihn, falls notwendig
-            var workTimeValue = $(this).val();
-            
-            // Wenn der Wert nicht im Format HH:mm ist, dann nicht absenden
-            if (workTimeValue === '') {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            // Wenn der Wert leer ist, überspringen wir die Validierung
+            if (workTimeValue !== '' && workTimeValue === '') {
                 valid = false;
                 alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
                 return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
             }
-            
-            // Setze den formatierten Wert zurück in das Feld
-            $(this).val(workTimeValue);  // Optional, um sicherzustellen, dass der Wert korrekt formatiert ist
         });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist

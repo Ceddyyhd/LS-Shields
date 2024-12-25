@@ -254,7 +254,7 @@ try {
 });
 
 // Funktion zum Generieren des HTML für Teamformular
-function generateTeamForm(team, index) {
+unction generateTeamForm(team, index) {
     let employeeFields = ''; // Variable für die Mitarbeiterfelder
 
     // Durch alle Mitarbeiter des Teams iterieren

@@ -189,6 +189,11 @@ try {
                     <input type="text" class="form-control" placeholder=".col-5">
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder=".col-5">
+                  </div>
+                </div>
               </div>
 
                       </div>

@@ -299,10 +299,13 @@ try {
             };
         }
 
-        teamData[teamName].employee_names.push(employeeName);
+        // Füge nur nicht-leere Mitarbeiter hinzu
+        if (employeeName.trim() !== "") {
+            teamData[teamName].employee_names.push(employeeName);
+        }
     });
 
-    // Ausgabe der Daten, die an den Server gesendet werden
+    // Daten vor dem Senden an den Server überprüfen
     console.log("Daten, die gesendet werden: ", teamData);
 
     // Sende die Team-Daten an den Server
@@ -324,6 +327,7 @@ try {
         }
     });
 });
+
 
 });
 

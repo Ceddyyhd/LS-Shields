@@ -265,6 +265,17 @@ try {
 
 // Funktion zum Generieren des HTML für Teamformular
 function generateTeamForm(team, index) {
+    let employeeFields = ''; // Variable für die Mitarbeiterfelder
+
+    // Durch alle Mitarbeiter des Teams iterieren
+    team.employee_names.forEach(function(employee, empIndex) {
+        employeeFields += `
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_${empIndex}[][name]" placeholder="Mitarbeiter" value="${employee.name}" ${empIndex === 0 ? 'required' : ''}>
+            </div>
+        `;
+    });
+
     return `
         <div class="team-form" id="team-form-${index}">
             <hr>
@@ -278,12 +289,7 @@ function generateTeamForm(team, index) {
             </div>
             <div class="form-group" id="mitarbeiter-container">
                 <label for="mitarbeiter">Mitarbeiter</label>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter (Team Lead)" value="${team.employee_name}" required>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}[][name]" placeholder="Mitarbeiter">
-                </div>
+                ${employeeFields}
             </div>
         </div>
     `;

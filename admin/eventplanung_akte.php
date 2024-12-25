@@ -28,7 +28,33 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
 
+  <?php
+// Verbindung zur Datenbank einbinden
+include('db.php');
 
+// ID aus der URL holen
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    die('Kein Eventplanungs-ID angegeben.');
+}
+
+// SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
+try {
+    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    // Ergebnis abrufen
+    $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$event) {
+        die('Eventplanung nicht gefunden.');
+    }
+} catch (PDOException $e) {
+    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
+}
+?>
 <?php include 'include/header.php'; ?>
 
 <body class="hold-transition sidebar-mini">

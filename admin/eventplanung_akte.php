@@ -387,7 +387,7 @@ try {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="far fa-clock"></i></span>
                             </div>
-                            <input type="text" class="form-control float-right" id="reservationtime"  name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
+                            <input type="text" class="form-control float-right" id="reservationtime<?php echo $employee['id']; ?>" name="work_time_<?php echo $employee['id']; ?>"
                             value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
                           </div>
                           <!-- /.input group -->
@@ -429,13 +429,13 @@ try {
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-      $('input[name^="work_time_"]').each(function() {
-          var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-          if (workTimeValue === '') {
-              $(this).val(null); // Wenn leer, als null setzen
-          }
-      });
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+        $('input[name^="work_time_"]').each(function() {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            if (workTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {

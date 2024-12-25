@@ -379,18 +379,15 @@ try {
                         </div>
 
                         <div class="form-group">
-                            <label>Gearbeitete Zeit:</label>
-                            <div class="form-group">
-                              <label>Gearbeitete Zeit:</label>
-                              <div class="input-group">
-                                  <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                  </div>
-                                  <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
-                                  value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
+                          <label>Gearbeitete Zeit:</label>
+                          <div class="input-group">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="far fa-clock"></i></span>
                               </div>
+                              <input type="text" class="form-control float-right" name="work_time_<?php echo $employee['id']; ?>" id="reservationtime<?php echo $employee['id']; ?>"
+                              value="<?php echo htmlspecialchars($employee['work_time']); ?>"/>
                           </div>
-                        </div>
+                      </div>
                     </div>
                 </div>
                 <?php

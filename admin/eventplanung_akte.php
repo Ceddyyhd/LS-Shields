@@ -272,6 +272,7 @@ function generateTeamForm(team, index) {
         employeeFields += `
             <div class="input-group mb-3">
                 <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_${empIndex}[][name]" placeholder="Mitarbeiter" value="${employee.name}" ${empIndex === 0 ? 'required' : ''}>
+                <input type="hidden" name="mitarbeiter_${index}_${empIndex}[][employee_id]" value="${employee.employee_id}">
             </div>
         `;
     });
@@ -286,6 +287,7 @@ function generateTeamForm(team, index) {
     return `
         <div class="team-form" id="team-form-${index}">
             <hr>
+            <input type="hidden" name="team_id[]" value="${team.team_id}">
             <div class="form-group">
                 <label for="team_name">Team Name ${index}</label>
                 <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">

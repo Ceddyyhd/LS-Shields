@@ -381,10 +381,12 @@ try {
                 
 
 
-
                 <div class="form-group">
                     <label>Gestartet Um:</label>
                     <div class="input-group date" id="gestartetUm" data-target-input="nearest">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                        </div>
                         <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um"/>
                         <div class="input-group-append" data-target="#gestartetUm" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -393,14 +395,17 @@ try {
                 </div>
 
                 <div class="form-group">
-                    <label>Gegangen Um:</label>
-                    <div class="input-group date" id="gegangenUm" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm" name="gegangen_um"/>
-                        <div class="input-group-append" data-target="#gegangenUm" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
+                  <label>Gegangen Um:</label>
+                  <div class="input-group date" id="gegangenUm" data-target-input="nearest">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                      </div>
+                      <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm" name="gegangen_um"/>
+                      <div class="input-group-append" data-target="#gegangenUm" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
                 <?php
             }
         } catch (PDOException $e) {

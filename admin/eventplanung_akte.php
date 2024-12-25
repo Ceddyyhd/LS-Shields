@@ -181,16 +181,11 @@ try {
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
-                  <div class="active tab-pane" id="plan">
-                    
+                <div class="active tab-pane" id="plan">
+                    <!-- Direkte Ausgabe des gespeicherten HTML-Inhalts -->
+                    <?= $event['summernote_content'] ?>
+                </div>
 
-                  <?= htmlspecialchars($event['summernote_content']) ?>
-
-
-                    
-
-
-                  </div>
                   <div class="active tab-pane" id="plan-bearbeiten">
                   <form action="speichern_eventplanung_summernote.php" method="POST">
         <div class="form-group">

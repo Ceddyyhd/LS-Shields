@@ -6,7 +6,7 @@ if (isset($_GET['event_id'])) {
     $eventId = $_GET['event_id'];
 
     try {
-        // Abfrage, um die Teams und alle Mitarbeiter für jedes Team zu holen
+        // Abfrage, um die Team-Daten zu holen, und alle Mitarbeiter für jedes Team zu gruppieren
         $query = "SELECT t.id AS team_id, t.team_name, t.area_name, e.id AS employee_id, e.employee_name, e.is_team_lead
                   FROM teams t
                   LEFT JOIN employees e ON e.team_id = t.id
@@ -19,6 +19,9 @@ if (isset($_GET['event_id'])) {
 
         // Ergebnisse abrufen
         $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Debug: Ausgabe der Teams
+        error_log("Teams: " . print_r($teams, true));
 
         // Team-Daten gruppieren
         $groupedTeams = [];
@@ -39,6 +42,9 @@ if (isset($_GET['event_id'])) {
                 'id' => $team['employee_id'], // Mitarbeiter ID
             ];
         }
+
+        // Debug: Ausgabe des gruppierten Teams
+        error_log("Grouped Teams: " . print_r($groupedTeams, true));
 
         // Gebe die gruppierten Teams als JSON zurück
         echo json_encode(array_values($groupedTeams));

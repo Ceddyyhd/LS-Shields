@@ -282,10 +282,13 @@ $(document).ready(function() {
 
     // Anmeldung abschicken
     $('#submitForm').on('click', function() {
-        var selectedEmployees = $('select.duallistbox').val(); // Ausgewählte Mitarbeiter
-        console.log(selectedEmployees);  // Überprüfen, ob die Mitarbeiter ausgewählt wurden
+    var selectedEmployees = $('select.duallistbox').val(); // Ausgewählte Mitarbeiter
+    console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 
-        // AJAX-Anfrage zum Absenden der Daten
+    // Überprüfen, ob Mitarbeiter ausgewählt wurden
+    if (selectedEmployees.length > 0) {
+        console.log('Mitarbeiter werden gesendet');
+        
         $.ajax({
             url: 'anmeldung_speichern.php', // PHP-Skript zum Speichern
             type: 'POST',
@@ -302,7 +305,10 @@ $(document).ready(function() {
                 alert('Fehler bei der Anmeldung!');
             }
         });
-    });
+    } else {
+        alert('Bitte wählen Sie mindestens einen Mitarbeiter aus!');
+    }
+});
 });
 </script>
 

@@ -304,11 +304,11 @@ try {
 
     // Sende die Team-Daten an den Server
     $.ajax({
-        url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
+        url: 'include/team_assignments.php',
         method: 'POST',
         data: {
-            team_data: Object.values(teamData), // Teamdaten als Array von Objekten
-            event_id: <?php echo $_GET['id']; ?> // Event ID
+            team_data: Object.values(teamData),
+            event_id: <?php echo $_GET['id']; ?>
         },
         success: function(response) {
             alert('Teams erfolgreich gespeichert');
@@ -316,8 +316,9 @@ try {
         },
         error: function(xhr, status, error) {
             console.log('Fehler beim Speichern der Teams:', error);
+            console.log(xhr.responseText); // Logge die vollständige Fehlerantwort
         }
-    });
+    })
 });
 });
 

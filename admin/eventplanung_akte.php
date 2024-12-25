@@ -2,25 +2,22 @@
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
-<head>
-  <!-- Summernote CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
-
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <!-- Summernote JS -->
-  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-</head>
-
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
   <?php include 'include/navbar.php'; ?>
+
   <!-- /.navbar -->
 
+  <!-- Main Sidebar Container -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Summernote CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+  
+  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header -->
+    <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -34,7 +31,7 @@
             </ol>
           </div>
         </div>
-      </div>
+      </div><!-- /.container-fluid -->
     </section>
 
     <!-- Main content -->
@@ -46,10 +43,13 @@
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle"
+                       src="dist/img/user4-128x128.jpg"
+                       alt="User profile picture">
                 </div>
                 <p class="text-muted text-center">Ansprechpartner</p>
                 <h3 class="profile-username text-center">Nina Mcintire</h3>
+
                 <ul class="list-group list-group-unbordered mb-3">
                   <li class="list-group-item">
                     <b>Tel. Nr.:</b> <a class="float-right">555 - 667 7541</a>
@@ -63,39 +63,8 @@
                 </ul>
               </div>
             </div>
-
-            <!-- About Me Box -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Informationen</h3>
-              </div>
-              <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Teams</strong>
-                <div class="card-body">
-                  <dl class="row">
-                    <dt class="col-sm-4">Haupteingang</dt>
-                    <dd class="col-sm-8"> 
-                      <ul>
-                        <li>Cedric Schmidt</li>
-                        <li>John Schmidt</li>
-                      </ul>
-                    </dd>
-                    <dt class="col-sm-4">Nebeneingang</dt>
-                    <dd class="col-sm-8"> 
-                      <ul>
-                        <li>Cedric Schmidt</li>
-                        <li>John Schmidt</li>
-                      </ul>
-                    </dd>
-                  </dl>
-                </div>
-                <hr>
-                <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-                <p class="text-muted">Malibu, California</p>
-              </div>
-            </div>
           </div>
-
+          
           <div class="col-md-9">
             <div class="card">
               <div class="card-header p-2">
@@ -104,7 +73,7 @@
                   <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                 </ul>
-              </div>
+              </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="plan">
@@ -121,9 +90,9 @@
                   </div>
 
                   <div class="tab-pane" id="plan-bearbeiten">
-                        <textarea id="summernote"></textarea>
-                    </div>
-
+                    <!-- Summernote editor -->
+                    <textarea id="summernote"></textarea>
+                  </div>
 
                   <div class="tab-pane" id="settings">
                     <form class="form-horizontal">
@@ -146,6 +115,12 @@
                         </div>
                       </div>
                       <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                        </div>
+                      </div>
+                      <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
                           <button type="submit" class="btn btn-danger">Submit</button>
                         </div>
@@ -153,7 +128,7 @@
                     </form>
                   </div>
                 </div>
-              </div>
+              </div><!-- /.card-body -->
             </div>
           </div>
         </div>
@@ -167,17 +142,30 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
+
 </div>
 
+<!-- Summernote JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+<!-- Initialize Summernote -->
 <script>
   $(document).ready(function() {
     $('#summernote').summernote({
-      height: 200,
-      placeholder: 'Geben Sie hier Ihren Text ein...',
-      tabsize: 2
+      height: 200, // Height of the editor
+      placeholder: 'Geben Sie hier Ihren Text ein...', // Placeholder text
+      tabsize: 2 // Tab size for indenting
     });
   });
 </script>
 
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
 </body>
 </html>

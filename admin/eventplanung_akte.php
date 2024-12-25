@@ -206,7 +206,6 @@ try {
                   </div>
                   <form action="speichern_eventplanung_summernote.php" method="POST">
         <div class="form-group">
-            <label for="summernote">Anfrage:</label>
             <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($event['summernote_content']) ?></textarea>
         </div>
         

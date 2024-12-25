@@ -211,6 +211,10 @@
             <!-- /.row -->
           </div>
 
+          <textarea>
+                Notiz
+              </textarea>
+
 
                   </div>
                   <!-- /.tab-pane -->

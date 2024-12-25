@@ -196,6 +196,9 @@ try {
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter" required>
                             </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -211,14 +214,16 @@ try {
     </div>
 </div>
 
+
 <script>
  $(document).ready(function() {
     let teamCount = 1; // Starten mit Team 1
 
-    // Das erste Mitarbeiterfeld ist immer fest und als Team Lead markiert
+    // Dynamisches Hinzufügen von Mitarbeiterfeldern
     $(document).on('input', '.mitarbeiter', function() {
         const lastEmployeeField = $('#mitarbeiter-container .input-group.mb-3').last();
         
+        // Wenn das zweite Mitarbeiterfeld ausgefüllt wird, füge ein drittes hinzu
         if (lastEmployeeField.find('input').val() !== '') {
             const newEmployeeField = `
                 <div class="input-group mb-3">

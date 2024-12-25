@@ -432,7 +432,6 @@ try {
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
         $('input[name^="work_time_"]').each(function() {
             var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            // Wenn der Wert leer ist, überspringen wir die Validierung
             if (workTimeValue === '') {
                 $(this).val(null); // Wenn leer, als null setzen
             }

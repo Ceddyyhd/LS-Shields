@@ -23,14 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $maxTime = !empty($_POST['max_time_' . $employeeId]) ? $_POST['max_time_' . $employeeId] : NULL;
                 $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
 
-                // Formatieren der Maximal da bis Zeit (nur Stunden und Minuten)
+                // Wenn die Zeit leer ist, als NULL speichern
                 if ($maxTime) {
-                    $maxTime = date('H:i', strtotime($maxTime));  // Nur Stunden und Minuten
+                    $maxTime = date('H:i', strtotime($maxTime));  // Nur Stunden und Minuten für max_time
+                } else {
+                    $maxTime = NULL; // Wenn leer, NULL setzen
                 }
 
-                // Formatieren der Gearbeiteten Zeit (Start- und Endzeit)
+                // Wenn die gearbeitete Zeit leer ist, als NULL speichern
                 if ($workTime) {
-                    $workTime = date('m/d/Y h:i A', strtotime($workTime));  // Format: MM/DD/YYYY hh:mm AM/PM
+                    $workTime = date('m/d/Y h:i A', strtotime($workTime));  // Formatieren als Zeitraum
+                } else {
+                    $workTime = NULL; // Wenn leer, NULL setzen
                 }
 
                 // Prüfen, ob bereits ein Dienstplan-Eintrag für diesen Mitarbeiter existiert

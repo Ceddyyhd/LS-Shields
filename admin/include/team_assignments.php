@@ -10,17 +10,12 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten
     $eventId = $_POST['event_id']; // Event ID
 
-    // Ausgabe der empfangenen Daten zur Überprüfung
-    echo "<pre>";
-    var_dump($teamData);  // Überprüfen der empfangenen Daten
-    echo "</pre>";
-
     // Die Teamdaten in die Datenbank einfügen
     try {
         foreach ($teamData as $team) {
             if (!isset($team['team_name'], $team['bereich'], $team['employee_names'])) {
                 // Fehlerbehandlung, falls die erwarteten Felder fehlen
-                echo "Fehlende Felder: team_name, bereich oder employee_names";
+                echo json_encode(['status' => 'error', 'message' => 'Fehlende Felder: team_name, bereich oder employee_names']);
                 exit;
             }
 
@@ -31,7 +26,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
 
             // Fehlerbehandlung, falls nach dem Filtern keine Mitarbeiter übrig bleiben
             if (empty($team['employee_names'])) {
-                echo "Fehler: Keine Mitarbeiter für das Team " . $team['team_name'] . " vorhanden.";
+                echo json_encode(['status' => 'error', 'message' => 'Fehler: Keine Mitarbeiter für das Team ' . $team['team_name'] . ' vorhanden.']);
                 exit;
             }
 
@@ -41,14 +36,6 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
             foreach ($team['employee_names'] as $index => $employeeName) {
                 $isTeamLead = ($index == 0); // Der erste Mitarbeiter ist der Team Lead
 
-                // Ausgabe der Daten, bevor sie in die Datenbank eingefügt werden
-                echo "Daten, die gespeichert werden: <br>";
-                echo "Event ID: " . $eventId . "<br>";
-                echo "Team Name: " . $team['team_name'] . "<br>";
-                echo "Bereich: " . $team['bereich'] . "<br>";
-                echo "Mitarbeiter Name: " . $employeeName . "<br>";
-                echo "Team Lead: " . ($isTeamLead ? "Ja" : "Nein") . "<br><br>";
-
                 // SQL-Abfrage zum Einfügen der Team- und Mitarbeiterdaten
                 $query = "INSERT INTO team_assignments (event_id, team_name, area_name, employee_name, is_team_lead)
                           VALUES (:event_id, :team_name, :area_name, :employee_name, :is_team_lead)";
@@ -57,7 +44,7 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 $stmt = $conn->prepare($query);
                 if (!$stmt) {
                     // Fehler bei der Vorbereitung der SQL-Abfrage
-                    echo "Fehler bei der Vorbereitung der SQL-Abfrage: " . implode(", ", $conn->errorInfo());
+                    echo json_encode(['status' => 'error', 'message' => 'Fehler bei der Vorbereitung der SQL-Abfrage: ' . implode(", ", $conn->errorInfo())]);
                     exit;
                 }
 
@@ -71,15 +58,17 @@ if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
                 // Führe die SQL-Abfrage aus, um das Team und den Mitarbeiter zu speichern
                 if (!$stmt->execute()) {
                     // Fehler bei der Ausführung der SQL-Abfrage
-                    echo "SQL Fehler: " . implode(", ", $stmt->errorInfo());
+                    echo json_encode(['status' => 'error', 'message' => 'SQL Fehler: ' . implode(", ", $stmt->errorInfo())]);
                     exit;
                 }
             }
         }
 
+        // Erfolgsnachricht zurückgeben
         echo json_encode(['status' => 'success', 'message' => 'Teams erfolgreich erstellt!']);
     } catch (Exception $e) {
-        echo "Fehler: " . $e->getMessage();
+        // Fehler bei der Verarbeitung
+        echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
         exit;
     }
 } else {

@@ -173,12 +173,34 @@
 
 
                   </div>
+
                   <div class="active tab-pane" id="plan-bearbeiten">
-                  <textarea id="summernote">
-                Place <em>some</em> <u>text</u> <strong>here</strong>
-              </textarea>
+                      <textarea id="summernote"></textarea>
                   </div>
-                  
+                  <script>$(document).ready(function() {
+                    $('#summernote').summernote({
+                        height: 300,   // Höhe von Summernote anpassen
+                        focus: true     // Fokus auf das Summernote-Feld setzen
+                    });
+                    
+                    // Formular absenden
+                    $('#submitForm').on('click', function() {
+                        var summernoteContent = $('#summernote').val(); // Summernote-Inhalt erhalten
+                        $.ajax({
+                            url: 'include/speichern_eventplanung_summernote.php', // PHP-Skript zum Speichern
+                            type: 'POST',
+                            data: {
+                                summernoteContent: summernoteContent
+                            },
+                            success: function(response) {
+                                alert('Daten wurden gespeichert!');
+                            },
+                            error: function() {
+                                alert('Fehler beim Speichern der Daten!');
+                            }
+                        });
+                    });
+                });</script>
 
                   <div class="tab-pane" id="anmeldung">
                    <!-- /.card-header -->

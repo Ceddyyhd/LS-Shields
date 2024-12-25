@@ -380,20 +380,22 @@ function generateTeamForm(team, index) {
 
                 // Sende die Team-Daten an den Server
                 $.ajax({
-                    url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
-                    method: 'POST',
-                    data: {
-                        team_data: Object.values(teamData), // Teamdaten als Array von Objekten
-                        event_id: <?php echo $_GET['id']; ?> // Event ID
-                    },
-                    success: function(response) {
-                        alert('Teams erfolgreich gespeichert');
-                        $('#teams-bearbeiten').modal('hide');
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Fehler beim Speichern der Teams:', error);
-                    }
-                });
+                  url: 'include/team_assignments.php', // PHP-Skript zum Speichern der Teams
+                  method: 'POST',
+                  data: {
+                      team_data: Object.values(teamData), // Teamdaten als Array von Objekten
+                      event_id: <?php echo $_GET['id']; ?> // Event ID
+                  },
+                  success: function(response) {
+                      console.log("Serverantwort:", response);  // Gibt die Antwort des Servers aus
+                      alert('Teams erfolgreich gespeichert');
+                      $('#teams-bearbeiten').modal('hide');
+                  },
+                  error: function(xhr, status, error) {
+                      console.log('Fehler beim Speichern der Teams:', error);
+                      console.log('Antwort des Servers: ', xhr.responseText);  // Gibt die vollständige Antwort des Servers aus
+                  }
+              });
             });
         });
     </script>

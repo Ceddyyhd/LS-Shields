@@ -19,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Extrahiere die Mitarbeiter-ID aus dem Feldnamen
                 $employeeId = substr($key, 9);
 
-                // Überprüfen der maximalen Zeit und gearbeitete Zeit
-                $maxTime = !empty($_POST['max_time_' . $employeeId]) ? $_POST['max_time_' . $employeeId] : NULL;
-                $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
+                // Überprüfen der maximalen Zeit und die neuen Felder
+                $maxTime = !empty($_POST['max_time']) ? $_POST['max_time'] : NULL;
+                $gestartetUm = !empty($_POST['gestartet_um']) ? $_POST['gestartet_um'] : NULL;
+                $gegangenUm = !empty($_POST['gegangen_um']) ? $_POST['gegangen_um'] : NULL;
 
                 // Wenn das Maximal da bis-Feld leer ist, auf NULL setzen
                 if ($maxTime) {
@@ -30,17 +31,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $maxTime = NULL; // Setze auf NULL, wenn leer
                 }
 
-                // Wenn die Gearbeitete Zeit leer ist, auf NULL setzen
-                if ($workTime) {
-                    // Versuche, das Datum korrekt zu parsen, und setze es nur, wenn es gültig ist
-                    $parsedWorkTime = strtotime($workTime);
-                    if ($parsedWorkTime !== false) {
-                        $workTime = date('Y-m-d H:i:s', $parsedWorkTime);  // Format: Y-m-d H:i:s für die DB
+                // Wenn das "Gestartet Um"-Feld ausgefüllt ist, setze den Wert
+                if ($gestartetUm) {
+                    $parsedGestartetUm = strtotime($gestartetUm);
+                    if ($parsedGestartetUm !== false) {
+                        $gestartetUm = date('Y-m-d H:i:s', $parsedGestartetUm);  // Format: Y-m-d H:i:s für die DB
                     } else {
-                        $workTime = NULL; // Wenn ungültig, setze auf NULL
+                        $gestartetUm = NULL; // Wenn ungültig, setze auf NULL
                     }
-                } else {
-                    $workTime = NULL; // Setze auf NULL, wenn leer
+                }
+
+                // Wenn das "Gegangen Um"-Feld ausgefüllt ist, setze den Wert
+                if ($gegangenUm) {
+                    $parsedGegangenUm = strtotime($gegangenUm);
+                    if ($parsedGegangenUm !== false) {
+                        $gegangenUm = date('Y-m-d H:i:s', $parsedGegangenUm);  // Format: Y-m-d H:i:s für die DB
+                    } else {
+                        $gegangenUm = NULL; // Wenn ungültig, setze auf NULL
+                    }
                 }
 
                 // Prüfen, ob bereits ein Dienstplan-Eintrag für diesen Mitarbeiter existiert
@@ -53,21 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Update, falls bereits ein Eintrag existiert
                     $stmt = $conn->prepare("
                         UPDATE dienstplan 
-                        SET max_time = :max_time, work_time = :work_time
+                        SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um
                         WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
                 } else {
                     // Insert, falls noch kein Eintrag existiert
                     $stmt = $conn->prepare("
-                        INSERT INTO dienstplan (event_id, employee_id, max_time, work_time)
-                        VALUES (:event_id, :employee_id, :max_time, :work_time)
+                        INSERT INTO dienstplan (event_id, employee_id, max_time, gestartet_um, gegangen_um)
+                        VALUES (:event_id, :employee_id, :max_time, :gestartet_um, :gegangen_um)
                     ");
                 }
 
                 $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
                 $stmt->bindParam(':max_time', $maxTime, PDO::PARAM_STR);
-                $stmt->bindParam(':work_time', $workTime, PDO::PARAM_STR);
+                $stmt->bindParam(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
+                $stmt->bindParam(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
                 $stmt->execute();
             }
         }

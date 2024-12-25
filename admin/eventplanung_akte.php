@@ -243,29 +243,68 @@ try {
                   
 
                   <div class="tab-pane" id="anmeldung">
-                   <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                            <label>Eintragen wer kann</label>
-                            <select class="duallistbox" multiple="multiple">
-                                <option selected>Alabama</option>
-                                <option>Alaska</option>
-                                <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option>
-                            </select>
-                            </div>
-                            <!-- /.form-group -->
-                        </div>
-                        <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                    </div>
-                  </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Eintragen wer kann</label>
+                    <select class="duallistbox" name="employee_list[]" multiple="multiple">
+                        <?php
+                        // Verbindung zur Datenbank
+                        include('db.php');
+
+                        // Abfrage, um alle Mitarbeiter aus der users-Tabelle zu holen
+                        try {
+                            $stmt = $conn->prepare("SELECT id, name FROM users WHERE gekuendigt = 'no_kuendigung'");
+                            $stmt->execute();
+                            $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                            // Mitarbeiter in die Duallistbox einfügen
+                            foreach ($employees as $employee) {
+                                echo '<option value="' . $employee['id'] . '">' . htmlspecialchars($employee['name']) . '</option>';
+                            }
+                        } catch (PDOException $e) {
+                            echo 'Fehler: ' . $e->getMessage();
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="submitForm" class="btn btn-danger">Anmelden</button>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Duallistbox initialisieren
+    $('select.duallistbox').bootstrapDualListbox();
+
+    // Anmeldung abschicken
+    $('#submitForm').on('click', function() {
+        var selectedEmployees = $('select.duallistbox').val(); // Ausgewählte Mitarbeiter
+        console.log(selectedEmployees);  // Überprüfen, ob die Mitarbeiter ausgewählt wurden
+
+        // AJAX-Anfrage zum Absenden der Daten
+        $.ajax({
+            url: 'anmeldung_speichern.php', // PHP-Skript zum Speichern
+            type: 'POST',
+            data: {
+                event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL
+                employees: selectedEmployees
+            },
+            success: function(response) {
+                console.log(response); // Serverantwort in der Konsole anzeigen
+                alert('Anmeldung erfolgreich!');
+            },
+            error: function(xhr, status, error) {
+                console.log('Fehler:', error);  // Fehlerdetails in der Konsole
+                alert('Fehler bei der Anmeldung!');
+            }
+        });
+    });
+});
+</script>
 
                   <div class="tab-pane" id="dienstplan">
                     <form class="form-horizontal">

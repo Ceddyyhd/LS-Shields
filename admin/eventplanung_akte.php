@@ -255,11 +255,9 @@ try {
                 </div>
                 <div class="form-group" id="mitarbeiter-container">
                     <label for="mitarbeiter">Mitarbeiter</label>
-                    <!-- Festes Mitarbeiterfeld für Team Lead -->
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter (Team Lead)" required>
                     </div>
-                    <!-- Dynamisches Mitarbeiterfeld -->
                     <div class="input-group mb-3">
                         <input type="text" class="form-control mitarbeiter" name="mitarbeiter[][name]" placeholder="Mitarbeiter">
                     </div>
@@ -282,6 +280,7 @@ try {
         }).get();
 
         const mitarbeiter = [];
+        // Wir sammeln alle Mitarbeiter pro Team
         $('input[name="mitarbeiter[][name]"]').each(function() {
             mitarbeiter.push($(this).val());
         });
@@ -318,6 +317,7 @@ try {
         });
     });
 });
+
 
 
 

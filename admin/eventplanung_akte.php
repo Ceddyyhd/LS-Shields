@@ -216,6 +216,7 @@ try {
     </div>
 </div>
 
+<!-- Füge das Skript am Ende der Seite ein -->
 <script>
     $(document).ready(function() {
         let teamCount = 1; // Starten mit Team 1
@@ -314,7 +315,8 @@ try {
             });
         });
     });
-</script>                
+</script>
+              
 
 
               </div>

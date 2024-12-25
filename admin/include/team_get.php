@@ -18,6 +18,7 @@ if (isset($_GET['event_id'])) {
         // Ergebnisse abrufen
         $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Wenn Teams gefunden werden, dann als JSON zurückgeben
         if ($teams) {
             echo json_encode($teams);
         } else {
@@ -28,7 +29,6 @@ if (isset($_GET['event_id'])) {
         echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
 } else {
-    // Keine Event-ID übergeben
     echo json_encode(['status' => 'error', 'message' => 'Keine Event-ID angegeben']);
 }
 ?>

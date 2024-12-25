@@ -410,23 +410,42 @@ try {
 </div>
 
 <script>
-  $(document).ready(function() {
+ $(document).ready(function() {
+    // Initialisiere datetimepicker für das erste "Maximal da bis"-Feld
+    <?php foreach ($employees as $employee) { ?>
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm'
+        });
+
+        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'HH:mm'  // Verwende das gleiche Format für gearbeitete Zeit
+        });
+    <?php } ?>
+
     // Submit-Button für den Dienstplan
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
         // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
         $('input[name^="work_time_"]').each(function() {
-            if ($(this).val() !== '' && $(this).val() === '') {
+            // Hole den Wert des Datetimepickers und formatiere ihn, falls notwendig
+            var workTimeValue = $(this).val();
+            
+            // Wenn der Wert nicht im Format HH:mm ist, dann nicht absenden
+            if (workTimeValue === '') {
                 valid = false;
                 alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
                 return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
             }
+            
+            // Setze den formatierten Wert zurück in das Feld
+            $(this).val(workTimeValue);  // Optional, um sicherzustellen, dass der Wert korrekt formatiert ist
         });
 
         // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
         $('input[name^="max_time_"]').each(function() {
-            if ($(this).val() !== '' && $(this).val() === '') {
+            if ($(this).val() === '') {
                 valid = false;
                 alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
                 return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
@@ -457,25 +476,6 @@ try {
     });
 });
 </script>
-
-<script>
-  $(document).ready(function() {
-    // Initialisiere datetimepicker für max_time
-    <?php foreach ($employees as $employee) { ?>
-        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'
-        });
-    <?php } ?>
-
-    // Initialisiere datetimepicker für gearbeitete Zeit
-    <?php foreach ($employees as $employee) { ?>
-        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'  // Verwende das passende Format
-        });
-    <?php } ?>
-});
-</script>
-
 
                   <div class="tab-pane" id="externes-dokument1">
                   <iframe src=""width="100%" height="700px"></iframe>                  

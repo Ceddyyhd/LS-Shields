@@ -1,6 +1,8 @@
 <?php
 include('db.php');
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 // Überprüfen, ob die Team-Daten und die Event-ID übermittelt wurden
 if (isset($_POST['team_data']) && isset($_POST['event_id'])) {
     $teamData = $_POST['team_data']; // Array der Teamdaten

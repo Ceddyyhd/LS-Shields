@@ -447,8 +447,11 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                alert('Fehler bei der Anfrage!');
-            }
+              console.log("Status: " + status);  // Gibt den Status des Fehlers aus
+              console.log("Fehler: " + error);   // Gibt den Fehlertext aus
+              console.log("Antwort: " + xhr.responseText);  // Gibt die vollständige Antwort des Servers aus
+              alert('Fehler bei der Anfrage! Siehe Konsole für Details.');
+          }
         });
     });
 });

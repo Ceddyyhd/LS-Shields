@@ -351,7 +351,7 @@ try {
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-                SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gestartet_um 
+                SELECT u.id, u.name, d.max_time
                 FROM users u
                 JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
                 LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
@@ -381,13 +381,11 @@ try {
                 
 
 
+
                 <div class="form-group">
                     <label>Gestartet Um:</label>
-                    <div class="input-group" id="gestartetUm" data-target-input="nearest">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-clock"></i></span>
-                        </div>
-                        <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um"/>
+                    <div class="input-group date" id="gestartetUm" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm" name="gestartet_um" value="<?php echo isset($employee['gestartet_um']) ? $employee['gestartet_um'] : ''; ?>"/>
                         <div class="input-group-append" data-target="#gestartetUm" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -395,17 +393,14 @@ try {
                 </div>
 
                 <div class="form-group">
-                  <label>Gegangen Um:</label>
-                  <div class="input-group date" id="gegangenUm" data-target-input="nearest">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                      </div>
-                      <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm" name="gegangen_um"/>
-                      <div class="input-group-append" data-target="#gegangenUm" data-toggle="datetimepicker">
-                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                      </div>
-                  </div>
-              </div>
+                    <label>Gegangen Um:</label>
+                    <div class="input-group date" id="gegangenUm" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm" name="gegangen_um" value="<?php echo isset($employee['gegangen_um']) ? $employee['gegangen_um'] : ''; ?>"/>
+                        <div class="input-group-append" data-target="#gegangenUm" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
                 <?php
             }
         } catch (PDOException $e) {
@@ -424,43 +419,53 @@ try {
 <script>
 $(document).ready(function() {
     // Initialisiere datetimepicker für das "Maximal da bis"-Feld
-    $('#timepicker').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
-        useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
-    });
+    <?php foreach ($employees as $employee) { ?>
+        // Sicherstellen, dass der datetimepicker für "Maximal da bis" funktioniert
+        $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+          format: 'hh:mm', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+          useCurrent: false // Verhindert das automatische Setzen des aktuellen Datums
+        });
 
-    // Initialisiere datetimepicker für "Gestartet Um"
-    $('#gestartetUm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
-        useCurrent: false,
-    });
+        // Sicherstellen, dass der datetimepicker für "Gearbeitete Zeit" korrekt funktioniert
+        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'YYYY-MM-DD hh:mm A', // Richtiges Datums- und Zeitformat (Datum + Uhrzeit)
+            useCurrent: false, // Verhindert das automatische Setzen des aktuellen Datums
+            stepping: 15, // Möglichkeit zur Auswahl von Minuten in 15-Minuten-Schritten
+            showClear: true, // Möglichkeit, das Datum zu löschen
+            showClose: true // Möglichkeit, das Picker-Menü zu schließen
+        });
 
-    // Initialisiere datetimepicker für "Gegangen Um"
-    $('#gegangenUm').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm', // Format für Datum und Uhrzeit
-        useCurrent: false,
-    });
+        // Sicherstellen, dass der datetimepicker für "Date and Time" funktioniert
+        $('#reservationdatetime').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm', // Richtiges Datums- und Zeitformat
+            useCurrent: false
+        });
+    <?php } ?>
 
     // Submit-Button für den Dienstplan
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob das "Maximal da bis"-Feld ausgefüllt wurde
-        var maxTimeValue = $('input[name="max_time"]').val();
-        if (maxTimeValue === '') {
-            $('input[name="max_time"]').val(null); // Wenn leer, als null setzen
-        }
+        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde
+        $('input[name^="work_time_"]').each(function() {
+            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
+            if (workTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
 
-        // Überprüfen, ob das "Gestartet Um"-Feld ausgefüllt wurde
-        var gestartetUmValue = $('input[name="gestartet_um"]').val();
-        if (gestartetUmValue === '') {
-            $('input[name="gestartet_um"]').val(null); // Wenn leer, als null setzen
-        }
+        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
+        $('input[name^="max_time_"]').each(function() {
+            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
+            if (maxTimeValue === '') {
+                $(this).val(null); // Wenn leer, als null setzen
+            }
+        });
 
-        // Überprüfen, ob das "Gegangen Um"-Feld ausgefüllt wurde
-        var gegangenUmValue = $('input[name="gegangen_um"]').val();
-        if (gegangenUmValue === '') {
-            $('input[name="gegangen_um"]').val(null); // Wenn leer, als null setzen
+        // Überprüfen, ob das "Date and time"-Feld ausgefüllt wurde
+        var reservationdatetimeValue = $('input[name="reservationdatetime"]').val();  // Wert des Date-Time Felds
+        if (reservationdatetimeValue === '') {
+            $('input[name="reservationdatetime"]').val(null); // Wenn leer, als null setzen
         }
 
         // Wenn alle Felder validiert sind, Formular absenden

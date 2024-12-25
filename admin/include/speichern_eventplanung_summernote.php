@@ -13,7 +13,7 @@ if (isset($_POST['summernoteContent'])) {
 
     try {
         // SQL-Abfrage zum Speichern des Inhalts mit PDO
-        $stmt = $conn->prepare("INSERT INTO Eventplanung (summernote_content) VALUES (:summernoteContent)");
+        $stmt = $conn->prepare("INSERT INTO eventplanung (summernote_content) VALUES (:summernoteContent)");
         $stmt->bindParam(':summernoteContent', $summernoteContent, PDO::PARAM_STR);
 
         // Die Abfrage ausführen

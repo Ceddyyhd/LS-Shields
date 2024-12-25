@@ -2,16 +2,25 @@
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
+<head>
+  <!-- Summernote CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Summernote JS -->
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+</head>
+
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
   <!-- Navbar -->
   <?php include 'include/navbar.php'; ?>
-
   <!-- /.navbar -->
 
-  <!-- Main Sidebar Container -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+    <!-- Content Header -->
     <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -25,7 +34,7 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
 
     <!-- Main content -->
@@ -37,9 +46,7 @@
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle"
-                       src="dist/img/user4-128x128.jpg"
-                       alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="dist/img/user4-128x128.jpg" alt="User profile picture">
                 </div>
                 <p class="text-muted text-center">Ansprechpartner</p>
                 <h3 class="profile-username text-center">Nina Mcintire</h3>
@@ -56,6 +63,37 @@
                 </ul>
               </div>
             </div>
+
+            <!-- About Me Box -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Informationen</h3>
+              </div>
+              <div class="card-body">
+                <strong><i class="fas fa-book mr-1"></i> Teams</strong>
+                <div class="card-body">
+                  <dl class="row">
+                    <dt class="col-sm-4">Haupteingang</dt>
+                    <dd class="col-sm-8"> 
+                      <ul>
+                        <li>Cedric Schmidt</li>
+                        <li>John Schmidt</li>
+                      </ul>
+                    </dd>
+                    <dt class="col-sm-4">Nebeneingang</dt>
+                    <dd class="col-sm-8"> 
+                      <ul>
+                        <li>Cedric Schmidt</li>
+                        <li>John Schmidt</li>
+                      </ul>
+                    </dd>
+                  </dl>
+                </div>
+                <hr>
+                <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                <p class="text-muted">Malibu, California</p>
+              </div>
+            </div>
           </div>
 
           <div class="col-md-9">
@@ -66,7 +104,7 @@
                   <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
                   <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                 </ul>
-              </div><!-- /.card-header -->
+              </div>
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="plan">
@@ -83,32 +121,44 @@
                   </div>
 
                   <div class="tab-pane" id="plan-bearbeiten">
-                    <!-- Summernote Editor Section -->
-                    <section class="content">
-                      <div class="container-fluid">
-                        <div class="card card-outline card-info">
-                          <div class="card-header">
-                            <h3 class="card-title">Summernote</h3>
-                          </div>
-                          <div class="card-body">
-                            <textarea id="summernote" name="summernote_data"></textarea>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
+                    <textarea id="summernote"></textarea>
                   </div>
 
                   <div class="tab-pane" id="settings">
-                    <!-- Settings content here -->
+                    <form class="form-horizontal">
+                      <div class="form-group row">
+                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="inputName" placeholder="Name">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
-              </div><!-- /.card-body -->
+              </div>
             </div>
           </div>
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section><!-- /.content -->
-  </div><!-- /.content-wrapper -->
+        </div>
+      </div>
+    </section>
+  </div>
 
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
@@ -116,30 +166,14 @@
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside><!-- /.control-sidebar -->
-</div><!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Summernote JS -->
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-<!-- AdminLTE JS -->
-<script src="dist/js/adminlte.min.js"></script>
+</div>
 
 <script>
-  $(document).ready(function () {
-    // Summernote Initialisierung
+  $(document).ready(function() {
     $('#summernote').summernote({
-      height: 200,  // Höhe des Editors
-      codemirror: { // CodeMirror Optionen für den HTML-Editor
-        theme: 'monokai'
-      }
+      height: 200,
+      placeholder: 'Geben Sie hier Ihren Text ein...',
+      tabsize: 2
     });
   });
 </script>

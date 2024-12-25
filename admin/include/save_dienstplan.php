@@ -15,13 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Für jeden Mitarbeiter die übermittelten Daten speichern
         foreach ($_POST as $key => $value) {
             // Nur die Felder bearbeiten, die mit einem Mitarbeiter zusammenhängen
-            if (strpos($key, 'max_time_') === 0) {
+            if (strpos($key, 'start_time_') === 0) {
                 // Extrahiere die Mitarbeiter-ID aus dem Feldnamen
-                $employeeId = substr($key, 9);
+                $employeeId = substr($key, 11);
 
-                // Überprüfen der maximalen Zeit und gearbeitete Zeit
-                $maxTime = !empty($_POST['max_time_' . $employeeId]) ? $_POST['max_time_' . $employeeId] : NULL;
-                $workTime = !empty($_POST['work_time_' . $employeeId]) ? $_POST['work_time_' . $employeeId] : NULL;
+                // Überprüfen der Start- und Endzeit
+                $startTime = !empty($_POST['start_time_' . $employeeId]) ? $_POST['start_time_' . $employeeId] : NULL;
+                $endTime = !empty($_POST['end_time_' . $employeeId]) ? $_POST['end_time_' . $employeeId] : NULL;
+
+                // Formatieren der Zeiten auf Y-m-d H:i:s (für korrekte Speicherung in der DB)
+                if ($startTime) {
+                    $startTime = date('Y-m-d H:i:s', strtotime($startTime));  // Umwandeln auf das richtige Format
+                }
+                if ($endTime) {
+                    $endTime = date('Y-m-d H:i:s', strtotime($endTime));  // Umwandeln auf das richtige Format
+                }
 
                 // Prüfen, ob bereits ein Dienstplan-Eintrag für diesen Mitarbeiter existiert
                 $stmt = $conn->prepare("SELECT * FROM dienstplan WHERE event_id = :event_id AND employee_id = :employee_id");
@@ -33,21 +41,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Update, falls bereits ein Eintrag existiert
                     $stmt = $conn->prepare("
                         UPDATE dienstplan 
-                        SET max_time = :max_time, work_time = :work_time
+                        SET start_time = :start_time, end_time = :end_time
                         WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
                 } else {
                     // Insert, falls noch kein Eintrag existiert
                     $stmt = $conn->prepare("
-                        INSERT INTO dienstplan (event_id, employee_id, max_time, work_time)
-                        VALUES (:event_id, :employee_id, :max_time, :work_time)
+                        INSERT INTO dienstplan (event_id, employee_id, start_time, end_time)
+                        VALUES (:event_id, :employee_id, :start_time, :end_time)
                     ");
                 }
 
                 $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
                 $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
-                $stmt->bindParam(':max_time', $maxTime, PDO::PARAM_STR);
-                $stmt->bindParam(':work_time', $workTime, PDO::PARAM_STR);
+                $stmt->bindParam(':start_time', $startTime, PDO::PARAM_STR);
+                $stmt->bindParam(':end_time', $endTime, PDO::PARAM_STR);
                 $stmt->execute();
             }
         }

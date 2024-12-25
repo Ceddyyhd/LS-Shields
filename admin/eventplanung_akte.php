@@ -411,15 +411,19 @@ try {
 
 <script>
  $(document).ready(function() {
-    // Initialisiere datetimepicker für das erste "Maximal da bis"-Feld
+    // Initialisiere datetimepicker für das "Maximal da bis"-Feld
     <?php foreach ($employees as $employee) { ?>
         $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm' // Format für die Uhrzeit
+            format: 'DD.MM.YYYY HH:mm' // Format für die Uhrzeit mit Datum
         });
 
-        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld
-        $('#reservationtime<?php echo $employee['id']; ?>').datetimepicker({
-            format: 'HH:mm'  // Verwende das gleiche Format für gearbeitete Zeit
+        // Initialisiere datetimepicker für das "Gearbeitete Zeit"-Feld (Start und Endzeit)
+        $('#starttime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'DD.MM.YYYY HH:mm' // Startzeit
+        });
+
+        $('#endtime<?php echo $employee['id']; ?>').datetimepicker({
+            format: 'DD.MM.YYYY HH:mm' // Endzeit
         });
     <?php } ?>
 
@@ -427,24 +431,22 @@ try {
     $('#submitFormDienstplanung').on('click', function() {
         var valid = true;
 
-        // Überprüfen, ob die gearbeitete Zeit ausgefüllt wurde, falls sie nicht leer ist
-        $('input[name^="work_time_"]').each(function() {
-            var workTimeValue = $(this).val();  // Wert der gearbeiteten Zeit
-            // Wenn der Wert leer ist, überspringen wir die Validierung
-            if (workTimeValue !== '' && workTimeValue === '') {
+        // Überprüfen, ob die gearbeitete Zeit (Start- und Endzeit) ausgefüllt wurde
+        $('input[name^="start_time_"]').each(function() {
+            var startTimeValue = $(this).val();  // Wert der Startzeit
+            if (startTimeValue === '') {
                 valid = false;
-                alert('Bitte geben Sie die gearbeitete Zeit für alle Mitarbeiter ein.');
-                return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
+                alert('Bitte geben Sie die Startzeit für alle Mitarbeiter ein.');
+                return false;
             }
         });
 
-        // Überprüfen der maximalen Zeit nur, wenn sie nicht leer ist
-        $('input[name^="max_time_"]').each(function() {
-            var maxTimeValue = $(this).val();  // Wert der maximalen Zeit
-            if (maxTimeValue !== '' && maxTimeValue === '') {
+        $('input[name^="end_time_"]').each(function() {
+            var endTimeValue = $(this).val();  // Wert der Endzeit
+            if (endTimeValue === '') {
                 valid = false;
-                alert('Bitte geben Sie die maximale Zeit für alle Mitarbeiter ein.');
-                return false; // Stoppt die Schleife, wenn eine Eingabe fehlt
+                alert('Bitte geben Sie die Endzeit für alle Mitarbeiter ein.');
+                return false;
             }
         });
 

@@ -135,6 +135,9 @@ try {
                   <li class="list-group-item">
                     <b>Ort:</b> <a class="float-right">15.12.2024</a>
                   </li>
+                  <li class="list-group-item">
+                    <b>Eventlead:</b> <a class="float-right">15.12.2024</a>
+                  </li>
                 </ul>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
                   Bearbeiten

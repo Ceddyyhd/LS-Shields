@@ -89,16 +89,16 @@ foreach ($events as &$event) {
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
                         </td>
                         <td>
-                            <ul class="list-inline">
-                                <?php
-                                // Teammitglieder und deren Profilbilder anzeigen
-                                foreach ($event['team_members'] as $member) {
-                                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                                    echo "</li>";
-                                }
-                                ?>
-                            </ul>
+                        <ul class="list-inline">
+                            <?php
+                            // Teammitglieder und deren Profilbilder anzeigen
+                            foreach ($event['team_members'] as $member) {
+                                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                                echo "</li>";
+                            }
+                            ?>
+                        </ul>
                         </td>
                         <td class="project-state">
                             <?php
@@ -135,9 +135,9 @@ foreach ($events as &$event) {
 <!-- JavaScript zum Initialisieren der Tooltips -->
 <script>
     $(document).ready(function () {
-        // Initialisiere alle Tooltips auf der Seite
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+    // Initialisiere alle Tooltips auf der Seite
+    $('[data-toggle="tooltip"]').tooltip();
+});
 </script>
     
     

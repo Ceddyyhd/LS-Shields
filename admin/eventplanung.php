@@ -35,23 +35,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
 // SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "SELECT eventplanung.*, 
                  users.name AS event_lead_name, 
-                 users.profile_image AS event_lead_profile_image,
-                 IFNULL(GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name), '') AS team_members_names,
-                 IFNULL(GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name), '') AS team_members_images
+                 users.profile_image AS event_lead_profile_image
           FROM eventplanung
-          LEFT JOIN users ON eventplanung.event_lead = users.id
-          LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
-          LEFT JOIN users AS team_users ON event_mitarbeiter_anmeldung.employee_id = team_users.id
-          WHERE eventplanung.id = :event_id
-          GROUP BY eventplanung.id";
+          LEFT JOIN users ON eventplanung.event_lead = users.id";
 
 $stmt = $conn->prepare($query);
-$stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
 $stmt->execute();
-$event = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$event) {
-    die('Eventplanung nicht gefunden.');
+// Alle Events abrufen
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+<?php
+foreach ($events as &$event) {
+    // Teammitglieder für das Event abfragen
+    $teamQuery = "SELECT users.name, users.profile_image 
+                  FROM event_mitarbeiter_anmeldung
+                  LEFT JOIN users ON event_mitarbeiter_anmeldung.employee_id = users.id
+                  WHERE event_mitarbeiter_anmeldung.event_id = :event_id";
+
+    $teamStmt = $conn->prepare($teamQuery);
+    $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+    $teamStmt->execute();
+    $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Teammitglieder in die Event-Daten einfügen
+    $event['team_members'] = $team_members;
 }
 ?>
     <!-- Main content -->
@@ -81,25 +89,16 @@ if (!$event) {
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
                         </td>
                         <td>
-                        <ul class="list-inline">
-        <?php
-        // Teammitglieder und deren Profilbilder anzeigen
-        $team_members = explode(',', $event['team_members_names']);
-        $team_member_images = explode(',', $event['team_members_images']);
-        foreach ($team_members as $key => $member) {
-            // Tooltip mit dem Namen des Mitarbeiters
-            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member) . "'>";
-            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($team_member_images[$key]) . "'>";
-            echo "</li>";
-        }
-        ?>
-    </ul>
-    <script>
-        $(document).ready(function () {
-    // Initialisiere alle Tooltips auf der Seite
-    $('[data-toggle="tooltip"]').tooltip();
-});
-    </script>
+                            <ul class="list-inline">
+                                <?php
+                                // Teammitglieder und deren Profilbilder anzeigen
+                                foreach ($event['team_members'] as $member) {
+                                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                                    echo "</li>";
+                                }
+                                ?>
+                            </ul>
                         </td>
                         <td class="project-state">
                             <?php
@@ -132,6 +131,14 @@ if (!$event) {
         </table>
     </div>
 </div>
+
+<!-- JavaScript zum Initialisieren der Tooltips -->
+<script>
+    $(document).ready(function () {
+        // Initialisiere alle Tooltips auf der Seite
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
     
     
     

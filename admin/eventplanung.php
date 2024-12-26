@@ -38,14 +38,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 // SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "
-    SELECT eventplanung.*, 
+    SELECT DISTINCT eventplanung.*, 
            users.name AS event_lead_name, 
            users.profile_image AS event_lead_profile_image,
            eventplanung.event, 
            eventplanung.anmerkung
     FROM eventplanung
     LEFT JOIN users ON eventplanung.event_lead = users.id
-    GROUP BY eventplanung.id"; // Grouping by event ID
+    LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
+    GROUP BY eventplanung.id"; // Verhindert doppelte Events, indem nach Event-ID gruppiert wird
 
 $stmt = $conn->prepare($query);
 $stmt->execute();

@@ -69,7 +69,22 @@ try {
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-
+  <?php
+// Beispiel zum Laden von Event-Daten
+$event_id = $_GET['event_id'];
+$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
+$result = mysqli_query($conn, $sql);
+$event = mysqli_fetch_assoc($result);
+?>
+<script>
+  $(document).ready(function() {
+    $('#vorname_nachname').val('<?= $event['vorname_nachname']; ?>');
+    $('#telefonnummer').val('<?= $event['telefonnummer']; ?>');
+    $('#datum_uhrzeit_event').val('<?= $event['datum_uhrzeit_event']; ?>');
+    $('#ort').val('<?= $event['ort']; ?>');
+    $('#event_lead').val('<?= $event['event_lead']; ?>');
+  });
+</script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -132,22 +147,7 @@ try {
         </button>
       </div>
       <div class="modal-body">
-      <?php
-// Beispiel zum Laden von Event-Daten
-$event_id = $_GET['event_id'];
-$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
-$result = mysqli_query($conn, $sql);
-$event = mysqli_fetch_assoc($result);
-?>
-<script>
-  $(document).ready(function() {
-    $('#vorname_nachname').val('<?= $event['vorname_nachname']; ?>');
-    $('#telefonnummer').val('<?= $event['telefonnummer']; ?>');
-    $('#datum_uhrzeit_event').val('<?= $event['datum_uhrzeit_event']; ?>');
-    $('#ort').val('<?= $event['ort']; ?>');
-    $('#event_lead').val('<?= $event['event_lead']; ?>');
-  });
-</script>
+
         <form id="edit-form">
           <div class="form-group">
             <label>Ansprechpartner Name</label>

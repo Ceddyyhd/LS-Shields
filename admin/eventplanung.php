@@ -37,11 +37,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-header -->
     <?php
 // SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
-$query = "SELECT eventplanung.*, 
+$query = "SELECT DISTINCT eventplanung.*, 
                  users.name AS event_lead_name, 
-                 users.profile_image AS event_lead_profile_image,
-                 eventplanung.event, 
-                 eventplanung.anmerkung
+                 users.profile_image AS event_lead_profile_image
           FROM eventplanung
           LEFT JOIN users ON eventplanung.event_lead = users.id";
 

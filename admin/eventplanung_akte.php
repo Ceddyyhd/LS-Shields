@@ -59,6 +59,16 @@ try {
     die("Fehler beim Abrufen der Daten: " . $e->getMessage());
 }
 ?>
+<script>
+  $(document).ready(function() {
+    // Die Werte aus der PHP-Variablen sicher an JavaScript übergeben
+    $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
+    $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
+    $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
+    $('#ort').val(<?= json_encode($event['ort']); ?>);
+    $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
+  });
+</script>
 <?php include 'include/header.php'; ?>
 
 <body class="hold-transition sidebar-mini">
@@ -89,13 +99,7 @@ try {
         </div>
       </div><!-- /.container-fluid -->
     </section>
-    <?php
-// Beispiel zum Laden von Event-Daten
-$event_id = $_GET['event_id'];
-$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
-$result = mysqli_query($conn, $sql);
-$event = mysqli_fetch_assoc($result);
-?>
+    
 
     <!-- Main content -->
     <section class="content">

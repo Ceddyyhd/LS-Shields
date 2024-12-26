@@ -42,7 +42,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute();
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
+foreach ($events as &$event) {
     // Für jedes Event die Team-Mitglieder abfragen
     $teamQuery = "
         SELECT u.id AS employee_id, u.name, u.profile_image
@@ -57,7 +57,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Team-Mitglieder dem Event hinzufügen
     $event['team_members'] = $team_members;
-
+}
 
 // Ausgabe der Events
 ?>

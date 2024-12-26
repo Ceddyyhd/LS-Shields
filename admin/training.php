@@ -194,8 +194,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <!-- BS-Stepper -->
 <script src="plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- dropzonejs -->
-<script src="plugins/dropzone/min/dropzone.min.js"></script>
 <script>
   $(function () {
     // Summernote

@@ -378,7 +378,6 @@ try {
         }
     });
 
-    console.log("TeamData vor dem Senden:", teamData);
 
     // Überprüfe, ob die Daten leer sind
     if (teamData.length === 0) {
@@ -388,15 +387,15 @@ try {
 
     // Sende die Daten per AJAX an den Server
     $.ajax({
-        url: 'include/team_assignments.php', 
-        method: 'POST',
-        data: { teams: teamData },
-        success: function(response) {
-            alert('Teams wurden gespeichert.');
-        },
-        error: function(xhr, status, error) {
-            alert('Fehler beim Speichern der Teams.');
-        }
+    url: 'include/team_assignments.php',
+    method: 'POST',
+    data: { teams: teamData },  // Überprüfe, ob teamData korrekt ist
+    success: function(response) {
+        alert('Teams wurden gespeichert.');
+    },
+    error: function(xhr, status, error) {
+        alert('Fehler beim Speichern der Teams.');
+    }
     });
 });
 

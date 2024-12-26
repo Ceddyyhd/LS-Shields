@@ -111,10 +111,13 @@ foreach ($events as &$event) {
                 <ul class="list-inline">
                     <?php
                     // Überprüfen, ob Teammitglieder vorhanden sind
-                    if (!empty($event['team_members'])) {
-                        foreach ($event['team_members'] as $member) {
-                            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                    if (!empty($event['team_members_names'])) {
+                        // Teammitglieder und Profilbilder anzeigen
+                        $names = explode(',', $event['team_members_names']);
+                        $images = explode(',', $event['team_members_images']);
+                        foreach ($names as $key => $name) {
+                            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($name) . "'>";
+                            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($images[$key]) . "'>";
                             echo "</li>";
                         }
                     } else {
@@ -125,7 +128,6 @@ foreach ($events as &$event) {
             </td>
             <td class="project-state">
                 <?php
-                // Status-Badge basierend auf dem Status
                 $status = htmlspecialchars($event['status']);
                 if ($status == 'in Planung') {
                     echo "<span class='badge badge-warning'>In Planung</span>";

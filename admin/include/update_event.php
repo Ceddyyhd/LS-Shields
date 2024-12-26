@@ -1,28 +1,38 @@
 <?php
-// Event ID aus der URL holen
-$event_id = isset($_GET['id']) ? $_GET['id'] : null;
+require 'db_connection.php'; // Deine DB-Verbindung
 
-if (!$event_id) {
-    die("Kein Eventplanungs-ID angegeben.");
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Event-ID aus der URL holen (falls erforderlich)
+    $event_id = $_GET['id']; // Event-ID aus der URL
 
-// Weiter mit der Datenbankabfrage
-try {
-    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
-    $stmt->bindParam(':id', $event_id, PDO::PARAM_INT);
-    $stmt->execute();
-    $event = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Formulardaten aus POST erhalten
+    $vorname_nachname = $_POST['vorname_nachname'];
+    $telefonnummer = $_POST['telefonnummer'];
+    $datum_uhrzeit_event = $_POST['datum_uhrzeit_event'];
+    $ort = $_POST['ort'];
+    $event_lead = $_POST['event_lead'];
 
-    if (!$event) {
-        die('Eventplanung nicht gefunden.');
+    // Update-Abfrage ausführen
+    $sql = "UPDATE eventplanung SET
+            vorname_nachname = :vorname_nachname,
+            telefonnummer = :telefonnummer,
+            datum_uhrzeit_event = :datum_uhrzeit_event,
+            ort = :ort,
+            event_lead = :event_lead
+            WHERE id = :event_id";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':vorname_nachname', $vorname_nachname);
+    $stmt->bindParam(':telefonnummer', $telefonnummer);
+    $stmt->bindParam(':datum_uhrzeit_event', $datum_uhrzeit_event);
+    $stmt->bindParam(':ort', $ort);
+    $stmt->bindParam(':event_lead', $event_lead);
+    $stmt->bindParam(':event_id', $event_id);
+
+    if ($stmt->execute()) {
+        echo json_encode(['message' => 'Änderungen erfolgreich gespeichert']);
+    } else {
+        echo json_encode(['message' => 'Fehler beim Speichern der Änderungen']);
     }
-
-    // Benutzer aus der `users`-Tabelle abfragen
-    $userStmt = $conn->prepare("SELECT id, name FROM users");
-    $userStmt->execute();
-    $users = $userStmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
 }
 ?>

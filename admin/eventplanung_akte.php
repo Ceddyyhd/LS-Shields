@@ -151,7 +151,7 @@ try {
       </div>
       <div class="modal-body">
 
-      <form id="edit-form" method="POST" action="include/update_event.php">
+      <form id="edit-form">
           <div class="form-group">
             <label>Ansprechpartner Name</label>
             <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
@@ -188,7 +188,7 @@ try {
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit_update" class="btn btn-primary">Save changes</button>
-          </div>
+        </div>
         </form>
 
       </div>
@@ -197,40 +197,40 @@ try {
 </div>
 <script>
   $(document).ready(function() {
-    // Event Lead Optionen per AJAX laden
+  // Event Lead Optionen per AJAX laden
+  $.ajax({
+    url: 'include/get_users.php', // Ein PHP-Skript, das die Benutzer abruft
+    method: 'GET',
+    success: function(data) {
+      var users = JSON.parse(data);
+      var select = $('#event_lead');
+      users.forEach(function(user) {
+        select.append('<option value="' + user.id + '">' + user.name + '</option>');
+      });
+    }
+  });
+
+  // Formular per AJAX senden
+  $('#edit-form').on('submit_update', function(e) {
+    e.preventDefault(); // Verhindert das normale Absenden des Formulars
+
+    var formData = $(this).serialize(); // Alle Formulardaten serialisieren
+
     $.ajax({
-      url: 'include/get_users.php', // Ein PHP-Skript, das die Benutzer abruft
-      method: 'GET',
-      success: function(data) {
-        var users = JSON.parse(data);
-        var select = $('#event_lead');
-        users.forEach(function(user) {
-          select.append('<option value="' + user.id + '">' + user.name + '</option>');
-        });
+      url: 'include/update_event.php', // PHP-Skript zum Verarbeiten des Updates
+      method: 'POST',
+      data: formData,
+      success: function(response) {
+        // Rückmeldung vom Server
+        alert(response.message); // Zum Beispiel: Erfolgsmeldung
+        $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
+      },
+      error: function() {
+        alert('Es gab einen Fehler bei der Aktualisierung.');
       }
     });
-
-    // Formular per AJAX senden
-    $('#edit-form').on('submit_update', function(e) {
-      e.preventDefault(); // Verhindert das normale Absenden des Formulars
-
-      var formData = $(this).serialize(); // Alle Formulardaten serialisieren
-
-      $.ajax({
-        url: 'include/update_event.php', // PHP-Skript zum Verarbeiten des Updates
-        method: 'POST',
-        data: formData,
-        success: function(response) {
-          // Rückmeldung vom Server
-          alert(response.message); // Zum Beispiel: Erfolgsmeldung
-          $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
-        },
-        error: function() {
-          alert('Es gab einen Fehler bei der Aktualisierung.');
-        }
-      });
-    });
   });
+});
 </script>
 
 

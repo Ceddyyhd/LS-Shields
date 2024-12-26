@@ -91,65 +91,70 @@ echo "</pre>";
     </thead>
     <tbody>
     <?php
-// Überprüfen und sicherstellen, dass jedes Event nur einmal durchlaufen wird
-$events = array_unique($events, SORT_REGULAR);
+// Beispiel für korrektes Handling der Event-IDs und Teammitglieder
 
-// Sicherstellen, dass Events nur einmal ausgegeben werden
-if (!empty($events)) {
-    foreach ($events as $event): ?>
-        <tr>
-            <td><?= htmlspecialchars($event['id']); ?></td>
-            <td>
-                <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
-                <br/>
-                <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
-            </td>
-            <td><span><?= htmlspecialchars($event['event']); ?></span></td>
-            <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
-            <td>
-                <ul class="list-inline">
-                    <?php
-                    // Überprüfen, ob Teammitglieder vorhanden sind
-                    if (!empty($event['team_members'])) {
-                        foreach ($event['team_members'] as $member) {
-                            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                            echo "</li>";
-                        }
-                    } else {
-                        // Wenn keine Teammitglieder vorhanden sind
-                        echo "<li>No team members available</li>";
-                    }
-                    ?>
-                </ul>
-            </td>
-            <td class="project-state">
-                <?php
-                $status = htmlspecialchars($event['status']);
-                if ($status == 'in Planung') {
-                    echo "<span class='badge badge-warning'>In Planung</span>";
-                } elseif ($status == 'in Durchführung') {
-                    echo "<span class='badge badge-danger'>In Durchführung</span>";
-                } elseif ($status == 'Abgeschlossen') {
-                    echo "<span class='badge badge-success'>Abgeschlossen</span>";
-                }
-                ?>
-            </td>
-            <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
-                    <i class="fas fa-folder"></i> View
-                </a>
-                <a class="btn btn-info btn-sm" href="#">
-                    <i class="fas fa-pencil-alt"></i> Edit
-                </a>
-                <a class="btn btn-danger btn-sm" href="#">
-                    <i class="fas fa-trash"></i> Delete
-                </a>
-            </td>
-        </tr>
-    <?php endforeach; 
-} else { 
-    echo "<tr><td colspan='7'>No events found</td></tr>";
+$events = array(); // Deine Events aus der DB
+$team_members = array(); // Deine Team-Mitglieder aus der DB
+
+// Beispiel-Daten - Ersetze dies mit der richtigen Logik
+$events = [
+    ['id' => 1, 'event' => 'SS offroad rennen', 'anmerkung' => '...', 'status' => 'in Planung', 'vorname_nachname' => 'Cedric Schmidt', 'datum_uhrzeit' => '2024-12-22 23:54:37'],
+    ['id' => 2, 'event' => 'test', 'anmerkung' => '', 'status' => 'in Planung', 'vorname_nachname' => 'dede', 'datum_uhrzeit' => '2024-12-22 23:53:54'],
+    ['id' => 7, 'event' => 'test2', 'anmerkung' => '', 'status' => 'in Planung', 'vorname_nachname' => 'Test', 'datum_uhrzeit' => '2024-12-24 23:59:13'],
+    ['id' => 8, 'event' => '', 'anmerkung' => '', 'status' => 'in Planung', 'vorname_nachname' => 'dfr', 'datum_uhrzeit' => '2024-12-24 22:57:39']
+];
+
+$team_members = [
+    ['event_id' => 1, 'name' => 'Cedric Schmidt', 'profile_image' => 'uploads/profile_images/standard.png'],
+    ['event_id' => 1, 'name' => 'testtttestttddedede', 'profile_image' => 'uploads/profile_images/standard.png'],
+    ['event_id' => 1, 'name' => 'Cedric S.', 'profile_image' => 'uploads/profile_images/standard.png']
+];
+
+// Sicherstellen, dass keine doppelten Events in der Ausgabe erscheinen
+$unique_events = array_unique($events, SORT_REGULAR);
+
+// Ausgabe der Events und Teammitglieder
+foreach ($unique_events as $event) {
+    echo "<tr>";
+    echo "<td>" . htmlspecialchars($event['id']) . "</td>";
+    echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
+    echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
+    echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
+
+    // Teammitglieder anzeigen
+    echo "<td><ul class='list-inline'>";
+    $has_team_members = false;
+    foreach ($team_members as $member) {
+        if ($member['event_id'] == $event['id']) {
+            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+            echo "</li>";
+            $has_team_members = true;
+        }
+    }
+    if (!$has_team_members) {
+        echo "<li>No team members available</li>";
+    }
+    echo "</ul></td>";
+
+    // Status anzeigen
+    echo "<td class='project-state'>";
+    if ($event['status'] == 'in Planung') {
+        echo "<span class='badge badge-warning'>In Planung</span>";
+    } elseif ($event['status'] == 'in Durchführung') {
+        echo "<span class='badge badge-danger'>In Durchführung</span>";
+    } elseif ($event['status'] == 'Abgeschlossen') {
+        echo "<span class='badge badge-success'>Abgeschlossen</span>";
+    }
+    echo "</td>";
+
+    // Aktionen
+    echo "<td class='project-actions text-right'>";
+    echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
+    echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
+    echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
+    echo "</td>";
+    echo "</tr>";
 }
 ?>
 

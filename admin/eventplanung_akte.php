@@ -45,8 +45,9 @@ if (isset($_GET['id'])) {
 
 // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
 try {
-    // Event-Daten mit dem Event Lead Name abfragen
-    $stmt = $conn->prepare("SELECT eventplanung.*, users.name AS event_lead_name FROM eventplanung 
+    // Event-Daten mit dem Event Lead Namen abfragen
+    $stmt = $conn->prepare("SELECT eventplanung.*, users.name AS event_lead_name 
+                            FROM eventplanung 
                             LEFT JOIN users ON eventplanung.event_lead = users.id 
                             WHERE eventplanung.id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -140,7 +141,7 @@ try {
                         <b>Ort:</b> <a class="float-right"><?= htmlspecialchars($event['ort']); ?></a>
                     </li>
                     <li class="list-group-item">
-                        <b>Eventlead:</b> <a class="float-right"><?= htmlspecialchars($event['event_lead']); ?></a>
+                        <b>Eventlead:</b> <a class="float-right"><?= htmlspecialchars($event['event_lead_name']); ?></a>
                     </li>
                 </ul>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">

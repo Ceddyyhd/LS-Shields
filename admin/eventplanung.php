@@ -36,23 +36,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
     <?php
-// SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
+// SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
 $query = "
-    SELECT DISTINCT eventplanung.*, 
-           users.name AS event_lead_name, 
-           users.profile_image AS event_lead_profile_image,
+    SELECT DISTINCT eventplanung.id, 
            eventplanung.event, 
            eventplanung.anmerkung
     FROM eventplanung
-    LEFT JOIN users ON eventplanung.event_lead = users.id
-    LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
-    GROUP BY eventplanung.id"; // Verhindert doppelte Events, indem nach Event-ID gruppiert wird
+    WHERE eventplanung.event IS NOT NULL"; // Verhindert NULL-Werte in der "event"-Spalte
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
 
 // Alle Events abrufen
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Debugging: Alle abgerufenen Events ausgeben
+echo '<pre>';
+print_r($events); // Gibt alle abgerufenen Events aus
+echo '</pre>';
 ?>
 <?php
 foreach ($events as &$event) {

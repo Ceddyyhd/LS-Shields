@@ -78,7 +78,11 @@ foreach ($events as &$event) {
 }
 ?>
     <!-- Main content -->
-    
+    <php>
+    echo '<pre>';
+print_r($events);
+echo '</pre>';
+    </php>
     <div class="card">
     <div class="card-header">
         <h3 class="card-title">Projects</h3>

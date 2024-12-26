@@ -253,6 +253,7 @@ try {
                 var responseData = JSON.parse(response);
                 alert(responseData.message); // Rückmeldung vom Server anzeigen
                 $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
+                window.location.reload();  // Seite neu laden
             },
             error: function() {
                 alert('Es gab einen Fehler beim Speichern der Änderungen.');

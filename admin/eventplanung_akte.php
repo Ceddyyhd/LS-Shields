@@ -872,7 +872,6 @@ $(document).ready(function() {
             previous: 'fa fa-chevron-left',
             next: 'fa fa-chevron-right'
         }
-            useCurrent: false
         });
 
         $('#gegangenUm<?php echo $employee['id']; ?>').datetimepicker({

@@ -6,6 +6,13 @@ ini_set('display_errors', 1);
 // Einbinden der Datenbankverbindung
 include('db.php');
 
+// Überprüfen, ob die Event-ID über die URL übergeben wurde
+if (isset($_GET['id'])) {
+    $eventId = $_GET['id'];  // Event ID aus der URL holen
+} else {
+    die('Keine Eventplanungs-ID angegeben.');  // Fehler anzeigen, wenn keine ID übergeben wurde
+}
+
 // Überprüfen, ob die Team-Daten gesendet wurden
 if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     $teamData = $_POST['teams'];
@@ -21,13 +28,6 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         error_log("Fehler bei der JSON-Codierung: " . json_last_error_msg());  // Fehler bei der JSON-Codierung
         echo "Fehler bei der JSON-Codierung."; // Diese Nachricht wird an den Browser gesendet
         exit;
-    }
-
-    // Holen der Event-ID aus der URL (z.B. /eventplanung_akte.php?id=1)
-    if (isset($_GET['id'])) {
-        $eventId = $_GET['id'];  // Beispiel Event ID aus der URL
-    } else {
-        die('Keine Eventplanungs-ID angegeben.');
     }
 
     try {

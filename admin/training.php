@@ -78,7 +78,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                       </div>
                       <div class="form-group">
-                        <label for="exampleInputEmail1">Uhrzeit</label>
+                        <label for="exampleInputEmail1">Trainingsleitung</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                       </div>
                       
@@ -112,6 +112,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <th>Grund</th>
                   <th>Trainingsleitung</th>
                   <th>Info</th>
+                  <th>An/Abmeldung</th>
                 </tr>
               </thead>
               <tbody>
@@ -122,6 +123,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <td>Aiden Knox, Paul Garcia</td>
                   <td>10 Minuten vor Start am Firmengelände in Dienstkleidung 
                     Genügend Essen und Trinken einpacken</td>
+                  <button type="button" class="btn btn-block btn-primary">Anmelden</button>
+                  <button type="button" class="btn btn-block btn-danger">Abmelden</button>
+
                 </tr>
                 <tr class="expandable-body">
                   <td colspan="5">

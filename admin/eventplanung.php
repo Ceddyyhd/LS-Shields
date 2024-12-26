@@ -32,11 +32,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
     <?php
+// SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "SELECT eventplanung.*, 
                  users.name AS event_lead_name, 
                  users.profile_image AS event_lead_profile_image,
-                 GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name) AS team_members_names,
-                 GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name) AS team_members_images
+                 IFNULL(GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name), '') AS team_members_names,
+                 IFNULL(GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name), '') AS team_members_images
           FROM eventplanung
           LEFT JOIN users ON eventplanung.event_lead = users.id
           LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id

@@ -31,28 +31,47 @@
     <!-- /.content-header -->
 
     <?php
-    // Include die db.php-Datei
-    include 'include/db.php';
+// SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
+$query = "
+    SELECT eventplanung.id, 
+           eventplanung.event, 
+           eventplanung.anmerkung, 
+           eventplanung.status, 
+           eventplanung.vorname_nachname, 
+           eventplanung.datum_uhrzeit
+    FROM eventplanung"; 
 
-    // SQL-Abfrage zum Abrufen aller Events
-    $query = "
-        SELECT eventplanung.id, 
-               eventplanung.event, 
-               eventplanung.anmerkung, 
-               eventplanung.status, 
-               eventplanung.vorname_nachname, 
-               eventplanung.datum_uhrzeit
-        FROM eventplanung"; 
+$stmt = $conn->prepare($query);
+$stmt->execute();
 
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
+// Alle Events abrufen
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Alle Events abrufen
-    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Debugging: Alle abgerufenen Events ausgeben
+echo '<pre>';
+print_r($events); // Gibt alle abgerufenen Events aus
+echo '</pre>';
 
-    // Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
-    
-    ?>
+// Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
+foreach ($events as &$event) {
+    // Teammitglieder abfragen
+    $teamQuery = "
+    SELECT DISTINCT eam.event_id, u.name, u.profile_image
+    FROM event_mitarbeiter_anmeldung eam
+    JOIN users u ON eam.employee_id = u.id
+    WHERE eam.event_id = :event_id";
+
+    $teamStmt = $conn->prepare($teamQuery);
+    $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+    $teamStmt->execute();
+    $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Teammitglieder in das Event-Datenfeld einfügen
+    $event['team_members'] = $team_members;
+}
+
+// Ausgabe der Events
+?>
 
 <!-- Ausgabe der Events -->
 <table class="table table-striped projects">
@@ -112,8 +131,7 @@
     }
     ?>
     </tbody>
-</table>
-        </div>
+</table>        </div>
     </div>
 
     <!-- JavaScript zum Initialisieren der Tooltips -->

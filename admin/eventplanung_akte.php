@@ -121,7 +121,18 @@ try {
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
                   Bearbeiten
                 </button>
-                <?php
+
+                <div class="modal fade" id="ansprechpartner-bearbeiten">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Ansprechpartner bearbeiten</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <?php
 // Beispiel zum Laden von Event-Daten
 $event_id = $_GET['event_id'];
 $sql = "SELECT * FROM eventplanung WHERE id = $event_id";
@@ -137,17 +148,6 @@ $event = mysqli_fetch_assoc($result);
     $('#event_lead').val('<?= $event['event_lead']; ?>');
   });
 </script>
-                <div class="modal fade" id="ansprechpartner-bearbeiten">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Ansprechpartner bearbeiten</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
         <form id="edit-form">
           <div class="form-group">
             <label>Ansprechpartner Name</label>

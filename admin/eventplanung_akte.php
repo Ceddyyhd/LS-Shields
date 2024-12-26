@@ -349,8 +349,8 @@ try {
 
     // Erfassung der Team- und Mitarbeiterdaten
     $('.team-form').each(function(index) {
-        const teamName = $(this).find('input[name^="team_name"]').val();
-        const teamArea = $(this).find('input[name^="bereich"]').val();
+        const teamName = $(this).find('input[name^="team_name"]').val().trim();
+        const teamArea = $(this).find('input[name^="bereich"]').val().trim();
 
         const employees = [];
         $(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
@@ -367,7 +367,7 @@ try {
         });
 
         // Füge nur Teams hinzu, die Mitarbeiter haben
-        if (employees.length > 0) {
+        if (employees.length > 0 && teamName !== '' && teamArea !== '') {
             const team = {
                 team_name: teamName,
                 area_name: teamArea,
@@ -379,6 +379,12 @@ try {
     });
 
     console.log("TeamData vor dem Senden:", teamData);
+
+    // Überprüfe, ob die Daten leer sind
+    if (teamData.length === 0) {
+        alert('Bitte füllen Sie alle Felder aus.');
+        return; // Stoppe das Senden, wenn keine gültigen Daten vorhanden sind
+    }
 
     // Sende die Daten per AJAX an den Server
     $.ajax({

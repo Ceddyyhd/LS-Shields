@@ -69,7 +69,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       </div>
                       <div class="modal-body">
 
-                        <p>One fine body&hellip;</p>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Grund</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Info</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Uhrzeit</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                      </div>
                       
                         <label>Date and time:</label>
                         <div class="input-group date" id="reservationdatetime" data-target-input="nearest">

@@ -123,8 +123,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <td>Aiden Knox, Paul Garcia</td>
                   <td>10 Minuten vor Start am Firmengelände in Dienstkleidung 
                     Genügend Essen und Trinken einpacken</td>
-                  <button type="button" class="btn btn-block btn-primary">Anmelden</button>
-                  <button type="button" class="btn btn-block btn-danger">Abmelden</button>
+                    <td><button type="button" class="btn btn-block btn-primary">Anmelden</button>
+                  <button type="button" class="btn btn-block btn-danger">Abmelden</button></td>
 
                 </tr>
                 <tr class="expandable-body">

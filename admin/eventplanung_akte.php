@@ -155,14 +155,24 @@ try {
                 response.forEach(function(team, index) {
                     const teamName = team.team_name;
                     const teamArea = team.area_name;
-                    const teamEmployees = team.employee_names.map(employee => employee.name).join('</li><li>'); // Liste der Mitarbeiter
+
+                    // Erstelle die Liste der Mitarbeiter mit speziellen Formatierungen für den Teamlead
+                    const teamEmployees = team.employee_names.map(employee => {
+                        if (employee.is_team_lead == 1) {
+                            // Wenn es der Teamlead ist, wende das Styling an
+                            return `<li><p><font style="background-color: rgb(148, 189, 123);" color="#000000">${employee.name}</font></p></li>`;
+                        } else {
+                            // Für normale Mitarbeiter
+                            return `<li>${employee.name}</li>`;
+                        }
+                    }).join(''); // Liste der Mitarbeiter
 
                     // Dynamisch in das <dl> einfügen
                     const teamHtml = `
                         <dt class="col-sm-4">${teamName} (${teamArea})</dt>
                         <dd class="col-sm-8"> 
                             <ul>
-                                <li>${teamEmployees}</li>
+                                ${teamEmployees}
                             </ul>
                         </dd>
                     `;

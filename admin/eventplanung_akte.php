@@ -200,7 +200,7 @@ try {
   $(document).ready(function() {
   // Event Lead Optionen per AJAX laden
   $.ajax({
-    url: 'get_users.php', // Ein PHP-Skript, das die Benutzer abruft
+    url: 'include/get_users.php', // Ein PHP-Skript, das die Benutzer abruft
     method: 'GET',
     success: function(data) {
       var users = JSON.parse(data);
@@ -223,7 +223,7 @@ try {
     formData += '&event_id=' + event_id; // Event ID zur Formulardaten hinzufügen
 
     $.ajax({
-      url: 'update_event_ajax.php', // PHP-Skript zum Verarbeiten des Updates
+      url: 'include/update_event.php', // PHP-Skript zum Verarbeiten des Updates
       method: 'POST',
       data: formData,
       success: function(response) {

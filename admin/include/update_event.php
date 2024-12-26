@@ -1,27 +1,28 @@
 <?php
-// update_event_ajax.php
-require 'db.php'; // Deine DB-Verbindung
+// Event ID aus der URL holen
+$event_id = isset($_GET['id']) ? $_GET['id'] : null;
 
-// Empfange die Daten vom AJAX-Request
-$vorname_nachname = $_POST['vorname_nachname'];
-$telefonnummer = $_POST['telefonnummer'];
-$datum_uhrzeit_event = $_POST['datum_uhrzeit_event'];
-$ort = $_POST['ort'];
-$event_lead = $_POST['event_lead'];
-$event_id = $_POST['event_id']; // Falls die Event-ID übergeben wird
+if (!$event_id) {
+    die("Kein Eventplanungs-ID angegeben.");
+}
 
-// Update-Abfrage ausführen
-$sql = "UPDATE eventplanung SET
-        vorname_nachname = '$vorname_nachname',
-        telefonnummer = '$telefonnummer',
-        datum_uhrzeit_event = '$datum_uhrzeit_event',
-        ort = '$ort',
-        event_lead = '$event_lead'
-        WHERE id = $event_id";
+// Weiter mit der Datenbankabfrage
+try {
+    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
+    $stmt->bindParam(':id', $event_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (mysqli_query($conn, $sql)) {
-    echo json_encode(['message' => 'Änderungen erfolgreich gespeichert']);
-} else {
-    echo json_encode(['message' => 'Fehler beim Speichern der Änderungen']);
+    if (!$event) {
+        die('Eventplanung nicht gefunden.');
+    }
+
+    // Benutzer aus der `users`-Tabelle abfragen
+    $userStmt = $conn->prepare("SELECT id, name FROM users");
+    $userStmt->execute();
+    $users = $userStmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
 }
 ?>

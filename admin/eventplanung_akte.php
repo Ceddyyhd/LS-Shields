@@ -489,7 +489,7 @@ try {
                         <select class="form-control" name="employee_list[]">
                             <?php
                             // Verbindung zur Datenbank
-                            include('db.php');
+                            include('include/db.php');
 
                             // Event ID aus der URL holen
                             $eventId = $_GET['id'];

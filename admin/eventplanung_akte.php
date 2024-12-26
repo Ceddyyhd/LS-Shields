@@ -133,37 +133,8 @@ try {
                 <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
                 <div class="card-body">
-                <dl class="row">
-                  <dt class="col-sm-4">Haupteingang</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Nebeneingang</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Tür 1</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Tür 2</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-
-                  </dd>
+                <dl class="row" id="teams-container">
+                    <!-- Dynamisch generierte Inhalte erscheinen hier -->
                 </dl>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teams-bearbeiten">
                   Teams Bearbeiten
@@ -221,37 +192,49 @@ try {
     $(document).ready(function() {
         let teamCount = 1; // Starten mit Team 1
         $('#teams-bearbeiten').on('show.bs.modal', function (e) {
-            var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+    var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
 
-            // AJAX-Anfrage, um die Team-Daten zu laden
-            $.ajax({
-                url: 'include/team_get.php', 
-                method: 'GET',
-                data: { event_id: eventId },
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+    // AJAX-Anfrage, um die Team-Daten zu laden
+    $.ajax({
+        url: 'include/team_get.php', 
+        method: 'GET',
+        data: { event_id: eventId },
+        dataType: 'json',
+        success: function(response) {
+            console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
 
-                    if (Array.isArray(response) && response.length > 0) {
-                        // Leere das Modal
-                        $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+            if (Array.isArray(response) && response.length > 0) {
+                // Leere das <dl>-Tag
+                $('#teams-container').empty(); // Entfernt alle vorherigen Teams
 
-                        // Füge die Team-Daten in das Modal ein
-                        response.forEach(function(team, index) {
-                            const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
-                            $('#teams-container').append(generateTeamForm(team, teamIndex));
-                        });
-                    } else {
-                        console.log("Keine Teams gefunden.");
-                        alert('Keine Teams gefunden.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log('Fehler bei der Anfrage:', error);
-                    console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
-                }
-            });
-        });
+                // Füge die Team-Daten in das <dl> ein
+                response.forEach(function(team, index) {
+                    const teamName = team.team_name;
+                    const teamArea = team.area_name;
+                    const teamEmployees = team.employee_names.map(employee => employee.name).join('<li></li>'); // Liste der Mitarbeiter
+
+                    // Dynamisch in das <dl> einfügen
+                    const teamHtml = `
+                        <dt class="col-sm-4">${teamName} (${teamArea})</dt>
+                        <dd class="col-sm-8"> 
+                            <ul>
+                                <li>${teamEmployees}</li>
+                            </ul>
+                        </dd>
+                    `;
+                    $('#teams-container').append(teamHtml);
+                });
+            } else {
+                console.log("Keine Teams gefunden.");
+                alert('Keine Teams gefunden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler bei der Anfrage:', error);
+            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+        }
+    });
+});
 
         // Funktion zum Generieren des HTML für Teamformular
         function generateTeamForm(team, index) {

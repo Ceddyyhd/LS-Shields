@@ -152,8 +152,8 @@ try {
       <div class="modal-body">
 
       <form id="edit-form">
-      <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['event_id']; ?>">
-  <div class="form-group">
+      <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>"> <!-- Verwendung von $_GET['id'] -->
+      <div class="form-group">
     <label>Ansprechpartner Name</label>
     <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
   </div>

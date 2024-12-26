@@ -50,11 +50,6 @@ $stmt->execute();
 // Alle Events abrufen
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Debugging: Alle abgerufenen Events ausgeben
-echo '<pre>';
-print_r($events); // Gibt alle abgerufenen Events aus
-echo '</pre>';
-
 // Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
 foreach ($events as &$event) {
     // Teammitglieder abfragen
@@ -71,6 +66,7 @@ foreach ($events as &$event) {
     // Teammitglieder in das Event-Datenfeld einfügen
     $event['team_members'] = $team_members;
 }
+
 ?>
 
 <!-- HTML-Ausgabe -->
@@ -98,28 +94,36 @@ foreach ($events as &$event) {
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($events as $event): ?>
-            <tr>
-                <td><?= htmlspecialchars($event['id']); ?></td>
-                <td><?= htmlspecialchars($event['vorname_nachname']); ?></td>
-                <td><?= htmlspecialchars($event['event']); ?></td>
-                <td><?= htmlspecialchars($event['anmerkung']); ?></td>
-                <td><?= htmlspecialchars($event['status']); ?></td>
-                <td><?= date('d.m.Y H:i', strtotime($event['datum_uhrzeit'])); ?></td>
-                <td>
-                    <?php
-                    if (!empty($event['team_members'])) {
-                        foreach ($event['team_members'] as $member) {
-                            echo htmlspecialchars($member['name']) . " ";
-                            echo "<img src='" . htmlspecialchars($member['profile_image']) . "' alt='Avatar' width='30' height='30' />";
+        <?php 
+        // Überprüfen, ob Events vorhanden sind
+        if (count($events) > 0) {
+            foreach ($events as $event): ?>
+                <tr>
+                    <td><?= htmlspecialchars($event['id']); ?></td>
+                    <td><?= htmlspecialchars($event['vorname_nachname']); ?></td>
+                    <td><?= htmlspecialchars($event['event']); ?></td>
+                    <td><?= htmlspecialchars($event['anmerkung']); ?></td>
+                    <td><?= htmlspecialchars($event['status']); ?></td>
+                    <td><?= date('d.m.Y H:i', strtotime($event['datum_uhrzeit'])); ?></td>
+                    <td>
+                        <?php
+                        // Überprüfen, ob Teammitglieder vorhanden sind
+                        if (!empty($event['team_members'])) {
+                            foreach ($event['team_members'] as $member) {
+                                echo htmlspecialchars($member['name']) . " ";
+                                echo "<img src='" . htmlspecialchars($member['profile_image']) . "' alt='Avatar' width='30' height='30' />";
+                            }
+                        } else {
+                            echo "Keine Teammitglieder";
                         }
-                    } else {
-                        echo "Keine Teammitglieder";
-                    }
-                    ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                        ?>
+                    </td>
+                </tr>
+            <?php endforeach; 
+        } else {
+            echo "<tr><td colspan='7'>Keine Events gefunden</td></tr>";
+        }
+        ?>
         </tbody>
     </table>
         </div>

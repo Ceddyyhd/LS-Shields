@@ -31,6 +31,9 @@
     <!-- /.content-header -->
 
     <?php
+// DB-Verbindung einbinden
+include 'include/db.php'; // Stelle sicher, dass der Pfad korrekt ist
+
 // SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
 $query = "
     SELECT eventplanung.id, 
@@ -70,80 +73,55 @@ foreach ($events as &$event) {
 }
 ?>
 
-<!-- Ausgabe der Events -->
-<table class="table table-striped projects">
-    <thead>
+<!-- HTML-Ausgabe -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Event-Liste</h1>
+    <table class="table table-striped">
+        <thead>
         <tr>
-            <th style="width: 1%">#</th>
-            <th style="width: 20%">Ansprechpartner</th>
-            <th style="width: 20%">Event</th>
-            <th style="width: 20%">Anmerkung</th>
-            <th style="width: 30%">Team Members</th>
+            <th>#</th>
+            <th>Ansprechpartner</th>
+            <th>Event</th>
+            <th>Anmerkung</th>
             <th>Status</th>
-            <th style="width: 20%">Actions</th>
+            <th>Datum</th>
+            <th>Team Members</th>
         </tr>
-    </thead>
-    <tbody>
-        <?php 
-        // Sicherstellen, dass Events nur einmal ausgegeben werden
-        if (!empty($events)) {
-            foreach ($events as $event): ?>
-                <tr>
-                    <td><?= htmlspecialchars($event['id']); ?></td>
-                    <td>
-                        <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
-                        <br/>
-                        <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
-                    </td>
-                    <td><span><?= htmlspecialchars($event['event']); ?></span></td>
-                    <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
-                    <td>
-                        <ul class="list-inline">
-                            <?php
-                            // Überprüfen, ob Teammitglieder vorhanden sind
-                            if (!empty($event['team_members'])) {
-                                foreach ($event['team_members'] as $member) {
-                                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                                    echo "</li>";
-                                }
-                            } else {
-                                echo "<li>No team members available</li>";
-                            }
-                            ?>
-                        </ul>
-                    </td>
-                    <td class="project-state">
-                        <?php
-                        $status = htmlspecialchars($event['status']);
-                        if ($status == 'in Planung') {
-                            echo "<span class='badge badge-warning'>In Planung</span>";
-                        } elseif ($status == 'in Durchführung') {
-                            echo "<span class='badge badge-danger'>In Durchführung</span>";
-                        } elseif ($status == 'Abgeschlossen') {
-                            echo "<span class='badge badge-success'>Abgeschlossen</span>";
+        </thead>
+        <tbody>
+        <?php foreach ($events as $event): ?>
+            <tr>
+                <td><?= htmlspecialchars($event['id']); ?></td>
+                <td><?= htmlspecialchars($event['vorname_nachname']); ?></td>
+                <td><?= htmlspecialchars($event['event']); ?></td>
+                <td><?= htmlspecialchars($event['anmerkung']); ?></td>
+                <td><?= htmlspecialchars($event['status']); ?></td>
+                <td><?= date('d.m.Y H:i', strtotime($event['datum_uhrzeit'])); ?></td>
+                <td>
+                    <?php
+                    if (!empty($event['team_members'])) {
+                        foreach ($event['team_members'] as $member) {
+                            echo htmlspecialchars($member['name']) . " ";
+                            echo "<img src='" . htmlspecialchars($member['profile_image']) . "' alt='Avatar' width='30' height='30' />";
                         }
-                        ?>
-                    </td>
-                    <td class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
-                            <i class="fas fa-folder"></i> View
-                        </a>
-                        <a class="btn btn-info btn-sm" href="#">
-                            <i class="fas fa-pencil-alt"></i> Edit
-                        </a>
-                        <a class="btn btn-danger btn-sm" href="#">
-                            <i class="fas fa-trash"></i> Delete
-                        </a>
-                    </td>
-                </tr>
-            <?php endforeach; 
-        } else { 
-            echo "<tr><td colspan='7'>No events found</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
+                    } else {
+                        echo "Keine Teammitglieder";
+                    }
+                    ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
         </div>
     </div>
 

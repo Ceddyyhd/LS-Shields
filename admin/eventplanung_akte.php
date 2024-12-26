@@ -133,8 +133,22 @@ try {
                 <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
 
-                <p><font style="background-color: rgb(148, 189, 123);" color="#000000">Cedric</font></p>
-                <script>
+                <style>
+    /* Flexbox für das Layout der Teams */
+    .row {
+        display: flex;
+        align-items: center;
+    }
+
+    .row dt {
+        flex: 1; /* Lässt das dt-Tag mehr Platz einnehmen */
+        white-space: nowrap; /* Verhindert das Umbruchverhalten */
+    }
+
+    .row dd {
+        flex: 2; /* Lässt das dd-Tag mehr Platz einnehmen */
+    }
+</style>                <script>
                     $(document).ready(function() {
     var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
 

@@ -47,7 +47,7 @@ foreach ($events as &$event) {
     echo "<pre>Event vor Team-Mitgliedern: ";
     print_r($event); // Gibt das Event ohne Team-Mitglieder aus
     echo "</pre>";
-    
+
     // Team-Mitglieder abfragen
     $teamQuery = "
         SELECT u.id AS employee_id, u.name, u.profile_image
@@ -59,13 +59,18 @@ foreach ($events as &$event) {
     $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
     $teamStmt->execute();
     $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     echo "<pre>Team-Mitglieder für Event " . $event['id'] . ": ";
     print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
     echo "</pre>";
 
     // Wenn keine Team-Mitglieder vorhanden sind, setze es auf ein leeres Array
-    $event['team_members'] = empty($team_members) ? [] : $team_members;
+    $event['team_members'] = !empty($team_members) ? $team_members : [];
+
+    // Event ausgeben, nachdem Team-Mitglieder zugeordnet wurden
+    echo "<pre>Event nach der Team-Mitglieder-Zuordnung: ";
+    print_r($event); 
+    echo "</pre>";
 }
 
 // Überprüfe, ob alle Events korrekt ausgegeben werden

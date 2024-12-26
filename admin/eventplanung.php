@@ -37,7 +37,7 @@
 $query = "
     SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
     FROM eventplanung
-    ORDER BY datum_uhrzeit DESC"; // Beispiel für die Events-Abfrage
+    ORDER BY datum_uhrzeit DESC"; 
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -64,15 +64,14 @@ foreach ($events as &$event) {
     print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
     echo "</pre>";
 
-    // Team-Mitglieder dem Event hinzufügen
-    $event['team_members'] = $team_members;
+    // Wenn keine Team-Mitglieder vorhanden sind, setze es auf ein leeres Array
+    $event['team_members'] = empty($team_members) ? [] : $team_members;
 }
 
 // Überprüfe, ob alle Events korrekt ausgegeben werden
 echo "<pre>Events nach der Team-Mitglieder-Zuordnung: ";
 print_r($events);
 echo "</pre>";
-
 // Ausgabe der Events
 ?>
 

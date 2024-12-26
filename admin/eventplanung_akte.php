@@ -89,7 +89,23 @@ try {
         </div>
       </div><!-- /.container-fluid -->
     </section>
-
+    <?php
+// Beispiel zum Laden von Event-Daten
+$event_id = $_GET['event_id'];
+$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
+$result = mysqli_query($conn, $sql);
+$event = mysqli_fetch_assoc($result);
+?>
+<script>
+  $(document).ready(function() {
+    // Sicherstellen, dass die PHP-Werte richtig in JavaScript übergeben werden
+    $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
+    $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
+    $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
+    $('#ort').val(<?= json_encode($event['ort']); ?>);
+    $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
+  });
+</script>
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -163,7 +179,7 @@ try {
 
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit_update" class="btn btn-primary">Save changes</button>
           </div>
         </form>
 
@@ -187,7 +203,7 @@ try {
     });
 
     // Formular per AJAX senden
-    $('#edit-form').on('submit', function(e) {
+    $('#edit-form').on('submit_update', function(e) {
       e.preventDefault(); // Verhindert das normale Absenden des Formulars
 
       var formData = $(this).serialize(); // Alle Formulardaten serialisieren

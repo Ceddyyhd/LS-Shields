@@ -1,6 +1,6 @@
 <?php
 // get_users.php
-require 'db_connection.php'; // Deine DB-Verbindung
+require 'db.php'; // Deine DB-Verbindung
 
 $sql = "SELECT id, name FROM users";
 $result = mysqli_query($conn, $sql);

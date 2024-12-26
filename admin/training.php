@@ -5,7 +5,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
 <?php include 'include/header.php'; ?>
-
+<header>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- daterange picker -->
+  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+  <!-- Bootstrap4 Duallistbox -->
+  <link rel="stylesheet" href="plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+  <!-- BS Stepper -->
+  <link rel="stylesheet" href="plugins/bs-stepper/css/bs-stepper.min.css">
+  <!-- dropzonejs -->
+  <link rel="stylesheet" href="plugins/dropzone/min/dropzone.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
+</header>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -63,23 +89,54 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                             </div>
                         </div>
-                        <script>
-                              $(function () {
-                        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+                          <script>
+  $(function () {
 
-                         $('#datetimepicker').datetimepicker({
-                            format: 'YYYY-MM-DD HH:mm', // Format für MySQL
-                            icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
-                                time: 'fa fa-clock',
-                                date: 'fa fa-calendar',
-                                up: 'fa fa-arrow-up',
-                                down: 'fa fa-arrow-down',
-                                previous: 'fa fa-chevron-left',
-                                next: 'fa fa-chevron-right'
-                            }
-                        });
-                      }
-                        </script>
+    //Date picker
+    $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+
+
+$('#datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm', // Format für MySQL
+        icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-arrow-up',
+            down: 'fa fa-arrow-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right'
+        }
+    });
+
+    //Date and time picker
+    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    })
+
+    //Timepicker
+    $('#timepicker').datetimepicker({
+      format: 'LT'
+    })
+  })
+
+
+
+
+
+
+</script>
+                        
                       </div>
                       <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

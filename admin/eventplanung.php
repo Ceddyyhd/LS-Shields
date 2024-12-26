@@ -48,22 +48,6 @@ echo "</pre>";
 // Team-Mitglieder abfragen
 
 
-$teamStmt = $conn->prepare($teamQuery);
-$teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-$teamStmt->execute();
-$team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
-
-echo "<pre>Team-Mitglieder für Event " . $event['id'] . ": ";
-print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
-echo "</pre>";
-
-// Wenn keine Team-Mitglieder vorhanden sind, setze es auf ein leeres Array
-if (empty($team_members)) {
-    $event['team_members'] = [];  // Leeres Array statt null
-} else {
-    $event['team_members'] = $team_members;
-}
-
 // Event ausgeben, nachdem Team-Mitglieder zugeordnet wurden
 echo "<pre>Event nach der Team-Mitglieder-Zuordnung: ";
 print_r($event); 

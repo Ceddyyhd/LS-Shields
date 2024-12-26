@@ -132,6 +132,53 @@ try {
               <div class="card-body">
                 <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
+                <script>
+                    $(document).ready(function() {
+    var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+
+    // AJAX-Anfrage, um die Team-Daten direkt beim Laden der Seite zu laden
+    $.ajax({
+        url: 'include/team_get.php', 
+        method: 'GET',
+        data: { event_id: eventId },
+        dataType: 'json',
+        success: function(response) {
+            console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+
+            if (Array.isArray(response) && response.length > 0) {
+                // Leere das <dl>-Tag
+                $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+
+                // Füge die Team-Daten in das <dl> ein
+                response.forEach(function(team, index) {
+                    const teamName = team.team_name;
+                    const teamArea = team.area_name;
+                    const teamEmployees = team.employee_names.map(employee => employee.name).join('</li><li>'); // Liste der Mitarbeiter
+
+                    // Dynamisch in das <dl> einfügen
+                    const teamHtml = `
+                        <dt class="col-sm-4">${teamName} (${teamArea})</dt>
+                        <dd class="col-sm-8"> 
+                            <ul>
+                                <li>${teamEmployees}</li>
+                            </ul>
+                        </dd>
+                    `;
+                    $('#teams-container').append(teamHtml);
+                });
+            } else {
+                console.log("Keine Teams gefunden.");
+                alert('Keine Teams gefunden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log('Fehler bei der Anfrage:', error);
+            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+        }
+    });
+});
+                </script>
+
                 <div class="card-body">
                 <dl class="row" id="teams-container">
                     <!-- Dynamisch generierte Inhalte erscheinen hier -->
@@ -201,7 +248,7 @@ try {
         data: { event_id: eventId },
         dataType: 'json',
         success: function(response) {
-            console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+            console.log("Serverantwort (raw):", response);
 
             if (Array.isArray(response) && response.length > 0) {
                 // Leere das <dl>-Tag
@@ -211,7 +258,7 @@ try {
                 response.forEach(function(team, index) {
                     const teamName = team.team_name;
                     const teamArea = team.area_name;
-                    const teamEmployees = team.employee_names.map(employee => employee.name).join('<li></li>'); // Liste der Mitarbeiter
+                    const teamEmployees = team.employee_names.map(employee => employee.name).join('</li><li>'); // Liste der Mitarbeiter
 
                     // Dynamisch in das <dl> einfügen
                     const teamHtml = `
@@ -231,7 +278,7 @@ try {
         },
         error: function(xhr, status, error) {
             console.log('Fehler bei der Anfrage:', error);
-            console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+            console.log('Antwort des Servers: ', xhr.responseText);
         }
     });
 });

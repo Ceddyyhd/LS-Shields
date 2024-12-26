@@ -6,11 +6,11 @@ ini_set('display_errors', 1);
 // Einbinden der Datenbankverbindung
 include('db.php');
 
-// Überprüfen, ob die Event-ID über die URL übergeben wurde
-if (isset($_GET['id'])) {
-    $eventId = $_GET['id'];  // Event ID aus der URL holen
+// Überprüfen, ob die Event-ID über POST übergeben wurde
+if (isset($_POST['event_id'])) {
+    $eventId = $_POST['event_id'];  // Event ID aus dem POST-Request holen
 } else {
-    die('Keine Eventplanungs-ID angegeben.');  // Fehler anzeigen, wenn keine ID übergeben wurde
+    die('Keine Eventplanungs-ID angegeben.');
 }
 
 // Überprüfen, ob die Team-Daten gesendet wurden

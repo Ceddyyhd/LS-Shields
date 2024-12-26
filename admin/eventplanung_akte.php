@@ -883,6 +883,7 @@ $(document).ready(function() {
             down: 'fa fa-arrow-down',
             previous: 'fa fa-chevron-left',
             next: 'fa fa-chevron-right'
+        }
         });
     <?php } ?>
 

@@ -80,10 +80,10 @@ foreach ($events as &$event) {
                 <tr>
                     <th style="width: 1%">#</th>
                     <th style="width: 20%">Project Name</th>
-                    <th style="width: 30%">Team Members</th>
-                    <th>Status</th>
                     <th style="width: 20%">Event</th> <!-- Neue Spalte für Event -->
                     <th style="width: 20%">Anmerkung</th> <!-- Neue Spalte für Anmerkung -->
+                    <th style="width: 30%">Team Members</th>
+                    <th>Status</th>
                     <th style="width: 20%">Actions</th>
                 </tr>
             </thead>
@@ -95,6 +95,14 @@ foreach ($events as &$event) {
                             <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
                             <br/>
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
+                        </td>
+                        <td>
+                            <!-- Neue Spalte für Event anzeigen -->
+                            <span><?= htmlspecialchars($event['event']); ?></span>
+                        </td>
+                        <td>
+                            <!-- Neue Spalte für Anmerkung anzeigen -->
+                            <span><?= htmlspecialchars($event['anmerkung']); ?></span>
                         </td>
                         <td>
                         <ul class="list-inline">
@@ -120,14 +128,6 @@ foreach ($events as &$event) {
                                 echo "<span class='badge badge-success'>Abgeschlossen</span>";
                             }
                             ?>
-                        </td>
-                        <td>
-                            <!-- Neue Spalte für Event anzeigen -->
-                            <span><?= htmlspecialchars($event['event']); ?></span>
-                        </td>
-                        <td>
-                            <!-- Neue Spalte für Anmerkung anzeigen -->
-                            <span><?= htmlspecialchars($event['anmerkung']); ?></span>
                         </td>
                         <td class="project-actions text-right">
                             <!-- View Button, der zu einer Detailseite weiterleitet -->

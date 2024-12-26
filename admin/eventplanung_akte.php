@@ -146,8 +146,8 @@ try {
 
           <div class="form-group">
             <label>Datum & Uhrzeit</label>
-            <input type="text" class="form-control" name="datum_uhrzeit_event" value="<?= $ansprechpartner['datum_uhrzeit_event']; ?>" required>
-            </div>
+            <input type="text" class="form-control" name="datum_uhrzeit" value="<?= $ansprechpartner['datum_uhrzeit']; ?>" required>
+          </div>
 
           <div class="form-group">
             <label>Ort</label>

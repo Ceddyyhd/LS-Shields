@@ -93,7 +93,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                         <td class="project-actions text-right">
                             <!-- View Button, der zu einer Detailseite weiterleitet -->
-                            <a class="btn btn-primary btn-sm" href="eventplanung_alte.php?id=<?= $event['id']; ?>">
+                            <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
                                 <i class="fas fa-folder"></i> View
                             </a>
                             <a class="btn btn-info btn-sm" href="#">

@@ -42,10 +42,13 @@ $query = "
            eventplanung.anmerkung, 
            eventplanung.status, 
            eventplanung.vorname_nachname, 
-           eventplanung.datum_uhrzeit
+           eventplanung.datum_uhrzeit,
+           GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name) AS team_members_names,
+           GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name) AS team_members_images
     FROM eventplanung
+    LEFT JOIN users AS team_users ON event_mitarbeiter_anmeldung.employee_id = team_users.id
     LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
-    LEFT JOIN users ON eventplanung.event_lead = users.id";
+    GROUP BY eventplanung.id"; // Verhindert Duplikate bei Events
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -94,19 +97,55 @@ foreach ($events as &$event) {
                 </tr>
             </thead>
             <tbody>
-    <?php
-    // Debugging: Zeige die Events an
-    print_r($events);
-    foreach ($events as $event): 
-    ?>
+    <?php foreach ($events as $event): ?>
         <tr>
-            <td><?= htmlspecialchars($event['id']); ?></td>
-            <td><?= htmlspecialchars($event['vorname_nachname']); ?></td>
-            <td><?= htmlspecialchars($event['event']); ?></td>
-            <td><?= htmlspecialchars($event['anmerkung']); ?></td>
-            <td><?= htmlspecialchars($event['status']); ?></td>
+            <td><a><?= htmlspecialchars($event['id']); ?></a></td>
+            <td>
+                <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
+                <br/>
+                <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
+            </td>
+            <td><span><?= htmlspecialchars($event['event']); ?></span></td>
+            <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
+            <td>
+                <ul class="list-inline">
+                    <?php
+                    // Überprüfen, ob Teammitglieder vorhanden sind
+                    if (!empty($event['team_members'])) {
+                        foreach ($event['team_members'] as $member) {
+                            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                            echo "</li>";
+                        }
+                    } else {
+                        echo "<li>No team members available</li>";
+                    }
+                    ?>
+                </ul>
+            </td>
+            <td class="project-state">
+                <?php
+                // Status-Badge basierend auf dem Status
+                $status = htmlspecialchars($event['status']);
+                if ($status == 'in Planung') {
+                    echo "<span class='badge badge-warning'>In Planung</span>";
+                } elseif ($status == 'in Durchführung') {
+                    echo "<span class='badge badge-danger'>In Durchführung</span>";
+                } elseif ($status == 'Abgeschlossen') {
+                    echo "<span class='badge badge-success'>Abgeschlossen</span>";
+                }
+                ?>
+            </td>
             <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">View</a>
+                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
+                    <i class="fas fa-folder"></i> View
+                </a>
+                <a class="btn btn-info btn-sm" href="#">
+                    <i class="fas fa-pencil-alt"></i> Edit
+                </a>
+                <a class="btn btn-danger btn-sm" href="#">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
             </td>
         </tr>
     <?php endforeach; ?>

@@ -32,46 +32,31 @@
 
     <?php
 // SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
+// Zuerst die Events abfragen (ohne Team-Mitglieder)
 $query = "
-    SELECT eventplanung.id, 
-           eventplanung.event, 
-           eventplanung.anmerkung, 
-           eventplanung.status, 
-           eventplanung.vorname_nachname, 
-           eventplanung.datum_uhrzeit
-    FROM eventplanung"; 
+    SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
+    FROM eventplanung
+    ORDER BY datum_uhrzeit DESC"; // Beispiel für die Events-Abfrage
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
-
-// Alle Events abrufen
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Duplikate der Events entfernen, falls vorhanden (z.B. bei doppeltem Auftreten der selben Event-ID)
-$events = array_map("unserialize", array_unique(array_map("serialize", $events)));
-
-// Team-Mitglieder für jedes Event abfragen
 foreach ($events as &$event) {
-    // Team-Mitglieder abfragen
+    // Für jedes Event die Team-Mitglieder abfragen
     $teamQuery = "
-    SELECT DISTINCT eam.event_id, u.id AS employee_id, u.name, u.profile_image
-    FROM event_mitarbeiter_anmeldung eam
-    JOIN users u ON eam.employee_id = u.id
-    WHERE eam.event_id = :event_id";
+        SELECT u.id AS employee_id, u.name, u.profile_image
+        FROM event_mitarbeiter_anmeldung eam
+        JOIN users u ON eam.employee_id = u.id
+        WHERE eam.event_id = :event_id";
 
     $teamStmt = $conn->prepare($teamQuery);
     $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
     $teamStmt->execute();
     $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Duplikate der Team-Mitglieder verhindern, wenn ein Teammitglied in mehreren Events ist
-    $unique_team_members = [];
-    foreach ($team_members as $member) {
-        $unique_team_members[$member['employee_id']] = $member;  // employee_id als Schlüssel
-    }
-
-    // Team-Mitglieder zum Event hinzufügen
-    $event['team_members'] = array_values($unique_team_members); // Nur die Werte als Array zurückgeben
+    // Team-Mitglieder dem Event hinzufügen
+    $event['team_members'] = $team_members;
 }
 
 // Ausgabe der Events

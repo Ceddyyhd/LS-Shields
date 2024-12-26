@@ -51,22 +51,7 @@
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
-    foreach ($events as &$event) {
-        // Teammitglieder abfragen
-        $teamQuery = "
-        SELECT DISTINCT eam.event_id, u.name, u.profile_image
-        FROM event_mitarbeiter_anmeldung eam
-        JOIN users u ON eam.employee_id = u.id
-        WHERE eam.event_id = :event_id";
-
-        $teamStmt = $conn->prepare($teamQuery);
-        $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-        $teamStmt->execute();
-        $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Teammitglieder in das Event-Datenfeld einfügen
-        $event['team_members'] = $team_members;
-    }
+    
     ?>
 
 <!-- Ausgabe der Events -->
@@ -92,7 +77,19 @@
         echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
         echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
 
-        
+        // Teammitglieder anzeigen
+        echo "<td><ul class='list-inline'>";
+        $has_team_members = false;
+        foreach ($event['team_members'] as $member) {
+            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+            echo "</li>";
+            $has_team_members = true;
+        }
+        if (!$has_team_members) {
+            echo "<li>No team members available</li>";
+        }
+        echo "</ul></td>";
 
         // Status anzeigen
         echo "<td class='project-state'>";

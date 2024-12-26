@@ -1,51 +1,22 @@
 <?php
-// Fehleranzeige für Debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Einbinden der Datenbankverbindung
 include('db.php');
 
-// Manuell die Teamdaten einfügen
-$teamData = [
-    [
-        'team_name' => 'de',
-        'area_name' => 'de',
-        'employee_names' => [
-            ['name' => 'de', 'is_team_lead' => '1'],
-            ['name' => 'de', 'is_team_lead' => '0'],
-            ['name' => 'de', 'is_team_lead' => '0'],
-        ]
-    ]
-];
+// ID des Events (kann aus der URL oder anderweitig kommen)
+$eventId = 1;  // Beispielwert
 
-// Die Teamdaten in JSON umwandeln
-$teamDataJson = json_encode($teamData);
+// SQL-Abfrage, um die gespeicherten Team-Daten zu erhalten
+$stmt = $conn->prepare("SELECT team_verteilung FROM eventplanung WHERE id = :id");
+$stmt->bindParam(':id', $eventId, PDO::PARAM_INT);
+$stmt->execute();
 
-// Überprüfen, ob JSON korrekt codiert wurde
-if ($teamDataJson === false) {
-    echo "Fehler bei der JSON-Codierung.";
-    exit;
-}
+// Das Ergebnis abrufen
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-try {
-    // SQL-Abfrage zum Aktualisieren der Teamverteilung
-    $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
-
-    // Setze hier die Event-ID (z. B. aus der URL)
-    $eventId = 1; // Beispiel Event-ID, bitte anpassen
-
-    // Binde die Parameter und führe die Abfrage aus
-    $stmt->bindParam(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
-    $stmt->bindParam(':id', $eventId, PDO::PARAM_INT);
-
-    // Führe das UPDATE-Statement aus
-    if ($stmt->execute()) {
-        echo "Daten wurden erfolgreich gespeichert!";
-    } else {
-        echo "Fehler beim Speichern der Daten.";
-    }
-} catch (PDOException $e) {
-    echo "Fehler beim Speichern der Daten: " . $e->getMessage();
+// JSON-Daten aus der DB holen
+if ($result) {
+    $teamData = json_decode($result['team_verteilung'], true);  // Umwandeln in ein PHP-Array
+    print_r($teamData);  // Ausgabe der Daten zum Debuggen
+} else {
+    echo "Kein Team gefunden.";
 }
 ?>

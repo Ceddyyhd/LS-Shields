@@ -130,43 +130,100 @@ try {
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <strong><i class="fas fa-book mr-1"></i> Teams</strong>
+              <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
-                <div class="card-body">
-                <dl class="row">
-                  <dt class="col-sm-4">Haupteingang</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Nebeneingang</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Tür 1</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
-                  <dt class="col-sm-4">Tür 2</dt>
-                  <dd class="col-sm-8"> 
-                    <ul>
-                      <li>Cedric Schmidt</li>
-                      <li>John Schmidt</li>
-                    </ul>
-                </dd>
 
-                  </dd>
-                </dl>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teams-bearbeiten">
-                  Teams Bearbeiten
+<style>
+/* Flexbox für das Layout der Teams */
+.row {
+display: flex;
+flex-wrap: wrap; /* Damit bei Bedarf Zeilenumbruch möglich ist */
+justify-content: flex-start; /* Ausrichtung nach links */
+}
+
+.row dt {
+flex: 0 0 30%; /* Den Teamnamen mit einer festen Breite */
+white-space: nowrap; /* Verhindert das Umbruchverhalten */
+}
+
+.row dd {
+flex: 1 0 60%; /* Den Mitarbeitern genügend Platz geben */
+}
+
+.row li {
+list-style-type: none; /* Entfernt das Standard-Aufzählungszeichen */
+}
+
+.row dt, .row dd {
+margin: 0; /* Verhindert unnötige Abstände */
+}
+
+.row p {
+margin: 0;
+}
+</style>                <script>
+    $(document).ready(function() {
+var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+
+// AJAX-Anfrage, um die Team-Daten direkt beim Laden der Seite zu laden
+$.ajax({
+url: 'include/team_get.php', 
+method: 'GET',
+data: { event_id: eventId },
+dataType: 'json',
+success: function(response) {
+console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+
+if (Array.isArray(response) && response.length > 0) {
+// Leere das <dl>-Tag
+$('#teams-container').empty(); // Entfernt alle vorherigen Teams
+
+// Füge die Team-Daten in das <dl> ein
+response.forEach(function(team, index) {
+    const teamName = team.team_name;
+    const teamArea = team.area_name;
+
+    // Erstelle die Liste der Mitarbeiter mit speziellen Formatierungen für den Teamlead
+    const teamEmployees = team.employee_names.map(employee => {
+        if (employee.is_team_lead == 1) {
+            // Wenn es der Teamlead ist, wende das Styling an
+            return `<li><p><font style="background-color: rgb(148, 189, 123);" color="#000000">${employee.name}</font></p></li>`;
+        } else {
+            // Für normale Mitarbeiter
+            return `<li>${employee.name}</li>`;
+        }
+    }).join(''); // Liste der Mitarbeiter
+
+    // Dynamisch in das <dl> einfügen
+    const teamHtml = `
+        <dt class="col-sm-4">${teamName} (${teamArea})</dt>
+        <dd class="col-sm-8"> 
+            <ul>
+                ${teamEmployees}
+            </ul>
+        </dd>
+    `;
+    $('#teams-container').append(teamHtml);
+});
+} else {
+console.log("Keine Teams gefunden.");
+alert('Keine Teams gefunden.');
+}
+},
+error: function(xhr, status, error) {
+console.log('Fehler bei der Anfrage:', error);
+console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+}
+});
+});
+</script>
+
+<div class="card-body">
+<dl class="row" id="teams-container">
+    <!-- Dynamisch generierte Inhalte erscheinen hier -->
+</dl>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teams-bearbeiten">
+  Teams Bearbeiten
                 </button>
 
 <!-- Modal für Team-Erstellung -->

@@ -3,12 +3,12 @@ require 'db.php'; // Deine DB-Verbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Event-ID aus den POST-Daten holen
-    $event_id = $_POST['event_id']; // Event ID aus POST-Daten (unverändert)
+    $event_id = $_POST['event_id']; // Event ID aus POST-Daten
 
     // Formulardaten aus POST erhalten
     $vorname_nachname = $_POST['vorname_nachname'];
     $telefonnummer = $_POST['telefonnummer'];
-    $datum_uhrzeit_event = $_POST['datum_uhrzeit_event'];
+    $datum_uhrzeit_event = $_POST['datum_uhrzeit_event']; // Datum und Uhrzeit direkt aus POST
     $ort = $_POST['ort'];
     $event_lead = $_POST['event_lead'];
 

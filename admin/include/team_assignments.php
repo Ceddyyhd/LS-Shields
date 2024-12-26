@@ -36,9 +36,11 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
 
         // Führe das SQL-Statement aus
         if ($stmt->execute()) {
-            // Erfolgreiches Einfügen
-            $lastId = $conn->lastInsertId(); // Holen der zuletzt eingefügten ID
-            error_log("Daten erfolgreich eingefügt. Letzte ID: " . $lastId);
+            // Holen der zuletzt eingefügten ID
+            $lastId = $conn->lastInsertId();
+
+            // Ausgabe der ID zur Überprüfung
+            error_log("Daten erfolgreich eingefügt. Letzte eingefügte ID: " . $lastId);
             
             // Bestätigen der Transaktion
             $conn->commit();

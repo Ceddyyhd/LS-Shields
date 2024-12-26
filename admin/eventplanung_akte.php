@@ -69,23 +69,7 @@ try {
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
-  <?php
-// Beispiel zum Laden von Event-Daten
-$event_id = $_GET['event_id'];
-$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
-$result = mysqli_query($conn, $sql);
-$event = mysqli_fetch_assoc($result);
-?>
-<script>
-  $(document).ready(function() {
-    // Sicherstellen, dass die PHP-Werte richtig in JavaScript übergeben werden
-    $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
-    $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
-    $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
-    $('#ort').val(<?= json_encode($event['ort']); ?>);
-    $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
-  });
-</script>
+  
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

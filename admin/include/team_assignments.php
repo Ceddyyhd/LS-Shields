@@ -6,37 +6,20 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     $teamData = $_POST['teams'];
 
     try {
+        // Die Teamdaten in JSON umwandeln
+        $teamDataJson = json_encode($teamData);
+
         // Beginne die Transaktion
         $conn->beginTransaction();
 
-        // Debugging: Ausgabe der empfangenen Team-Daten
-        error_log("Empfangene Team-Daten: " . print_r($teamData, true));
+        // Bereite das SQL-Statement vor, um die Daten in die Tabelle `eventplanung` einzufügen
+        $stmt = $conn->prepare("INSERT INTO eventplanung (team_verteilung) VALUES (:team_verteilung)");
 
-        foreach ($teamData as $team) {
-            // Team in die Datenbank einfügen
-            $stmt = $conn->prepare("INSERT INTO teams (team_name, area_name) VALUES (:team_name, :area_name)");
-            $stmt->bindValue(':team_name', $team['team_name'], PDO::PARAM_STR);
-            $stmt->bindValue(':area_name', $team['area_name'], PDO::PARAM_STR);
-            $stmt->execute();
+        // Binde die JSON-Daten in das `team_verteilung`-Feld ein
+        $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
 
-            // Team-ID des neu eingefügten Teams holen
-            $teamId = $conn->lastInsertId();
-
-            // Debugging: Ausgabe der Team-ID und Mitarbeiter
-            error_log("Team gespeichert. Team-ID: " . $teamId);
-
-            // Mitarbeiter hinzufügen
-            foreach ($team['employee_names'] as $employee) {
-                // Sicherstellen, dass der Mitarbeitername nicht leer ist
-                if (!empty($employee['name'])) {
-                    $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
-                    $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
-                    $stmt->bindValue(':employee_name', $employee['name'], PDO::PARAM_STR);
-                    $stmt->bindValue(':is_team_lead', $employee['is_team_lead'], PDO::PARAM_INT);
-                    $stmt->execute();
-                }
-            }
-        }
+        // Führe das SQL-Statement aus
+        $stmt->execute();
 
         // Transaktion bestätigen
         $conn->commit();

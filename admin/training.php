@@ -172,7 +172,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- ./wrapper -->
 
 <!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
 <script>
   $(function () {
     // Summernote

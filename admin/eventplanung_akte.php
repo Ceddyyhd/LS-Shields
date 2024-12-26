@@ -167,7 +167,7 @@ try {
 <div class="input-group date" id="datetimepicker" data-target-input="nearest">
     <input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker"/>
     <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+        <div class="input-group-text"><i class="fa fa-calendar"></i> <i class="fa fa-clock"></i></div> <!-- Uhr-Icon hier hinzufügen -->
     </div>
 </div>
 
@@ -202,7 +202,15 @@ try {
 <script>
   $(document).ready(function () {
     $('#datetimepicker').datetimepicker({
-        format: 'YYYY-MM-DD HH:mm:ss' // Format für MySQL
+        format: 'YYYY-MM-DD HH:mm', // Format für MySQL
+        icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-arrow-up',
+            down: 'fa fa-arrow-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right'
+        }
     });
 
     // Event Lead Optionen per AJAX laden

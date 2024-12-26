@@ -11,15 +11,12 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     // Die Teamdaten in JSON umwandeln
     $teamDataJson = json_encode($teamData);
 
-    // Überprüfe, ob JSON korrekt codiert wurde
+    // Überprüfen, ob JSON korrekt codiert wurde
     if ($teamDataJson === false) {
         error_log("JSON-Fehler: " . json_last_error_msg());
         echo "Fehler bei der JSON-Codierung.";
         exit;
     }
-
-    // Beispiel für die Generierung des Werts für vorname_nachname
-    $vornameNachname = "Unbekannt";  // Setze einen Standardwert oder wähle einen dynamischen Wert aus
 
     try {
         // Beginne die Transaktion
@@ -33,9 +30,8 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         }
 
         // UPDATE-Befehl für das bestehende Event mit der entsprechenden ID
-        $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung, vorname_nachname = :vorname_nachname WHERE id = :id");
+        $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
         $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
-        $stmt->bindValue(':vorname_nachname', $vornameNachname, PDO::PARAM_STR);
         $stmt->bindValue(':id', $eventId, PDO::PARAM_INT);
 
         // Führe das UPDATE-Statement aus

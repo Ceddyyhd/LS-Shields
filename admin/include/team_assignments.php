@@ -8,12 +8,9 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     $teamData = $_POST['teams'];
 
-    // Debugging: Prüfe, was wir erhalten
-    error_log("Empfangene Team-Daten: " . print_r($teamData, true));
-
     // Die Teamdaten in JSON umwandeln
     $teamDataJson = json_encode($teamData);
-    
+
     // Überprüfe, ob JSON korrekt codiert wurde
     if ($teamDataJson === false) {
         error_log("JSON-Fehler: " . json_last_error_msg());
@@ -21,25 +18,25 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         exit;
     }
 
-    // Debugging: Überprüfen des generierten JSON
-    error_log("Team-Daten (JSON): " . $teamDataJson);
+    // Beispiel für die Generierung des Werts für vorname_nachname
+    // Du kannst hier einen Wert aus den Teamdaten oder etwas anderes setzen
+    $vornameNachname = "Unbekannt";  // Setze einen Standardwert oder wähle einen dynamischen Wert aus
 
     try {
         // Beginne die Transaktion
         $conn->beginTransaction();
 
         // Bereite das SQL-Statement vor, um die Daten in die Tabelle `eventplanung` einzufügen
-        $stmt = $conn->prepare("INSERT INTO eventplanung (team_verteilung) VALUES (:team_verteilung)");
+        $stmt = $conn->prepare("INSERT INTO eventplanung (team_verteilung, vorname_nachname) VALUES (:team_verteilung, :vorname_nachname)");
 
-        // Binde die JSON-Daten in das `team_verteilung`-Feld ein
+        // Binde die JSON-Daten und den Namen ein
         $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
+        $stmt->bindValue(':vorname_nachname', $vornameNachname, PDO::PARAM_STR);
 
         // Führe das SQL-Statement aus
         if ($stmt->execute()) {
             // Holen der zuletzt eingefügten ID
             $lastId = $conn->lastInsertId();
-
-            // Ausgabe der ID zur Überprüfung
             error_log("Daten erfolgreich eingefügt. Letzte eingefügte ID: " . $lastId);
             
             // Bestätigen der Transaktion

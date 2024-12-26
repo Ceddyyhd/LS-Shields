@@ -134,9 +134,35 @@ try {
             <div class="modal-body">
 
             <div class="form-group">
-                        <label>Text</label>
+                        <label>Ansprechpartner Name</label>
                         <input type="text" class="form-control" placeholder="Enter ...">
             </div>
+
+            <div class="form-group">
+                        <label>Ansprechpartner Tel. Nr.:</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Datum & Uhrzeit</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Ort</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Event Lead</label>
+                        <select class="form-control">
+                          <option>option 1</option>
+                          <option>option 2</option>
+                          <option>option 3</option>
+                          <option>option 4</option>
+                          <option>option 5</option>
+                        </select>
+                      </div>
 
             </div>
             <div class="modal-footer justify-content-between">

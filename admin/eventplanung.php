@@ -35,9 +35,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 // SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "SELECT eventplanung.*, 
                  users.name AS event_lead_name, 
-                 users.profile_image AS event_lead_profile_image
+                 users.profile_image AS event_lead_profile_image,
+                 GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name) AS team_members_names,
+                 GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name) AS team_members_images
           FROM eventplanung
-          LEFT JOIN users ON eventplanung.event_lead = users.id";
+          LEFT JOIN users ON eventplanung.event_lead = users.id
+          LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
+          LEFT JOIN users AS team_users ON event_mitarbeiter_anmeldung.employee_id = team_users.id
+          WHERE eventplanung.id = :event_id
+          GROUP BY eventplanung.id";
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -72,12 +78,28 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
                         </td>
                         <td>
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <img alt="Avatar" class="table-avatar" src="<?= htmlspecialchars($event['event_lead_profile_image']); ?>">
-                                </li>
-                            </ul>
-                        </td>
+    <ul class="list-inline">
+        <?php
+        // Teammitglieder und deren Profilbilder anzeigen
+        $team_members = explode(',', $event['team_members_names']);
+        $team_member_images = explode(',', $event['team_members_images']);
+        foreach ($team_members as $key => $member) {
+            // Tooltip mit dem Namen des Mitarbeiters
+            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member) . "'>";
+            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($team_member_images[$key]) . "'>";
+            echo "</li>";
+        }
+        ?>
+    </ul>
+</td>
+
+<script>
+    $(document).ready(function () {
+    // Initialisiere alle Tooltips auf der Seite
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+</script>
                         <td class="project-state">
                             <?php
                             // Status-Badge basierend auf dem Status

@@ -354,22 +354,28 @@ try {
 
         const employees = [];
         $(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
-            const employeeName = $(this).val();
+            const employeeName = $(this).val().trim(); // Leerzeichen entfernen
             const isTeamLead = empIndex === 0 ? "1" : "0"; // Der erste Mitarbeiter ist Team Lead
 
-            employees.push({
-                name: employeeName,
-                is_team_lead: isTeamLead
-            });
+            // Ignoriere leere Mitarbeiter
+            if (employeeName !== '') {
+                employees.push({
+                    name: employeeName,
+                    is_team_lead: isTeamLead
+                });
+            }
         });
 
-        const team = {
-            team_name: teamName,
-            area_name: teamArea,
-            employee_names: employees
-        };
+        // Füge nur Teams hinzu, die Mitarbeiter haben
+        if (employees.length > 0) {
+            const team = {
+                team_name: teamName,
+                area_name: teamArea,
+                employee_names: employees
+            };
 
-        teamData.push(team);
+            teamData.push(team);
+        }
     });
 
     console.log(teamData); // Überprüfe die gesammelten Daten

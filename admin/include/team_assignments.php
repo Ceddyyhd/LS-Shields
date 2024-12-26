@@ -1,60 +1,45 @@
 <?php
-// Fehleranzeige aktivieren
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Beispiel für die manuelle Speicherung in die Datenbank
 
-// Einbinden der Datenbankverbindung
 include('db.php');
 
-// Überprüfen, ob die Team-Daten gesendet wurden
-if (isset($_POST['teams']) && !empty($_POST['teams'])) {
-    $teamData = $_POST['teams'];
+// Manuell erstellter JSON-String für Team-Daten
+$teamDataJson = json_encode([
+    [
+        'team_name' => 'Team 1',
+        'area_name' => 'Bereich 1',
+        'employee_names' => [
+            ['name' => 'Mitarbeiter Lead', 'is_team_lead' => 1],
+            ['name' => 'Test', 'is_team_lead' => 0]
+        ]
+    ]
+]);
 
-    // Fehlerprotokollierung: Ausgabe der empfangenen Team-Daten
-    error_log("Empfangene Team-Daten: " . print_r($teamData, true));  // Diese Zeile gibt die empfangenen Daten im Log aus
+// Überprüfen, ob JSON korrekt codiert wurde
+if ($teamDataJson === false) {
+    error_log("Fehler bei der JSON-Codierung: " . json_last_error_msg());
+    echo "Fehler bei der JSON-Codierung.";
+    exit;
+}
 
-    // Die Teamdaten in JSON umwandeln
-    $teamDataJson = json_encode($teamData);
+try {
+    // Event ID, die du testen möchtest (z.B. 1)
+    $eventId = 1;
 
-    // Überprüfen, ob JSON korrekt codiert wurde
-    if ($teamDataJson === false) {
-        error_log("Fehler bei der JSON-Codierung: " . json_last_error_msg());  // Fehler bei der JSON-Codierung
-        echo "Fehler bei der JSON-Codierung."; // Diese Nachricht wird an den Browser gesendet
-        exit;
-    }
+    // SQL-UPDATE-Statement, um die Team-Daten in die Datenbank zu speichern
+    $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
+    $stmt->bindParam(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $eventId, PDO::PARAM_INT);
 
-    // Holen der Event-ID aus der URL (z.B. /eventplanung_akte.php?id=1)
-    if (isset($_GET['id'])) {
-        $eventId = $_GET['id'];  // Beispiel Event ID aus der URL
+    // Führe das UPDATE-Statement aus
+    if ($stmt->execute()) {
+        echo "Daten wurden erfolgreich gespeichert!";
     } else {
-        die('Keine Eventplanungs-ID angegeben.');
+        error_log("Fehler beim Ausführen des UPDATE-Statements: " . implode(", ", $stmt->errorInfo()));
+        echo "Fehler beim Speichern der Daten.";
     }
-
-    try {
-        // Beginne die Transaktion
-        $conn->beginTransaction();
-
-        // UPDATE-Statement für das bestehende Event mit der entsprechenden ID
-        $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
-        $stmt->bindParam(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
-        $stmt->bindParam(':id', $eventId, PDO::PARAM_INT);
-
-        // Führe das UPDATE-Statement aus
-        if ($stmt->execute()) {
-            // Bestätigen der Transaktion
-            $conn->commit();
-            echo "Daten wurden erfolgreich gespeichert!";  // Diese Nachricht wird an den Browser gesendet
-        } else {
-            error_log("Fehler beim Ausführen des UPDATE-Statements: " . implode(", ", $stmt->errorInfo())); // Protokolliere SQL-Fehler
-            echo "Fehler beim Speichern der Daten.";  // Diese Nachricht wird an den Browser gesendet
-        }
-    } catch (PDOException $e) {
-        // Fehlerbehandlung: Transaktion zurücksetzen
-        $conn->rollBack();
-        error_log("Fehler: " . $e->getMessage());  // Protokolliere den Fehler
-        echo "Fehler: " . $e->getMessage();  // Diese Nachricht wird an den Browser gesendet
-    }
-} else {
-    echo "Fehlende Team-Daten!";  // Diese Nachricht wird an den Browser gesendet, wenn keine Daten gesendet wurden
+} catch (PDOException $e) {
+    error_log("Fehler beim Speichern der Daten: " . $e->getMessage());
+    echo "Fehler: " . $e->getMessage();
 }
 ?>

@@ -135,7 +135,7 @@ document.getElementById('saveTraining').addEventListener('click', function() {
     var datum_zeit = document.getElementById('trainingDate').value;
 
     $.ajax({
-        url: 'admin/include/training_anmeldung.php',  // Stelle sicher, dass der Pfad korrekt ist
+        url: 'include/training_anmeldung.php',  // Stelle sicher, dass der Pfad korrekt ist
         method: 'POST',
         data: {
             action: 'training_erstellen',

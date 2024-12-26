@@ -38,12 +38,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-training-erstellen">
                   Training Erstellen
                 </button>      
                 
                 
-                <div class="modal fade" id="modal-default">
+                <div class="modal fade" id="modal-training-erstellen">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">

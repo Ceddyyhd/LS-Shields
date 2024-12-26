@@ -132,7 +132,12 @@ try {
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+
+            <div class="form-group">
+                        <label>Text</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

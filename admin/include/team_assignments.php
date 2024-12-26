@@ -25,9 +25,9 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
             // Debugging: Ausgabe der Team-ID und Mitarbeiter
             error_log("Team gespeichert. Team-ID: " . $teamId);
 
-            // Mitarbeiter hinzufügen
+            // Mitarbeiter hinzufügen (nur mit gültigem Namen)
             foreach ($team['employee_names'] as $employee) {
-                if (!empty($employee['name'])) { // Leere Mitarbeiter ignorieren
+                if (!empty($employee['name'])) { // Nur Mitarbeiter mit Namen hinzufügen
                     $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
                     $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
                     $stmt->bindValue(':employee_name', $employee['name'], PDO::PARAM_STR);

@@ -78,7 +78,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
                         </td>
                         <td>
-    <ul class="list-inline">
+                        <ul class="list-inline">
         <?php
         // Teammitglieder und deren Profilbilder anzeigen
         $team_members = explode(',', $event['team_members_names']);
@@ -91,15 +91,7 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         ?>
     </ul>
-</td>
-
-<script>
-    $(document).ready(function () {
-    // Initialisiere alle Tooltips auf der Seite
-    $('[data-toggle="tooltip"]').tooltip();
-});
-
-</script>
+                        </td>
                         <td class="project-state">
                             <?php
                             // Status-Badge basierend auf dem Status

@@ -90,63 +90,64 @@ foreach ($events as &$event) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($events as $event): ?>
-                    <tr>
-                        <td>                            <a><?= htmlspecialchars($event['id']); ?></a>
-</td>
-                        <td>
-                            <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
-                            <br/>
-                            <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
-                        </td>
-                        <td>
-                            <!-- Neue Spalte für Event anzeigen -->
-                            <span><?= htmlspecialchars($event['event']); ?></span>
-                        </td>
-                        <td>
-                            <!-- Neue Spalte für Anmerkung anzeigen -->
-                            <span><?= htmlspecialchars($event['anmerkung']); ?></span>
-                        </td>
-                        <td>
-                        <ul class="list-inline">
-                            <?php
-                            // Teammitglieder und deren Profilbilder anzeigen
-                            foreach ($event['team_members'] as $member) {
-                                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                                echo "</li>";
-                            }
-                            ?>
-                        </ul>
-                        </td>
-                        <td class="project-state">
-                            <?php
-                            // Status-Badge basierend auf dem Status
-                            $status = htmlspecialchars($event['status']);
-                            if ($status == 'in Planung') {
-                                echo "<span class='badge badge-warning'>In Planung</span>";
-                            } elseif ($status == 'in Durchführung') {
-                                echo "<span class='badge badge-danger'>In Durchführung</span>";
-                            } elseif ($status == 'Abgeschlossen') {
-                                echo "<span class='badge badge-success'>Abgeschlossen</span>";
-                            }
-                            ?>
-                        </td>
-                        <td class="project-actions text-right">
-                            <!-- View Button, der zu einer Detailseite weiterleitet -->
-                            <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
-                                <i class="fas fa-folder"></i> View
-                            </a>
-                            <a class="btn btn-info btn-sm" href="#">
-                                <i class="fas fa-pencil-alt"></i> Edit
-                            </a>
-                            <a class="btn btn-danger btn-sm" href="#">
-                                <i class="fas fa-trash"></i> Delete
-                            </a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
+    <?php foreach ($events as $event): ?>
+        <tr>
+            <td>#</td>
+            <td>
+                <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
+                <br/>
+                <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
+            </td>
+            <td>
+                <ul class="list-inline">
+                    <?php
+                    // Teammitglieder und deren Profilbilder anzeigen
+                    if (isset($event['team_members']) && !empty($event['team_members'])) {
+                        foreach ($event['team_members'] as $member) {
+                            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                            echo "</li>";
+                        }
+                    }
+                    ?>
+                </ul>
+            </td>
+            <td class="project-state">
+                <?php
+                // Status-Badge basierend auf dem Status
+                $status = htmlspecialchars($event['status']);
+                if ($status == 'in Planung') {
+                    echo "<span class='badge badge-warning'>In Planung</span>";
+                } elseif ($status == 'in Durchführung') {
+                    echo "<span class='badge badge-danger'>In Durchführung</span>";
+                } elseif ($status == 'Abgeschlossen') {
+                    echo "<span class='badge badge-success'>Abgeschlossen</span>";
+                }
+                ?>
+            </td>
+            <td>
+                <!-- Event anzeigen -->
+                <span><?= htmlspecialchars($event['event']); ?></span>
+            </td>
+            <td>
+                <!-- Anmerkung anzeigen -->
+                <span><?= htmlspecialchars($event['anmerkung']); ?></span>
+            </td>
+            <td class="project-actions text-right">
+                <!-- View Button, der zu einer Detailseite weiterleitet -->
+                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
+                    <i class="fas fa-folder"></i> View
+                </a>
+                <a class="btn btn-info btn-sm" href="#">
+                    <i class="fas fa-pencil-alt"></i> Edit
+                </a>
+                <a class="btn btn-danger btn-sm" href="#">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
         </table>
     </div>
 </div>

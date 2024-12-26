@@ -1,23 +1,25 @@
 <?php
-// Fehleranzeige für Debugging
+// Fehleranzeige aktivieren
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Einbinden der Datenbankverbindung
+// Datenbankverbindung einbinden
 include('db.php');
 
 // Überprüfen, ob die Teamdaten gesendet wurden
 if (isset($_POST['teams']) && !empty($_POST['teams'])) {
+    // Empfange die Teamdaten
     $teamData = $_POST['teams'];
 
-    // Fehlerprotokollierung: Ausgabe der empfangenen Team-Daten
-    error_log("Empfangene Team-Daten: " . print_r($teamData, true)); // Diese Zeile gibt die empfangenen Daten in den Fehler-Log aus
+    // Protokolliere die empfangenen Teamdaten (zur Überprüfung)
+    error_log("Empfangene Team-Daten: " . print_r($teamData, true));  // Diese Zeile gibt die empfangenen Daten im Log aus
 
     // Die Teamdaten in JSON umwandeln
     $teamDataJson = json_encode($teamData);
 
     // Überprüfen, ob JSON korrekt codiert wurde
     if ($teamDataJson === false) {
+        error_log("Fehler bei der JSON-Codierung: " . json_last_error_msg());  // Fehler bei der JSON-Codierung
         echo "Fehler bei der JSON-Codierung.";
         exit;
     }
@@ -26,14 +28,14 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         // Beginne die Transaktion
         $conn->beginTransaction();
 
-        // Die ID aus der URL holen (wir gehen davon aus, dass diese immer gesetzt wird)
+        // Die ID aus der URL holen (Event ID)
         if (isset($_GET['id'])) {
-            $eventId = $_GET['id'];  // Die Event-ID aus der URL (z.B. eventplanung_akte.php?id=1)
+            $eventId = $_GET['id'];  // Beispiel Event ID aus der URL
         } else {
             die('Keine Eventplanungs-ID angegeben.');
         }
 
-        // UPDATE-Befehl für das bestehende Event mit der entsprechenden ID
+        // UPDATE-Statement für das bestehende Event mit der entsprechenden ID
         $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
         $stmt->bindParam(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
         $stmt->bindParam(':id', $eventId, PDO::PARAM_INT);
@@ -44,13 +46,17 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
             $conn->commit();
             echo "Daten wurden erfolgreich gespeichert!";
         } else {
+            error_log("Fehler beim Ausführen des UPDATE-Statements: " . implode(", ", $stmt->errorInfo()));
             echo "Fehler beim Speichern der Daten.";
         }
 
     } catch (PDOException $e) {
-        echo "Fehler beim Speichern der Daten: " . $e->getMessage();
+        // Fehlerbehandlung: Transaktion zurücksetzen
+        $conn->rollBack();
+        error_log("Fehler: " . $e->getMessage());
+        echo "Fehler: " . $e->getMessage();
     }
 } else {
-    echo "Fehlende Daten!";
+    echo "Fehlende Team-Daten!";
 }
 ?>

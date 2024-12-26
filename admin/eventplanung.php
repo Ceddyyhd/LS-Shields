@@ -36,12 +36,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
     <?php
-// SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
-$query = "SELECT DISTINCT eventplanung.*, 
-                 users.name AS event_lead_name, 
-                 users.profile_image AS event_lead_profile_image
-          FROM eventplanung
-          LEFT JOIN users ON eventplanung.event_lead = users.id";
+// SQL-Abfrage zum Abrufen aller Events ohne Duplikate
+$query = "
+    SELECT eventplanung.*, 
+           users.name AS event_lead_name, 
+           users.profile_image AS event_lead_profile_image
+    FROM eventplanung
+    LEFT JOIN users ON eventplanung.event_lead = users.id
+    GROUP BY eventplanung.id"; // Grouping by event ID
 
 $stmt = $conn->prepare($query);
 $stmt->execute();

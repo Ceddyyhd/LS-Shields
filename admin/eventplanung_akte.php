@@ -121,7 +121,22 @@ try {
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
                   Bearbeiten
                 </button>
-
+                <?php
+// Beispiel zum Laden von Event-Daten
+$event_id = $_GET['event_id'];
+$sql = "SELECT * FROM eventplanung WHERE id = $event_id";
+$result = mysqli_query($conn, $sql);
+$event = mysqli_fetch_assoc($result);
+?>
+<script>
+  $(document).ready(function() {
+    $('#vorname_nachname').val('<?= $event['vorname_nachname']; ?>');
+    $('#telefonnummer').val('<?= $event['telefonnummer']; ?>');
+    $('#datum_uhrzeit_event').val('<?= $event['datum_uhrzeit_event']; ?>');
+    $('#ort').val('<?= $event['ort']; ?>');
+    $('#event_lead').val('<?= $event['event_lead']; ?>');
+  });
+</script>
                 <div class="modal fade" id="ansprechpartner-bearbeiten">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -171,6 +186,43 @@ try {
     </div>
   </div>
 </div>
+<script>
+  $(document).ready(function() {
+    // Event Lead Optionen per AJAX laden
+    $.ajax({
+      url: 'get_users.php', // Ein PHP-Skript, das die Benutzer abruft
+      method: 'GET',
+      success: function(data) {
+        var users = JSON.parse(data);
+        var select = $('#event_lead');
+        users.forEach(function(user) {
+          select.append('<option value="' + user.id + '">' + user.name + '</option>');
+        });
+      }
+    });
+
+    // Formular per AJAX senden
+    $('#edit-form').on('submit', function(e) {
+      e.preventDefault(); // Verhindert das normale Absenden des Formulars
+
+      var formData = $(this).serialize(); // Alle Formulardaten serialisieren
+
+      $.ajax({
+        url: 'update_event_ajax.php', // PHP-Skript zum Verarbeiten des Updates
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+          // Rückmeldung vom Server
+          alert(response.message); // Zum Beispiel: Erfolgsmeldung
+          $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
+        },
+        error: function() {
+          alert('Es gab einen Fehler bei der Aktualisierung.');
+        }
+      });
+    });
+  });
+</script>
 
 
               </div>

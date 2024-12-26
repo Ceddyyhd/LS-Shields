@@ -31,95 +31,88 @@
     <!-- /.content-header -->
 
     <?php
-// SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
-// Zuerst die Events abfragen (ohne Team-Mitglieder)
-$query = "
-    SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
-    FROM eventplanung
-    ORDER BY datum_uhrzeit DESC"; // Beispiel für die Events-Abfrage
+    // SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
+    // Zuerst die Events abfragen (ohne Team-Mitglieder)
+    $query = "
+        SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
+        FROM eventplanung
+        ORDER BY datum_uhrzeit DESC"; // Beispiel für die Events-Abfrage
 
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($events as &$event) {
-    // Für jedes Event die Team-Mitglieder abfragen
-    $teamQuery = "
-        SELECT u.id AS employee_id, u.name, u.profile_image
-        FROM event_mitarbeiter_anmeldung eam
-        JOIN users u ON eam.employee_id = u.id
-        WHERE eam.event_id = :event_id";
-
-    $teamStmt = $conn->prepare($teamQuery);
-    $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-    $teamStmt->execute();
-    $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Team-Mitglieder dem Event hinzufügen
-    $event['team_members'] = $team_members;
-}
-
-// Ausgabe der Events
-?>
-
-<!-- Ausgabe der Events -->
-<table class="table table-striped projects">
-    <thead>
-        <tr>
-            <th style="width: 1%">#</th>
-            <th style="width: 20%">Ansprechpartner</th>
-            <th style="width: 20%">Event</th>
-            <th style="width: 20%">Anmerkung</th>
-            <th style="width: 30%">Team Members</th>
-            <th>Status</th>
-            <th style="width: 20%">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php
-    // Ausgabe der Events und Teammitglieder
-    foreach ($events as $event) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($event['id']) . "</td>";
-        echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
-        echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
-        echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
-
-        // Team-Mitglieder anzeigen
-        echo "<td><ul class='list-inline'>";
-        if (empty($event['team_members'])) {
-            echo "<li>No team members available</li>";
-        } else {
-            foreach ($event['team_members'] as $member) {
-                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                echo "</li>";
-            }
-        }
-        echo "</ul></td>";
-
-        // Status anzeigen
-        echo "<td class='project-state'>";
-        if ($event['status'] == 'in Planung') {
-            echo "<span class='badge badge-warning'>In Planung</span>";
-        } elseif ($event['status'] == 'in Durchführung') {
-            echo "<span class='badge badge-danger'>In Durchführung</span>";
-        } elseif ($event['status'] == 'Abgeschlossen') {
-            echo "<span class='badge badge-success'>Abgeschlossen</span>";
-        }
-        echo "</td>";
-
-        // Aktionen
-        echo "<td class='project-actions text-right'>";
-        echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
-        echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
-        echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
-        echo "</td>";
-        echo "</tr>";
-    }
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    </tbody>
-</table>
+
+    <!-- Ausgabe der Events -->
+    <table class="table table-striped projects">
+        <thead>
+            <tr>
+                <th style="width: 1%">#</th>
+                <th style="width: 20%">Ansprechpartner</th>
+                <th style="width: 20%">Event</th>
+                <th style="width: 20%">Anmerkung</th>
+                <th style="width: 30%">Team Members</th>
+                <th>Status</th>
+                <th style="width: 20%">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        // Ausgabe der Events und Teammitglieder
+        foreach ($events as $event) {
+            // Für jedes Event die Team-Mitglieder abfragen
+            $teamQuery = "
+                SELECT u.id AS employee_id, u.name, u.profile_image
+                FROM event_mitarbeiter_anmeldung eam
+                JOIN users u ON eam.employee_id = u.id
+                WHERE eam.event_id = :event_id";
+
+            $teamStmt = $conn->prepare($teamQuery);
+            $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+            $teamStmt->execute();
+            $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($event['id']) . "</td>";
+            echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
+            echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
+            echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
+
+            // Team-Mitglieder anzeigen
+            echo "<td><ul class='list-inline'>";
+            if (empty($team_members)) {
+                echo "<li>No team members available</li>";
+            } else {
+                foreach ($team_members as $member) {
+                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                    echo "</li>";
+                }
+            }
+            echo "</ul></td>";
+
+            // Status anzeigen
+            echo "<td class='project-state'>";
+            if ($event['status'] == 'in Planung') {
+                echo "<span class='badge badge-warning'>In Planung</span>";
+            } elseif ($event['status'] == 'in Durchführung') {
+                echo "<span class='badge badge-danger'>In Durchführung</span>";
+            } elseif ($event['status'] == 'Abgeschlossen') {
+                echo "<span class='badge badge-success'>Abgeschlossen</span>";
+            }
+            echo "</td>";
+
+            // Aktionen
+            echo "<td class='project-actions text-right'>";
+            echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
+            echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
+            echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        ?>
+        </tbody>
+    </table>
 </div>
     </div>
 

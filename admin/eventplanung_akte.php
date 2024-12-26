@@ -344,63 +344,61 @@ try {
         });
 
         // Speichern der Teamdaten
-        $('#saveTeam').click(function() {
-    const teamData = [];
+        $(document).ready(function() {
+    $('#saveTeam').click(function() {
+        const teamData = [];
+        $('.team-form').each(function(index) {
+            const teamName = $(this).find('input[name^="team_name"]').val();
+            const teamArea = $(this).find('input[name^="bereich"]').val();
+            const employees = [];
+            $(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
+                const employeeName = $(this).val().trim(); // Leerzeichen entfernen
+                const isTeamLead = empIndex === 0 ? "1" : "0"; // Der erste Mitarbeiter ist Team Lead
+                if (employeeName !== '') {
+                    employees.push({
+                        name: employeeName,
+                        is_team_lead: isTeamLead
+                    });
+                }
+            });
 
-    // Erfassung der Team- und Mitarbeiterdaten
-    $('.team-form').each(function(index) {
-        const teamName = $(this).find('input[name^="team_name"]').val().trim();
-        const teamArea = $(this).find('input[name^="bereich"]').val().trim();
-
-        const employees = [];
-        $(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
-            const employeeName = $(this).val().trim(); // Leerzeichen entfernen
-            const isTeamLead = empIndex === 0 ? "1" : "0"; // Der erste Mitarbeiter ist Team Lead
-
-            // Ignoriere leere Mitarbeiter
-            if (employeeName !== '') {
-                employees.push({
-                    name: employeeName,
-                    is_team_lead: isTeamLead
-                });
+            if (employees.length > 0) {
+                const team = {
+                    team_name: teamName,
+                    area_name: teamArea,
+                    employee_names: employees
+                };
+                teamData.push(team);
             }
         });
 
-        // Füge nur Teams hinzu, die Mitarbeiter haben
-        if (employees.length > 0 && teamName !== '' && teamArea !== '') {
-            const team = {
-                team_name: teamName,
-                area_name: teamArea,
-                employee_names: employees
-            };
-
-            teamData.push(team);
+        // Holen der Event-ID aus der URL
+        var eventId = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
+        if (eventId === null) {
+            alert('Event-ID fehlt in der URL!');
+            return;
         }
+
+        console.log("TeamData vor dem Senden:", teamData);  // Gibt die zu sendenden Daten aus
+
+        // AJAX-Anfrage
+        $.ajax({
+            url: 'include/team_assignments.php', 
+            method: 'POST',
+            data: {
+                teams: teamData,
+                event_id: eventId  // Event-ID hinzufügen
+            },
+            success: function(response) {
+                console.log('Erfolgreich gespeichert:', response);
+                alert('Teams wurden gespeichert.');
+            },
+            error: function(xhr, status, error) {
+                console.log('Fehler bei der Anfrage:', error);
+                alert('Fehler beim Speichern der Teams.');
+            }
+        });
     });
-
-    console.log("TeamData vor dem Senden:", teamData);
-
-    // Überprüfe, ob die Daten leer sind
-    if (teamData.length === 0) {
-        alert('Bitte füllen Sie alle Felder aus.');
-        return; // Stoppe das Senden, wenn keine gültigen Daten vorhanden sind
-    }
-
-    // Sende die Daten per AJAX an den Server
-    $.ajax({
-    url: 'include/team_assignments.php', 
-    method: 'POST',
-    data: { teams: teamData },
-    success: function(response) {
-        console.log("Erfolgreich gespeichert:", response);
-        alert('Teams wurden gespeichert.');
-    },
-    error: function(xhr, status, error) {
-        console.log("Fehler bei der Anfrage:", error);  // Ausgabe des Fehlertextes
-        console.log("Antwort des Servers:", xhr.responseText);  // Antwort des Servers anzeigen
-        alert('Fehler beim Speichern der Teams.');
-    }
-});
 });
 
     });

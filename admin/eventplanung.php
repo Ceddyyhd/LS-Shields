@@ -79,7 +79,7 @@ foreach ($events as &$event) {
             <thead>
                 <tr>
                     <th style="width: 1%">#</th>
-                    <th style="width: 20%">Project Name</th>
+                    <th style="width: 20%">Ansprechpartner</th>
                     <th style="width: 20%">Event</th> <!-- Neue Spalte für Event -->
                     <th style="width: 20%">Anmerkung</th> <!-- Neue Spalte für Anmerkung -->
                     <th style="width: 30%">Team Members</th>
@@ -90,7 +90,8 @@ foreach ($events as &$event) {
             <tbody>
                 <?php foreach ($events as $event): ?>
                     <tr>
-                        <td>#</td>
+                        <td>                            <a><?= htmlspecialchars($event['id']); ?></a>
+                        </td>
                         <td>
                             <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
                             <br/>

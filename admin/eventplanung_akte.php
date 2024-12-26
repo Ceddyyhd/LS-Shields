@@ -167,7 +167,7 @@ try {
 <div class="input-group date" id="datetimepicker" data-target-input="nearest">
     <input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker"/>
     <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-        <div class="input-group-text"><i class="fa fa-calendar"></i> <i class="fa fa-clock"></i></div> <!-- Uhr-Icon hier hinzufügen -->
+        <div class="input-group-text"><i class="fa fa-calendar"></i> </div> <!-- Uhr-Icon hier hinzufügen -->
     </div>
 </div>
 

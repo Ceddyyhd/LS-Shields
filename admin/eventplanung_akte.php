@@ -379,6 +379,7 @@ try {
             return;
         }
 
+        console.log("Event ID:", eventId);  // Die ID aus der URL ausgeben
         console.log("TeamData vor dem Senden:", teamData);  // Gibt die zu sendenden Daten aus
 
         // AJAX-Anfrage

@@ -151,7 +151,7 @@ try {
       </div>
       <div class="modal-body">
 
-        <form id="edit-form">
+      <form id="edit-form" method="POST" action="include/update_event.php">
           <div class="form-group">
             <label>Ansprechpartner Name</label>
             <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>

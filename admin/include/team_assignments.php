@@ -10,7 +10,7 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         $conn->beginTransaction();
 
         // Debugging: Ausgabe der empfangenen Team-Daten
-        error_log("Team-Daten zum Speichern: " . print_r($teamData, true));
+        error_log("Empfangene Team-Daten: " . print_r($teamData, true));
 
         foreach ($teamData as $team) {
             // Team in die Datenbank einfügen
@@ -25,9 +25,10 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
             // Debugging: Ausgabe der Team-ID und Mitarbeiter
             error_log("Team gespeichert. Team-ID: " . $teamId);
 
-            // Mitarbeiter hinzufügen (nur mit gültigem Namen)
+            // Mitarbeiter hinzufügen
             foreach ($team['employee_names'] as $employee) {
-                if (!empty($employee['name'])) { // Nur Mitarbeiter mit Namen hinzufügen
+                // Sicherstellen, dass der Mitarbeitername nicht leer ist
+                if (!empty($employee['name'])) {
                     $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
                     $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
                     $stmt->bindValue(':employee_name', $employee['name'], PDO::PARAM_STR);

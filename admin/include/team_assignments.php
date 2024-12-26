@@ -34,16 +34,17 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         // Binde die JSON-Daten in das `team_verteilung`-Feld ein
         $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
 
-        // Führe das SQL-Statement aus und prüfe, ob es erfolgreich war
-        $result = $stmt->execute();
-        
-        if ($result) {
+        // Führe das SQL-Statement aus
+        if ($stmt->execute()) {
             // Erfolgreiches Einfügen
-            error_log("Daten erfolgreich eingefügt.");
+            $lastId = $conn->lastInsertId(); // Holen der zuletzt eingefügten ID
+            error_log("Daten erfolgreich eingefügt. Letzte ID: " . $lastId);
+            
+            // Bestätigen der Transaktion
             $conn->commit();
             echo "Erfolgreich gespeichert.";
         } else {
-            // Fehler bei der Ausführung des Statements
+            // Fehler beim Ausführen des Insert-Statements
             error_log("Fehler beim Einfügen der Daten.");
             $conn->rollBack();
             echo "Fehler beim Speichern der Daten.";

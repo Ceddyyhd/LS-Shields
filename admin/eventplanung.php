@@ -94,42 +94,24 @@ foreach ($events as &$event) {
                 </tr>
             </thead>
             <tbody>
-    <?php foreach ($events as $event): ?>
+    <?php
+    // Debugging: Zeige die Events an
+    print_r($events);
+    foreach ($events as $event): 
+    ?>
         <tr>
-            <td><a><?= htmlspecialchars($event['id']); ?></a></td>
-            <td>
-                <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
-                <br/>
-                <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
-            </td>
-            <td><span><?= htmlspecialchars($event['event']); ?></span></td>
-            <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
-            <td class="project-state">
-                <?php
-                $status = htmlspecialchars($event['status']);
-                if ($status == 'in Planung') {
-                    echo "<span class='badge badge-warning'>In Planung</span>";
-                } elseif ($status == 'in Durchführung') {
-                    echo "<span class='badge badge-danger'>In Durchführung</span>";
-                } elseif ($status == 'Abgeschlossen') {
-                    echo "<span class='badge badge-success'>Abgeschlossen</span>";
-                }
-                ?>
-            </td>
+            <td><?= htmlspecialchars($event['id']); ?></td>
+            <td><?= htmlspecialchars($event['vorname_nachname']); ?></td>
+            <td><?= htmlspecialchars($event['event']); ?></td>
+            <td><?= htmlspecialchars($event['anmerkung']); ?></td>
+            <td><?= htmlspecialchars($event['status']); ?></td>
             <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">
-                    <i class="fas fa-folder"></i> View
-                </a>
-                <a class="btn btn-info btn-sm" href="#">
-                    <i class="fas fa-pencil-alt"></i> Edit
-                </a>
-                <a class="btn btn-danger btn-sm" href="#">
-                    <i class="fas fa-trash"></i> Delete
-                </a>
+                <a class="btn btn-primary btn-sm" href="eventplanung_akte.php?id=<?= $event['id']; ?>">View</a>
             </td>
         </tr>
     <?php endforeach; ?>
 </tbody>
+
         </table>
     </div>
 </div>

@@ -78,19 +78,11 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <small>Created <?= date('d.m.Y', strtotime($event['datum_uhrzeit'])); ?></small>
                         </td>
                         <td>
-                        <ul class="list-inline">
-        <?php
-        // Teammitglieder und deren Profilbilder anzeigen
-        $team_members = explode(',', $event['team_members_names']);
-        $team_member_images = explode(',', $event['team_members_images']);
-        foreach ($team_members as $key => $member) {
-            // Tooltip mit dem Namen des Mitarbeiters
-            echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member) . "'>";
-            echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($team_member_images[$key]) . "'>";
-            echo "</li>";
-        }
-        ?>
-    </ul>
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <img alt="Avatar" class="table-avatar" src="<?= htmlspecialchars($event['event_lead_profile_image']); ?>">
+                                </li>
+                            </ul>
                         </td>
                         <td class="project-state">
                             <?php

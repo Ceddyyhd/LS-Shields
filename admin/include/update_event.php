@@ -1,5 +1,5 @@
 <?php
-require 'db_connection.php'; // Deine DB-Verbindung
+require 'db.php'; // Deine DB-Verbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Event-ID aus den POST-Daten holen

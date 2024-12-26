@@ -78,11 +78,12 @@ $event = mysqli_fetch_assoc($result);
 ?>
 <script>
   $(document).ready(function() {
-    $('#vorname_nachname').val('<?= $event['vorname_nachname']; ?>');
-    $('#telefonnummer').val('<?= $event['telefonnummer']; ?>');
-    $('#datum_uhrzeit_event').val('<?= $event['datum_uhrzeit_event']; ?>');
-    $('#ort').val('<?= $event['ort']; ?>');
-    $('#event_lead').val('<?= $event['event_lead']; ?>');
+    // Sicherstellen, dass die PHP-Werte richtig in JavaScript übergeben werden
+    $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
+    $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
+    $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
+    $('#ort').val(<?= json_encode($event['ort']); ?>);
+    $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
   });
 </script>
 

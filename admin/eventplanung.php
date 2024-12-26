@@ -31,53 +31,53 @@
     <!-- /.content-header -->
 
     <?php
-// SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
-// Zuerst die Events abfragen (ohne Team-Mitglieder)
-// Beispiel: Events ohne Team-Mitglieder ausgeben
 $query = "
-    SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
-    FROM eventplanung
-    ORDER BY datum_uhrzeit DESC"; 
+SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
+FROM eventplanung
+ORDER BY datum_uhrzeit DESC"; 
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($events as &$event) {
-    echo "<pre>Event vor Team-Mitgliedern: ";
-    print_r($event); // Gibt das Event ohne Team-Mitglieder aus
-    echo "</pre>";
+echo "<pre>Event vor Team-Mitgliedern: ";
+print_r($event); // Gibt das Event ohne Team-Mitglieder aus
+echo "</pre>";
 
-    // Team-Mitglieder abfragen
-    $teamQuery = "
-        SELECT u.id AS employee_id, u.name, u.profile_image
-        FROM event_mitarbeiter_anmeldung eam
-        JOIN users u ON eam.employee_id = u.id
-        WHERE eam.event_id = :event_id";
-    
-    $teamStmt = $conn->prepare($teamQuery);
-    $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-    $teamStmt->execute();
-    $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+// Team-Mitglieder abfragen
+$teamQuery = "
+    SELECT u.id AS employee_id, u.name, u.profile_image
+    FROM event_mitarbeiter_anmeldung eam
+    JOIN users u ON eam.employee_id = u.id
+    WHERE eam.event_id = :event_id";
 
-    echo "<pre>Team-Mitglieder für Event " . $event['id'] . ": ";
-    print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
-    echo "</pre>";
+$teamStmt = $conn->prepare($teamQuery);
+$teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+$teamStmt->execute();
+$team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Wenn keine Team-Mitglieder vorhanden sind, setze es auf ein leeres Array
-    $event['team_members'] = !empty($team_members) ? $team_members : [];
+echo "<pre>Team-Mitglieder für Event " . $event['id'] . ": ";
+print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
+echo "</pre>";
 
-    // Event ausgeben, nachdem Team-Mitglieder zugeordnet wurden
-    echo "<pre>Event nach der Team-Mitglieder-Zuordnung: ";
-    print_r($event); 
-    echo "</pre>";
+// Wenn keine Team-Mitglieder vorhanden sind, setze es auf ein leeres Array
+if (empty($team_members)) {
+    $event['team_members'] = [];  // Leeres Array statt null
+} else {
+    $event['team_members'] = $team_members;
+}
+
+// Event ausgeben, nachdem Team-Mitglieder zugeordnet wurden
+echo "<pre>Event nach der Team-Mitglieder-Zuordnung: ";
+print_r($event); 
+echo "</pre>";
 }
 
 // Überprüfe, ob alle Events korrekt ausgegeben werden
 echo "<pre>Events nach der Team-Mitglieder-Zuordnung: ";
 print_r($events);
 echo "</pre>";
-// Ausgabe der Events
 ?>
 
 <!-- Ausgabe der Events -->

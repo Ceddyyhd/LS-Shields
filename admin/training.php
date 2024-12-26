@@ -135,7 +135,7 @@ document.getElementById('saveTraining').addEventListener('click', function() {
     var datum_zeit = document.getElementById('trainingDate').value;
 
     $.ajax({
-        url: 'include/training_anmeldung.php',
+        url: 'admin/include/training_anmeldung.php',  // Stelle sicher, dass der Pfad korrekt ist
         method: 'POST',
         data: {
             action: 'training_erstellen',
@@ -147,9 +147,14 @@ document.getElementById('saveTraining').addEventListener('click', function() {
         success: function(response) {
             var result = JSON.parse(response);
             if (result.status === 'erfolgreich') {
-                loadTrainings(); // Trainings neu laden
+                loadTrainings();  // Trainingsliste neu laden
                 $('#modal-training-erstellen').modal('hide');
+            } else {
+                console.error('Fehler beim Erstellen des Trainings:', result.error);
             }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX-Fehler:', error);
         }
     });
 });

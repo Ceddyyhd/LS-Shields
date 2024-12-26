@@ -39,7 +39,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 // SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "SELECT eventplanung.*, 
                  users.name AS event_lead_name, 
-                 users.profile_image AS event_lead_profile_image
+                 users.profile_image AS event_lead_profile_image,
+                 eventplanung.event, 
+                 eventplanung.anmerkung
           FROM eventplanung
           LEFT JOIN users ON eventplanung.event_lead = users.id";
 
@@ -80,6 +82,8 @@ foreach ($events as &$event) {
                     <th style="width: 20%">Project Name</th>
                     <th style="width: 30%">Team Members</th>
                     <th>Status</th>
+                    <th style="width: 20%">Event</th> <!-- Neue Spalte für Event -->
+                    <th style="width: 20%">Anmerkung</th> <!-- Neue Spalte für Anmerkung -->
                     <th style="width: 20%">Actions</th>
                 </tr>
             </thead>
@@ -116,6 +120,14 @@ foreach ($events as &$event) {
                                 echo "<span class='badge badge-success'>Abgeschlossen</span>";
                             }
                             ?>
+                        </td>
+                        <td>
+                            <!-- Neue Spalte für Event anzeigen -->
+                            <span><?= htmlspecialchars($event['event']); ?></span>
+                        </td>
+                        <td>
+                            <!-- Neue Spalte für Anmerkung anzeigen -->
+                            <span><?= htmlspecialchars($event['anmerkung']); ?></span>
                         </td>
                         <td class="project-actions text-right">
                             <!-- View Button, der zu einer Detailseite weiterleitet -->

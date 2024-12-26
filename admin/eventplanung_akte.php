@@ -345,45 +345,49 @@ try {
 
         // Speichern der Teamdaten
         $('#saveTeam').click(function() {
-            const teamData = [];
+    const teamData = [];
 
-            // Erfassung der Team- und Mitarbeiterdaten
-            $('input[name^="mitarbeiter_"]').each(function(index) {
-                const parentForm = $(this).closest('.team-form'); // Das Teamformular
-                const teamName = parentForm.find('input[name^="team_name"]').val(); // Teamname des aktuellen Teams
-                const teamArea = parentForm.find('input[name^="bereich"]').val(); // Bereich des aktuellen Teams
+    // Erfassung der Team- und Mitarbeiterdaten
+    $('.team-form').each(function(index) {
+        const teamName = $(this).find('input[name^="team_name"]').val();
+        const teamArea = $(this).find('input[name^="bereich"]').val();
 
-                // Speichern der Mitarbeiter in das teamData Array
-                const employeeName = $(this).val();
-                const isTeamLead = $(this).index() === 0 ? "1" : "0"; // Teamlead-Erkennung: Der erste Mitarbeiter ist der Team Lead
+        const employees = [];
+        $(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
+            const employeeName = $(this).val();
+            const isTeamLead = empIndex === 0 ? "1" : "0"; // Der erste Mitarbeiter ist Team Lead
 
-                const team = {
-                    team_name: teamName,
-                    area_name: teamArea,
-                    employee_names: [{
-                        name: employeeName,
-                        is_team_lead: isTeamLead
-                    }]
-                };
-
-                teamData.push(team); // Team hinzufügen
-            });
-
-            console.log(teamData); // Überprüfe die gesammelten Daten
-
-            // Sende die Daten per AJAX an den Server
-            $.ajax({
-                url: 'include/team_assignments.php', 
-                method: 'POST',
-                data: { teams: teamData },
-                success: function(response) {
-                    alert('Teams wurden gespeichert.');
-                },
-                error: function(xhr, status, error) {
-                    alert('Fehler beim Speichern der Teams.');
-                }
+            employees.push({
+                name: employeeName,
+                is_team_lead: isTeamLead
             });
         });
+
+        const team = {
+            team_name: teamName,
+            area_name: teamArea,
+            employee_names: employees
+        };
+
+        teamData.push(team);
+    });
+
+    console.log(teamData); // Überprüfe die gesammelten Daten
+
+    // Sende die Daten per AJAX an den Server
+    $.ajax({
+        url: 'include/team_assignments.php', 
+        method: 'POST',
+        data: { teams: teamData },
+        success: function(response) {
+            alert('Teams wurden gespeichert.');
+        },
+        error: function(xhr, status, error) {
+            alert('Fehler beim Speichern der Teams.');
+        }
+    });
+});
+
     });
 </script>
 

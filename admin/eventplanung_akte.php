@@ -378,7 +378,7 @@ try {
         }
     });
 
-    console.log(teamData); // Überprüfe die gesammelten Daten
+    console.log("TeamData vor dem Senden:", teamData);
 
     // Sende die Daten per AJAX an den Server
     $.ajax({

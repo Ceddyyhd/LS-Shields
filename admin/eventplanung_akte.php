@@ -118,6 +118,7 @@ try {
                     <b>Ort:</b> <a class="float-right">15.12.2024</a>
                   </li>
                 </ul>
+                <button type="button" class="btn btn-block btn-primary">Primary</button>
               </div>
               <!-- /.card-body -->
             </div>

@@ -202,6 +202,15 @@ try {
     ?>
             </select>
           </div>
+          <div class="form-group">
+    <label>Event</label>
+    <input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>" required>
+</div>
+
+<div class="form-group">
+    <label>Anmerkung</label>
+    <textarea class="form-control" name="anmerkung" id="anmerkung" rows="3" required><?= htmlspecialchars($event['anmerkung']); ?></textarea>
+</div>
 
   <div class="modal-footer justify-content-between">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

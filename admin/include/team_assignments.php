@@ -14,24 +14,42 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     $eventId = isset($_GET['id']) ? $_GET['id'] : null;
 
     if ($eventId) {
-        // Beginne die Transaktion (für alle Teams gleichzeitig)
+        // Beginne die Transaktion
         $conn->beginTransaction();
 
         try {
             // Die Teamdaten in JSON umwandeln
             $teamDataJson = json_encode($teamData);
+            
+            if (!$teamDataJson) {
+                throw new Exception("JSON-Encoding ist fehlgeschlagen: " . json_last_error_msg());
+            }
 
-            // Eventplanung in der Datenbank speichern (inklusive der Teamdaten als JSON)
-            $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
-            $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
+            // Überprüfen, ob ein Event mit dieser ID bereits existiert
+            $stmt = $conn->prepare("SELECT id FROM eventplanung WHERE id = :id");
             $stmt->bindValue(':id', $eventId, PDO::PARAM_INT);
             $stmt->execute();
+            $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($event) {
+                // Event existiert, wir aktualisieren die `team_verteilung` Spalte
+                $stmt = $conn->prepare("UPDATE eventplanung SET team_verteilung = :team_verteilung WHERE id = :id");
+                $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
+                $stmt->bindValue(':id', $eventId, PDO::PARAM_INT);
+                $stmt->execute();
+            } else {
+                // Event existiert nicht, wir erstellen einen neuen Eintrag
+                $stmt = $conn->prepare("INSERT INTO eventplanung (id, team_verteilung) VALUES (:id, :team_verteilung)");
+                $stmt->bindValue(':id', $eventId, PDO::PARAM_INT);
+                $stmt->bindValue(':team_verteilung', $teamDataJson, PDO::PARAM_STR);
+                $stmt->execute();
+            }
 
             // Bestätigen der Transaktion
             $conn->commit();
             echo "Erfolgreich gespeichert.";
         } catch (Exception $e) {
-            // Bei einem Fehler die Transaktion zurücksetzen
+            // Bei einem Fehler die Transaktion zurücksetzen und Fehler ausgeben
             $conn->rollBack();
             echo "Fehler: " . $e->getMessage();
         }

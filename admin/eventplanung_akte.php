@@ -55,17 +55,24 @@ try {
     if (!$event) {
         die('Eventplanung nicht gefunden.');
     }
+    // Benutzer aus der `users`-Tabelle abfragen
+    $userStmt = $conn->prepare("SELECT id, name FROM users");
+    $userStmt->execute();
+    $users = $userStmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (PDOException $e) {
     die("Fehler beim Abrufen der Daten: " . $e->getMessage());
 }
 ?>
 <script>
   $(document).ready(function() {
-    // Die Werte aus der PHP-Variablen sicher an JavaScript übergeben
+    // Werte in das Formular setzen
     $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
     $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
     $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
     $('#ort').val(<?= json_encode($event['ort']); ?>);
+    
+    // Event Lead setzen
     $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
   });
 </script>
@@ -168,7 +175,13 @@ try {
           <div class="form-group">
             <label>Event Lead</label>
             <select class="form-control" name="event_lead" id="event_lead" required>
-              <!-- Optionen werden per AJAX geladen -->
+                <?php
+                foreach ($users as $user) {
+                    // Prüfen, ob der Benutzer der Event Lead des aktuellen Events ist
+                    $selected = ($event['event_lead'] == $user['id']) ? 'selected' : '';
+                    echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
+                }
+                ?>
             </select>
           </div>
 

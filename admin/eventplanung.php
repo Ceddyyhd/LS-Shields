@@ -53,22 +53,7 @@ print_r($events); // Gibt alle abgerufenen Events aus
 echo '</pre>';
 
 // Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
-foreach ($events as &$event) {
-    // Teammitglieder abfragen
-    $teamQuery = "
-    SELECT DISTINCT eam.event_id, u.id AS employee_id, u.name, u.profile_image
-    FROM event_mitarbeiter_anmeldung eam
-    JOIN users u ON eam.employee_id = u.id
-    WHERE eam.event_id = :event_id";
 
-    $teamStmt = $conn->prepare($teamQuery);
-    $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-    $teamStmt->execute();
-    $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Teammitglieder in das Event-Datenfeld einfügen
-    $event['team_members'] = $team_members;
-}
 
 // Ausgabe der Events
 ?>

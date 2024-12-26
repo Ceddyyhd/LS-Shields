@@ -42,10 +42,13 @@ $query = "
            eventplanung.anmerkung, 
            eventplanung.status, 
            eventplanung.vorname_nachname, 
-           eventplanung.datum_uhrzeit
+           eventplanung.datum_uhrzeit,
+           GROUP_CONCAT(DISTINCT team_users.name ORDER BY team_users.name) AS team_members_names,
+           GROUP_CONCAT(DISTINCT team_users.profile_image ORDER BY team_users.name) AS team_members_images
     FROM eventplanung
+    LEFT JOIN users AS team_users ON event_mitarbeiter_anmeldung.employee_id = team_users.id
     LEFT JOIN event_mitarbeiter_anmeldung ON eventplanung.id = event_mitarbeiter_anmeldung.event_id
-    LEFT JOIN users ON eventplanung.event_lead = users.id";
+    GROUP BY eventplanung.id"; // Verhindert Duplikate bei Events
 
 $stmt = $conn->prepare($query);
 $stmt->execute();

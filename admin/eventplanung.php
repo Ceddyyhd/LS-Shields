@@ -36,11 +36,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
     <?php
-// SQL-Abfrage zum Abrufen aller Events ohne Duplikate
+// SQL-Abfrage zum Abrufen aller Events aus der eventplanung-Tabelle
 $query = "
     SELECT eventplanung.*, 
            users.name AS event_lead_name, 
-           users.profile_image AS event_lead_profile_image
+           users.profile_image AS event_lead_profile_image,
+           eventplanung.event, 
+           eventplanung.anmerkung
     FROM eventplanung
     LEFT JOIN users ON eventplanung.event_lead = users.id
     GROUP BY eventplanung.id"; // Grouping by event ID
@@ -53,8 +55,8 @@ $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php
 foreach ($events as &$event) {
-    // Teammitglieder für das Event abfragen
-    $teamQuery = "SELECT users.name, users.profile_image 
+    // Teammitglieder für jedes Event abfragen und doppelte IDs vermeiden
+    $teamQuery = "SELECT DISTINCT users.name, users.profile_image 
                   FROM event_mitarbeiter_anmeldung
                   LEFT JOIN users ON event_mitarbeiter_anmeldung.employee_id = users.id
                   WHERE event_mitarbeiter_anmeldung.event_id = :event_id";
@@ -64,7 +66,7 @@ foreach ($events as &$event) {
     $teamStmt->execute();
     $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Teammitglieder in die Event-Daten einfügen
+    // Teammitglieder in das Event-Datenfeld einfügen
     $event['team_members'] = $team_members;
 }
 ?>

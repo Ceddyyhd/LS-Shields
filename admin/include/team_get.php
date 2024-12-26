@@ -6,48 +6,36 @@ if (isset($_GET['event_id'])) {
     $eventId = $_GET['event_id'];
 
     try {
-        // Abfrage, um die Team-Daten zu holen, und alle Mitarbeiter für jedes Team zu gruppieren
-        $query = "SELECT t.id AS team_id, t.team_name, t.area_name, e.id AS employee_id, e.employee_name, e.is_team_lead
-                  FROM teams t
-                  LEFT JOIN employees e ON e.team_id = t.id
-                  WHERE t.event_id = :event_id
-                  ORDER BY t.team_name";
-
+        // SQL-Abfrage, um die Team-Daten (als JSON) aus der eventplanung-Tabelle zu holen
+        $query = "SELECT team_verteilung FROM eventplanung WHERE id = :event_id";
         $stmt = $conn->prepare($query);
-        $stmt->bindParam(':event_id', $eventId);
+        $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Ergebnisse abrufen
-        $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Ergebnis abrufen
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Debug: Ausgabe der Teams
-        error_log("Teams: " . print_r($teams, true));
+        // Überprüfen, ob das Ergebnis vorhanden ist
+        if ($result) {
+            // JSON-Daten dekodieren
+            $teamData = json_decode($result['team_verteilung'], true);
 
-        // Team-Daten gruppieren
-        $groupedTeams = [];
-        foreach ($teams as $team) {
-            // Wenn das Team noch nicht existiert, füge es hinzu
-            if (!isset($groupedTeams[$team['team_name']])) {
-                $groupedTeams[$team['team_name']] = [
-                    'team_name' => $team['team_name'],
-                    'area_name' => $team['area_name'],
-                    'employee_names' => [],
-                ];
+            // Überprüfen, ob die JSON-Daten dekodiert wurden
+            if ($teamData === null) {
+                error_log("Fehler beim Dekodieren der JSON-Daten.");
+                echo json_encode(['status' => 'error', 'message' => 'Fehler beim Dekodieren der Team-Daten.']);
+                exit;
             }
 
-            // Füge den Mitarbeiter zum entsprechenden Team hinzu
-            $groupedTeams[$team['team_name']]['employee_names'][] = [
-                'name' => $team['employee_name'],
-                'is_team_lead' => $team['is_team_lead'],
-                'id' => $team['employee_id'], // Mitarbeiter ID
-            ];
+            // Debug: Ausgabe der Team-Daten
+            error_log("Empfangene Team-Daten: " . print_r($teamData, true));
+
+            // Gebe die dekodierten Team-Daten als JSON zurück
+            echo json_encode($teamData);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Keine Eventplanungs-Daten gefunden.']);
         }
 
-        // Debug: Ausgabe des gruppierten Teams
-        error_log("Grouped Teams: " . print_r($groupedTeams, true));
-
-        // Gebe die gruppierten Teams als JSON zurück
-        echo json_encode(array_values($groupedTeams));
     } catch (PDOException $e) {
         // Fehler bei der Datenbankabfrage
         echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);

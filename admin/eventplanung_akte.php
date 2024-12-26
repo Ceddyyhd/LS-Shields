@@ -449,12 +449,10 @@ margin: 0;
             },
             success: function(response) {
                 console.log('Erfolgreich gespeichert:', response);
-                alert('Teams wurden gespeichert.');
                 window.location.reload();  // Seite neu laden
             },
             error: function(xhr, status, error) {
                 console.log('Fehler bei der Anfrage:', error);
-                alert('Fehler beim Speichern der Teams.');
             }
         });
     });

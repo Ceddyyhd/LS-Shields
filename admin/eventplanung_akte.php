@@ -152,6 +152,7 @@ try {
       <div class="modal-body">
 
       <form id="edit-form">
+      <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>">
   <div class="form-group">
     <label>Ansprechpartner Name</label>
     <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
@@ -199,7 +200,7 @@ try {
   $(document).ready(function() {
   // Event Lead Optionen per AJAX laden
   $.ajax({
-    url: 'include/get_users.php', // Ein PHP-Skript, das die Benutzer abruft
+    url: 'get_users.php', // Ein PHP-Skript, das die Benutzer abruft
     method: 'GET',
     success: function(data) {
       var users = JSON.parse(data);
@@ -210,23 +211,28 @@ try {
     }
   });
 
+  // Event ID aus der URL extrahieren
+  var urlParams = new URLSearchParams(window.location.search);
+  var event_id = urlParams.get('id'); // Event ID aus URL holen
+
   // Formular per AJAX senden
   $('#edit-form').on('submit_update', function(e) {
     e.preventDefault(); // Verhindert das normale Absenden des Formulars
 
     var formData = $(this).serialize(); // Alle Formulardaten serialisieren
+    formData += '&event_id=' + event_id; // Event ID hinzufügen
 
     $.ajax({
-      url: 'include/update_event.php', // PHP-Skript zum Verarbeiten des Updates
+      url: 'update_event_ajax.php', // PHP-Skript zum Verarbeiten des Updates
       method: 'POST',
       data: formData,
       success: function(response) {
-        // Rückmeldung vom Server
-        alert(response.message); // Zum Beispiel: Erfolgsmeldung
+        var responseData = JSON.parse(response);
+        alert(responseData.message); // Rückmeldung vom Server anzeigen
         $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
       },
       error: function() {
-        alert('Es gab einen Fehler bei der Aktualisierung.');
+        alert('Es gab einen Fehler beim Speichern der Änderungen.');
       }
     });
   });

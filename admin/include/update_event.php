@@ -2,8 +2,8 @@
 require 'db_connection.php'; // Deine DB-Verbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Event-ID aus der URL holen (falls erforderlich)
-    $event_id = $_GET['id']; // Event-ID aus der URL
+    // Event-ID aus den POST-Daten holen
+    $event_id = $_POST['event_id']; // Event ID aus POST-Daten
 
     // Formulardaten aus POST erhalten
     $vorname_nachname = $_POST['vorname_nachname'];

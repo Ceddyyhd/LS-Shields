@@ -137,16 +137,29 @@ try {
     /* Flexbox für das Layout der Teams */
     .row {
         display: flex;
-        align-items: center;
+        flex-wrap: wrap; /* Damit bei Bedarf Zeilenumbruch möglich ist */
+        justify-content: flex-start; /* Ausrichtung nach links */
     }
 
     .row dt {
-        flex: 1; /* Lässt das dt-Tag mehr Platz einnehmen */
+        flex: 0 0 30%; /* Den Teamnamen mit einer festen Breite */
         white-space: nowrap; /* Verhindert das Umbruchverhalten */
     }
 
     .row dd {
-        flex: 2; /* Lässt das dd-Tag mehr Platz einnehmen */
+        flex: 1 0 60%; /* Den Mitarbeitern genügend Platz geben */
+    }
+
+    .row li {
+        list-style-type: none; /* Entfernt das Standard-Aufzählungszeichen */
+    }
+
+    .row dt, .row dd {
+        margin: 0; /* Verhindert unnötige Abstände */
+    }
+
+    .row p {
+        margin: 0;
     }
 </style>                <script>
                     $(document).ready(function() {

@@ -33,6 +33,7 @@
     <?php
 // SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
 // Zuerst die Events abfragen (ohne Team-Mitglieder)
+// Beispiel: Events ohne Team-Mitglieder ausgeben
 $query = "
     SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
     FROM eventplanung
@@ -43,21 +44,34 @@ $stmt->execute();
 $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 foreach ($events as &$event) {
-    // Für jedes Event die Team-Mitglieder abfragen
+    echo "<pre>Event vor Team-Mitgliedern: ";
+    print_r($event); // Gibt das Event ohne Team-Mitglieder aus
+    echo "</pre>";
+    
+    // Team-Mitglieder abfragen
     $teamQuery = "
         SELECT u.id AS employee_id, u.name, u.profile_image
         FROM event_mitarbeiter_anmeldung eam
         JOIN users u ON eam.employee_id = u.id
         WHERE eam.event_id = :event_id";
-
+    
     $teamStmt = $conn->prepare($teamQuery);
     $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
     $teamStmt->execute();
     $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    echo "<pre>Team-Mitglieder für Event " . $event['id'] . ": ";
+    print_r($team_members); // Gibt die Team-Mitglieder für das Event aus
+    echo "</pre>";
 
     // Team-Mitglieder dem Event hinzufügen
     $event['team_members'] = $team_members;
 }
+
+// Überprüfe, ob alle Events korrekt ausgegeben werden
+echo "<pre>Events nach der Team-Mitglieder-Zuordnung: ";
+print_r($events);
+echo "</pre>";
 
 // Ausgabe der Events
 ?>

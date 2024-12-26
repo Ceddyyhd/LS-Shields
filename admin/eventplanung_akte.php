@@ -124,6 +124,10 @@ try {
               <div class="card-body box-profile">
                 <div class="text-center">
                 </div>
+                <p class="text-muted text-center">Event</p>
+                <h3 class="profile-username text-center"><?= htmlspecialchars($event['event']); ?></h3>
+                <p class="text-muted text-center">Anmerkung</p>
+                <h3 class="profile-username text-center"><?= htmlspecialchars($event['anmerkung']); ?></h3>
                 <p class="text-muted text-center">Ansprechpartner</p>
                 <h3 class="profile-username text-center"><?= htmlspecialchars($event['vorname_nachname']); ?></h3>
 

@@ -96,7 +96,7 @@ foreach ($events as &$event) {
             <tbody>
     <?php foreach ($events as $event): ?>
         <tr>
-            <td><?= htmlspecialchars($event['id']); ?></td>
+            <td><a><?= htmlspecialchars($event['id']); ?></a></td>
             <td>
                 <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
                 <br/>
@@ -104,9 +104,6 @@ foreach ($events as &$event) {
             </td>
             <td><span><?= htmlspecialchars($event['event']); ?></span></td>
             <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
-            <td>
-                <!-- Team Members hier anzeigen -->
-            </td>
             <td class="project-state">
                 <?php
                 $status = htmlspecialchars($event['status']);

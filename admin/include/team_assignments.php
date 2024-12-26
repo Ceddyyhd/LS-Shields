@@ -9,6 +9,9 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
         // Beginne die Transaktion
         $conn->beginTransaction();
 
+        // Debugging: Ausgabe der empfangenen Team-Daten
+        error_log("Team-Daten zum Speichern: " . print_r($teamData, true));
+
         foreach ($teamData as $team) {
             // Team in die Datenbank einfügen
             $stmt = $conn->prepare("INSERT INTO teams (team_name, area_name) VALUES (:team_name, :area_name)");
@@ -16,24 +19,31 @@ if (isset($_POST['teams']) && !empty($_POST['teams'])) {
             $stmt->bindValue(':area_name', $team['area_name'], PDO::PARAM_STR);
             $stmt->execute();
 
-            $teamId = $conn->lastInsertId();  // ID des neu eingefügten Teams
+            // Team-ID des neu eingefügten Teams holen
+            $teamId = $conn->lastInsertId();
+
+            // Debugging: Ausgabe der Team-ID und Mitarbeiter
+            error_log("Team gespeichert. Team-ID: " . $teamId);
 
             // Mitarbeiter hinzufügen
             foreach ($team['employee_names'] as $employee) {
-                $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
-                $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
-                $stmt->bindValue(':employee_name', $employee['name'], PDO::PARAM_STR);
-                $stmt->bindValue(':is_team_lead', $employee['is_team_lead'], PDO::PARAM_INT);
-                $stmt->execute();
+                if (!empty($employee['name'])) { // Leere Mitarbeiter ignorieren
+                    $stmt = $conn->prepare("INSERT INTO employees (team_id, employee_name, is_team_lead) VALUES (:team_id, :employee_name, :is_team_lead)");
+                    $stmt->bindValue(':team_id', $teamId, PDO::PARAM_INT);
+                    $stmt->bindValue(':employee_name', $employee['name'], PDO::PARAM_STR);
+                    $stmt->bindValue(':is_team_lead', $employee['is_team_lead'], PDO::PARAM_INT);
+                    $stmt->execute();
+                }
             }
         }
 
-        // Bestätigen der Transaktion
+        // Transaktion bestätigen
         $conn->commit();
         echo "Erfolgreich gespeichert.";
     } catch (Exception $e) {
-        // Bei Fehlern die Transaktion zurücksetzen
+        // Fehlerbehandlung: Transaktion zurücksetzen
         $conn->rollBack();
+        error_log("Fehler: " . $e->getMessage());
         echo "Fehler: " . $e->getMessage();
     }
 } else {

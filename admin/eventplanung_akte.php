@@ -130,7 +130,7 @@ try {
                         <b>Tel. Nr.:</b> <a class="float-right"><?= htmlspecialchars($event['telefonnummer']); ?></a>
                     </li>
                     <li class="list-group-item">
-                        <b>Datum & Uhrzeit:</b> <a class="float-right"><?= htmlspecialchars($event['datum_uhrzeit_event']); ?></a>
+                        <b>Datum & </br>Uhrzeit:</b> <a class="float-right"><?= htmlspecialchars($event['datum_uhrzeit_event']); ?></a>
                     </li>
                     <li class="list-group-item">
                         <b>Ort:</b> <a class="float-right"><?= htmlspecialchars($event['ort']); ?></a>

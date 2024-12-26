@@ -211,9 +211,9 @@ try {
     }
   });
 
-  // Event ID aus der URL extrahieren
+  // Event ID aus der URL extrahieren (jetzt aus 'id' statt 'event_id')
   var urlParams = new URLSearchParams(window.location.search);
-  var event_id = urlParams.get('event_id'); // Event ID aus URL holen
+  var event_id = urlParams.get('id'); // Event ID aus URL holen (jetzt 'id')
 
   // Formular per AJAX senden
   $('#edit-form').on('submit', function(e) {
@@ -237,6 +237,7 @@ try {
     });
   });
 });
+
 </script>
 
 

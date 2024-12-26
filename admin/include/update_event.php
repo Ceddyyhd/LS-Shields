@@ -3,7 +3,7 @@ require 'db.php'; // Deine DB-Verbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Event-ID aus den POST-Daten holen
-    $event_id = $_POST['event_id']; // Event ID aus POST-Daten
+    $event_id = $_POST['event_id']; // Event ID aus POST-Daten (unverändert)
 
     // Formulardaten aus POST erhalten
     $vorname_nachname = $_POST['vorname_nachname'];
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             datum_uhrzeit_event = :datum_uhrzeit_event,
             ort = :ort,
             event_lead = :event_lead
-            WHERE id = :event_id";
+            WHERE id = :event_id"; // 'id' statt 'event_id' in der WHERE-Klausel
 
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':vorname_nachname', $vorname_nachname);

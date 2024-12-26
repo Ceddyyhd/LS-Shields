@@ -46,11 +46,7 @@ print_r($event); // Gibt das Event ohne Team-Mitglieder aus
 echo "</pre>";
 
 // Team-Mitglieder abfragen
-$teamQuery = "
-    SELECT u.id AS employee_id, u.name, u.profile_image
-    FROM event_mitarbeiter_anmeldung eam
-    JOIN users u ON eam.employee_id = u.id
-    WHERE eam.event_id = :event_id";
+
 
 $teamStmt = $conn->prepare($teamQuery);
 $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);

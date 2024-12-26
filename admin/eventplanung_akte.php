@@ -123,21 +123,21 @@ try {
                        alt="User profile picture">
                 </div>
                 <p class="text-muted text-center">Ansprechpartner</p>
-                <h3 class="profile-username text-center">Nina Mcintire</h3>
+                <h3 class="profile-username text-center"><?= htmlspecialchars($event['vorname_nachname']); ?></h3>
 
                 <ul class="list-group list-group-unbordered mb-3">
-                  <li class="list-group-item">
-                    <b>Tel. Nr.:</b> <a class="float-right">555 - 667 7541</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Datum & Uhrzeit:</b> <a class="float-right">15.12.2024</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Ort:</b> <a class="float-right">15.12.2024</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>Eventlead:</b> <a class="float-right">15.12.2024</a>
-                  </li>
+                    <li class="list-group-item">
+                        <b>Tel. Nr.:</b> <a class="float-right"><?= htmlspecialchars($event['telefonnummer']); ?></a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Datum & Uhrzeit:</b> <a class="float-right"><?= htmlspecialchars($event['datum_uhrzeit_event']); ?></a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Ort:</b> <a class="float-right"><?= htmlspecialchars($event['ort']); ?></a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Eventlead:</b> <a class="float-right"><?= htmlspecialchars($event['event_lead']); ?></a>
+                    </li>
                 </ul>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
                   Bearbeiten

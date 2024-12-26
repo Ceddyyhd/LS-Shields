@@ -5,10 +5,14 @@ include('db.php');
 if (isset($_POST['teams']) && !empty($_POST['teams'])) {
     $teamData = $_POST['teams'];
 
-    try {
-        // Die Teamdaten in JSON umwandeln
-        $teamDataJson = json_encode($teamData);
+    // Debugging: Prüfe, was wir erhalten
+    error_log("Empfangene Team-Daten: " . print_r($teamData, true));
+    
+    // Die Teamdaten in JSON umwandeln
+    $teamDataJson = json_encode($teamData);
+    error_log("Team-Daten (JSON): " . $teamDataJson);  // Überprüfe, ob die JSON-Codierung korrekt funktioniert
 
+    try {
         // Beginne die Transaktion
         $conn->beginTransaction();
 

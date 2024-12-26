@@ -286,15 +286,8 @@ $(document).ready(function() {
     $('#reservation').daterangepicker()
     //Date range picker with time picker
     $('#reservationtime').daterangepicker({
-            format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
-            icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
-            time: 'fa fa-clock',
-            date: 'fa fa-calendar',
-            up: 'fa fa-arrow-up',
-            down: 'fa fa-arrow-down',
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right'
-        }
+      format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
+            
     })
 
     //Timepicker

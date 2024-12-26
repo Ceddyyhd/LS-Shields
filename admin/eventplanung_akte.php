@@ -152,7 +152,7 @@ try {
       <div class="modal-body">
 
       <form id="edit-form">
-      <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>">
+      <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['event_id']; ?>">
   <div class="form-group">
     <label>Ansprechpartner Name</label>
     <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
@@ -213,14 +213,14 @@ try {
 
   // Event ID aus der URL extrahieren
   var urlParams = new URLSearchParams(window.location.search);
-  var event_id = urlParams.get('id'); // Event ID aus URL holen
+  var event_id = urlParams.get('event_id'); // Event ID aus URL holen
 
   // Formular per AJAX senden
-  $('#edit-form').on('submit_update', function(e) {
+  $('#edit-form').on('submit', function(e) {
     e.preventDefault(); // Verhindert das normale Absenden des Formulars
 
     var formData = $(this).serialize(); // Alle Formulardaten serialisieren
-    formData += '&event_id=' + event_id; // Event ID hinzufügen
+    formData += '&event_id=' + event_id; // Event ID zur Formulardaten hinzufügen
 
     $.ajax({
       url: 'update_event_ajax.php', // PHP-Skript zum Verarbeiten des Updates

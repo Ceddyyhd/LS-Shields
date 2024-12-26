@@ -197,6 +197,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </td>
                 </tr>
               </tbody>
+              <tbody>
+                <tr data-widget="expandable-table" aria-expanded="false">
+                  <td>1</td>
+                  <td>08.01.2024 19:00</td>
+                  <td>Szenario Training</td>
+                  <td>Aiden Knox, Paul Garcia</td>
+                  <td>10 Minuten vor Start am Firmengelände in Dienstkleidung 
+                    Genügend Essen und Trinken einpacken</td>
+                </tr>
+                <tr class="expandable-body">
+                  <td colspan="5">
+                    <div class="p-3">
+                      <div class="mb-3">
+                        <strong>Ansprechpartner:</strong>
+                        <div>Name: Tom Meyer</div>
+                        <div>Tel. Nr.: 123456789</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong>Eingetragene Mitarbeiter:</strong>
+                        <ul class="mb-0">
+                          <li>Cedric Schmidt</li>
+                          <li>Falco Hunter</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <!-- /.card-body -->

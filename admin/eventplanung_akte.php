@@ -45,7 +45,10 @@ if (isset($_GET['id'])) {
 
 // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
 try {
-    $stmt = $conn->prepare("SELECT * FROM eventplanung WHERE id = :id");
+    // Event-Daten mit dem Event Lead Name abfragen
+    $stmt = $conn->prepare("SELECT eventplanung.*, users.name AS event_lead_name FROM eventplanung 
+                            LEFT JOIN users ON eventplanung.event_lead = users.id 
+                            WHERE eventplanung.id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -55,6 +58,7 @@ try {
     if (!$event) {
         die('Eventplanung nicht gefunden.');
     }
+
     // Benutzer aus der `users`-Tabelle abfragen
     $userStmt = $conn->prepare("SELECT id, name FROM users");
     $userStmt->execute();
@@ -66,15 +70,15 @@ try {
 ?>
 <script>
   $(document).ready(function() {
-    // Werte in das Formular setzen
-    $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
-    $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
-    $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
-    $('#ort').val(<?= json_encode($event['ort']); ?>);
-    
-    // Event Lead setzen
-    $('#event_lead').val(<?= json_encode($event['event_lead']); ?>);
-  });
+  // Werte in das Formular setzen
+  $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
+  $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
+  $('#datum_uhrzeit_event').val(<?= json_encode($event['datum_uhrzeit_event']); ?>);
+  $('#ort').val(<?= json_encode($event['ort']); ?>);
+
+  // Event Lead setzen
+  $('#event_lead').val(<?= json_encode($event['event_lead']); ?>); // Die ID des Event Leads wird hier gesetzt
+});
 </script>
 <?php include 'include/header.php'; ?>
 
@@ -182,13 +186,13 @@ try {
   <div class="form-group">
             <label>Event Lead</label>
             <select class="form-control" name="event_lead" id="event_lead" required>
-                <?php
-                foreach ($users as $user) {
-                    // Prüfen, ob der Benutzer der Event Lead des aktuellen Events ist
-                    $selected = ($event['event_lead'] == $user['id']) ? 'selected' : '';
-                    echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
-                }
-                ?>
+            <?php
+    // Alle Benutzer im Dropdown anzeigen
+    foreach ($users as $user) {
+        $selected = ($user['id'] == $event['event_lead']) ? 'selected' : '';
+        echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
+    }
+    ?>
             </select>
           </div>
 

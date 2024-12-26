@@ -118,34 +118,7 @@ try {
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-          <style>
-/* Tooltip container */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
 
-/* Tooltip text */
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
-</style>
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
@@ -166,9 +139,6 @@ try {
                     </li>
                     <li class="list-group-item">
                         <b>Eventlead:</b> <a class="float-right"><?= htmlspecialchars($event['event_lead_name']); ?></a>
-                        <div class="tooltip">Hover over me
-                        <span class="tooltiptext">Tooltip text</span>
-                        </div>
                     </li>
                 </ul>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
@@ -245,19 +215,6 @@ try {
             down: 'fa fa-arrow-down',
             previous: 'fa fa-chevron-left',
             next: 'fa fa-chevron-right'
-        }
-    });
-
-    // Event Lead Optionen per AJAX laden
-    $.ajax({
-        url: 'include/get_users.php', // Ein PHP-Skript, das die Benutzer abruft
-        method: 'GET',
-        success: function(data) {
-            var users = JSON.parse(data);
-            var select = $('#event_lead');
-            users.forEach(function(user) {
-                select.append('<option value="' + user.id + '">' + user.name + '</option>');
-            });
         }
     });
 

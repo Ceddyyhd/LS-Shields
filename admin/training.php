@@ -38,7 +38,60 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Expandable Table</h3>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                  Training Erstellen
+                </button>      
+                
+                
+                <div class="modal fade" id="modal-default">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">Training Erstellen</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+
+                        <p>One fine body&hellip;</p>
+                      
+                        <label>Date and time:</label>
+                        <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime"/>
+                            <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                        <script>
+                              $(function () {
+                        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+                         $('#datetimepicker').datetimepicker({
+                            format: 'YYYY-MM-DD HH:mm', // Format für MySQL
+                            icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
+                                time: 'fa fa-clock',
+                                date: 'fa fa-calendar',
+                                up: 'fa fa-arrow-up',
+                                down: 'fa fa-arrow-down',
+                                previous: 'fa fa-chevron-left',
+                                next: 'fa fa-chevron-right'
+                            }
+                        });
+                      }
+                        </script>
+                      </div>
+                      <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                      </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+
           </div>
           <!-- ./card-header -->
           <div class="card-body">

@@ -10,10 +10,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
 <?php include 'include/navbar.php'; ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JS (falls noch nicht eingebunden) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
   <!-- Content Wrapper. Contains page content -->

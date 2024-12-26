@@ -56,7 +56,7 @@ echo '</pre>';
 foreach ($events as &$event) {
     // Teammitglieder abfragen
     $teamQuery = "
-    SELECT DISTINCT eam.event_id, u.name, u.profile_image
+    SELECT DISTINCT eam.event_id, u.id AS employee_id, u.name, u.profile_image
     FROM event_mitarbeiter_anmeldung eam
     JOIN users u ON eam.employee_id = u.id
     WHERE eam.event_id = :event_id";
@@ -96,7 +96,7 @@ foreach ($events as &$event) {
         echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
         echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
 
-        // Teammitglieder anzeigen
+        // Team-Mitglieder anzeigen
         echo "<td><ul class='list-inline'>";
         $has_team_members = false;
         foreach ($event['team_members'] as $member) {
@@ -131,7 +131,8 @@ foreach ($events as &$event) {
     }
     ?>
     </tbody>
-</table>        </div>
+</table>      
+</div>
     </div>
 
     <!-- JavaScript zum Initialisieren der Tooltips -->

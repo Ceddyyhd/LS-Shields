@@ -90,7 +90,8 @@ foreach ($events as &$event) {
             <tbody>
                 <?php foreach ($events as $event): ?>
                     <tr>
-                        <td>#</td>
+                        <td>                            <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
+</td>
                         <td>
                             <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
                             <br/>

@@ -166,8 +166,10 @@ try {
                     </li>
                     <li class="list-group-item">
                         <b>Eventlead:</b> <a class="float-right"><?= htmlspecialchars($event['event_lead_name']); ?></a>
-                        <span class="tooltiptext">Tooltip text</span>
                     </li>
+                    <div class="tooltip">Hover over me
+  <span class="tooltiptext">Tooltip text</span>
+</div>
                 </ul>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
                   Bearbeiten

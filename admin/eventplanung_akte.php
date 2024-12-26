@@ -864,6 +864,14 @@ $(document).ready(function() {
 
         $('#gestartetUm<?php echo $employee['id']; ?>').datetimepicker({
             format: 'YYYY-MM-DD HH:mm', // MySQL-kompatibles Format
+            icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-arrow-up',
+            down: 'fa fa-arrow-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right'
+        }
             useCurrent: false
         });
 

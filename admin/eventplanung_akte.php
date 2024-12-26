@@ -152,27 +152,27 @@ try {
       <div class="modal-body">
 
       <form id="edit-form">
-          <div class="form-group">
-            <label>Ansprechpartner Name</label>
-            <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
-          </div>
+  <div class="form-group">
+    <label>Ansprechpartner Name</label>
+    <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
+  </div>
 
-          <div class="form-group">
-            <label>Ansprechpartner Tel. Nr.:</label>
-            <input type="text" class="form-control" name="telefonnummer" id="telefonnummer" required>
-          </div>
+  <div class="form-group">
+    <label>Ansprechpartner Tel. Nr.:</label>
+    <input type="text" class="form-control" name="telefonnummer" id="telefonnummer" required>
+  </div>
 
-          <div class="form-group">
-            <label>Datum & Uhrzeit</label>
-            <input type="text" class="form-control" name="datum_uhrzeit_event" id="datum_uhrzeit_event" required>
-          </div>
+  <div class="form-group">
+    <label>Datum & Uhrzeit</label>
+    <input type="text" class="form-control" name="datum_uhrzeit_event" id="datum_uhrzeit_event" required>
+  </div>
 
-          <div class="form-group">
-            <label>Ort</label>
-            <input type="text" class="form-control" name="ort" id="ort" required>
-          </div>
+  <div class="form-group">
+    <label>Ort</label>
+    <input type="text" class="form-control" name="ort" id="ort" required>
+  </div>
 
-          <div class="form-group">
+  <div class="form-group">
             <label>Event Lead</label>
             <select class="form-control" name="event_lead" id="event_lead" required>
                 <?php
@@ -185,11 +185,11 @@ try {
             </select>
           </div>
 
-          <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit_update" class="btn btn-primary">Save changes</button>
-        </div>
-        </form>
+  <div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <button type="submit_update" class="btn btn-primary">Save changes</button>
+  </div>
+</form>
 
       </div>
     </div>

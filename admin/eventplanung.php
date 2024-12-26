@@ -32,11 +32,10 @@
 
     <?php
     // SQL-Abfrage zum Abrufen aller Events ohne Duplikate und NULL-Werte
-    // Zuerst die Events abfragen (ohne Team-Mitglieder)
     $query = "
         SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
         FROM eventplanung
-        ORDER BY datum_uhrzeit DESC"; // Beispiel für die Events-Abfrage
+        ORDER BY datum_uhrzeit DESC"; // Absteigende Sortierung nach Datum und Uhrzeit
 
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -58,7 +57,8 @@
         </thead>
         <tbody>
         <?php
-        // Ausgabe der Events und Teammitglieder
+        $counter = 1; // Zähler für die Reihenfolge der Events
+
         foreach ($events as $event) {
             // Für jedes Event die Team-Mitglieder abfragen
             $teamQuery = "
@@ -73,7 +73,7 @@
             $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
 
             echo "<tr>";
-            echo "<td>" . htmlspecialchars($event['id']) . "</td>";
+            echo "<td>" . $counter++ . "</td>"; // Hier wird die Reihenfolge angezeigt (Zähler hochzählen)
             echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
             echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
             echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";

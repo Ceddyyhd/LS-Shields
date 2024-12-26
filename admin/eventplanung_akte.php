@@ -132,6 +132,8 @@ try {
               <div class="card-body">
                 <strong><i class="fas fa-book mr-1"></i> Teams</strong>
 
+
+                <p><font style="background-color: rgb(148, 189, 123);" color="#000000">Cedric</font></p>
                 <script>
                     $(document).ready(function() {
     var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL

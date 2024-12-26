@@ -163,10 +163,12 @@ try {
     <input type="text" class="form-control" name="telefonnummer" id="telefonnummer" required>
   </div>
 
-  <div class="form-group">
-    <label>Datum & Uhrzeit</label>
-    <input type="text" class="form-control" name="datum_uhrzeit_event" id="datum_uhrzeit_event" required>
-  </div>
+  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="far fa-clock"></i></span>
+                    </div>
+                    <input type="text" class="form-control float-right" id="reservationtime">
+                  </div>
 
   <div class="form-group">
     <label>Ort</label>

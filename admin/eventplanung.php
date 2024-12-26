@@ -91,6 +91,9 @@ echo "</pre>";
     </thead>
     <tbody>
     <?php
+// Überprüfen und sicherstellen, dass jedes Event nur einmal durchlaufen wird
+$events = array_unique($events, SORT_REGULAR);
+
 // Sicherstellen, dass Events nur einmal ausgegeben werden
 if (!empty($events)) {
     foreach ($events as $event): ?>

@@ -173,12 +173,12 @@ try {
       <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>"> <!-- Verwendung von $_GET['id'] -->
       <div class="form-group">
     <label>Ansprechpartner Name</label>
-    <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname" required>
+    <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname">
   </div>
 
   <div class="form-group">
     <label>Ansprechpartner Tel. Nr.:</label>
-    <input type="text" class="form-control" name="telefonnummer" id="telefonnummer" required>
+    <input type="text" class="form-control" name="telefonnummer" id="telefonnummer">
   </div>
 
   <label>Datum & Uhrzeit:</label>
@@ -191,12 +191,12 @@ try {
 
   <div class="form-group">
     <label>Ort</label>
-    <input type="text" class="form-control" name="ort" id="ort" required>
+    <input type="text" class="form-control" name="ort" id="ort">
   </div>
 
   <div class="form-group">
             <label>Event Lead</label>
-            <select class="form-control" name="event_lead" id="event_lead" required>
+            <select class="form-control" name="event_lead" id="event_lead">
             <?php
     // Alle Benutzer im Dropdown anzeigen
     foreach ($users as $user) {
@@ -208,12 +208,12 @@ try {
           </div>
           <div class="form-group">
     <label>Event</label>
-    <input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>" required>
+    <input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>">
 </div>
 
 <div class="form-group">
     <label>Anmerkung</label>
-    <textarea class="form-control" name="anmerkung" id="anmerkung" rows="3" required><?= htmlspecialchars($event['anmerkung']); ?></textarea>
+    <textarea class="form-control" name="anmerkung" id="anmerkung" rows="3"><?= htmlspecialchars($event['anmerkung']); ?></textarea>
 </div>
 
   <div class="modal-footer justify-content-between">

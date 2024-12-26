@@ -93,8 +93,7 @@ foreach ($events as &$event) {
             <tbody>
                 <?php foreach ($events as $event): ?>
                     <tr>
-                        <td>                            <a><?= htmlspecialchars($event['id']); ?></a>
-</td>
+                        <td><a><?= htmlspecialchars($event['id']); ?></a></td>
                         <td>
                             <a><?= htmlspecialchars($event['vorname_nachname']); ?></a>
                             <br/>
@@ -109,16 +108,16 @@ foreach ($events as &$event) {
                             <span><?= htmlspecialchars($event['anmerkung']); ?></span>
                         </td>
                         <td>
-                        <ul class="list-inline">
-                            <?php
-                            // Teammitglieder und deren Profilbilder anzeigen
-                            foreach ($event['team_members'] as $member) {
-                                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                                echo "</li>";
-                            }
-                            ?>
-                        </ul>
+                            <ul class="list-inline">
+                                <?php
+                                // Teammitglieder und deren Profilbilder anzeigen
+                                foreach ($event['team_members'] as $member) {
+                                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                                    echo "</li>";
+                                }
+                                ?>
+                            </ul>
                         </td>
                         <td class="project-state">
                             <?php

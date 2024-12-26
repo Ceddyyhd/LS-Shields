@@ -442,19 +442,14 @@ margin: 0;
         // AJAX-Anfrage
         $.ajax({
             url: 'include/team_assignments.php', 
-            method: 'POST',
-            data: {
-                teams: teamData,
-                event_id: eventId  // Event-ID hinzufügen
-            },
-            success: function(response) {
-                console.log('Erfolgreich gespeichert:', response);
-                alert('Teams wurden gespeichert.');
-            },
-            error: function(xhr, status, error) {
-                console.log('Fehler bei der Anfrage:', error);
-                alert('Fehler beim Speichern der Teams.');
-            }
+        method: 'POST',
+        data: { teams: teamData },
+        success: function(response) {
+            // Seite nach dem Speichern neu laden
+            window.location.reload();  // Seite neu laden
+        },
+        error: function(xhr, status, error) {
+        }
         });
     });
 });

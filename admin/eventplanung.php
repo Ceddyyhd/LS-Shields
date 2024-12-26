@@ -104,21 +104,22 @@ echo "</pre>";
                     <td><span><?= htmlspecialchars($event['event']); ?></span></td>
                     <td><span><?= htmlspecialchars($event['anmerkung']); ?></span></td>
                     <td>
-                        <ul class="list-inline">
-                            <?php
-                            // Überprüfen, ob Teammitglieder vorhanden sind
-                            if (!empty($event['team_members'])) {
-                                foreach ($event['team_members'] as $member) {
-                                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                                    echo "</li>";
-                                }
-                            } else {
-                                echo "<li>No team members available</li>";
+                    <ul class="list-inline">
+                        <?php
+                        // Überprüfen, ob Teammitglieder vorhanden sind
+                        if (!empty($event['team_members'])) {
+                            foreach ($event['team_members'] as $member) {
+                                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                                echo "</li>";
                             }
-                            ?>
-                        </ul>
-                    </td>
+                        } else {
+                            // Wenn keine Teammitglieder vorhanden sind
+                            echo "<li>No team members available</li>";
+                        }
+                        ?>
+                    </ul>
+                </td>
                     <td class="project-state">
                         <?php
                         $status = htmlspecialchars($event['status']);

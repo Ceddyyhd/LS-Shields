@@ -117,7 +117,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Trainingsleitung</th>
                 <th>Info</th>
                 <th>An/Abmeldung</th>
-
                 <?php if (isset($_SESSION['permissions']['create_trainings']) && $_SESSION['permissions']['create_trainings']): ?>
                   <th>Löschen</th>
                 <?php endif; ?> 
@@ -141,9 +140,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
 $(document).ready(function() {
     // Hole den Benutzernamen aus dem `data-username`-Attribut im HTML
     var username = $('#user-info').data('username');  // Benutzernamen aus data-Attribut holen
-    var canRemoveTraining = <?php echo isset($_SESSION['permissions']['remove_training']) && $_SESSION['permissions']['remove_training'] ? 'true' : 'false'; ?>;
 
-    // Trainings speichern (unverändert)
+    // Initialisiere den DateTimePicker für das Erstellen des Trainings
+    $('#reservationdatetime').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        icons: {
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-arrow-up',
+            down: 'fa fa-arrow-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right'
+        }
+    });
+
+    // Trainings speichern
     document.getElementById('saveTraining').addEventListener('click', function() {
         var grund = document.getElementById('trainingGrund').value;
         var info = document.getElementById('trainingInfo').value;
@@ -179,106 +190,117 @@ $(document).ready(function() {
     loadTrainings(); // Direkt beim Laden der Seite
 
     function loadTrainings() {
+    $.ajax({
+        url: 'include/training_anmeldung.php',
+        method: 'POST',
+        data: { action: 'get_trainings' },
+        success: function(response) {
+            var trainings = JSON.parse(response);
+            var tableBody = $('#trainingList');
+            tableBody.empty(); // Tabelle leeren
+
+            trainings.forEach(function(training) {
+                // Anmelde- und Abmelde-Buttons erstellen
+                var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
+                var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+
+                // Überprüfen, ob der Benutzer für das Training angemeldet ist
+                var actionButtons = '';
+                if (training.is_enrolled) {
+                    actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
+                } else {
+                    actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
+                }
+
+                // Zeile für das Training
+                var row = '<tr class="training-row" data-widget="expandable-table" aria-expanded="false">' +
+                    '<td>' + training.id + '</td>' +
+                    '<td>' + training.datum_zeit + '</td>' +
+                    '<td>' + training.grund + '</td>' +
+                    '<td>' + training.leitung + '</td>' +
+                    '<td>' + training.info + '</td>' +
+                    '<td>' + actionButtons + '</td>' +
+                    '</tr>';
+
+                // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)
+                var mitarbeiterListe = '';
+                if (training.mitarbeiter) {
+                    training.mitarbeiter.forEach(function(mitarbeiter) {
+                        mitarbeiterListe += '<li>' + mitarbeiter.benutzername + '</li>';
+                    });
+                }
+
+                // Zeile für die Details, die initial verborgen ist
+                var detailsRow = '<tr class="expandable-body" style="display:none;">' + // Initial verborgen
+                    '<td colspan="6">' +  // Spaltenanzahl anpassen
+                        '<div class="p-3">' +
+                            '<div class="mb-3">' +
+                                '<strong>Eingetragene Mitarbeiter:</strong>' +
+                                '<ul class="mb-0">' +
+                                    mitarbeiterListe +
+                                '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';
+
+                // Training und Details zur Tabelle hinzufügen
+                tableBody.append(row);
+                tableBody.append(detailsRow);
+            });
+
+             // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
+             $('.training-row').on('click', function() {
+                var $this = $(this);
+                var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
+                
+                // Toggle die Sichtbarkeit der Details-Zeile
+                $expandableRow.toggle(); // Toggle der Anzeige
+            });
+        }
+    });
+}
+
+    // Anmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Anmelden" klickt
+    window.toggleAnmeldung = function(trainingId) {
         $.ajax({
             url: 'include/training_anmeldung.php',
             method: 'POST',
-            data: { action: 'get_trainings' },
+            data: {
+                action: 'anmelden',
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
+            },
             success: function(response) {
-                var trainings = JSON.parse(response);
-                var tableBody = $('#trainingList');
-                tableBody.empty(); // Tabelle leeren
-
-                trainings.forEach(function(training) {
-                    // Anmelde- und Abmelde-Buttons erstellen
-                    var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
-                    var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
-
-                    // Überprüfen, ob der Benutzer für das Training angemeldet ist
-                    var actionButtons = '';
-                    if (training.is_enrolled) {
-                        actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
-                    } else {
-                        actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
-                    }
-
-                    // Lösch-Button nur anzeigen, wenn der Benutzer die Berechtigung hat
-                    var deleteButton = '';
-                    if (canRemoveTraining) {
-                        deleteButton = '<button type="button" class="btn btn-block btn-danger" onclick="deleteTraining(' + training.id + ')">Löschen</button>';
-                    }
-
-                    // Zeile für das Training
-                    var row = '<tr class="training-row" data-widget="expandable-table" aria-expanded="false">' +
-                        '<td>' + training.id + '</td>' +
-                        '<td>' + training.datum_zeit + '</td>' +
-                        '<td>' + training.grund + '</td>' +
-                        '<td>' + training.leitung + '</td>' +
-                        '<td>' + training.info + '</td>' +
-                        '<td>' + actionButtons + ' ' + deleteButton + '</td>' +
-                        '</tr>';
-
-                    // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)
-                    var mitarbeiterListe = '';
-                    if (training.mitarbeiter) {
-                        training.mitarbeiter.forEach(function(mitarbeiter) {
-                            mitarbeiterListe += '<li>' + mitarbeiter.benutzername + '</li>';
-                        });
-                    }
-
-                    // Zeile für die Details, die initial verborgen ist
-                    var detailsRow = '<tr class="expandable-body" style="display:none;">' + // Initial verborgen
-                        '<td colspan="6">' +  // Spaltenanzahl anpassen
-                            '<div class="p-3">' +
-                                '<div class="mb-3">' +
-                                    '<strong>Eingetragene Mitarbeiter:</strong>' +
-                                    '<ul class="mb-0">' +
-                                        mitarbeiterListe +
-                                    '</ul>' +
-                                '</div>' +
-                            '</div>' +
-                        '</td>' +
-                    '</tr>';
-
-                    // Training und Details zur Tabelle hinzufügen
-                    tableBody.append(row);
-                    tableBody.append(detailsRow);
-                });
-
-                 // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
-                 $('.training-row').on('click', function() {
-                    var $this = $(this);
-                    var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
-                    
-                    // Toggle die Sichtbarkeit der Details-Zeile
-                    $expandableRow.toggle(); // Toggle der Anzeige
-                });
+                var result = JSON.parse(response);
+                if (result.status === 'angemeldet') {
+                    loadTrainings(); // Trainingsliste neu laden
+                } else {
+                    console.error('Fehler beim Anmelden:', result.error);
+                }
             }
         });
     }
 
-    // Funktion zum Löschen eines Trainings
-    window.deleteTraining = function(trainingId) {
-        if (confirm("Möchten Sie dieses Training wirklich löschen?")) {
-            $.ajax({
-                url: 'include/training_anmeldung.php',
-                method: 'POST',
-                data: {
-                    action: 'delete_training',
-                    training_id: trainingId
-                },
-                success: function(response) {
-                    var result = JSON.parse(response);
-                    if (result.status === 'erfolgreich') {
-                        loadTrainings(); // Trainingsliste neu laden
-                    } else {
-                        console.error('Fehler beim Löschen des Trainings:', result.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX-Fehler:', error);
+    // Abmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Abmelden" klickt
+    window.toggleAbmeldung = function(trainingId) {
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: {
+                action: 'abmelden',
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.status === 'abgemeldet') {
+                    loadTrainings(); // Trainingsliste neu laden
+                } else {
+                    console.error('Fehler beim Abmelden:', result.error);
                 }
-            });
-        }
+            }
+        });
     }
 });
 </script>

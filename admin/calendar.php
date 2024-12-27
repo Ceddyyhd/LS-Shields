@@ -76,7 +76,7 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </button>
 
 
-                <div class="modal fade" id="modal-primary">
+                <div class="modal fade" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content bg-primary">
             <div class="modal-header">
@@ -99,7 +99,7 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
       </div>
 
 
-      
+
                 </div>
                 <div class="card-body">
                   <!-- /btn-group -->

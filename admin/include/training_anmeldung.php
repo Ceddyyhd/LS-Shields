@@ -102,21 +102,31 @@ if ($_POST['action'] == 'get_trainings') {
 
         echo json_encode(['status' => 'abgemeldet']);
     }
-    // Aktion: Training löschen
-if ($_POST['action'] == 'delete_training') {
-    if (isset($_SESSION['permissions']['remove_training']) && $_SESSION['permissions']['remove_training']) {
+    // Berechtigung prüfen
+if (isset($_SESSION['permissions']['remove_trainings']) && $_SESSION['permissions']['remove_trainings']) {
+    // Die Berechtigung zum Löschen ist vorhanden
+
+    // Sicherstellen, dass die `training_id` übergeben wird
+    if (isset($_POST['training_id'])) {
         $training_id = $_POST['training_id'];
 
         try {
+            // Das Training löschen
             $stmt = $conn->prepare("DELETE FROM trainings WHERE id = ?");
             $stmt->execute([$training_id]);
+
+            // Erfolgreiche Rückmeldung
             echo json_encode(['status' => 'erfolgreich']);
         } catch (PDOException $e) {
+            // Fehlerbehandlung
             echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
         }
     } else {
-        echo json_encode(['status' => 'fehlgeschlagen', 'error' => 'Keine Berechtigung zum Löschen']);
+        echo json_encode(['status' => 'fehlgeschlagen', 'error' => 'Keine Training-ID angegeben.']);
     }
+} else {
+    // Keine Berechtigung zum Löschen
+    echo json_encode(['status' => 'fehlgeschlagen', 'error' => 'Keine Berechtigung zum Löschen']);
 }
 }
 ?>

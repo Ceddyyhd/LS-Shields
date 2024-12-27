@@ -20,7 +20,7 @@ $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
 try {
     // SQL zum Einfügen der Anfrage in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (vorname_nachname,, anfrage, datum_uhrzeit, status, erstellt_von)
+    $sql = "INSERT INTO verbesserungsvorschlaege (name, vorschlag, datum_uhrzeit, status, erstellt_von)
             VALUES (:name, :anfrage, :datum_uhrzeit, :status, :erstellt_von)";
 
     $stmt = $conn->prepare($sql);

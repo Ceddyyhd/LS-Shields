@@ -182,40 +182,75 @@ $(document).ready(function() {
     loadTrainings(); // Direkt beim Laden der Seite
 
     function loadTrainings() {
-        $.ajax({
-            url: 'include/training_anmeldung.php',
-            method: 'POST',
-            data: { action: 'get_trainings' },
-            success: function(response) {
-                var trainings = JSON.parse(response);
-                var tableBody = $('#trainingList');
-                tableBody.empty(); // Tabelle leeren
+    $.ajax({
+        url: 'include/training_anmeldung.php',
+        method: 'POST',
+        data: { action: 'get_trainings' },
+        success: function(response) {
+            var trainings = JSON.parse(response);
+            var tableBody = $('#trainingList');
+            tableBody.empty(); // Tabelle leeren
 
-                trainings.forEach(function(training) {
-                    var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
-                    var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+            trainings.forEach(function(training) {
+                // Anmelde- und Abmelde-Buttons erstellen
+                var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
+                var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
 
-                    // Überprüfen, ob der Benutzer für das Training angemeldet ist
-                    var actionButtons = '';
-                    if (training.is_enrolled) {
-                        actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
-                    } else {
-                        actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
-                    }
+                // Überprüfen, ob der Benutzer für das Training angemeldet ist
+                var actionButtons = '';
+                if (training.is_enrolled) {
+                    actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
+                } else {
+                    actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
+                }
 
-                    var row = '<tr>' +
-                        '<td>' + training.id + '</td>' +
-                        '<td>' + training.datum_zeit + '</td>' +
-                        '<td>' + training.grund + '</td>' +
-                        '<td>' + training.leitung + '</td>' +
-                        '<td>' + training.info + '</td>' +
-                        '<td>' + actionButtons + '</td>' +
+                // Zeile für das Training
+                var row = '<tr data-widget="expandable-table" aria-expanded="false">' +
+                    '<td>' + training.id + '</td>' +
+                    '<td>' + training.datum_zeit + '</td>' +
+                    '<td>' + training.grund + '</td>' +
+                    '<td>' + training.leitung + '</td>' +
+                    '<td>' + training.info + '</td>' +
                     '</tr>';
-                    tableBody.append(row); // Zeile zur Tabelle hinzufügen
-                });
-            }
-        });
-    }
+
+                // Zeile für die Details, die initial verborgen ist
+                var detailsRow = '<tr class="expandable-body" style="display:none;">' +
+                    '<td colspan="5">' +
+                        '<div class="p-3">' +
+                            '<div class="mb-3">' +
+                                '<strong>Ansprechpartner:</strong>' +
+                                '<div>Name: Tom Meyer</div>' +
+                                '<div>Tel. Nr.: 123456789</div>' +
+                            '</div>' +
+                            '<div class="mb-3">' +
+                                '<strong>Eingetragene Mitarbeiter:</strong>' +
+                                '<ul class="mb-0">' +
+                                    '<li>Cedric Schmidt</li>' +
+                                    '<li>Falco Hunter</li>' +
+                                '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';
+
+                // Training und Details zur Tabelle hinzufügen
+                tableBody.append(row);
+                tableBody.append(detailsRow);
+            });
+
+            // Event-Listener für expandierende Zeilen
+            $('[data-widget="expandable-table"]').on('click', function() {
+                var $this = $(this);
+                var $expandableRow = $this.next('.expandable-body');
+                var isExpanded = $this.attr('aria-expanded') === 'true';
+
+                // Toggle die Sichtbarkeit der Details
+                $expandableRow.toggle();
+                $this.attr('aria-expanded', !isExpanded);
+            });
+        }
+    });
+}
 
     // Anmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Anmelden" klickt
     window.toggleAnmeldung = function(trainingId) {

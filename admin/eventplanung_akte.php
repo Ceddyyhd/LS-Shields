@@ -736,6 +736,10 @@ margin: 0;
                             ?>
                         </select>
                     </div>
+                    <div class="form-group">
+                    <label for="exampleInputEmail1">Notiz</label>
+                    <input type="text" class="form-control" id="InputNotiz" placeholder="Notiz">
+                  </div>
                 </div>
             </div>
         </div>

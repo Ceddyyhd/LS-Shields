@@ -103,33 +103,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </div>
           <!-- ./card-header -->
           <div class="card-body">
-          <table class="table table-bordered table-hover" id="trainingTable">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Datum & Uhrzeit</th>
-                      <th>Grund</th>
-                      <th>Trainingsleitung</th>
-                      <th>Info</th>
-                      <th>An/Abmeldung</th>
-                  </tr>
-              </thead>
-              <tbody id="trainingList">
-                  <!-- Dynamische Inhalte -->
-              </tbody>
-          </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-      </div>
-    </div>
-    
-    
-    <script>
+    <table class="table table-bordered table-hover" id="trainingTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Datum & Uhrzeit</th>
+                <th>Grund</th>
+                <th>Trainingsleitung</th>
+                <th>Info</th>
+                <th>An/Abmeldung</th>
+            </tr>
+        </thead>
+        <tbody id="trainingList">
+            <!-- Dynamische Inhalte -->
+        </tbody>
+    </table>
+</div>
+<!-- /.card-body -->
+</div>
+<!-- /.card -->
+</div>
+</div>
+
+<!-- Unsichtbares div mit data-username -->
+<div id="user-info" data-username="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" style="display:none;"></div>
+
+<script>
 $(document).ready(function() {
-    // Den Benutzernamen direkt aus der PHP-Session an JavaScript übergeben
-    var username = $_SESSION['user_name']
+    // Hole den Benutzernamen aus dem `data-username`-Attribut im HTML
+    var username = $('#user-info').data('username');  // Benutzernamen aus data-Attribut holen
 
     // Initialisiere den DateTimePicker für das Erstellen des Trainings
     $('#reservationdatetime').datetimepicker({
@@ -258,6 +260,7 @@ $(document).ready(function() {
     }
 });
 </script>
+
 
       
 

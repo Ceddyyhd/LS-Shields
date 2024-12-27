@@ -133,44 +133,39 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </tr>
           </thead>
           <tbody>
-<?php foreach ($anfragen as $anfrage): ?>
-  <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
-    <td><?= htmlspecialchars($anfrage['id']) ?></td>
-    <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
-    <td>
-      <?= mb_strimwidth(htmlspecialchars($anfrage['anfrage']), 0, 50, '...') ?>
-    </td>
-    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
-    <td><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
-    <td>Details einblenden</td>
-  </tr>
-  <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-    <td colspan="5">
-      <div class="p-3">
-        <div class="mb-3">
-          <strong>Datum & Uhrzeit:</strong>
-          <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Status:</strong>
-          <div><?= htmlspecialchars($anfrage['status']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Anfrage:</strong>
-          <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
-        </div>
-        <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-          <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-          <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
-          <?php endif; ?>
-        </div>
-      </div>
-    </td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
+            <?php foreach ($vorschlaege as $vorschlag): ?>
+                <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
+                    <td><?= htmlspecialchars($vorschlag['id']) ?></td>
+                    <td><?= mb_strimwidth(htmlspecialchars($vorschlag['vorschlag']), 0, 50, '...') ?></td>
+                    <td id="status-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['status']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></td>
+                    <td>Details einblenden</td>
+                </tr>
+                <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
+                    <td colspan="5">
+                        <div class="p-3">
+                            <div class="mb-3">
+                                <strong>Vorschlag:</strong>
+                                <div><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Status:</strong>
+                                <div><?= htmlspecialchars($vorschlag['status']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Erstellt von:</strong>
+                                <div><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Datum & Uhrzeit:</strong>
+                                <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
         </table>
       </div>
     </div>
@@ -190,12 +185,13 @@ function changeStatus(id, action) {
     .then((data) => {
       if (data.success) {
         if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
+          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status auf "In Bearbeitung" ändern
           document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
-        } else if (action === 'move_to_eventplanung' && data.removed) {
-          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
-          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
+            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
+        } else if (action === 'move_to_eventplanung') {
+          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status auf "Abgeschlossen" ändern
+          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove(); // Anfrage entfernen
+          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove(); // Details entfernen
         }
       } else {
         alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));

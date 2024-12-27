@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null; // ID des Verbesserungsvorschlags
     $action = $_POST['action'] ?? null; // Die durchgeführte Aktion
 
-    // Überprüfen, ob id und action übergeben wurden
     if (!$id || !$action) {
         echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
         exit;
@@ -41,8 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");
         $stmt->execute([':new_status' => $newStatus, ':id' => $id]);
 
-        // Erfolgreiche Antwort zurückgeben
-        echo json_encode(['success' => true, 'message' => 'Status erfolgreich aktualisiert.']);
+        // Überprüfen, ob die Zeilenanzahl durch das UPDATE geändert wurde
+        if ($stmt->rowCount() > 0) {
+            echo json_encode(['success' => true, 'new_status' => $newStatus, 'message' => 'Status erfolgreich aktualisiert.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Keine Änderungen in der Datenbank vorgenommen.']);
+        }
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Status: ' . $e->getMessage()]);
     }

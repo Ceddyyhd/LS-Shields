@@ -1,25 +1,21 @@
 <?php
+// Verbindung zur Datenbank einbinden
 include 'db.php';
 session_start();
 
+// Überprüfen, ob die Anfrage mit den richtigen Parametern gesendet wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'] ?? null;
-    $action = $_POST['action'] ?? null;
-
-    // Berechtigungsprüfung
-    if (!($_SESSION['permissions']['change_status'] ?? false)) {
-        echo json_encode(['success' => false, 'message' => 'Keine Berechtigung, den Status zu ändern.']);
-        exit;
-    }
+    $id = $_POST['id'] ?? null; // ID des Verbesserungsvorschlags
+    $action = $_POST['action'] ?? null; // Die durchgeführte Aktion
 
     if (!$id || !$action) {
-        echo json_encode(['success' => false, 'message' => 'Fehlende Daten.']);
+        echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
         exit;
     }
 
     try {
-        // Überprüfen, ob der Vorschlag existiert
-        $stmt = $conn->prepare("SELECT id, status FROM verbesserungsvorschlaege WHERE id = :id");
+        // SQL-Abfrage, um den aktuellen Status des Vorschlags zu überprüfen
+        $stmt = $conn->prepare("SELECT status FROM verbesserungsvorschlaege WHERE id = :id");
         $stmt->execute([':id' => $id]);
         $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -28,38 +24,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Status ändern je nach Aktion
+        // Wenn die Aktion 'change_status' ist, setze den Status auf 'In Bearbeitung'
         if ($action === 'change_status' && $vorschlag['status'] === 'Eingetroffen') {
-            // Ändere den Status zu "In Bearbeitung"
             $newStatus = 'In Bearbeitung';
-        } elseif ($action === 'move_to_abgeschlossen' && $vorschlag['status'] === 'In Bearbeitung') {
-            // Ändere den Status zu "Abgeschlossen"
+        } 
+        // Wenn die Aktion 'move_to_eventplanung' ist, setze den Status auf 'Abgeschlossen'
+        elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'in Bearbeitung') {
             $newStatus = 'Abgeschlossen';
         } else {
-            echo json_encode(['success' => false, 'message' => 'Unzulässige Statusänderung.']);
+            echo json_encode(['success' => false, 'message' => 'Ungültige Aktion für den aktuellen Status.']);
             exit;
         }
 
-        // Benutzername des Bearbeiters aus der Session holen
-        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
-
-        // Status in der Datenbank aktualisieren
-        $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET status = :status WHERE id = :id");
-        $stmt->execute([':status' => $newStatus, ':id' => $id]);
-
-        // Log für die Änderung
-        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
-                                VALUES (:user_id, :editor_name, :action)");
-        $stmt->execute([
-            ':user_id' => $id,
-            ':editor_name' => $editor_name,
-            ':action' => 'Status geändert'
-        ]);
+        // Den Status in der Datenbank aktualisieren
+        $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");
+        $stmt->execute([':new_status' => $newStatus, ':id' => $id]);
 
         // Erfolgreiche Antwort zurückgeben
-        echo json_encode(['success' => true, 'message' => 'Status erfolgreich geändert.']);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren: ' . $e->getMessage()]);
+        echo json_encode(['success' => true, 'message' => 'Status erfolgreich aktualisiert.']);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Status: ' . $e->getMessage()]);
     }
 }
 ?>

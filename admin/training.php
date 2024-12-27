@@ -232,7 +232,7 @@ function toggleAnmeldung(trainingId) {
     });
 }
 
-// Abmeldung
+// Abmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Abmelden" klickt
 function toggleAbmeldung(trainingId) {
     $.ajax({
         url: 'include/training_anmeldung.php',
@@ -251,6 +251,10 @@ function toggleAbmeldung(trainingId) {
         }
     });
     }
+    // Direkt beim Laden der Seite Trainings abrufen
+$(document).ready(function() {
+    loadTrainings();
+
 });
 </script>
 

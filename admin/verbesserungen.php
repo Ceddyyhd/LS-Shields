@@ -129,13 +129,25 @@ include 'include/db.php';
             </tr>
           </thead>
           <tbody>
-            <?php 
-            // Verbesserungsvorschläge aus der Datenbank abrufen
-            $query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
-            $stmt = $conn->prepare($query);
-            $stmt->execute();
-            $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            ?>
+          <?php
+
+          // SQL-Abfrage, um alle Vorschläge zu erhalten
+          $query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+          $stmt = $conn->prepare($query);
+          $stmt->execute();
+
+          // Sicherstellen, dass $vorschlaege korrekt gesetzt ist
+          $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          // Überprüfen, ob $vorschlaege nicht leer ist, bevor die foreach-Schleife ausgeführt wird
+          if (!empty($vorschlaege)) {
+              foreach ($vorschlaege as $vorschlag) {
+                  // Deine Ausgabe hier
+              }
+          } else {
+              echo "Keine Verbesserungsvorschläge gefunden.";
+          }
+          ?>
             <?php foreach ($vorschlaege as $vorschlag): ?>
                 <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
                     <td><?= htmlspecialchars($vorschlag['id']) ?></td>

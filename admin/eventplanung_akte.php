@@ -753,6 +753,7 @@ margin: 0;
     // Anmeldung abschicken
     $('#submitFormAnmeldung').on('click', function() {
         var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
+        var notiz = $('#InputNotiz').val();  // Wert des Notizen-Feldes
         console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 
         // Überprüfen, ob Mitarbeiter ausgewählt wurden
@@ -769,7 +770,8 @@ margin: 0;
                 type: 'POST',
                 data: {
                     event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL
-                    employees: selectedEmployees
+                    employees: selectedEmployees,
+                    notizen: notiz  // Notizen hinzufügen
                 },
                 success: function(response) {
                     console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen

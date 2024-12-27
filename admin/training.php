@@ -129,7 +129,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script>
 $(document).ready(function() {
     // Den Benutzernamen direkt aus der PHP-Session an JavaScript übergeben
-    var username = "<?php echo htmlspecialchars($_SESSION['user_name']); ?>";
+    var username = $_SESSION['user_name']
 
     // Initialisiere den DateTimePicker für das Erstellen des Trainings
     $('#reservationdatetime').datetimepicker({

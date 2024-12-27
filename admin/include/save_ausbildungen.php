@@ -19,14 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Überprüfen, ob Felder leer sind und NULL zuweisen
-    if (empty($letzte_spind_kontrolle)) {
-        $letzte_spind_kontrolle = null;  // Setze NULL, wenn das Datum leer ist
-    }
-
-    if (empty($notiz)) {
-        $notiz = null;  // Setze NULL, wenn keine Notiz eingegeben wurde
-    }
+    
 
     try {
         // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt

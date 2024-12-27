@@ -49,7 +49,7 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-vorschlag-create">
                 Anfrage erstellen
             </button>      
           </div>
@@ -58,7 +58,7 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <!-- Verbesserungsvorschlag erstellen Modal -->
-<div class="modal fade" id="modal-anfrage-create">
+<div class="modal fade" id="modal-vorschlag-create">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

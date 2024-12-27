@@ -117,6 +117,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Trainingsleitung</th>
                 <th>Info</th>
                 <th>An/Abmeldung</th>
+
+                <?php if (isset($_SESSION['permissions']['create_trainings']) && $_SESSION['permissions']['create_trainings']): ?>
+                  <th>Löschen</th>
+                <?php endif; ?> 
             </tr>
         </thead>
         <tbody id="trainingList">

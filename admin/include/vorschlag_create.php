@@ -17,11 +17,6 @@ $anfrage = $_POST['anfrage'] ?? '';
 $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
-// Validierung der Formulardaten
-if (empty($name) || empty($nummer) || empty($anfrage)) {
-    echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
-    exit;
-}
 
 try {
     // SQL zum Einfügen der Anfrage in die Datenbank

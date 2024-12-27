@@ -187,67 +187,76 @@ $(document).ready(function() {
         method: 'POST',
         data: { action: 'get_trainings' },
         success: function(response) {
+            // Überprüfen, ob die Antwort ein Array ist
             var trainings = JSON.parse(response);
-            var tableBody = $('#trainingList');
-            tableBody.empty(); // Tabelle leeren
+            
+            if (Array.isArray(trainings)) {
+                var tableBody = $('#trainingList');
+                tableBody.empty(); // Tabelle leeren
 
-            trainings.forEach(function(training) {
-                // Anmelde- und Abmelde-Buttons erstellen
-                var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
-                var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+                trainings.forEach(function(training) {
+                    // Anmelde- und Abmelde-Buttons erstellen
+                    var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
+                    var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
 
-                // Überprüfen, ob der Benutzer für das Training angemeldet ist
-                var actionButtons = '';
-                if (training.is_enrolled) {
-                    actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
-                } else {
-                    actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
-                }
+                    // Überprüfen, ob der Benutzer für das Training angemeldet ist
+                    var actionButtons = '';
+                    if (training.is_enrolled) {
+                        actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
+                    } else {
+                        actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
+                    }
 
-                // Zeile für das Training
-                var row = '<tr data-widget="expandable-table" aria-expanded="false">' +
-                    '<td>' + training.id + '</td>' +
-                    '<td>' + training.datum_zeit + '</td>' +
-                    '<td>' + training.grund + '</td>' +
-                    '<td>' + training.leitung + '</td>' +
-                    '<td>' + training.info + '</td>' +
+                    // Zeile für das Training
+                    var row = '<tr data-widget="expandable-table" aria-expanded="false">' +
+                        '<td>' + training.id + '</td>' +
+                        '<td>' + training.datum_zeit + '</td>' +
+                        '<td>' + training.grund + '</td>' +
+                        '<td>' + training.leitung + '</td>' +
+                        '<td>' + training.info + '</td>' +
+                        '</tr>';
+
+                    // Dynamisch die eingetragenen Mitarbeiter abrufen
+                    var mitarbeiterListe = '';
+                    training.mitarbeiter.forEach(function(mitarbeiter) {
+                        mitarbeiterListe += '<li>' + mitarbeiter.name + '</li>';
+                    });
+
+                    // Zeile für die Details, die initial verborgen ist
+                    var detailsRow = '<tr class="expandable-body" style="display:none;">' +
+                        '<td colspan="5">' +
+                            '<div class="p-3">' +
+                                '<div class="mb-3">' +
+                                    '<strong>Eingetragene Mitarbeiter:</strong>' +
+                                    '<ul class="mb-0">' +
+                                        mitarbeiterListe +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
                     '</tr>';
 
-                // Dynamisch die eingetragenen Mitarbeiter abrufen
-                var mitarbeiterListe = '';
-                training.mitarbeiter.forEach(function(mitarbeiter) {
-                    mitarbeiterListe += '<li>' + mitarbeiter.name + '</li>';
+                    // Training und Details zur Tabelle hinzufügen
+                    tableBody.append(row);
+                    tableBody.append(detailsRow);
                 });
 
-                // Zeile für die Details, die initial verborgen ist
-                var detailsRow = '<tr class="expandable-body" style="display:none;">' +
-                    '<td colspan="5">' +
-                        '<div class="p-3">' +
-                            '<div class="mb-3">' +
-                                '<strong>Eingetragene Mitarbeiter:</strong>' +
-                                '<ul class="mb-0">' +
-                                    mitarbeiterListe +
-                                '</ul>' +
-                            '</div>' +
-                        '</div>' +
-                    '</td>' +
-                '</tr>';
+                // Event-Listener für expandierende Zeilen
+                $('[data-widget="expandable-table"]').on('click', function() {
+                    var $this = $(this);
+                    var $expandableRow = $this.next('.expandable-body');
+                    var isExpanded = $this.attr('aria-expanded') === 'true';
 
-                // Training und Details zur Tabelle hinzufügen
-                tableBody.append(row);
-                tableBody.append(detailsRow);
-            });
-
-            // Event-Listener für expandierende Zeilen
-            $('[data-widget="expandable-table"]').on('click', function() {
-                var $this = $(this);
-                var $expandableRow = $this.next('.expandable-body');
-                var isExpanded = $this.attr('aria-expanded') === 'true';
-
-                // Toggle die Sichtbarkeit der Details
-                $expandableRow.toggle();
-                $this.attr('aria-expanded', !isExpanded);
-            });
+                    // Toggle die Sichtbarkeit der Details
+                    $expandableRow.toggle();
+                    $this.attr('aria-expanded', !isExpanded);
+                });
+            } else {
+                console.error("Fehler: Antwort ist kein Array", trainings);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX-Fehler:', error);
         }
     });
 }

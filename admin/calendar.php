@@ -103,7 +103,6 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
   if (name && start_date && end_date) {
     var formData = new FormData();
-    formData.append('name', name);
     formData.append('start_date', start_date);
     formData.append('end_date', end_date);
 

@@ -3,15 +3,9 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
     $start_date = $_POST['start_date'] ?? '';
     $end_date = $_POST['end_date'] ?? '';
 
-    // Überprüfen, ob alle Felder vorhanden sind
-    if (empty($name) || empty($start_date) || empty($end_date)) {
-        echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt sein.']);
-        exit;
-    }
 
     // Berechne die Dauer des Urlaubs (in Tagen)
     $start = new DateTime($start_date);

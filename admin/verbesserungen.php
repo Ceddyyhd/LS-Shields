@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php';
 
 // Verbesserungsvorschläge aus der Datenbank abrufen
-$query = "SELECT id, vorschlag, datum_uhrzeit, erstellt_von, status FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+$query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);

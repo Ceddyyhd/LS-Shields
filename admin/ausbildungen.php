@@ -82,7 +82,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-<?php endif; ?>
 <div class="card-body">
   <table id="example1" class="table table-bordered table-striped">
     <thead>

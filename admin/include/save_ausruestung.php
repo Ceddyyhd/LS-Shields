@@ -3,8 +3,10 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? null;
-    $ausruestung = $_POST['ausruestung'] ?? [];
+    // Benutzerdaten entweder aus POST oder URL holen
+    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
+    $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
+    $notiz = $_POST['notiz'] ?? null;
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -17,91 +19,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    
+
     try {
-        // Abrufen der aktuellen Einträge in der Datenbank
-        $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
+        // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
+        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
-        $existingItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $existingStatus = [];
-        foreach ($existingItems as $item) {
-            $existingStatus[$item['key_name']] = (int)$item['status'];
-        }
-
-        // Benutzername direkt aus der Datenbank holen
+        // Benutzername für das Log
         $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
-        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $stmt->execute([':user_id' => $user_id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $editor_name = $user['name'] ?? 'Unbekannt';
 
-
-        // Logs und Updates vorbereiten
-        $logData = [];
-        foreach ($existingStatus as $key_name => $currentStatus) {
-            $newStatus = isset($ausruestung[$key_name]) ? (int)$ausruestung[$key_name] : 0;
-
-            if ($newStatus !== $currentStatus) {
-                $action = $newStatus ? 'hinzugefügt' : 'entfernt';
-                $logData[] = [
-                    'user_id' => $user_id,
-                    'editor_name' => $editor_name,
-                    'key_name' => $key_name,
-                    'action' => $action,
-                ];
-
-                // Update oder Entfernen in der Datenbank
-                if ($newStatus) {
-                    $stmt = $conn->prepare("UPDATE benutzer_ausruestung 
-                                            SET status = :status 
-                                            WHERE user_id = :user_id AND key_name = :key_name");
-                    $stmt->execute([
-                        ':status' => $newStatus,
-                        ':user_id' => $user_id,
-                        ':key_name' => $key_name,
-                    ]);
-                } else {
-                    $stmt = $conn->prepare("DELETE FROM benutzer_ausruestung 
-                                            WHERE user_id = :user_id AND key_name = :key_name");
-                    $stmt->execute([
-                        ':user_id' => $user_id,
-                        ':key_name' => $key_name,
-                    ]);
-                }
-            }
-        }
-
-        // Neue Einträge hinzufügen, die vorher nicht existierten
-        foreach ($ausruestung as $key_name => $status) {
-            if (!array_key_exists($key_name, $existingStatus)) {
-                $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) 
-                                        VALUES (:user_id, :key_name, :status)");
-                $stmt->execute([
-                    ':user_id' => $user_id,
-                    ':key_name' => $key_name,
-                    ':status' => (int)$status,
-                ]);
-
-                $logData[] = [
-                    'user_id' => $user_id,
-                    'editor_name' => $editor_name,
-                    'key_name' => $key_name,
-                    'action' => 'hinzugefügt',
-                ];
-            }
-        }
-
-        // Logs in die Datenbank schreiben
-        foreach ($logData as $log) {
-            $stmt = $conn->prepare("INSERT INTO ausruestung_logs (user_id, editor_name, key_name, action) 
-                                    VALUES (:user_id, :editor_name, :key_name, :action)");
+        // Wenn der Eintrag bereits existiert, aktualisieren
+        if ($existingEntry) {
+            $stmt = $conn->prepare("UPDATE spind_kontrolle_notizen 
+                                    SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
+                                    WHERE user_id = :user_id");
             $stmt->execute([
-                ':user_id' => $log['user_id'],
-                ':editor_name' => $log['editor_name'],
-                ':key_name' => $log['key_name'],
-                ':action' => $log['action'],
+                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
+                ':notizen' => $notiz,
+                ':user_id' => $user_id
+            ]);
+        } else {
+            // Neuen Eintrag in die Tabelle einfügen
+            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
+                                    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
+                ':notizen' => $notiz
             ]);
         }
+
+        // Log für die Änderung oder Erstellung
+        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
+                                VALUES (:user_id, :editor_name, :action)");
+        $stmt->execute([
+            ':user_id' => $user_id,
+            ':editor_name' => $editor_name,
+            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
+        ]);
 
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {

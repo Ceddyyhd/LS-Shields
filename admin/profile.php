@@ -928,8 +928,8 @@ $("#noteForm").on("submit", function (e) {
     var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
     var notiz = $('#notiz').val();
 
-    console.log('Letzte Spind Kontrolle:', letzteSpindKontrolle);
-    console.log('Notiz:', notiz);
+    console.log('Letzte Spind Kontrolle:', letzteSpindKontrolle);  // Überprüfe den Wert von letzteSpindKontrolle
+    console.log('Notiz:', notiz);  // Überprüfe den Wert von notiz
 
     // Füge Felder zu formData hinzu
     formData += '&letzte_spind_kontrolle=' + encodeURIComponent(letzteSpindKontrolle);

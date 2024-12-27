@@ -82,38 +82,38 @@ include 'include/db.php';
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('saveRequestBtn'));
+    const formData = new FormData(document.getElementById('createSuggestionForm'));
 
-        // Überprüfe, ob alle Felder ausgefüllt sind
-        if (!formData.get('anfrage')) {
-            alert('Bitte alle Felder ausfüllen!');
-            return;
+    // Überprüfe, ob das Vorschlagsfeld ausgefüllt ist
+    if (!formData.get('vorschlag')) {
+        alert('Bitte den Vorschlag ausfüllen!');
+        return;
+    }
+
+    // Zusätzliche Daten hinzufügen
+    formData.append('status', 'Eingetroffen');
+    formData.append('erstellt_von', '<?php echo $_SESSION["username"]; ?>');  // Hier den Ersteller aus der Session holen
+
+    // AJAX-Anfrage senden
+    fetch('include/vorschlag_create.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Vorschlag erfolgreich erstellt!');
+            $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
+            location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag anzuzeigen
+        } else {
+            alert('Fehler: ' + data.message);
         }
-
-        // Füge zusätzliche Daten hinzu
-        formData.append('status', 'Eingetroffen');
-        formData.append('erstellt_von', 'Admin');  // Hier kannst du den Ersteller dynamisch setzen, z.B. aus der Session
-
-        // AJAX-Anfrage senden
-        fetch('include/vorschlag_create.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Anfrage erfolgreich erstellt!');
-                $('#modal-anfrage-create').modal('hide'); // Schließt das Modal
-                location.reload();  // Optional: Seite neu laden, um die neue Anfrage zu sehen
-            } else {
-                alert('Fehler: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Fehler:', error);
-            alert('Ein unerwarteter Fehler ist aufgetreten.');
-        });
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein unerwarteter Fehler ist aufgetreten.');
     });
+});
 </script>
 
       <div class="card-body">

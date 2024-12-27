@@ -1,8 +1,8 @@
 <?php
 include 'db.php'; // Datenbankverbindung
-
 session_start(); // Sitzung starten
 
+// Überprüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['username'])) {
     echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
     exit;
@@ -12,27 +12,24 @@ if (!isset($_SESSION['username'])) {
 $erstellt_von = $_SESSION['username'];
 
 // Formulardaten auslesen
-$name = $_POST['name'] ?? '';
-$anfrage = $_POST['anfrage'] ?? '';
-$status = 'Eingetroffen'; // Standardstatus
-$datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
-
+$vorschlag = $_POST['vorschlag'] ?? '';  // Vorschlag
+$status = 'Eingetroffen';  // Standardstatus
+$datum_uhrzeit = date('Y-m-d H:i:s');  // Aktuelles Datum und Uhrzeit
 
 try {
-    // SQL zum Einfügen der Anfrage in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (name, vorschlag, datum_uhrzeit, status, erstellt_von)
-            VALUES (:name, :anfrage, :datum_uhrzeit, :status, :erstellt_von)";
+    // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
+    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, datum_uhrzeit, status, erstellt_von)
+            VALUES (:vorschlag, :datum_uhrzeit, :status, :erstellt_von)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([
-        ':name' => $name,
-        ':anfrage' => $anfrage,
+        ':vorschlag' => $vorschlag,
         ':datum_uhrzeit' => $datum_uhrzeit,
         ':status' => $status,
-        ':erstellt_von' => $erstellt_von, // Der Benutzername wird hier gespeichert
+        ':erstellt_von' => $erstellt_von,  // Der Benutzername wird hier gespeichert
     ]);
 
-    echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
+    echo json_encode(['success' => true, 'message' => 'Vorschlag wurde erfolgreich erstellt.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }

@@ -176,24 +176,25 @@ $(document).ready(function() {
     // Trainings abrufen und anzeigen
     function loadTrainings() {
     $.ajax({
-        url: 'include/training_anmeldung.php',
+        url: 'include/training_anmeldung.php', // Stelle sicher, dass der Pfad korrekt ist
         method: 'POST',
-        data: { action: 'get_trainings' },
+        data: { action: 'get_trainings' },  // Action zum Abrufen der Trainings
         success: function(response) {
-            var trainings = JSON.parse(response);
+            var trainings = JSON.parse(response);  // Antwort als JSON parsen
             var tableBody = $('#trainingList');
-            tableBody.empty(); // Tabelle leeren
+            tableBody.empty();  // Tabelle leeren
 
+            // Trainings durchlaufen und in die Tabelle einfügen
             trainings.forEach(function(training) {
                 var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
                 var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
                 
-                // Überprüfen, ob der Benutzer bereits für das Training angemeldet ist
+                // Anzeige des richtigen Buttons je nach Anmeldestatus
                 var actionButtons = '';
-                if (training.is_enrolled) {  // Zum Beispiel, wenn `is_enrolled` im Training-Objekt den Status angibt
-                    actionButtons = abmeldenBtn;  // Benutzer ist angemeldet, also den Abmelden-Button zeigen
+                if (training.is_enrolled) {  // Überprüfen, ob der Benutzer angemeldet ist
+                    actionButtons = abmeldenBtn;  // Benutzer ist angemeldet
                 } else {
-                    actionButtons = anmeldenBtn;  // Benutzer ist nicht angemeldet, also den Anmelden-Button zeigen
+                    actionButtons = anmeldenBtn;  // Benutzer ist nicht angemeldet
                 }
 
                 var row = '<tr>' +
@@ -204,8 +205,11 @@ $(document).ready(function() {
                     '<td>' + training.info + '</td>' +
                     '<td>' + actionButtons + '</td>' +
                 '</tr>';
-                tableBody.append(row);
+                tableBody.append(row);  // Füge die Zeile zur Tabelle hinzu
             });
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Trainings:', error);
         }
     });
 }

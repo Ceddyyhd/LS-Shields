@@ -116,9 +116,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Dein JavaScript -->
 <script>
   $(document).on('click', '.btn-outline-secondary', function() {
-    // Hole die ID des zu bearbeitenden Ausbildungstyps
+    console.log('Bearbeiten-Button geklickt'); // Log beim Klick auf Bearbeiten
     const id = $(this).data('id');
-
+    
     // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
     $.ajax({
         url: 'include/fetch_ausbildungstypen.php',
@@ -126,21 +126,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
         data: { id: id },
         dataType: 'json',
         success: function(data) {
+            console.log('Daten erhalten:', data); // Log die erhaltenen Daten
             if (data && data.length > 0) {
                 const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
                 $('#edit_id').val(ausbildung.id);
                 $('#edit_key_name').val(ausbildung.key_name);
                 $('#edit_display_name').val(ausbildung.display_name);
                 $('#edit_description').val(ausbildung.description);
-                // Zeige das Bearbeitungsmodal an
                 $('#modal-ausbildung-edit').modal('show');
             } else {
                 alert('Daten konnten nicht geladen werden.');
             }
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
+            console.error('Fehler beim Abrufen der Ausbildungstypen:', error); // Fehlerlog
             alert('Fehler beim Abrufen der Ausbildungstypen.');
         }
     });

@@ -4,10 +4,10 @@ session_start();
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 
 // Benutzerinformationen abrufen
-$sql = "SELECT users.*, roles.name AS role_name 
-        FROM users 
-        LEFT JOIN roles ON users.role_id = roles.id 
-        WHERE users.id = :id";
+$sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
+            FROM users 
+            LEFT JOIN roles ON users.role_id = roles.id 
+            WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -241,19 +241,13 @@ $(document).ready(function() {
                 tableBody.append(detailsRow);
             });
 
-            // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
-            $('.training-row').on('click', function() {
+             // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
+             $('.training-row').on('click', function() {
                 var $this = $(this);
                 var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
-
-                // Überprüfen, ob die Details-Zeile sichtbar ist oder nicht
-                var isExpanded = $this.attr('aria-expanded') === 'true';
-
+                
                 // Toggle die Sichtbarkeit der Details-Zeile
-                $expandableRow.toggle();
-
-                // Toggle den expandierten Status (True/False)
-                $this.attr('aria-expanded', !isExpanded);  // Setzt den Status auf true/false
+                $expandableRow.toggle(); // Toggle der Anzeige
             });
         }
     });

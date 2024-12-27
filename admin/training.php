@@ -214,9 +214,9 @@ $(document).ready(function() {
 
                     // Löschen-Button nur anzeigen, wenn der Benutzer die Berechtigung hat
                     var deleteButton = '';
-                    if (canRemoveTraining) {
+                    <?php if (isset($_SESSION['permissions']['remove_trainings']) && $_SESSION['permissions']['remove_trainings']): ?>
                         deleteButton = '<button type="button" class="btn btn-block btn-danger" onclick="deleteTraining(' + training.id + ')">Löschen</button>';
-                    }
+                    <?php endif; ?>
 
                     // Zeile für das Training
                     var row = '<tr class="training-row" data-widget="expandable-table" aria-expanded="false">' +

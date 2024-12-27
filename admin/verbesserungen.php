@@ -131,10 +131,10 @@ include 'include/db.php';
           <tbody>
             <?php 
             // Verbesserungsvorschläge aus der Datenbank abrufen
-$query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+            $stmt = $conn->prepare($query);
+            $stmt->execute();
+            $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
             <?php foreach ($vorschlaege as $vorschlag): ?>
                 <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">

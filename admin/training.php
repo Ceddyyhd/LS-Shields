@@ -225,7 +225,8 @@ $(document).ready(function() {
                         '<td>' + training.grund + '</td>' +
                         '<td>' + training.leitung + '</td>' +
                         '<td>' + training.info + '</td>' +
-                        '<td>' + actionButtons + ' ' + deleteButton + '</td>' +
+                        '<td>' + actionButtons + '</td>' +
+                        '<td>' + deleteButton + '</td>' +
                         '</tr>';
 
                     // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)

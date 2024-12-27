@@ -55,68 +55,75 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
 
       <!-- Verbesserungsvorschlag erstellen Modal -->
-      <!-- Verbesserungsvorschlag erstellen Modal -->
-<div class="modal fade" id="modal-vorschlag-create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Neuen Verbesserungsvorschlag erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createSuggestionForm">
-                    <div class="form-group">
-                        <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Beschreiben Sie den Vorschlag" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveSuggestionBtn">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
+      <div class="modal fade" id="modal-vorschlag-create">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h4 class="modal-title">Neuen Verbesserungsvorschlag erstellen</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="createSuggestionForm">
+                          <div class="form-group">
+                              <label for="name">Name</label>
+                              <input type="text" class="form-control" id="name" name="name" placeholder="Name des Vorschlaggebers" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="nummer">Telefonnummer</label>
+                              <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Telefonnummer" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="vorschlag">Vorschlag</label>
+                              <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Beschreiben Sie den Vorschlag" required></textarea>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer justify-content-between">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                      <button type="button" class="btn btn-primary" id="saveSuggestionBtn">Speichern</button>
+                  </div>
+              </div>
+          </div>
+      </div>
 
-<!-- JavaScript zur Verarbeitung des Formulars -->
-<script>
-    document.getElementById('saveSuggestionBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('createSuggestionForm'));
+      <!-- JavaScript zur Verarbeitung des Formulars -->
+      <script>
+          document.getElementById('saveSuggestionBtn').addEventListener('click', function() {
+              const formData = new FormData(document.getElementById('createSuggestionForm'));
 
-        // Überprüfe, ob das Vorschlagsfeld ausgefüllt ist
-        if (!formData.get('vorschlag')) {
-            alert('Bitte den Vorschlag ausfüllen!');
-            return;
-        }
+              // Überprüfe, ob alle Felder ausgefüllt sind
+              if (!formData.get('name') || !formData.get('nummer') || !formData.get('vorschlag')) {
+                  alert('Bitte alle Felder ausfüllen!');
+                  return;
+              }
 
-        // Füge zusätzliche Daten hinzu
-        formData.append('status', 'Eingetroffen');
-        formData.append('erstellt_von', '<?= $_SESSION['username']; ?>');  // Der Benutzername wird automatisch aus der Session gesetzt
+              // Füge zusätzliche Daten hinzu
+              formData.append('status', 'Eingetroffen');
+              formData.append('erstellt_von', 'Admin');  // Hier kannst du den Ersteller dynamisch setzen, z.B. aus der Session
 
-        // AJAX-Anfrage senden
-        fetch('include/vorschlag_create.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Verbesserungsvorschlag erfolgreich erstellt!');
-                $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
-                location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag zu sehen
-            } else {
-                alert('Fehler: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Fehler:', error);
-            alert('Ein unerwarteter Fehler ist aufgetreten.');
-        });
-    });
-</script>
+              // AJAX-Anfrage senden
+              fetch('include/vorschlag_create.php', {
+                  method: 'POST',
+                  body: formData,
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Verbesserungsvorschlag erfolgreich erstellt!');
+                      $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
+                      location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag zu sehen
+                  } else {
+                      alert('Fehler: ' + data.message);
+                  }
+              })
+              .catch(error => {
+                  console.error('Fehler:', error);
+                  alert('Ein unerwarteter Fehler ist aufgetreten.');
+              });
+          });
+      </script>
 
       <!-- Verbesserungsvorschläge Tabelle -->
       <div class="card-body">

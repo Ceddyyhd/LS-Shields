@@ -910,6 +910,14 @@ $("#noteForm").on("submit", function (e) {
         }
         ?>
     </form>
+    <div class="form-group">
+                        <label>Letzte Spind kontrolle</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
+                      <div class="form-group">
+                        <label>Notiz</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
 </div>
 
                   <script>$("#saveButton").on("click", function () {

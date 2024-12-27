@@ -81,8 +81,8 @@ include 'include/db.php';
 
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
-    document.getElementById('saveRequestBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('createRequestForm'));
+    document.getElementById('saveSuggestionBtn').addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('saveSuggestionBtn'));
 
         // Überprüfe, ob alle Felder ausgefüllt sind
         if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {

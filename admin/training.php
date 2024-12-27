@@ -53,9 +53,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-training-erstellen">
-                  Training Erstellen
-                </button>      
+          <?php if (isset($_SESSION['permissions']['training_create']) && $_SESSION['permissions']['training_create']): ?>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-training-erstellen">
+                Training Erstellen
+            </button>
+        <?php endif; ?>     
                 
                 
                 <div class="modal fade" id="modal-training-erstellen">

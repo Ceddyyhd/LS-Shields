@@ -176,18 +176,21 @@ include 'include/db.php';
                                 <strong>Datum & Uhrzeit:</strong>
                                 <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
-                            <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-          <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-          <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
-          <?php endif; ?>
-        </div>
-      </div>
-    </td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
+                            <div class="mb-3" id="buttons-<?= $vorschlag['id'] ?>">
+                            <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
+                                <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status')">in Bearbeitung</button>
+                            <?php elseif ($vorschlag['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
+                                <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
+                            <?php elseif ($vorschlag['status'] === 'Abgeschlossen'): ?>
+                                <!-- Kein Button für den Status 'Abgeschlossen' -->
+                                <span class="badge badge-success">Abgeschlossen</span>
+                            <?php endif; ?>
+                        </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
         </table>
       </div>
     </div>
@@ -196,7 +199,10 @@ include 'include/db.php';
 
 <script>
 function changeStatus(id, action) {
-  fetch('include/update_vorschlag_status.php', {
+  console.log('ID:', id);  // Prüfe die ID in der Konsole
+  console.log('Action:', action);  // Prüfe die Aktion in der Konsole
+
+  fetch('include/update_status.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -205,20 +211,22 @@ function changeStatus(id, action) {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data); // Hier wird die Antwort vom Server in der Konsole angezeigt
       if (data.success) {
+        console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
         if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
+          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
           document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
-        } else if (action === 'move_to_eventplanung' && data.removed) {
-          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
-          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
+            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
+        } else if (action === 'move_to_eventplanung') {
+          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
         }
       } else {
-        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+        alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
       }
     })
     .catch((error) => {
+      console.error('Fehler:', error); // Protokolliere den Fehler in der Konsole
       alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
 }

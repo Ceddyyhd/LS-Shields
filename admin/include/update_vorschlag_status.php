@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Fehlerbehandlung und Debugging - Zeigt das SQL-Statement und die Parameter an
+        // Debugging-Ausgabe: Zeigt die SQL-Anweisung und die Parameter an
         error_log("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");
         error_log("Parameters: new_status = $newStatus, id = $id");
 

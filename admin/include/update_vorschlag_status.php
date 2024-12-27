@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null; // ID des Verbesserungsvorschlags
     $action = $_POST['action'] ?? null; // Die durchgeführte Aktion
 
+    // Überprüfen, ob id und action übergeben wurden
     if (!$id || !$action) {
         echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
         exit;
@@ -28,13 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'change_status' && $vorschlag['status'] === 'Eingetroffen') {
             $newStatus = 'In Bearbeitung';
         } 
-        // Den Status auf "Abgeschlossen" ändern, ohne etwas zu verschieben
+        // Den Status auf "Abgeschlossen" ändern
         elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'in Bearbeitung') {
             $newStatus = 'Abgeschlossen';
         } else {
             echo json_encode(['success' => false, 'message' => 'Ungültige Aktion für den aktuellen Status.']);
             exit;
         }
+
+        // Fehlerbehandlung und Debugging - Zeigt das SQL-Statement und die Parameter an
+        error_log("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");
+        error_log("Parameters: new_status = $newStatus, id = $id");
 
         // Den Status in der Datenbank aktualisieren
         $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");

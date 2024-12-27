@@ -251,9 +251,6 @@ function toggleAbmeldung(trainingId) {
         }
     });
     }
-    // Direkt beim Laden der Seite Trainings abrufen
-$(document).ready(function() {
-    loadTrainings();
 
 });
 </script>

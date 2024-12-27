@@ -51,15 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':notizen' => $notiz,
                 ':user_id' => $user_id
             ]);
-
-            // Log für die Änderung
-            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
-                                    VALUES (:user_id, :editor_name, 'Aktualisiert')");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':editor_name' => $editor_name
-            ]);
-
         } else {
             // Neuen Eintrag in die Tabelle einfügen
             $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
@@ -69,15 +60,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
                 ':notizen' => $notiz
             ]);
-
-            // Log für die Erstellung
-            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
-                                    VALUES (:user_id, :editor_name, 'Erstellt')");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':editor_name' => $editor_name
-            ]);
         }
+
+        // Log für die Änderung oder Erstellung
+        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
+                                VALUES (:user_id, :editor_name, :action)");
+        $stmt->execute([
+            ':user_id' => $user_id,
+            ':editor_name' => $editor_name,
+            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
+        ]);
 
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {

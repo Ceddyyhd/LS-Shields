@@ -34,12 +34,12 @@ $vacations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $events = [];
 foreach ($vacations as $vacation) {
     $events[] = [
-        'title' => 'Urlaub',  // Titel des Events, hier kannst du auch den Namen des Mitarbeiters oder andere Details einfügen
-        'start' => $vacation['start_date'],
-        'end'   => $vacation['end_date'],
-        'backgroundColor' => '#00a65a',  // Farbe für "Urlaub"
-        'borderColor'     => '#00a65a',  // Farbe für den Rand des Events
-    ];
+      'title' => 'Urlaub',  // Titel des Events, hier kannst du auch den Namen des Mitarbeiters oder andere Details einfügen
+      'start' => $vacation['start_date'],
+      'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
+      'backgroundColor' => '#00a65a',  // Farbe für "Urlaub"
+      'borderColor'     => '#00a65a',  // Farbe für den Rand des Events
+  ];
 }
 ?>
   <!-- Content Wrapper. Contains page content -->

@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+
     // Aktion: Trainings abrufen
 if ($_POST['action'] == 'get_trainings') {
     try {
@@ -101,5 +102,21 @@ if ($_POST['action'] == 'get_trainings') {
 
         echo json_encode(['status' => 'abgemeldet']);
     }
+    // Aktion: Training löschen
+if ($_POST['action'] == 'delete_training') {
+    if (isset($_SESSION['permissions']['remove_training']) && $_SESSION['permissions']['remove_training']) {
+        $training_id = $_POST['training_id'];
+
+        try {
+            $stmt = $conn->prepare("DELETE FROM trainings WHERE id = ?");
+            $stmt->execute([$training_id]);
+            echo json_encode(['status' => 'erfolgreich']);
+        } catch (PDOException $e) {
+            echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(['status' => 'fehlgeschlagen', 'error' => 'Keine Berechtigung zum Löschen']);
+    }
+}
 }
 ?>

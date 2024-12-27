@@ -8,6 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null; // ID des Verbesserungsvorschlags
     $action = $_POST['action'] ?? null; // Die durchgeführte Aktion
 
+    // Überprüfen, ob id und action übergeben wurden
     if (!$id || !$action) {
         echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
         exit;

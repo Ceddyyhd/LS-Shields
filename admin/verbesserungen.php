@@ -211,13 +211,13 @@ function changeStatus(id, action) {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data); // Hier wird die Antwort vom Server in der Konsole angezeigt
       if (data.success) {
-        // Erfolgreiche Statusänderung
         console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
         if (action === 'change_status') {
           document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
           document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`;
+            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
         } else if (action === 'move_to_eventplanung') {
           document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
         }
@@ -226,6 +226,7 @@ function changeStatus(id, action) {
       }
     })
     .catch((error) => {
+      console.error('Fehler:', error); // Protokolliere den Fehler in der Konsole
       alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
 }

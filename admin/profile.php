@@ -7,7 +7,18 @@ $user_id = $_GET['id'] ?? null;
 if (!$user_id) {
     die("Benutzer-ID fehlt.");
 }
+// Benutzerinformationen abrufen
+$sql = "SELECT users.*, roles.name AS role_name 
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id 
+        WHERE users.id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['id' => $user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$user) {
+    die("Benutzer nicht gefunden.");
+}
 
 // Dokumente abrufen
 $sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
@@ -27,11 +38,7 @@ $stmt_notes = $conn->prepare($sql_notes);
 $stmt_notes->execute(['user_id' => $user_id]);
 $notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
-// Ausbildungen abrufen
-$sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";
-$stmt_trainings = $conn->prepare($sql_trainings);
-$stmt_trainings->execute(['user_id' => $user_id]);
-$trainings = $stmt_trainings->fetchAll(PDO::FETCH_ASSOC);
+
 
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name 

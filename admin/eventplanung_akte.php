@@ -803,7 +803,7 @@ margin: 0;
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-              SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um, d.arbeitszeit
+              SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um, d.arbeitszeit, d.notizen
               FROM users u
               JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
               LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
@@ -816,7 +816,7 @@ margin: 0;
             // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
             foreach ($employees as $employee) {
                 ?>
-                <h4><?php echo htmlspecialchars($employee['name']); ?></h4>
+                <h4><?php echo htmlspecialchars($employee['name']); ?>"(<?php echo htmlspecialchars($employee['notizen']); ?>)"</h4>
                 <div class="form-group">
                     <div class="bootstrap-timepicker">
                         <label>Maximal da bis:</label>

@@ -1,6 +1,11 @@
 <?php
 include('db.php'); // Verbindung zur Datenbank
 
+// Session starten, falls noch nicht gestartet
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Aktion: Training erstellen
     if ($_POST['action'] == 'training_erstellen') {
@@ -45,6 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Aktion: Anmelden
     if ($_POST['action'] == 'anmelden') {
+        // Überprüfen, ob der Benutzer eingeloggt ist
+        if (!isset($_SESSION['username'])) {
+            echo json_encode(['status' => 'fehler', 'error' => 'Benutzer nicht eingeloggt']);
+            exit; // Stoppe das Skript, falls der Benutzer nicht eingeloggt ist
+        }
+
         $training_id = $_POST['training_id'];
         $benutzername = $_SESSION['username']; // Benutzername aus der Session
 
@@ -66,6 +77,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Aktion: Abmelden
     if ($_POST['action'] == 'abmelden') {
+        // Überprüfen, ob der Benutzer eingeloggt ist
+        if (!isset($_SESSION['username'])) {
+            echo json_encode(['status' => 'fehler', 'error' => 'Benutzer nicht eingeloggt']);
+            exit; // Stoppe das Skript, falls der Benutzer nicht eingeloggt ist
+        }
+
         $training_id = $_POST['training_id'];
         $benutzername = $_SESSION['username']; // Benutzername aus der Session
 

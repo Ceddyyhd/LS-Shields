@@ -115,65 +115,63 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- Dein JavaScript -->
 <script>
-  $(document).ready(function () {
-    // Ajax-Anfrage zum Laden der Ausbildungstypen
+  $(document).on('click', '.btn-outline-secondary', function() {
+    // Hole die ID des zu bearbeitenden Ausbildungstyps
+    const id = $(this).data('id');
+
+    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
     $.ajax({
-      url: 'include/fetch_ausbildungstypen.php',
-      type: 'POST',
-      dataType: 'json',
-      success: function (data) {
-          console.log(data);
-
-          if (!Array.isArray(data)) {
-              console.error('Die Antwort ist kein Array:', data);
-              alert('Fehler: Antwort ist kein Array.');
-              return;
-          }
-
-          let tableBody = $('#example1 tbody');
-          tableBody.empty();
-
-          data.forEach(item => {
-              tableBody.append(`
-                  <tr>
-                      <td>${item.id}</td>
-                      <td>${item.key_name}</td>
-                      <td>${item.display_name}</td>
-                      <td>${item.description}</td>
-                      <td>
-                          <a href="/admin/edit_ausbildungstyp.php?id=${item.id}" class="btn btn-outline-secondary">Bearbeiten</a>
-                          <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${item.id})">Löschen</button>
-                      </td>
-                  </tr>
-              `);
-          });
-      },
-      error: function (xhr, status, error) {
-          console.error('AJAX-Fehler:', xhr.responseText);
-          alert('Fehler beim Abrufen der Daten.');
-      }
-    });
-
-    // Listener für den "Speichern"-Button im Modal
-    // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
-    $('#saveEditAusbildung').click(function() {
-        const formData = new FormData(document.getElementById('editAusbildungForm'));
-        
-        $.ajax({
-            url: 'include/update_ausbildungstyp.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Ausbildungstyp erfolgreich bearbeitet.');
-                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
-            },
-            error: function() {
-                alert('Fehler beim Bearbeiten des Ausbildungstyps.');
+        url: 'include/fetch_ausbildungstypen.php',
+        type: 'GET',
+        data: { id: id },
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
+                $('#edit_id').val(ausbildung.id);
+                $('#edit_key_name').val(ausbildung.key_name);
+                $('#edit_display_name').val(ausbildung.display_name);
+                $('#edit_description').val(ausbildung.description);
+                // Zeige das Bearbeitungsmodal an
+                $('#modal-ausbildung-edit').modal('show');
+            } else {
+                alert('Daten konnten nicht geladen werden.');
             }
-        });
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
+            alert('Fehler beim Abrufen der Ausbildungstypen.');
+        }
     });
+});
+
+// Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
+$('#saveEditAusbildung').click(function() {
+    const formData = new FormData(document.getElementById('editAusbildungForm'));
+
+    // Überprüfe, ob FormData korrekt ist
+    console.log('FormData:', formData);
+
+    $.ajax({
+        url: 'include/update_ausbildungstyp.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            // Debugging: Antwort ausgeben
+            console.log('Serverantwort:', response);
+            alert('Ausbildungstyp erfolgreich bearbeitet.');
+            location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+        },
+        error: function(xhr, status, error) {
+            // Fehlermeldung ausgeben, wenn etwas schiefgeht
+            console.error('Fehler beim Bearbeiten:', error);
+            alert('Fehler beim Bearbeiten des Ausbildungstyps.');
+        }
+    });
+});
 
   // Löschen-Funktion
   function deleteAusbildungTyp(id) {

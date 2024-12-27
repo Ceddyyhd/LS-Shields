@@ -177,8 +177,8 @@ include 'include/db.php';
                                 <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
                             <div class="mb-3" id="buttons-<?= $vorschlag['id'] ?>">
-                            <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-                                <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status')">in Bearbeitung</button>
+                            <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung_verbesserungen'] ?? false)): ?>
+                                <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status_verbesserungen')">in Bearbeitung</button>
                             <?php elseif ($vorschlag['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
                                 <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
                             <?php elseif ($vorschlag['status'] === 'Abgeschlossen'): ?>

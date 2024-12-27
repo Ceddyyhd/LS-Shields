@@ -3,7 +3,8 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;  // Benutzerdaten entweder aus POST oder URL holen
+    // Benutzerdaten entweder aus POST oder URL holen
+    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
 

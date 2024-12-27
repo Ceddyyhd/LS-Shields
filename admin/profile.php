@@ -912,11 +912,11 @@ $("#noteForm").on("submit", function (e) {
     </form>
     <div class="form-group">
     <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= $letzteSpindKontrolle ?? ''; ?>">
+    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= htmlspecialchars($letzteSpindKontrolle ?? ''); ?>">
 </div>
 <div class="form-group">
     <label for="notiz">Notiz</label>
-    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= $notiz ?? ''; ?>">
+    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notiz ?? ''); ?>">
 </div>
 </div>
 
@@ -924,11 +924,14 @@ $("#noteForm").on("submit", function (e) {
     $("#saveButton").on("click", function () {
     var formData = $("#ausruestungForm").serialize();
 
-    // Füge zusätzliche Felder hinzu (letzte Spind Kontrolle und Notiz)
+    // Zusätzliche Felder
     var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
     var notiz = $('#notiz').val();
 
-    // Zusätzliche Daten in formData einfügen
+    console.log('Letzte Spind Kontrolle:', letzteSpindKontrolle);
+    console.log('Notiz:', notiz);
+
+    // Füge Felder zu formData hinzu
     formData += '&letzte_spind_kontrolle=' + encodeURIComponent(letzteSpindKontrolle);
     formData += '&notiz=' + encodeURIComponent(notiz);
 

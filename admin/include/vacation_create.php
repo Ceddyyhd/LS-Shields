@@ -17,7 +17,7 @@ $start_date = $_POST['start_date'] ?? '';
 $end_date = $_POST['end_date'] ?? '';
 
 // Berechnen, ob der Status "approved" oder "pending" ist
-$status = (strtotime($end_date) - strtotime($start_date) <= 6 * 86400) ? 'approved' : 'pending';  // Wenn Urlaub <= 6 Tage, dann genehmigt
+$status = (strtotime($end_date) - strtotime($start_date) <= 5 * 86400) ? 'approved' : 'pending';  // Wenn Urlaub <= 6 Tage, dann genehmigt
 
 // Der aktuelle Zeitpunkt wird automatisch von der Datenbank gesetzt
 try {

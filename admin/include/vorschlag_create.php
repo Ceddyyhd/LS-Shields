@@ -3,10 +3,9 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? null;
     $vorschlag = $_POST['vorschlag'] ?? null;
     $status = $_POST['status'] ?? 'Eingetroffen';  // Standardstatus "Eingetroffen"
-    $erstellt_von = $_POST['erstellt_von'] ?? 'Admin';  // Standard Ersteller, hier "Admin"
+    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';  // Benutzernamen aus der Session holen
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -14,17 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!$name || !$nummer || !$vorschlag) {
-        echo json_encode(['success' => false, 'message' => 'Bitte alle Felder ausfüllen.']);
+    if (!$vorschlag) {
+        echo json_encode(['success' => false, 'message' => 'Bitte den Vorschlag ausfüllen.']);
         exit;
     }
 
     try {
         // Eintrag in die Datenbank erstellen
-        $stmt = $conn->prepare("INSERT INTO verbesserungsvorschlaege (name, telefonnummer, vorschlag, status, erstellt_von) 
+        // Hier setzen wir 'name' mit dem Wert von 'erstellt_von', wenn 'name' nicht entfernt werden kann.
+        $stmt = $conn->prepare("INSERT INTO verbesserungsvorschlaege (name, vorschlag, status, erstellt_von) 
                                 VALUES (:name, :vorschlag, :status, :erstellt_von)");
         $stmt->execute([
-            ':name' => $name,
+            ':name' => $erstellt_von,  // Setze 'name' auf 'erstellt_von'
             ':vorschlag' => $vorschlag,
             ':status' => $status,
             ':erstellt_von' => $erstellt_von

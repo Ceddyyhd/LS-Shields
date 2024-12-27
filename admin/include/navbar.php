@@ -3,6 +3,10 @@ session_start();
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 
+$user_id = $_GET['id'] ?? null;
+if (!$user_id) {
+    die("Benutzer-ID fehlt.");
+}
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
             FROM users 

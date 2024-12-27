@@ -1,49 +1,53 @@
 <?php
-include 'db.php';
-session_start();
+include 'db.php'; // Datenbankverbindung
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $start_date = $_POST['start_date'] ?? '';
-    $end_date = $_POST['end_date'] ?? '';
+session_start(); // Sitzung starten
 
+// Überprüfen, ob der Benutzer eingeloggt ist
+if (!isset($_SESSION['username'])) {
+    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
+    exit;
+}
 
-    // Berechne die Dauer des Urlaubs (in Tagen)
-    $start = new DateTime($start_date);
-    $end = new DateTime($end_date);
-    $interval = $start->diff($end);
-    $vacation_duration = $interval->days + 1; // +1 um den letzten Tag mit einzubeziehen
+// Benutzernamen aus der Session holen
+$erstellt_von = $_SESSION['username'];
 
-    // Wenn der Urlaub weniger als 6 Tage dauert, wird er automatisch genehmigt
-    $status = ($vacation_duration <= 6) ? 'approved' : 'pending';
+// Formulardaten auslesen
+$start_date = $_POST['start_date'] ?? '';
+$end_date = $_POST['end_date'] ?? '';
 
-    // Benutzername aus der Session holen (diesen Wert verwenden wir als 'erstellt_von')
-    $erstellt_von = $_SESSION['username'] ?? 'Unknown';
+// Überprüfen, ob die Felder ausgefüllt sind
+if (!$start_date || !$end_date) {
+    echo json_encode(['success' => false, 'message' => 'Startdatum und Enddatum müssen ausgefüllt sein.']);
+    exit;
+}
 
-    try {
-        // SQL-Abfrage zum Einfügen des Urlaubsantrags
-        $stmt = $conn->prepare("INSERT INTO vacations (user_id, start_date, end_date, status, erstellt_von)
-                                VALUES (:user_id, :start_date, :end_date, :status, :erstellt_von)");
+// Status basierend auf der Dauer des Urlaubs setzen
+$start_timestamp = strtotime($start_date);
+$end_timestamp = strtotime($end_date);
+$days_diff = ($end_timestamp - $start_timestamp) / (60 * 60 * 24);
 
-        // Hier muss die user_id je nach Benutzer in der Session zugewiesen werden (z.B. aus $_SESSION['user_id'])
-        $user_id = $_SESSION['user_id'] ?? null; 
+$status = $days_diff <= 6 ? 'approved' : 'pending'; // Wenn der Urlaub 6 Tage oder weniger dauert, wird der Status auf "approved" gesetzt
 
-        if (!$user_id) {
-            echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
-            exit;
-        }
+// Das aktuelle Datum und Uhrzeit für die Erstellung
+$datum_uhrzeit = date('Y-m-d H:i:s');
 
-        // Führen Sie die SQL-Abfrage aus
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':start_date' => $start_date,
-            ':end_date' => $end_date,
-            ':status' => $status,
-            ':erstellt_von' => $erstellt_von
-        ]);
+try {
+    // SQL zum Einfügen des Urlaubs in die Datenbank
+    $sql = "INSERT INTO vacations (start_date, end_date, status, erstellt_von, datum_uhrzeit)
+            VALUES (:start_date, :end_date, :status, :erstellt_von, :datum_uhrzeit)";
 
-        echo json_encode(['success' => true, 'message' => 'Urlaub wurde erfolgreich erstellt.']);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
-    }
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':start_date'   => $start_date,
+        ':end_date'     => $end_date,
+        ':status'       => $status,
+        ':erstellt_von' => $erstellt_von,
+        ':datum_uhrzeit'=> $datum_uhrzeit
+    ]);
+
+    echo json_encode(['success' => true, 'message' => 'Urlaub wurde erfolgreich erstellt.']);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 ?>

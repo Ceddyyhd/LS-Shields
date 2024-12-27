@@ -81,6 +81,10 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
       <div class="card-body">
         <form id="vacationForm">
           <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Name" required>
+          </div>
+          <div class="form-group">
             <label>Start Datum</label>
             <input type="date" class="form-control" id="start_date" required>
           </div>
@@ -103,6 +107,7 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
   if (name && start_date && end_date) {
     var formData = new FormData();
+    formData.append('name', name);
     formData.append('start_date', start_date);
     formData.append('end_date', end_date);
 

@@ -55,8 +55,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <?php if (isset($_SESSION['permissions']['create_trainings']) && $_SESSION['permissions']['create_trainings']): ?>
     <div class="card-header">
         <h3 class="card-title">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
-                Benutzer erstellen
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-training-erstellen">
+                Training erstellen
             </button>
         </h3>
     </div>

@@ -82,6 +82,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
+<!-- Modal für das Bearbeiten eines Ausbildungstyps -->
+<div class="modal fade" id="modal-ausbildung-edit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ausbildungstyp Ändern</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAusbildungForm">
+                    <input type="hidden" id="edit_id" name="id"> <!-- ID des Ausbildungstyps -->
+                    <div class="form-group">
+                        <label for="edit_key_name">Key Name</label>
+                        <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_display_name">Display Name</label>
+                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_description">Beschreibung</label>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveEditAusbildung">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="card-body">
   <table id="example1" class="table table-bordered table-striped">
     <thead>
@@ -153,9 +189,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 });
 
+// Wenn der Bearbeiten-Button geklickt wird
 $(document).on('click', '.btn-outline-secondary', function() {
-    console.log('Bearbeiten-Button geklickt'); // Log beim Klick auf Bearbeiten
-    const id = $(this).data('id');
+    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausbildungstyps
     
     // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
     $.ajax({
@@ -164,20 +200,23 @@ $(document).on('click', '.btn-outline-secondary', function() {
         data: { id: id },
         dataType: 'json',
         success: function(data) {
-            console.log('Daten erhalten:', data); // Log die erhaltenen Daten
             if (data && data.length > 0) {
                 const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-                $('#edit_id').val(ausbildung.id);
-                $('#edit_key_name').val(ausbildung.key_name);
-                $('#edit_display_name').val(ausbildung.display_name);
-                $('#edit_description').val(ausbildung.description);
+
+                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
+                $('#edit_id').val(ausbildung.id); // ID in hidden input
+                $('#edit_key_name').val(ausbildung.key_name); // Key Name
+                $('#edit_display_name').val(ausbildung.display_name); // Display Name
+                $('#edit_description').val(ausbildung.description); // Beschreibung
+                
+                // Zeige das Bearbeitungsmodal an
                 $('#modal-ausbildung-edit').modal('show');
             } else {
                 alert('Daten konnten nicht geladen werden.');
             }
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error); // Fehlerlog
+            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
             alert('Fehler beim Abrufen der Ausbildungstypen.');
         }
     });
@@ -187,9 +226,6 @@ $(document).on('click', '.btn-outline-secondary', function() {
 $('#saveEditAusbildung').click(function() {
     const formData = new FormData(document.getElementById('editAusbildungForm'));
 
-    // Überprüfe, ob FormData korrekt ist
-    console.log('FormData:', formData);
-
     $.ajax({
         url: 'include/update_ausbildungstyp.php',
         type: 'POST',
@@ -197,13 +233,10 @@ $('#saveEditAusbildung').click(function() {
         processData: false,
         contentType: false,
         success: function(response) {
-            // Debugging: Antwort ausgeben
-            console.log('Serverantwort:', response);
             alert('Ausbildungstyp erfolgreich bearbeitet.');
             location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
         },
         error: function(xhr, status, error) {
-            // Fehlermeldung ausgeben, wenn etwas schiefgeht
             console.error('Fehler beim Bearbeiten:', error);
             alert('Fehler beim Bearbeiten des Ausbildungstyps.');
         }

@@ -85,7 +85,7 @@ include 'include/db.php';
         const formData = new FormData(document.getElementById('saveRequestBtn'));
 
         // Überprüfe, ob alle Felder ausgefüllt sind
-        if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {
+        if (!formData.get('name') || !formData.get('anfrage')) {
             alert('Bitte alle Felder ausfüllen!');
             return;
         }

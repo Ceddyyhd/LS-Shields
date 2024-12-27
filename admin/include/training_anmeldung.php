@@ -103,10 +103,9 @@ if ($_POST['action'] == 'get_trainings') {
         echo json_encode(['status' => 'abgemeldet']);
     }
     // Aktion: Training löschen
-if ($_POST['action'] == 'delete_training') {
-    if (isset($_SESSION['permissions']['remove_training']) && $_SESSION['permissions']['remove_training']) {
+    if ($_POST['action'] == 'delete_training') {
         $training_id = $_POST['training_id'];
-
+    
         try {
             $stmt = $conn->prepare("DELETE FROM trainings WHERE id = ?");
             $stmt->execute([$training_id]);
@@ -114,9 +113,6 @@ if ($_POST['action'] == 'delete_training') {
         } catch (PDOException $e) {
             echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
         }
-    } else {
-        echo json_encode(['status' => 'fehlgeschlagen', 'error' => 'Keine Berechtigung zum Löschen']);
     }
-}
 }
 ?>

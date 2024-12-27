@@ -9,10 +9,6 @@ if (!$user_id) {
 }
 
 
-if (!$user) {
-    die("Benutzer nicht gefunden.");
-}
-
 // Dokumente abrufen
 $sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);

@@ -97,36 +97,41 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 <script>
   document.getElementById('submitVacation').addEventListener('click', function () {
-  var name = document.getElementById('name').value;
-  var start_date = document.getElementById('start_date').value;
-  var end_date = document.getElementById('end_date').value;
+    var start_date = document.getElementById('start_date');
+    var end_date = document.getElementById('end_date');
+    
+    // Überprüfe, ob die Elemente existieren
+    if (start_date && end_date) {
+        var start_date_value = start_date.value;
+        var end_date_value = end_date.value;
 
-  if (name && start_date && end_date) {
-    var formData = new FormData();
-    formData.append('name', name);
-    formData.append('start_date', start_date);
-    formData.append('end_date', end_date);
+        if (start_date_value && end_date_value) {
+            var formData = new FormData();
+            formData.append('start_date', start_date_value);
+            formData.append('end_date', end_date_value);
 
-    // AJAX-Anfrage, um den Urlaub zu speichern
-    fetch('include/vacation_create.php', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Urlaub erfolgreich erstellt!');
-        // Optional: Formular zurücksetzen oder etwas anderes tun
-      } else {
-        alert('Fehler: ' + data.message);
-      }
-    })
-    .catch(error => {
-      alert('Fehler: ' + error.message);
-    });
-  } else {
-    alert('Bitte füllen Sie alle Felder aus!');
-  }
+            // AJAX-Anfrage, um den Urlaub zu speichern
+            fetch('include/vacation_create.php', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Urlaub erfolgreich erstellt!');
+                } else {
+                    alert('Fehler: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Fehler: ' + error.message);
+            });
+        } else {
+            alert('Bitte füllen Sie alle Felder aus!');
+        }
+    } else {
+        console.error('Start- oder End-Datum-Element fehlt!');
+    }
 });
 </script>
           <!-- /.col -->

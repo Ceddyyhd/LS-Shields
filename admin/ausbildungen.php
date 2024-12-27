@@ -118,7 +118,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   $(document).ready(function() {
     // AJAX-Anfrage zum Abrufen der Ausbildungstypen direkt beim Laden der Seite
     $.ajax({
-        url: 'fetch_ausbildungstypen.php', // URL für das Abrufen der Daten
+        url: 'include/fetch_ausbildungstypen.php', // URL für das Abrufen der Daten
         type: 'GET',
         dataType: 'json',
         success: function(data) {

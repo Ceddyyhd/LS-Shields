@@ -906,7 +906,11 @@ $("#noteForm").on("submit", function (e) {
                     <?php endforeach; ?>
                 </div>
             </div>
-            
+            <?php
+        }
+        ?>
+    </form>
+    
 
 <div class="form-group">
                     <label for="exampleInputEmail1">Letzte schließfach Kontrolle</label>
@@ -916,10 +920,6 @@ $("#noteForm").on("submit", function (e) {
                     <label for="exampleInputEmail1">Notiz zur Kontrolle</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
                   </div>
-            <?php
-        }
-        ?>
-    </form>
 </div>
 
                   <script>$("#saveButton").on("click", function () {

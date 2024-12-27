@@ -24,29 +24,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Aktion: Trainings abrufen
-    if ($_POST['action'] == 'get_trainings') {
-        try {
-            // Alle Trainings abrufen
-            $stmt = $conn->query("SELECT * FROM trainings");
-            $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-            // Den Anmeldestatus für jedes Training hinzufügen
-            foreach ($trainings as &$training) {
-                $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
-                $stmt->execute([$training['id'], $_SESSION['username']]);
-                $isEnrolled = $stmt->fetchColumn();
-    
-                // Füge das Anmeldestatus-Feld hinzu
-                $training['is_enrolled'] = ($isEnrolled > 0);
-            }
-    
-            // Gebe die Trainings als JSON zurück
-            echo json_encode($trainings);
-        } catch (PDOException $e) {
-            // Fehlerbehandlung
-            echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
+if ($_POST['action'] == 'get_trainings') {
+    try {
+        // Alle Trainings abrufen
+        $stmt = $conn->query("SELECT * FROM trainings");
+        $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Den Anmeldestatus und die Mitarbeiter für jedes Training hinzufügen
+        foreach ($trainings as &$training) {
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
+            $stmt->execute([$training['id'], $_SESSION['username']]);
+            $isEnrolled = $stmt->fetchColumn();
+
+            // Füge das Anmeldestatus-Feld hinzu
+            $training['is_enrolled'] = ($isEnrolled > 0);
+
+            // Mitarbeiter für dieses Training abrufen
+            $stmt = $conn->prepare("SELECT name FROM mitarbeiter WHERE training_id = ?");
+            $stmt->execute([$training['id']]);
+            $training['mitarbeiter'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        // Gebe die Trainings als JSON zurück
+        echo json_encode($trainings);
+    } catch (PDOException $e) {
+        // Fehlerbehandlung
+        echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
     }
+}
 
     // Aktion: Anmelden
     if ($_POST['action'] == 'anmelden') {

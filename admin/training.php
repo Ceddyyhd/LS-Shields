@@ -34,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-          <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+            <h1 class="m-0">Starter Page</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -128,6 +128,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
     <script>
 $(document).ready(function() {
+    // Den Benutzernamen direkt aus der PHP-Session an JavaScript übergeben
+    var username = "<?php echo htmlspecialchars($_SESSION['user_name']); ?>";
+
     // Initialisiere den DateTimePicker für das Erstellen des Trainings
     $('#reservationdatetime').datetimepicker({
         format: 'YYYY-MM-DD HH:mm',
@@ -219,7 +222,8 @@ $(document).ready(function() {
             method: 'POST',
             data: {
                 action: 'anmelden',
-                training_id: trainingId
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
             },
             success: function(response) {
                 var result = JSON.parse(response);
@@ -239,7 +243,8 @@ $(document).ready(function() {
             method: 'POST',
             data: {
                 action: 'abmelden',
-                training_id: trainingId
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
             },
             success: function(response) {
                 var result = JSON.parse(response);

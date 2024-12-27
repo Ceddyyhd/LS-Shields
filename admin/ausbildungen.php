@@ -173,8 +173,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <td>${ausbildung.display_name}</td>
                             <td>${ausbildung.description}</td>
                             <td>
-                                <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
-                            </td>
+                              <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
+                              <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
+                          </td>
                         </tr>
                     `);
                 });
@@ -245,18 +246,18 @@ $('#saveEditAusbildung').click(function() {
 
   // Löschen-Funktion
   function deleteAusbildungTyp(id) {
-    if (confirm('Möchten Sie diesen Ausbildungstyp wirklich löschen?')) {
+    if (confirm('Möchten Sie diesen Ausbildungstyp wirklich löschen? (Er wird archiviert)')) {
         $.ajax({
             url: 'include/delete_ausbildungstyp.php',
             type: 'POST',
             data: { id: id },
             success: function(response) {
-                alert('Ausbildungstyp gelöscht');
-                location.reload();
+                alert('Ausbildungstyp archiviert');
+                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
             },
             error: function(xhr, status, error) {
-                console.error('Fehler beim Löschen:', xhr.responseText);
-                alert('Fehler beim Löschen des Ausbildungstyps.');
+                console.error('Fehler beim Archivieren:', xhr.responseText);
+                alert('Fehler beim Archivieren des Ausbildungstyps.');
             }
         });
     }

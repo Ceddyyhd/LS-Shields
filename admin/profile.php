@@ -3,8 +3,8 @@ include 'include/db.php';
 ini_set('display_errors', 0);
 error_reporting(0);
 // Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
-$userid = $_GET['id'] ?? null;
-if (!$userid) {
+$user_id = $_GET['id'] ?? null;
+if (!$user_id) {
     die("Benutzer-ID fehlt.");
 }
 // Benutzerinformationen abrufen
@@ -13,7 +13,7 @@ $sql = "SELECT users.*, roles.name AS role_name
         LEFT JOIN roles ON users.role_id = roles.id 
         WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $userid]);
+$stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
@@ -21,23 +21,28 @@ if (!$user) {
 }
 
 // Dokumente abrufen
-$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE userid = :userid";
+$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
-$stmt_documents->execute(['userid' => $userid]);
+$stmt_documents->execute(['user_id' => $user_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
 // Ausrüstung abrufen
-$sql_equipment = "SELECT equipment_name, received FROM equipment WHERE userid = :userid";
+$sql_equipment = "SELECT equipment_name, received FROM equipment WHERE user_id = :user_id";
 $stmt_equipment = $conn->prepare($sql_equipment);
-$stmt_equipment->execute(['userid' => $userid]);
+$stmt_equipment->execute(['user_id' => $user_id]);
 $equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);
 
 // Notizen abrufen
-$sql_notes = "SELECT type, content, created_at, author FROM notes WHERE userid = :userid ORDER BY created_at DESC";
+$sql_notes = "SELECT type, content, created_at, author FROM notes WHERE user_id = :user_id ORDER BY created_at DESC";
 $stmt_notes = $conn->prepare($sql_notes);
-$stmt_notes->execute(['userid' => $userid]);
+$stmt_notes->execute(['user_id' => $user_id]);
 $notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
+// Ausbildungen abrufen
+$sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";
+$stmt_trainings = $conn->prepare($sql_trainings);
+$stmt_trainings->execute(['user_id' => $user_id]);
+$trainings = $stmt_trainings->fetchAll(PDO::FETCH_ASSOC);
 
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name 
@@ -127,7 +132,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="modal-body">
                 <form id="changeRankForm">
-                    <input type="hidden" name="userid" value="<?= htmlspecialchars($user['id']); ?>">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user['id']); ?>">
                     <div class="form-group">
                         <label for="roleSelect">Neuer Rang</label>
                         <select class="custom-select" name="role_id" id="roleSelect" required>
@@ -231,7 +236,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </div>
       <form id="userEditForm">
-    <input type="hidden" name="userid" value="<?= htmlspecialchars($user['id']); ?>">
+    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user['id']); ?>">
     <div class="modal fade" id="user-bearbeiten">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -328,19 +333,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script>
-    // Event-Listener für die Checkbox
-    document.getElementById('changePasswordCheckbox').addEventListener('change', function() {
-        // Hole das Passwortfeld
-        var passwordField = document.getElementById('passwordField');
-        
-        // Wenn die Checkbox aktiviert ist, setze 'disabled' auf false (also aktivieren)
-        if (this.checked) {
-            passwordField.disabled = false;
-        } else {
-            // Wenn die Checkbox deaktiviert ist, setze 'disabled' auf true (also deaktivieren)
-            passwordField.disabled = true;
-        }
-    });
     $(document).ready(function () {
         $("#saveChanges").on("click", function (e) {
             e.preventDefault();
@@ -393,12 +385,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <!-- Dokumente -->
                   <div class="active tab-pane" id="dokumente">
                   <form id="employeeForm" class="form-horizontal" method="POST">
-    <input type="hidden" name="userid" value="<?= htmlspecialchars($userid); ?>">
+    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
     <?php
 // Führerscheine aus der Datenbank abrufen
-$sql = "SELECT fuehrerscheine FROM employee_info WHERE userid = :userid";
+$sql = "SELECT fuehrerscheine FROM employee_info WHERE user_id = :user_id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['userid' => $userid]);
+$stmt->execute(['user_id' => $user_id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $fuehrerscheine = json_decode($result['fuehrerscheine'] ?? '[]', true);
@@ -408,9 +400,9 @@ if (!is_array($fuehrerscheine)) {
 }
 
 // Waffenschein aus der Datenbank abrufen
-$sql = "SELECT waffenschein_type FROM employee_info WHERE userid = :userid";
+$sql = "SELECT waffenschein_type FROM employee_info WHERE user_id = :user_id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['userid' => $userid]);
+$stmt->execute(['user_id' => $user_id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $waffenschein_type = $result['waffenschein_type'] ?? 'none'; // Standardwert 'none', falls nicht gesetzt
@@ -508,7 +500,7 @@ $(document).ready(function () {
                 <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
                 <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
                     <!-- Benutzer-ID -->
-                    <input type="hidden" name="userid" value="<?= htmlspecialchars($userid); ?>">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
                     <!-- Dokumenttyp -->
                     <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
@@ -650,7 +642,7 @@ $(document).ready(function () {
                 </button>
             </div>
             <form id="noteForm">
-                <input type="hidden" name="userid" value="<?= htmlspecialchars($userid); ?>"> <!-- Benutzer-ID -->
+                <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>"> <!-- Benutzer-ID -->
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Typ</label>
@@ -744,7 +736,7 @@ $("#noteForm").on("submit", function (e) {
                   <!-- Ausbildungen -->
                   <div class="tab-pane" id="ausbildungen">
     <form id="ausbildungForm">
-        <input type="hidden" name="userid" value="<?= htmlspecialchars($userid); ?>">
+        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Bewertungen</label>
             <div class="col-sm-10">
@@ -755,8 +747,8 @@ $("#noteForm").on("submit", function (e) {
                 $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 // Benutzerausbildungen abrufen
-                $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE userid = :userid");
-                $stmt->execute([':userid' => $userid]);
+                $stmt = $conn->prepare("SELECT ausbildung, status, bewertung FROM ausbildungen WHERE user_id = :user_id");
+                $stmt->execute([':user_id' => $user_id]);
                 $ausbildungen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 // Benutzerausbildungen in ein Array umwandeln
@@ -857,7 +849,7 @@ $("#noteForm").on("submit", function (e) {
                   <!-- Ausrüstung -->
                   <div class="tab-pane" id="ausruestung">
     <form id="ausruestungForm">
-        <input type="hidden" name="userid" value="<?= htmlspecialchars($userid); ?>">
+        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <?php
         // Berechtigungsprüfung
         $canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
@@ -867,8 +859,8 @@ $("#noteForm").on("submit", function (e) {
         $stmt->execute();
         $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE userid = :userid");
-        $stmt->execute([':userid' => $userid]);
+        $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
         $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Benutzer-Ausrüstung in ein Array umwandeln

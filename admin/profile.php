@@ -912,11 +912,11 @@ $("#noteForm").on("submit", function (e) {
     </form>
     <div class="form-group">
     <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" placeholder="Datum der letzten Kontrolle">
+    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= $letzteSpindKontrolle ?? ''; ?>">
 </div>
 <div class="form-group">
     <label for="notiz">Notiz</label>
-    <input type="text" class="form-control" id="notiz" name="notiz" placeholder="Geben Sie eine Notiz ein">
+    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= $notiz ?? ''; ?>">
 </div>
 </div>
 

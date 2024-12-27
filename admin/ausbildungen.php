@@ -115,27 +115,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- Dein JavaScript -->
 <script>
-  $(document).on('click', '.btn-outline-secondary', function() {
-    console.log('Bearbeiten-Button geklickt'); // Log beim Klick auf Bearbeiten
-    const id = $(this).data('id');
-    
-    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+  $(document).ready(function() {
+    // AJAX-Anfrage zum Abrufen der Ausbildungstypen direkt beim Laden der Seite
     $.ajax({
-        url: 'include/fetch_ausbildungstypen.php',
+        url: 'fetch_ausbildungstypen.php', // URL für das Abrufen der Daten
         type: 'GET',
-        data: { id: id },
         dataType: 'json',
         success: function(data) {
-            console.log('Daten erhalten:', data); // Log die erhaltenen Daten
+            console.log('Daten erhalten:', data); // Logge die erhaltenen Daten in der Konsole
             if (data && data.length > 0) {
-                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-                $('#edit_id').val(ausbildung.id);
-                $('#edit_key_name').val(ausbildung.key_name);
-                $('#edit_display_name').val(ausbildung.display_name);
-                $('#edit_description').val(ausbildung.description);
-                $('#modal-ausbildung-edit').modal('show');
+                // Wenn Daten vorhanden sind, befülle die Tabelle oder Modal
+                const tableBody = $('#example1 tbody'); // Beispiel: ID der Tabelle, in der die Daten angezeigt werden
+                tableBody.empty(); // Leere das Tabellenbody, bevor neue Daten hinzugefügt werden
+
+                // Daten durchlaufen und in die Tabelle einfügen
+                data.forEach(function(ausbildung) {
+                    tableBody.append(`
+                        <tr>
+                            <td>${ausbildung.id}</td>
+                            <td>${ausbildung.key_name}</td>
+                            <td>${ausbildung.display_name}</td>
+                            <td>${ausbildung.description}</td>
+                            <td>
+                                <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
+                            </td>
+                        </tr>
+                    `);
+                });
             } else {
-                alert('Daten konnten nicht geladen werden.');
+                alert('Keine Ausbildungstypen gefunden.');
             }
         },
         error: function(xhr, status, error) {

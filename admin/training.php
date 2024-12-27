@@ -134,6 +134,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 <!-- Unsichtbares div mit data-username -->
+<div id="user-info" data-username="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" style="display:none;"></div>
 
 <script>
 $(document).ready(function() {

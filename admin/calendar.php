@@ -71,39 +71,22 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
               <!-- /.card -->
               <div class="card">
                 <div class="card-header">
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-                  Launch Default Modal
-                </button>
-
-
-                <div class="modal fade" id="modal-default">
-        <div class="modal-dialog">
-          <div class="modal-content bg-primary">
-            <div class="modal-header">
-              <h4 class="modal-title">Primary Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-outline-light">Save changes</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-
-
-
+                  <h3 class="card-title">Create Event</h3>
                 </div>
                 <div class="card-body">
                   <!-- /btn-group -->
-                  
+                  <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
+                      <div class="form-group">
+                        <label>Start Datum</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
+                      <div class="form-group">
+                        <label>End Datum</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
                   <!-- /input-group -->
                 </div>
               </div>

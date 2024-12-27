@@ -874,7 +874,7 @@ $("#noteForm").on("submit", function (e) {
 
         $stmt = $conn->prepare("SELECT letzte_spind_kontrolle, notizen FROM spind_kontrolle_notizen WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
-        $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $benutzerSpind_Kontrolle = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Benutzer-Ausrüstung in ein Array umwandeln
         $userAusrüstung = [];
@@ -916,11 +916,11 @@ $("#noteForm").on("submit", function (e) {
     </form>
     <div class="form-group">
     <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= htmlspecialchars($letzteSpindKontrolle ?? ''); ?>">
+    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
 </div>
 <div class="form-group">
     <label for="notiz">Notiz</label>
-    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notiz ?? ''); ?>">
+    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
 </div>
 </div>
 

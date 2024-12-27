@@ -153,6 +153,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 });
 
+$(document).on('click', '.btn-outline-secondary', function() {
+    console.log('Bearbeiten-Button geklickt'); // Log beim Klick auf Bearbeiten
+    const id = $(this).data('id');
+    
+    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+    $.ajax({
+        url: 'include/fetch_ausbildungstypen.php',
+        type: 'GET',
+        data: { id: id },
+        dataType: 'json',
+        success: function(data) {
+            console.log('Daten erhalten:', data); // Log die erhaltenen Daten
+            if (data && data.length > 0) {
+                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+                $('#edit_id').val(ausbildung.id);
+                $('#edit_key_name').val(ausbildung.key_name);
+                $('#edit_display_name').val(ausbildung.display_name);
+                $('#edit_description').val(ausbildung.description);
+                $('#modal-ausbildung-edit').modal('show');
+            } else {
+                alert('Daten konnten nicht geladen werden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Ausbildungstypen:', error); // Fehlerlog
+            alert('Fehler beim Abrufen der Ausbildungstypen.');
+        }
+    });
+});
+
 // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
 $('#saveEditAusbildung').click(function() {
     const formData = new FormData(document.getElementById('editAusbildungForm'));

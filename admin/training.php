@@ -50,88 +50,145 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     
     <div class="row">
-      <div class="col-12">
-        <div class="card">
-        <?php if (isset($_SESSION['permissions']['create_trainings']) && $_SESSION['permissions']['create_trainings']): ?>
-    <div class="card-header">
-        <h3 class="card-title">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-training-erstellen">
-                Training erstellen
-            </button>
-        </h3>
-    </div>
-<?php endif; ?> 
-                
-                
-                <div class="modal fade" id="modal-training-erstellen">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h4 class="modal-title">Training Erstellen</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="form-group">
-                            <label for="trainingGrund">Grund</label>
-                            <input type="text" class="form-control" id="trainingGrund" placeholder="Enter Grund">
-                        </div>
-                        <div class="form-group">
-                            <label for="trainingInfo">Info</label>
-                            <input type="text" class="form-control" id="trainingInfo" placeholder="Enter Info">
-                        </div>
-                        <div class="form-group">
-                            <label for="trainingLeitung">Trainingsleitung</label>
-                            <input type="text" class="form-control" id="trainingLeitung" placeholder="Enter Leitung">
-                        </div>
-
-                        <label>Date and time:</label>
-                        <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                          <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" id="trainingDate"/>
-                          <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
-                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                          </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="saveTraining">Save changes</button>
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Expandable Table</h3>
+              </div>
+              <!-- ./card-header -->
+              <div class="card-body">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>User</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>183</td>
+                      <td>John Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Approved</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="true">
+                      <td>219</td>
+                      <td>Alexander Pierce</td>
+                      <td>11-7-2014</td>
+                      <td>Pending</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="true">
+                      <td>657</td>
+                      <td>Alexander Pierce</td>
+                      <td>11-7-2014</td>
+                      <td>Approved</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>175</td>
+                      <td>Mike Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Denied</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>134</td>
+                      <td>Jim Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Approved</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>494</td>
+                      <td>Victoria Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Pending</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>832</td>
+                      <td>Michael Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Approved</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr data-widget="expandable-table" aria-expanded="false">
+                      <td>982</td>
+                      <td>Rocky Doe</td>
+                      <td>11-7-2014</td>
+                      <td>Denied</td>
+                      <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td colspan="5">
+                        <p>
+                          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
             </div>
-                    </div>
-                    <!-- /.modal-content -->
-                  </div>
-                  <!-- /.modal-dialog -->
-                </div>
-
-
+            <!-- /.card -->
           </div>
-          <!-- ./card-header -->
-          <div class="card-body">
-    <table class="table table-bordered table-hover" id="trainingTable">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Datum & Uhrzeit</th>
-                <th>Grund</th>
-                <th>Trainingsleitung</th>
-                <th>Info</th>
-                <th>An/Abmeldung</th>
-                <?php if (isset($_SESSION['permissions']['remove_trainings']) && $_SESSION['permissions']['remove_trainings']): ?>
-                <th>Löschen</th>
-            <?php endif; ?>
-            </tr>
-        </thead>
-        <tbody id="trainingList">
-            <!-- Dynamische Inhalte -->
-        </tbody>
-    </table>
-</div>
-<!-- /.card-body -->
-</div>
-<!-- /.card -->
-</div>
-</div>
+        </div>
+
 
 <!-- Unsichtbares div mit data-username -->
 <div id="user-info" data-username="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" style="display:none;"></div>

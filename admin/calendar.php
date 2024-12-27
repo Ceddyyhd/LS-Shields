@@ -25,21 +25,27 @@
 include 'include/db.php'; // Datenbankverbindung einbinden
 
 // SQL-Abfrage, um die Urlaubsanfragen abzurufen (status = 'approved' wird gefiltert)
-$query = "SELECT id, start_date, end_date, status FROM vacations WHERE status = 'approved' ORDER BY start_date";
+$query = "
+    SELECT v.start_date, v.end_date, u.name 
+    FROM vacations v
+    JOIN users u ON v.user_id = u.id
+    WHERE v.status = 'approved'
+";
+
 $stmt = $conn->prepare($query);
 $stmt->execute();
-$vacations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Um die Urlaubsanfragen in ein für FullCalendar passendes Format umzuwandeln
+// Array für die Events
 $events = [];
-foreach ($vacations as $vacation) {
+
+while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $events[] = [
-      'title' => 'Urlaub',  // Titel des Events, hier kannst du auch den Namen des Mitarbeiters oder andere Details einfügen
-      'start' => $vacation['start_date'],
-      'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
-      'backgroundColor' => '#00a65a',  // Farbe für "Urlaub"
-      'borderColor'     => '#00a65a',  // Farbe für den Rand des Events
-  ];
+        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']), // Titel: Urlaub - Mitarbeiter Name
+        'start' => $vacation['start_date'],
+        'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
+        'backgroundColor' => '#00a65a',  // Farbe für "Urlaub"
+        'borderColor'     => '#00a65a',  // Farbe für den Rand des Events
+    ];
 }
 ?>
   <!-- Content Wrapper. Contains page content -->

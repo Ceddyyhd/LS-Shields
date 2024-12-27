@@ -115,12 +115,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- /.card-body -->
 </div>
 <!-- /.card -->
-      </div>
-    </div>
-    
-    <!-- Unsichtbares div mit data-username -->
+</div>
+</div>
+
+<!-- Unsichtbares div mit data-username -->
 <div id="user-info" data-username="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" style="display:none;"></div>
-    <script>
+
+<script>
 $(document).ready(function() {
     // Hole den Benutzernamen aus dem `data-username`-Attribut im HTML
     var username = $('#user-info').data('username');  // Benutzernamen aus data-Attribut holen

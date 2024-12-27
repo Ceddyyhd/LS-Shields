@@ -205,12 +205,13 @@ $(document).ready(function() {
                 }
 
                 // Zeile für das Training
-                var row = '<tr data-widget="expandable-table" aria-expanded="false">' +
+                var row = '<tr data-widget="expandable-table" aria-expanded="false" class="training-row">' +
                     '<td>' + training.id + '</td>' +
                     '<td>' + training.datum_zeit + '</td>' +
                     '<td>' + training.grund + '</td>' +
                     '<td>' + training.leitung + '</td>' +
                     '<td>' + training.info + '</td>' +
+                    '<td>' + actionButtons + '</td>' +
                     '</tr>';
 
                 // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)
@@ -221,7 +222,7 @@ $(document).ready(function() {
 
                 // Zeile für die Details, die initial verborgen ist
                 var detailsRow = '<tr class="expandable-body" style="display:none;">' +
-                    '<td colspan="5">' +
+                    '<td colspan="6">' +  // Spaltenanzahl anpassen
                         '<div class="p-3">' +
                             '<div class="mb-3">' +
                                 '<strong>Eingetragene Mitarbeiter:</strong>' +
@@ -238,15 +239,15 @@ $(document).ready(function() {
                 tableBody.append(detailsRow);
             });
 
-            // Event-Listener für expandierende Zeilen
-            $('[data-widget="expandable-table"]').on('click', function() {
+            // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
+            $('.training-row').on('click', function() {
                 var $this = $(this);
-                var $expandableRow = $this.next('.expandable-body');
+                var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
                 var isExpanded = $this.attr('aria-expanded') === 'true';
 
                 // Toggle die Sichtbarkeit der Details
                 $expandableRow.toggle();
-                $this.attr('aria-expanded', !isExpanded);
+                $this.attr('aria-expanded', !isExpanded);  // Toggle den expandierten Status
             });
         }
     });

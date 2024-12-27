@@ -199,35 +199,37 @@ include 'include/db.php';
 
 <script>
 function changeStatus(id, action) {
-  console.log('ID:', id);  // Prüfe die ID in der Konsole
-  console.log('Action:', action);  // Prüfe die Aktion in der Konsole
+    console.log('ID:', id);  // Prüfe die ID in der Konsole
+    console.log('Action:', action);  // Prüfe die Aktion in der Konsole
 
-  fetch('include/update_vorschlag_status.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `id=${id}&action=${action}`,
-  })
+    fetch('include/update_status.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `id=${id}&action=${action}`,  // Parameter übergeben
+    })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // Hier wird die Antwort vom Server in der Konsole angezeigt
-      if (data.success) {
-        console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
-        if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
-          document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
-        } else if (action === 'move_to_eventplanung') {
-          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
+        console.log(data); // Hier wird die Antwort vom Server in der Konsole angezeigt
+        if (data.success) {
+            console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
+            if (action === 'change_status') {
+                document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
+                document.getElementById(`buttons-${id}`).innerHTML =
+                    `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
+            } else if (action === 'move_to_eventplanung') {
+                document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
+                document.getElementById(`buttons-${id}`).innerHTML =
+                    `<span class="badge badge-success">Abgeschlossen</span>`; // Button durch Text ersetzen
+            }
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
         }
-      } else {
-        alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
-      }
     })
     .catch((error) => {
-      console.error('Fehler:', error); // Protokolliere den Fehler in der Konsole
-      alert('Ein Fehler ist aufgetreten: ' + error.message);
+        console.error('Fehler:', error); // Protokolliere den Fehler in der Konsole
+        alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
 }
 </script>

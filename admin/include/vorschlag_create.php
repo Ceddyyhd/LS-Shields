@@ -19,12 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Eintrag in die Datenbank erstellen
-        // Hier setzen wir 'name' mit dem Wert von 'erstellt_von', wenn 'name' nicht entfernt werden kann.
-        $stmt = $conn->prepare("INSERT INTO verbesserungsvorschlaege (name, vorschlag, status, erstellt_von) 
-                                VALUES (:name, :vorschlag, :status, :erstellt_von)");
+        // Eintrag in die Datenbank erstellen, ohne das telefonnummer Feld
+        $stmt = $conn->prepare("INSERT INTO verbesserungsvorschlaege (vorschlag, status, erstellt_von) 
+                                VALUES (:vorschlag, :status, :erstellt_von)");
         $stmt->execute([
-            ':name' => $erstellt_von,  // Setze 'name' auf 'erstellt_von'
             ':vorschlag' => $vorschlag,
             ':status' => $status,
             ':erstellt_von' => $erstellt_von

@@ -126,6 +126,30 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
                         </li>
                     </ul>
                 </li>
+
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'leitungsbereich.php' ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Settings
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausbildungen.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Ausbildung Verwaltung</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Rang Verwaltung</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

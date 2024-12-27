@@ -803,11 +803,19 @@ margin: 0;
         try {
             // Alle Mitarbeiter holen, die sich für das Event angemeldet haben und bereits Daten im Dienstplan haben
             $stmt = $conn->prepare("
-              SELECT u.id, u.name, d.max_time, d.gestartet_um, d.gegangen_um, d.arbeitszeit, d.notizen
-              FROM users u
-              JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
-              LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
-              WHERE em.event_id = :event_id
+                SELECT 
+                    u.id, 
+                    u.name, 
+                    d.max_time, 
+                    d.gestartet_um, 
+                    d.gegangen_um, 
+                    d.arbeitszeit, 
+                    d.notizen,
+                    em.event_id  -- Hier fügen wir das event_id von event_mitarbeiter_anmeldung hinzu
+                FROM users u
+                JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+                LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
+                WHERE em.event_id = :event_id
             ");
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
             $stmt->execute();

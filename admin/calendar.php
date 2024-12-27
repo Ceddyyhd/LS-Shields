@@ -72,32 +72,32 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <section class="content">
       <div class="container-fluid">
       <div class="row">
-          <div class="col-md-3">
-            <div class="sticky-top mb-3">
-              <!-- /.card -->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Create Event</h3>
-                </div>
-                <div class="card-body">
-                  <!-- /btn-group -->
-                  <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
-                      <div class="form-group">
-                        <label>Start Datum</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
-                      <div class="form-group">
-                        <label>End Datum</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
-                  <!-- /input-group -->
-                </div>
-              </div>
-            </div>
+      <div class="col-md-3">
+  <div class="sticky-top mb-3">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Create Event</h3>
+      </div>
+      <div class="card-body">
+        <form id="vacationForm">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Name" required>
           </div>
+          <div class="form-group">
+            <label>Start Datum</label>
+            <input type="date" class="form-control" id="start_date" required>
+          </div>
+          <div class="form-group">
+            <label>End Datum</label>
+            <input type="date" class="form-control" id="end_date" required>
+          </div>
+          <button type="button" class="btn btn-primary" id="submitVacation">Urlaub Anmelden</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
           <!-- /.col -->
           <div class="col-md-9">
             <div class="card card-primary">

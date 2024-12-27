@@ -38,7 +38,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Main content -->
   <div class="card">
-  <?php if (isset($_SESSION['permissions']['user_create']) && $_SESSION['permissions']['user_create']): ?>
     <?php if (isset($_SESSION['permissions']['ausbildung_create']) && $_SESSION['permissions']['ausbildung_create']): ?>
   <div class="card-header">
     <h3 class="card-title">

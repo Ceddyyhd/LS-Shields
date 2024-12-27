@@ -16,37 +16,28 @@ $erstellt_von = $_SESSION['username'];
 $start_date = $_POST['start_date'] ?? '';
 $end_date = $_POST['end_date'] ?? '';
 
-// Überprüfen, ob die Felder ausgefüllt sind
-if (!$start_date || !$end_date) {
-    echo json_encode(['success' => false, 'message' => 'Startdatum und Enddatum müssen ausgefüllt sein.']);
-    exit;
-}
+// Berechnen, ob der Status "approved" oder "pending" ist
+$status = (strtotime($end_date) - strtotime($start_date) <= 6 * 86400) ? 'approved' : 'pending';  // Wenn Urlaub <= 6 Tage, dann genehmigt
 
-// Status basierend auf der Dauer des Urlaubs setzen
-$start_timestamp = strtotime($start_date);
-$end_timestamp = strtotime($end_date);
-$days_diff = ($end_timestamp - $start_timestamp) / (60 * 60 * 24);
-
-$status = $days_diff <= 6 ? 'approved' : 'pending'; // Wenn der Urlaub 6 Tage oder weniger dauert, wird der Status auf "approved" gesetzt
-
-// Das aktuelle Datum und Uhrzeit für die Erstellung
-$datum_uhrzeit = date('Y-m-d H:i:s');
-
+// Der aktuelle Zeitpunkt wird automatisch von der Datenbank gesetzt
 try {
-    // SQL zum Einfügen des Urlaubs in die Datenbank
-    $sql = "INSERT INTO vacations (start_date, end_date, status, erstellt_von, datum_uhrzeit)
-            VALUES (:start_date, :end_date, :status, :erstellt_von, :datum_uhrzeit)";
+    // SQL zum Einfügen der Anfrage in die Datenbank
+    $sql = "INSERT INTO vacations (user_id, start_date, end_date, status, erstellt_von)
+            VALUES (:user_id, :start_date, :end_date, :status, :erstellt_von)";
 
+    // Bereite die Anfrage vor
     $stmt = $conn->prepare($sql);
+
+    // Führe das SQL aus
     $stmt->execute([
-        ':start_date'   => $start_date,
-        ':end_date'     => $end_date,
-        ':status'       => $status,
-        ':erstellt_von' => $erstellt_von,
-        ':datum_uhrzeit'=> $datum_uhrzeit
+        ':user_id' => $_SESSION['user_id'],  // Benutzer-ID aus der Session
+        ':start_date' => $start_date,
+        ':end_date' => $end_date,
+        ':status' => $status,
+        ':erstellt_von' => $erstellt_von,  // Der Benutzername wird hier gespeichert
     ]);
 
-    echo json_encode(['success' => true, 'message' => 'Urlaub wurde erfolgreich erstellt.']);
+    echo json_encode(['success' => true, 'message' => 'Urlaubsantrag erfolgreich erstellt.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }

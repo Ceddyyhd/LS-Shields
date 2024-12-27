@@ -129,39 +129,58 @@ include 'include/db.php';
             </tr>
           </thead>
           <tbody>
-    <?php foreach ($vorschlaege as $vorschlag): ?>
-        <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
-            <td><?= htmlspecialchars($vorschlag['id']) ?></td>
-            <td><?= mb_strimwidth(htmlspecialchars($vorschlag['vorschlag']), 0, 50, '...') ?></td>
-            <td id="status-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['status']) ?></td>
-            <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>
-            <td><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></td>
-            <td>Details einblenden</td>
-        </tr>
-        <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
-            <td colspan="5">
-                <div class="p-3">
-                    <div class="mb-3">
-                        <strong>Vorschlag:</strong>
-                        <div><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Status:</strong>
-                        <div><?= htmlspecialchars($vorschlag['status']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Erstellt von:</strong>
-                        <div><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Datum & Uhrzeit:</strong>
-                        <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+          <?php
+
+          // SQL-Abfrage, um alle Vorschläge zu erhalten
+          $query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+          $stmt = $conn->prepare($query);
+          $stmt->execute();
+
+          // Sicherstellen, dass $vorschlaege korrekt gesetzt ist
+          $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          // Überprüfen, ob $vorschlaege nicht leer ist, bevor die foreach-Schleife ausgeführt wird
+          if (!empty($vorschlaege)) {
+              foreach ($vorschlaege as $vorschlag) {
+                  // Deine Ausgabe hier
+              }
+          } else {
+              echo "Keine Verbesserungsvorschläge gefunden.";
+          }
+          ?>
+            <?php foreach ($vorschlaege as $vorschlag): ?>
+                <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
+                    <td><?= htmlspecialchars($vorschlag['id']) ?></td>
+                    <td><?= mb_strimwidth(htmlspecialchars($vorschlag['vorschlag']), 0, 50, '...') ?></td>
+                    <td id="status-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['status']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></td>
+                    <td>Details einblenden</td>
+                </tr>
+                <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
+                    <td colspan="5">
+                        <div class="p-3">
+                            <div class="mb-3">
+                                <strong>Vorschlag:</strong>
+                                <div><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Status:</strong>
+                                <div><?= htmlspecialchars($vorschlag['status']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Erstellt von:</strong>
+                                <div><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Datum & Uhrzeit:</strong>
+                                <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
         </table>
       </div>
     </div>

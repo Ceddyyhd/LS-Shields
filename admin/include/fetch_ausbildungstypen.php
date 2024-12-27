@@ -1,23 +1,25 @@
 <?php
 // Verbindung zur Datenbank herstellen
-require_once 'db.php'; // Stelle sicher, dass du die korrekte Datenbankverbindungsdatei verwendest
+require_once 'db.php'; // Deine DB-Verbindungsdatei
 
-// SQL-Abfrage, um alle Ausbildungstypen abzurufen
-$sql = "SELECT id, key_name, display_name, description FROM ausbildungstypen";
-$result = $conn->query($sql);
+try {
+    // SQL-Abfrage, um alle Ausbildungstypen abzurufen
+    $sql = "SELECT id, key_name, display_name, description FROM ausbildungstypen";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
 
-$ausbildungstypen = [];
-if ($result->num_rows > 0) {
-    // Jede Zeile der Ergebnistabelle durchlaufen
-    while ($row = $result->fetch_assoc()) {
-        $ausbildungstypen[] = $row;
-    }
+    // Alle Ergebnisse in einem Array speichern
+    $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Header setzen, um die Antwort als JSON zurückzugeben
+    header('Content-Type: application/json');
+    echo json_encode($ausbildungstypen);
+
+} catch (PDOException $e) {
+    // Fehlerbehandlung
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 
-// Header setzen, um die Antwort als JSON zurückzugeben
-header('Content-Type: application/json');
-echo json_encode($ausbildungstypen);
-
 // Verbindung schließen
-$conn->close();
+$conn = null;
 ?>

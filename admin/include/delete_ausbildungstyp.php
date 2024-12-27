@@ -1,31 +1,24 @@
 <?php
-// Verbindung zur Datenbank herstellen
-require_once 'db.php'; // Stelle sicher, dass du die korrekte Datenbankverbindungsdatei verwendest
+require_once 'db.php'; // Deine DB-Verbindungsdatei
 
-// Überprüfen, ob eine ID übergeben wurde
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    // SQL-Abfrage zum Löschen des Ausbildungstyps
-    $sql = "DELETE FROM ausbildungstypen WHERE id = ?";
+    try {
+        // SQL-Abfrage zum Löschen eines Ausbildungstyps
+        $sql = "DELETE FROM ausbildungstypen WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-    // Vorbereiten der SQL-Anweisung
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-
-    if ($stmt->execute()) {
-        // Erfolgreiches Löschen
-        echo json_encode(['success' => true]);
-    } else {
-        // Fehler beim Löschen
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Löschen des Ausbildungstyps.']);
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Löschen des Ausbildungstyps.']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
-
-    // Verbindung schließen
-    $stmt->close();
-    $conn->close();
 } else {
-    // Fehlende ID
     echo json_encode(['success' => false, 'message' => 'Keine ID angegeben.']);
 }
 ?>

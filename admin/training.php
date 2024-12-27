@@ -211,19 +211,44 @@ $(document).ready(function() {
     });
 }
 
-    // Anmeldung
-    window.toggleAnmeldung = function(trainingId) {
-        $.ajax({
-            url: 'include/training_anmeldung.php',
-            method: 'POST',
-            data: {
-                action: 'anmelden',
-                training_id: trainingId
-            },
-            success: function() {
-                loadTrainings(); // Trainings neu laden
+// Anmeldung
+function toggleAnmeldung(trainingId) {
+    $.ajax({
+        url: 'include/training_anmeldung.php',
+        method: 'POST',
+        data: {
+            action: 'anmelden',
+            training_id: trainingId
+        },
+        success: function(response) {
+            var result = JSON.parse(response);
+            if (result.status === 'angemeldet') {
+                loadTrainings(); // Trainingsliste neu laden
+            } else {
+                console.error('Fehler beim Anmelden:', result.error);
             }
-        });
+        }
+    });
+}
+
+// Abmeldung
+function toggleAbmeldung(trainingId) {
+    $.ajax({
+        url: 'include/training_anmeldung.php',
+        method: 'POST',
+        data: {
+            action: 'abmelden',
+            training_id: trainingId
+        },
+        success: function(response) {
+            var result = JSON.parse(response);
+            if (result.status === 'abgemeldet') {
+                loadTrainings(); // Trainingsliste neu laden
+            } else {
+                console.error('Fehler beim Abmelden:', result.error);
+            }
+        }
+    });
     }
 
     // Abmeldung

@@ -213,20 +213,20 @@ $(document).ready(function() {
                     '<td>' + training.info + '</td>' +
                     '</tr>';
 
+                // Dynamisch die eingetragenen Mitarbeiter abrufen
+                var mitarbeiterListe = '';
+                training.mitarbeiter.forEach(function(mitarbeiter) {
+                    mitarbeiterListe += '<li>' + mitarbeiter.name + '</li>';
+                });
+
                 // Zeile für die Details, die initial verborgen ist
                 var detailsRow = '<tr class="expandable-body" style="display:none;">' +
                     '<td colspan="5">' +
                         '<div class="p-3">' +
                             '<div class="mb-3">' +
-                                '<strong>Ansprechpartner:</strong>' +
-                                '<div>Name: Tom Meyer</div>' +
-                                '<div>Tel. Nr.: 123456789</div>' +
-                            '</div>' +
-                            '<div class="mb-3">' +
                                 '<strong>Eingetragene Mitarbeiter:</strong>' +
                                 '<ul class="mb-0">' +
-                                    '<li>Cedric Schmidt</li>' +
-                                    '<li>Falco Hunter</li>' +
+                                    mitarbeiterListe +
                                 '</ul>' +
                             '</div>' +
                         '</div>' +

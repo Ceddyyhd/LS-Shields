@@ -737,8 +737,8 @@ margin: 0;
                         </select>
                     </div>
                     <div class="form-group">
-                    <label for="exampleInputEmail1">Notiz</label>
-                    <input type="text" class="form-control" id="InputNotiz" placeholder="Notiz">
+                    <label for="InputNotiz">Notiz</label>
+                    <input type="text" class="form-control" id="InputNotiz" name="InputNotiz" placeholder="Notiz">
                   </div>
                 </div>
             </div>
@@ -754,38 +754,32 @@ margin: 0;
     $('#submitFormAnmeldung').on('click', function() {
         var selectedEmployees = $('select[name="employee_list[]"]').val(); // Ausgewählte Mitarbeiter
         var notiz = $('#InputNotiz').val();  // Wert des Notizen-Feldes
-        console.log('Ausgewählte Mitarbeiter:', selectedEmployees);  // Ausgabe der ausgewählten Mitarbeiter
 
-        // Überprüfen, ob Mitarbeiter ausgewählt wurden
+        console.log('Ausgewählte Mitarbeiter:', selectedEmployees);
+        console.log('Notiz:', notiz);  // Konsolenausgabe für Notiz
+
         if (selectedEmployees && selectedEmployees.length > 0) {
             console.log('Mitarbeiter werden gesendet');
 
             // Sicherstellen, dass selectedEmployees ein Array ist
             if (typeof selectedEmployees === 'string') {
-                selectedEmployees = [selectedEmployees]; // Falls es nur eine Auswahl ist, in ein Array umwandeln
+                selectedEmployees = [selectedEmployees];
             }
 
             $.ajax({
-                url: 'include/anmeldung_speichern.php', // PHP-Skript zum Speichern
+                url: 'include/anmeldung_speichern.php',
                 type: 'POST',
                 data: {
-                    event_id: <?= $_GET['id'] ?>,  // Event ID aus der URL
+                    event_id: <?= $_GET['id'] ?>,
                     employees: selectedEmployees,
-                    notizen: notiz  // Notizen hinzufügen
+                    InputNotiz: notiz  // Hier wird das Notizen-Feld gesendet
                 },
                 success: function(response) {
-                    console.log('Antwort vom Server:', response); // Serverantwort in der Konsole anzeigen
+                    console.log('Antwort vom Server:', response);
                     alert('Anmeldung erfolgreich!');
-
-                    // Nach erfolgreicher Anmeldung den Mitarbeiter aus der Liste entfernen
-                    selectedEmployees.forEach(function(employeeId) {
-                        $('option[value="' + employeeId + '"]').remove();
-                    });
                 },
                 error: function(xhr, status, error) {
-                    console.log('AJAX-Fehler: ', error);  // Fehlerdetails in der Konsole
-                    console.log('Status: ', status);
-                    console.log('XHR-Objekt: ', xhr);
+                    console.log('AJAX-Fehler: ', error);
                     alert('Fehler bei der Anmeldung!');
                 }
             });

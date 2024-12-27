@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Überprüfen, ob die Daten gesendet wurden
-if (isset($_POST['event_id']) && isset($_POST['employees'])) {
+if (isset($_POST['event_id']) && isset($_POST['employees']) && isset($_POST['InputNotiz'])) {
     $eventId = $_POST['event_id'];
     $employeeIds = $_POST['employees'];
-    $notiz = $_POST['InputNotiz'];  // Den Notizen-Wert hier holen
+    $notiz = $_POST['InputNotiz'];  // Notizen holen
 
     // Überprüfen, ob $employeeIds ein Array ist
     if (!is_array($employeeIds)) {
@@ -39,4 +39,5 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
 } else {
     echo 'Fehlende Daten!';
 }
+
 ?>

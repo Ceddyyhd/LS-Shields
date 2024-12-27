@@ -199,7 +199,6 @@ include 'include/db.php';
 
 <script>
 function changeStatus(id, action) {
-  // Sende eine POST-Anfrage mit den notwendigen Parametern an das PHP-Skript
   fetch('include/update_status.php', {
     method: 'POST',
     headers: {
@@ -210,7 +209,6 @@ function changeStatus(id, action) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        // Wenn die Anfrage erfolgreich war, den Status und Button ändern
         if (action === 'change_status') {
           document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status auf "In Bearbeitung" ändern
           document.getElementById(`buttons-${id}`).innerHTML =

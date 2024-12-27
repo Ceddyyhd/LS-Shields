@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Wenn die Aktion 'change_status' ist, setze den Status auf 'In Bearbeitung'
+        // Den Status in der Datenbank ändern
         if ($action === 'change_status' && $vorschlag['status'] === 'Eingetroffen') {
             $newStatus = 'In Bearbeitung';
         } 
-        // Wenn die Aktion 'move_to_eventplanung' ist, setze den Status auf 'Abgeschlossen'
+        // Den Status auf "Abgeschlossen" ändern, ohne etwas zu verschieben
         elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'in Bearbeitung') {
             $newStatus = 'Abgeschlossen';
         } else {

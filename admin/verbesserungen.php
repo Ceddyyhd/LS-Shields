@@ -81,18 +81,18 @@ include 'include/db.php';
 
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
-    document.getElementById('saveSuggestionBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('createSuggestionForm'));
+    document.getElementById('saveRequestBtn').addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('createRequestForm'));
 
-        // Überprüfe, ob das Vorschlagsfeld ausgefüllt ist
-        if (!formData.get('vorschlag')) {
-            alert('Bitte den Vorschlag ausfüllen!');
+        // Überprüfe, ob alle Felder ausgefüllt sind
+        if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {
+            alert('Bitte alle Felder ausfüllen!');
             return;
         }
 
         // Füge zusätzliche Daten hinzu
         formData.append('status', 'Eingetroffen');
-        formData.append('erstellt_von', '<?= $_SESSION['username']; ?>');  // Der Benutzername wird automatisch aus der Session gesetzt
+        formData.append('erstellt_von', 'Admin');  // Hier kannst du den Ersteller dynamisch setzen, z.B. aus der Session
 
         // AJAX-Anfrage senden
         fetch('include/vorschlag_create.php', {
@@ -102,9 +102,9 @@ include 'include/db.php';
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Verbesserungsvorschlag erfolgreich erstellt!');
-                $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
-                location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag zu sehen
+                alert('Anfrage erfolgreich erstellt!');
+                $('#modal-anfrage-create').modal('hide'); // Schließt das Modal
+                location.reload();  // Optional: Seite neu laden, um die neue Anfrage zu sehen
             } else {
                 alert('Fehler: ' + data.message);
             }

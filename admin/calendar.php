@@ -98,6 +98,41 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </div>
   </div>
 </div>
+
+<script>
+  document.getElementById('submitVacation').addEventListener('click', function () {
+  var name = document.getElementById('name').value;
+  var start_date = document.getElementById('start_date').value;
+  var end_date = document.getElementById('end_date').value;
+
+  if (name && start_date && end_date) {
+    var formData = new FormData();
+    formData.append('name', name);
+    formData.append('start_date', start_date);
+    formData.append('end_date', end_date);
+
+    // AJAX-Anfrage, um den Urlaub zu speichern
+    fetch('include/vacation_create.php', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Urlaub erfolgreich erstellt!');
+        // Optional: Formular zurücksetzen oder etwas anderes tun
+      } else {
+        alert('Fehler: ' + data.message);
+      }
+    })
+    .catch(error => {
+      alert('Fehler: ' + error.message);
+    });
+  } else {
+    alert('Bitte füllen Sie alle Felder aus!');
+  }
+});
+</script>
           <!-- /.col -->
           <div class="col-md-9">
             <div class="card card-primary">

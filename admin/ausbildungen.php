@@ -6,7 +6,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
-<body class="hold-transition sidebar-mini darkmode">
+<body class="hold-transition sidebar-mini dark-mode">
 <div class="wrapper">
 
 <?php include 'include/navbar.php'; ?>

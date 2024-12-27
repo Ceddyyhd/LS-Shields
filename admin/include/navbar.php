@@ -14,7 +14,7 @@ $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light darkmode">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">

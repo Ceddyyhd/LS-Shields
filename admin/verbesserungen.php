@@ -58,7 +58,7 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <!-- Verbesserungsvorschlag erstellen Modal -->
-<div class="modal fade" id="modal-vorschlag-create">
+<div class="modal fade" id="modal-anfrage-create">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

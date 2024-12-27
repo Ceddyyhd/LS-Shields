@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 if (isset($_POST['event_id']) && isset($_POST['employees'])) {
     $eventId = $_POST['event_id'];
     $employeeIds = $_POST['employees'];
-    $notiz = $_POST['InputNotiz'];
+    $notiz = $_POST['InputNotiz'];  // Den Notizen-Wert hier holen
 
     // Überprüfen, ob $employeeIds ein Array ist
     if (!is_array($employeeIds)) {
@@ -16,7 +16,7 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
     }
 
     // Ausgabe der übermittelten Daten zur Fehlerbehebung
-    var_dump($eventId, $employeeIds);
+    var_dump($eventId, $employeeIds, $notiz);  // Auch die Notiz ausgeben
 
     try {
         // Verbindung zur Datenbank
@@ -28,7 +28,7 @@ if (isset($_POST['event_id']) && isset($_POST['employees'])) {
         foreach ($employeeIds as $employeeId) {
             $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
             $stmt->bindParam(':employee_id', $employeeId, PDO::PARAM_INT);
-            $stmt->bindParam(':notizen', $notiz, PDO::PARAM_INT);
+            $stmt->bindParam(':notizen', $notiz, PDO::PARAM_STR);  // Ändern auf PDO::PARAM_STR
             $stmt->execute();
         }
 

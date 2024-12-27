@@ -872,6 +872,10 @@ $("#noteForm").on("submit", function (e) {
         $stmt->execute([':user_id' => $user_id]);
         $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        $stmt = $conn->prepare("SELECT letzte_spind_kontrolle, notizen FROM spind_kontrolle_notizen WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         // Benutzer-Ausrüstung in ein Array umwandeln
         $userAusrüstung = [];
         foreach ($benutzerAusrüstung as $item) {

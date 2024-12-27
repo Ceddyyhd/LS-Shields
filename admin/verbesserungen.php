@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php';
 
 // Verbesserungsvorschläge aus der Datenbank abrufen
-$query = "SELECT id, name, vorschlag, datum_uhrzeit, erstellt_von, status FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+$query = "SELECT id, vorschlag, datum_uhrzeit, erstellt_von, status FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -163,7 +163,7 @@ $verbesserungsvorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
             <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
           <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
+            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
           <?php endif; ?>
         </div>
       </div>

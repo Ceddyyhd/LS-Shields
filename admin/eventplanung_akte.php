@@ -811,7 +811,7 @@ margin: 0;
                     d.gegangen_um, 
                     d.arbeitszeit, 
                     d.notizen,
-                    em.event_id  -- Hier fügen wir das event_id von event_mitarbeiter_anmeldung hinzu
+                    em.notizen  
                 FROM users u
                 JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
                 LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id

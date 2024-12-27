@@ -37,57 +37,290 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Expandable Table</h3>
+        <?php if (isset($_SESSION['permissions']['create_trainings']) && $_SESSION['permissions']['create_trainings']): ?>
+    <div class="card-header">
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
+                Benutzer erstellen
+            </button>
+        </h3>
+    </div>
+<?php endif; ?> 
+                
+                
+                <div class="modal fade" id="modal-training-erstellen">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">Training Erstellen</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                            <label for="trainingGrund">Grund</label>
+                            <input type="text" class="form-control" id="trainingGrund" placeholder="Enter Grund">
+                        </div>
+                        <div class="form-group">
+                            <label for="trainingInfo">Info</label>
+                            <input type="text" class="form-control" id="trainingInfo" placeholder="Enter Info">
+                        </div>
+                        <div class="form-group">
+                            <label for="trainingLeitung">Trainingsleitung</label>
+                            <input type="text" class="form-control" id="trainingLeitung" placeholder="Enter Leitung">
+                        </div>
+
+                        <label>Date and time:</label>
+                        <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                          <input type="text" class="form-control datetimepicker-input" data-target="#reservationdatetime" id="trainingDate"/>
+                          <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveTraining">Save changes</button>
+            </div>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                  <!-- /.modal-dialog -->
+                </div>
+
+
           </div>
           <!-- ./card-header -->
           <div class="card-body">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Datum & Uhrzeit</th>
-                  <th>Grund</th>
-                  <th>Trainingsleitung</th>
-                  <th>Info</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr data-widget="expandable-table" aria-expanded="false">
-                  <td>1</td>
-                  <td>08.01.2024 19:00</td>
-                  <td>Szenario Training</td>
-                  <td>Aiden Knox, Paul Garcia</td>
-                  <td>10 Minuten vor Start am Firmengelände in Dienstkleidung 
-                    Genügend Essen und Trinken einpacken</td>
-                </tr>
-                <tr class="expandable-body">
-                  <td colspan="5">
-                    <div class="p-3">
-                      <div class="mb-3">
-                        <strong>Ansprechpartner:</strong>
-                        <div>Name: Tom Meyer</div>
-                        <div>Tel. Nr.: 123456789</div>
-                      </div>
-                      <div class="mb-3">
-                        <strong>Eingetragene Mitarbeiter:</strong>
-                        <ul class="mb-0">
-                          <li>Cedric Schmidt</li>
-                          <li>Falco Hunter</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+    <table class="table table-bordered table-hover" id="trainingTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Datum & Uhrzeit</th>
+                <th>Grund</th>
+                <th>Trainingsleitung</th>
+                <th>Info</th>
+                <th>An/Abmeldung</th>
+                <?php if (isset($_SESSION['permissions']['remove_trainings']) && $_SESSION['permissions']['remove_trainings']): ?>
+                <th>Löschen</th>
+            <?php endif; ?>
+            </tr>
+        </thead>
+        <tbody id="trainingList">
+            <!-- Dynamische Inhalte -->
+        </tbody>
+    </table>
+</div>
+<!-- /.card-body -->
+</div>
+<!-- /.card -->
       </div>
     </div>
-    
+    <!-- Unsichtbares div mit data-username -->
+<div id="user-info" data-username="<?php echo htmlspecialchars($_SESSION['user_name']); ?>" style="display:none;"></div>
+
+<script>
+$(document).ready(function() {
+    // Hole den Benutzernamen aus dem `data-username`-Attribut im HTML
+    var username = $('#user-info').data('username');  // Benutzernamen aus data-Attribut holen
+
+    // Initialisiere den DateTimePicker für das Erstellen des Trainings
+    $('#reservationdatetime').datetimepicker({
+        format: 'YYYY-MM-DD HH:mm',
+        icons: {
+            time: 'fa fa-clock',
+            date: 'fa fa-calendar',
+            up: 'fa fa-arrow-up',
+            down: 'fa fa-arrow-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right'
+        }
+    });
+
+    // Trainings speichern
+    document.getElementById('saveTraining').addEventListener('click', function() {
+        var grund = document.getElementById('trainingGrund').value;
+        var info = document.getElementById('trainingInfo').value;
+        var leitung = document.getElementById('trainingLeitung').value;
+        var datum_zeit = document.getElementById('trainingDate').value;
+
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: {
+                action: 'training_erstellen',
+                grund: grund,
+                info: info,
+                leitung: leitung,
+                datum_zeit: datum_zeit
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.status === 'erfolgreich') {
+                    loadTrainings(); // Trainingsliste neu laden
+                    $('#modal-training-erstellen').modal('hide');
+                } else {
+                    console.error('Fehler beim Erstellen des Trainings:', result.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX-Fehler:', error);
+            }
+        });
+    });
+
+    // Trainings abrufen und anzeigen
+    loadTrainings(); // Direkt beim Laden der Seite
+
+    function loadTrainings() {
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: { action: 'get_trainings' },
+            success: function(response) {
+                var trainings = JSON.parse(response);
+                var tableBody = $('#trainingList');
+                tableBody.empty(); // Tabelle leeren
+
+                trainings.forEach(function(training) {
+                    // Anmelde- und Abmelde-Buttons erstellen
+                    var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
+                    var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+
+                    // Überprüfen, ob der Benutzer für das Training angemeldet ist
+                    var actionButtons = '';
+                    if (training.is_enrolled) {
+                        actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
+                    } else {
+                        actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
+                    }
+
+                    // Löschen-Button nur anzeigen, wenn der Benutzer die Berechtigung hat
+                    var deleteButton = '';
+                    <?php if (isset($_SESSION['permissions']['remove_trainings']) && $_SESSION['permissions']['remove_trainings']): ?>
+                        deleteButton = '<button type="button" class="btn btn-block btn-danger" onclick="deleteTraining(' + training.id + ')">Löschen</button>';
+                    <?php endif; ?>
+
+                    // Zeile für das Training
+                    var row = '<tr class="training-row" data-widget="expandable-table" aria-expanded="false">' +
+                        '<td>' + training.id + '</td>' +
+                        '<td>' + training.datum_zeit + '</td>' +
+                        '<td>' + training.grund + '</td>' +
+                        '<td>' + training.leitung + '</td>' +
+                        '<td>' + training.info + '</td>' +
+                        '<td>' + actionButtons + '</td>' +
+                        '<td>' + deleteButton + '</td>' +
+                        '</tr>';
+
+                    // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)
+                    var mitarbeiterListe = '';
+                    if (training.mitarbeiter) {
+                        training.mitarbeiter.forEach(function(mitarbeiter) {
+                            mitarbeiterListe += '<li>' + mitarbeiter.benutzername + '</li>';
+                        });
+                    }
+
+                    // Zeile für die Details, die initial verborgen ist
+                    var detailsRow = '<tr class="expandable-body" style="display:none;">' + // Initial verborgen
+                        '<td colspan="6">' +  // Spaltenanzahl anpassen
+                            '<div class="p-3">' +
+                                '<div class="mb-3">' +
+                                    '<strong>Eingetragene Mitarbeiter:</strong>' +
+                                    '<ul class="mb-0">' +
+                                        mitarbeiterListe +
+                                    '</ul>' +
+                                '</div>' +
+                            '</div>' +
+                        '</td>' +
+                    '</tr>';
+
+                    // Training und Details zur Tabelle hinzufügen
+                    tableBody.append(row);
+                    tableBody.append(detailsRow);
+                });
+
+                // Event-Listener für expandierende Zeilen (Toggle für expandieren und reduzieren)
+                $('.training-row').on('click', function() {
+                    var $this = $(this);
+                    var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
+                    
+                    // Toggle die Sichtbarkeit der Details-Zeile
+                    $expandableRow.toggle(); // Toggle der Anzeige
+                });
+            }
+        });
+    }
+
+    // Funktion zum Löschen eines Trainings
+    window.deleteTraining = function(trainingId) {
+        if (confirm("Möchten Sie dieses Training wirklich löschen?")) {
+            $.ajax({
+                url: 'include/training_anmeldung.php',
+                method: 'POST',
+                data: {
+                    action: 'delete_training',
+                    training_id: trainingId
+                },
+                success: function(response) {
+                    var result = JSON.parse(response);
+                    if (result.status === 'erfolgreich') {
+                        loadTrainings(); // Trainingsliste neu laden
+                    } else {
+                        console.error('Fehler beim Löschen des Trainings:', result.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX-Fehler:', error);
+                }
+            });
+        }
+    }
+
+    // Anmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Anmelden" klickt
+    window.toggleAnmeldung = function(trainingId) {
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: {
+                action: 'anmelden',
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.status === 'angemeldet') {
+                    loadTrainings(); // Trainingsliste neu laden
+                } else {
+                    console.error('Fehler beim Anmelden:', result.error);
+                }
+            }
+        });
+    }
+
+    // Abmeldung - Diese Funktion wird aufgerufen, wenn der Benutzer auf "Abmelden" klickt
+    window.toggleAbmeldung = function(trainingId) {
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: {
+                action: 'abmelden',
+                training_id: trainingId,
+                benutzername: username // Den Benutzernamen übergeben
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.status === 'abgemeldet') {
+                    loadTrainings(); // Trainingsliste neu laden
+                } else {
+                    console.error('Fehler beim Abmelden:', result.error);
+                }
+            }
+        });
+    }
+});
+</script>
+
     
     
 

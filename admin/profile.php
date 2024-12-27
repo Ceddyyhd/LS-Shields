@@ -860,37 +860,42 @@ $("#noteForm").on("submit", function (e) {
     <form id="ausruestungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
         <?php
-        // Berechtigungsprüfung
-        $canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
+// Berechtigungsprüfung
+$canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
 
-        // Ausrüstungstypen und Benutzer-Ausrüstung abrufen
-        $stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");
-        $stmt->execute();
-        $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Ausrüstungstypen und Benutzer-Ausrüstung abrufen
+$stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");
+$stmt->execute();
+$ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
+$stmt->execute([':user_id' => $user_id]);
+$benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $conn->prepare("SELECT letzte_spind_kontrolle, notizen FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $benutzerSpind_Kontrolle = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Abrufen der letzten Spind Kontrolle und Notiz für den Benutzer
+$stmt = $conn->prepare("SELECT letzte_spind_kontrolle, notizen FROM spind_kontrolle_notizen WHERE user_id = :user_id");
+$stmt->execute([':user_id' => $user_id]);
+$benutzerSpind_Kontrolle = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Benutzer-Ausrüstung in ein Array umwandeln
-        $userAusrüstung = [];
-        foreach ($benutzerAusrüstung as $item) {
-            $userAusrüstung[$item['key_name']] = (int)$item['status'];
-        }
+// Falls keine Daten vorhanden sind, Standardwerte setzen
+$letzte_spind_kontrolle = $benutzerSpind_Kontrolle['letzte_spind_kontrolle'] ?? '';
+$notizen = $benutzerSpind_Kontrolle['notizen'] ?? '';
 
-        // Nach Kategorien gruppieren
-        $categories = [];
-        foreach ($ausruestungstypen as $item) {
-            $categories[$item['category']][] = $item;
-        }
+// Benutzer-Ausrüstung in ein Array umwandeln
+$userAusrüstung = [];
+foreach ($benutzerAusrüstung as $item) {
+    $userAusrüstung[$item['key_name']] = (int)$item['status'];
+}
 
-        // HTML-Ausgabe
-        foreach ($categories as $category => $items) {
-            ?>
+// Nach Kategorien gruppieren
+$categories = [];
+foreach ($ausruestungstypen as $item) {
+    $categories[$item['category']][] = $item;
+}
+
+// HTML-Ausgabe der Ausrüstungs-Kategorien
+foreach ($categories as $category => $items) {
+?>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
                 <div class="col-sm-10">
@@ -914,14 +919,17 @@ $("#noteForm").on("submit", function (e) {
         }
         ?>
     </form>
-    <div class="form-group">
+    <!-- Letzte Spind Kontrolle -->
+<div class="form-group">
     <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
+    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
+           value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
 </div>
+
+<!-- Notiz -->
 <div class="form-group">
     <label for="notiz">Notiz</label>
     <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
-</div>
 </div>
 
 <script>

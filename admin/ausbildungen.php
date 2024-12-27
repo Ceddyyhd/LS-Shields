@@ -155,26 +155,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 
     // Listener für den "Speichern"-Button im Modal
-    $('#saveAusbildung').click(function() {
-        const formData = new FormData(document.getElementById('createAusbildungForm'));
+    // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
+    $('#saveEditAusbildung').click(function() {
+        const formData = new FormData(document.getElementById('editAusbildungForm'));
         
         $.ajax({
-            url: 'include/create_ausbildungstyp.php',
+            url: 'include/update_ausbildungstyp.php',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
-                alert('Ausbildungstyp erfolgreich erstellt.');
-                location.reload();
+                alert('Ausbildungstyp erfolgreich bearbeitet.');
+                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
             },
-            error: function(xhr, status, error) {
-                console.error('Fehler beim Erstellen:', xhr.responseText);
-                alert('Fehler beim Erstellen des Ausbildungstyps.');
+            error: function() {
+                alert('Fehler beim Bearbeiten des Ausbildungstyps.');
             }
         });
     });
-  });
 
   // Löschen-Funktion
   function deleteAusbildungTyp(id) {

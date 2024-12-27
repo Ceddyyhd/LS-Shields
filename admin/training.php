@@ -339,7 +339,7 @@ $(document).ready(function() {
 
 
       
-
+</div>
 
     <!-- /.content -->
   </div>

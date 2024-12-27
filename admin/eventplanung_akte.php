@@ -816,7 +816,7 @@ margin: 0;
             // Über alle Mitarbeiter iterieren und für jeden Mitarbeiter ein Formular erstellen
             foreach ($employees as $employee) {
                 ?>
-                <h4><?php echo htmlspecialchars($employee['name']); ?>"(<?php echo htmlspecialchars($employee['notizen']); ?>)"</h4>
+                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
                 <div class="form-group">
                     <div class="bootstrap-timepicker">
                         <label>Maximal da bis:</label>

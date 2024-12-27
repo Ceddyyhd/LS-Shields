@@ -27,35 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Aktion: Anmelden
     if ($_POST['action'] == 'anmelden') {
-        $training_id = $_POST['training_id'];
-        $benutzername = $_SESSION['username']; // Benutzername aus der Session
-
-        // Überprüfen, ob der Benutzer bereits für das Training angemeldet ist
-        $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
-        $stmt->execute([$training_id, $benutzername]);
-        $count = $stmt->fetchColumn();
-
-        if ($count > 0) {
-            // Benutzer ist bereits angemeldet
-            echo json_encode(['status' => 'already_enrolled']);
-        } else {
-            // Benutzer für das Training anmelden
-            $stmt = $conn->prepare("INSERT INTO trainings_anmeldungen (training_id, benutzername, status) VALUES (?, ?, ?)");
-            $stmt->execute([$training_id, $benutzername, 'angemeldet']);
-            echo json_encode(['status' => 'angemeldet']);
-        }
+        // Logik für Anmeldung
     }
 
     // Aktion: Abmelden
     if ($_POST['action'] == 'abmelden') {
-        $training_id = $_POST['training_id'];
-        $benutzername = $_SESSION['username']; // Benutzername aus der Session
-
-        // Abmeldung des Benutzers vom Training
-        $stmt = $conn->prepare("DELETE FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
-        $stmt->execute([$training_id, $benutzername]);
-
-        echo json_encode(['status' => 'abgemeldet']);
+        // Logik für Abmeldung
     }
 }
 ?>

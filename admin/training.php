@@ -174,81 +174,49 @@ $(document).ready(function() {
     });
 
     // Trainings abrufen und anzeigen
+    loadTrainings(); // Direkt beim Laden der Seite
+
     function loadTrainings() {
-    $.ajax({
-        url: 'include/training_anmeldung.php',
-        method: 'POST',
-        data: { action: 'get_trainings' },
-        success: function(response) {
-            var trainings = JSON.parse(response);
-            var tableBody = $('#trainingList');
-            tableBody.empty(); // Tabelle leeren
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: { action: 'get_trainings' },
+            success: function(response) {
+                var trainings = JSON.parse(response);
+                var tableBody = $('#trainingList');
+                tableBody.empty(); // Tabelle leeren
 
-            trainings.forEach(function(training) {
-                // Hier überprüfen wir, ob der Benutzer für das Training angemeldet ist
-                var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
-                var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
-
-                // Wir nehmen an, dass `training.is_enrolled` die Information über den Anmeldestatus enthält.
-                var actionButtons = '';
-                if (training.is_enrolled) {
-                    actionButtons = abmeldenBtn; // Zeige Abmelden-Button, wenn angemeldet
-                } else {
-                    actionButtons = anmeldenBtn; // Zeige Anmelden-Button, wenn nicht angemeldet
-                }
-
-                var row = '<tr>' +
-                    '<td>' + training.id + '</td>' +
-                    '<td>' + training.datum_zeit + '</td>' +
-                    '<td>' + training.grund + '</td>' +
-                    '<td>' + training.leitung + '</td>' +
-                    '<td>' + training.info + '</td>' +
-                    '<td>' + actionButtons + '</td>' +
-                '</tr>';
-                tableBody.append(row); // Zeile zur Tabelle hinzufügen
-            });
-        }
-    });
-}
-
-// Anmeldung
-function toggleAnmeldung(trainingId) {
-    $.ajax({
-        url: 'include/training_anmeldung.php',
-        method: 'POST',
-        data: {
-            action: 'anmelden',
-            training_id: trainingId
-        },
-        success: function(response) {
-            var result = JSON.parse(response);
-            if (result.status === 'angemeldet') {
-                loadTrainings(); // Trainingsliste neu laden
-            } else {
-                console.error('Fehler beim Anmelden:', result.error);
+                trainings.forEach(function(training) {
+                    var row = '<tr>' +
+                        '<td>' + training.id + '</td>' +
+                        '<td>' + training.datum_zeit + '</td>' +
+                        '<td>' + training.grund + '</td>' +
+                        '<td>' + training.leitung + '</td>' +
+                        '<td>' + training.info + '</td>' +
+                        '<td>' +
+                            '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>' +
+                            '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>' +
+                        '</td>' +
+                    '</tr>';
+                    tableBody.append(row);
+                });
             }
-        }
-    });
-}
+        });
+    }
 
-// Abmeldung
-function toggleAbmeldung(trainingId) {
-    $.ajax({
-        url: 'include/training_anmeldung.php',
-        method: 'POST',
-        data: {
-            action: 'abmelden',
-            training_id: trainingId
-        },
-        success: function(response) {
-            var result = JSON.parse(response);
-            if (result.status === 'abgemeldet') {
-                loadTrainings(); // Trainingsliste neu laden
-            } else {
-                console.error('Fehler beim Abmelden:', result.error);
+    // Anmeldung
+    window.toggleAnmeldung = function(trainingId) {
+        $.ajax({
+            url: 'include/training_anmeldung.php',
+            method: 'POST',
+            data: {
+                action: 'anmelden',
+                training_id: trainingId
+            },
+            success: function() {
+                loadTrainings(); // Trainings neu laden
             }
-        }
-    });
+        });
     }
 
     // Abmeldung

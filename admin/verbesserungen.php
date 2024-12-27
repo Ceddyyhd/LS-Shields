@@ -202,7 +202,7 @@ function changeStatus(id, action) {
   console.log('ID:', id);  // Prüfe die ID in der Konsole
   console.log('Action:', action);  // Prüfe die Aktion in der Konsole
 
-  fetch('include/update_status.php', {
+  fetch('include/update_vorschlag_status.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

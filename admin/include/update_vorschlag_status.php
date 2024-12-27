@@ -25,19 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Den Status in der Datenbank ändern
+        // Statusänderung basierend auf der Aktion
         if ($action === 'change_status' && $vorschlag['status'] === 'Eingetroffen') {
             $newStatus = 'In Bearbeitung';
         } 
         // Den Status auf "Abgeschlossen" ändern
-        elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'in Bearbeitung') {
+        elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'In Bearbeitung') {
             $newStatus = 'Abgeschlossen';
         } else {
             echo json_encode(['success' => false, 'message' => 'Ungültige Aktion für den aktuellen Status.']);
             exit;
         }
 
-        // Debugging-Ausgabe: Zeigt die SQL-Anweisung und die Parameter an
+        // Fehlerbehandlung und Debugging - Zeigt das SQL-Statement und die Parameter an
         error_log("UPDATE verbesserungsvorschlaege SET status = :new_status WHERE id = :id");
         error_log("Parameters: new_status = $newStatus, id = $id");
 

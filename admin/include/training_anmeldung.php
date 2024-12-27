@@ -20,9 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Aktion: Trainings abrufen
     if ($_POST['action'] == 'get_trainings') {
-        $stmt = $conn->query("SELECT * FROM trainings");
-        $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($trainings);
+        try {
+            // Alle Trainings abrufen
+            $stmt = $conn->query("SELECT * FROM trainings");
+            $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Den Anmeldestatus für jedes Training hinzufügen
+            foreach ($trainings as &$training) {
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
+                $stmt->execute([$training['id'], $_SESSION['username']]);
+                $isEnrolled = $stmt->fetchColumn();
+    
+                // Füge das Anmeldestatus-Feld hinzu
+                $training['is_enrolled'] = ($isEnrolled > 0);
+            }
+    
+            // Gebe die Trainings als JSON zurück
+            echo json_encode($trainings);
+        } catch (PDOException $e) {
+            // Fehlerbehandlung
+            echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
+        }
     }
 
     // Aktion: Anmelden

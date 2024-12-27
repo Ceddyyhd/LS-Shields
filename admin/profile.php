@@ -38,11 +38,6 @@ $stmt_notes = $conn->prepare($sql_notes);
 $stmt_notes->execute(['user_id' => $user_id]);
 $notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
-// Ausbildungen abrufen
-$sql_trainings = "SELECT training_name, rating, completed FROM trainings WHERE user_id = :user_id";
-$stmt_trainings = $conn->prepare($sql_trainings);
-$stmt_trainings->execute(['user_id' => $user_id]);
-$trainings = $stmt_trainings->fetchAll(PDO::FETCH_ASSOC);
 
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name 

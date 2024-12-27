@@ -910,16 +910,6 @@ $("#noteForm").on("submit", function (e) {
         }
         ?>
     </form>
-    
-
-<div class="form-group">
-                    <label for="exampleInputEmail1">Letzte schließfach Kontrolle</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-<div class="form-group">
-                    <label for="exampleInputEmail1">Notiz zur Kontrolle</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
 </div>
 
                   <script>$("#saveButton").on("click", function () {

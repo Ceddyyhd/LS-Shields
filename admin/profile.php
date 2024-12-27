@@ -911,26 +911,35 @@ $("#noteForm").on("submit", function (e) {
         ?>
     </form>
     <div class="form-group">
-                        <label>Letzte Spind kontrolle</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
-                      <div class="form-group">
-                        <label>Notiz</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                      </div>
+    <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
+    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" placeholder="Datum der letzten Kontrolle">
+</div>
+<div class="form-group">
+    <label for="notiz">Notiz</label>
+    <input type="text" class="form-control" id="notiz" name="notiz" placeholder="Geben Sie eine Notiz ein">
+</div>
 </div>
 
-                  <script>$("#saveButton").on("click", function () {
+<script>
+    $("#saveButton").on("click", function () {
     var formData = $("#ausruestungForm").serialize();
 
+    // Füge zusätzliche Felder hinzu (letzte Spind Kontrolle und Notiz)
+    var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
+    var notiz = $('#notiz').val();
+
+    // Zusätzliche Daten in formData einfügen
+    formData += '&letzte_spind_kontrolle=' + encodeURIComponent(letzteSpindKontrolle);
+    formData += '&notiz=' + encodeURIComponent(notiz);
+
     $.ajax({
-        url: "include/save_ausruestung.php",
+        url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
         type: "POST",
         data: formData,
         success: function (response) {
             if (response.success) {
                 alert("Änderungen gespeichert.");
-                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+                location.reload();  // Seite neu laden, um Änderungen anzuzeigen
             } else {
                 alert("Fehler: " + response.message);
             }

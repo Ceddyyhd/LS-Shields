@@ -42,7 +42,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-            <img class="profile-user-img img-fluid img-circle" src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="User profile picture">
+                <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>

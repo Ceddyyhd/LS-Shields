@@ -173,7 +173,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <td>${ausbildung.display_name}</td>
                             <td>${ausbildung.description}</td>
                             <td>
-                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_update ']) && $_SESSION['permissions']['ausbildungstyp_update ']): ?>
+                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_update']) && $_SESSION['permissions']['ausbildungstyp_update']): ?>
                             <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
                           <?php endif; ?>
                           <?php if (isset($_SESSION['permissions']['ausbildungstyp_remove']) && $_SESSION['permissions']['ausbildungstyp_remove']): ?>

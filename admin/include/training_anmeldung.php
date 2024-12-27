@@ -32,17 +32,21 @@ if ($_POST['action'] == 'get_trainings') {
 
         // Den Anmeldestatus und die Mitarbeiter für jedes Training hinzufügen
         foreach ($trainings as &$training) {
+            // Abfrage für den Anmeldestatus
             $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
             $stmt->execute([$training['id'], $_SESSION['username']]);
             $isEnrolled = $stmt->fetchColumn();
 
-            // Füge das Anmeldestatus-Feld hinzu
+            // Anmeldestatus hinzufügen
             $training['is_enrolled'] = ($isEnrolled > 0);
 
-            // Mitarbeiter für dieses Training abrufen
-            $stmt = $conn->prepare("SELECT name FROM mitarbeiter WHERE training_id = ?");
+            // Mitarbeiter für dieses Training abrufen (Benutzernamen aus der `trainings_anmeldungen`-Tabelle)
+            $stmt = $conn->prepare("SELECT benutzername FROM trainings_anmeldungen WHERE training_id = ?");
             $stmt->execute([$training['id']]);
-            $training['mitarbeiter'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Die Benutzernamen der Mitarbeiter hinzufügen
+            $training['mitarbeiter'] = $mitarbeiter;
         }
 
         // Gebe die Trainings als JSON zurück

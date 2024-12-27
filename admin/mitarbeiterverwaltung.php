@@ -217,7 +217,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
   $(document).ready(function () {
     $.ajax({
-    url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users.php',
+    url: 'include/fetch_users.php',
     type: 'POST',
     dataType: 'json',
     success: function (data) {

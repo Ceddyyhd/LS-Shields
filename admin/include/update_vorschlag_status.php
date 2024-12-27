@@ -27,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Statusänderung basierend auf der Aktion
         if ($action === 'change_status' && $vorschlag['status'] === 'Eingetroffen') {
-            $newStatus = 'In Bearbeitung';
+            $newStatus = 'in Bearbeitung';
         } 
         // Den Status auf "Abgeschlossen" ändern
-        elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'In Bearbeitung') {
+        elseif ($action === 'move_to_eventplanung' && $vorschlag['status'] === 'in Bearbeitung') {
             $newStatus = 'Abgeschlossen';
         } else {
             echo json_encode(['success' => false, 'message' => 'Ungültige Aktion für den aktuellen Status.']);

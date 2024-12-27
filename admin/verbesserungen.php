@@ -73,7 +73,7 @@ include 'include/db.php';
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveSuggestionBtn">Speichern</button>
+                <button type="button" class="btn btn-primary" id="saveRequestBtn">Speichern</button>
             </div>
         </div>
     </div>
@@ -81,8 +81,8 @@ include 'include/db.php';
 
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
-    document.getElementById('saveSuggestionBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('saveSuggestionBtn'));
+    document.getElementById('saveRequestBtn').addEventListener('click', function() {
+        const formData = new FormData(document.getElementById('saveRequestBtn'));
 
         // Überprüfe, ob alle Felder ausgefüllt sind
         if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {

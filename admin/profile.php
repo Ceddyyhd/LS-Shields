@@ -444,15 +444,6 @@ $waffenschein_type = $result['waffenschein_type'] ?? 'none'; // Standardwert 'no
     </div>
 </div>
 
-<div class="form-group">
-                    <label for="exampleInputEmail1">Letzte schließfach Kontrolle</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-<div class="form-group">
-                    <label for="exampleInputEmail1">Notiz zur Kontrolle</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-
         <!-- Weitere Dokumente -->
         <script>
 $(document).ready(function () {
@@ -915,6 +906,16 @@ $("#noteForm").on("submit", function (e) {
                     <?php endforeach; ?>
                 </div>
             </div>
+            
+
+<div class="form-group">
+                    <label for="exampleInputEmail1">Letzte schließfach Kontrolle</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
+<div class="form-group">
+                    <label for="exampleInputEmail1">Notiz zur Kontrolle</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  </div>
             <?php
         }
         ?>

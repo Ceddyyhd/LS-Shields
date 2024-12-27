@@ -1,39 +1,44 @@
 <?php
-include 'db.php';
-session_start();
+include 'db.php'; // Datenbankverbindung
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $vorschlag = $_POST['vorschlag'] ?? null;
-    $status = $_POST['status'] ?? 'Eingetroffen';  // Standardstatus "Eingetroffen"
-    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';  // Benutzernamen aus der Session holen
+session_start(); // Sitzung starten
 
-    // Berechtigungsprüfung
-    if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
-        echo json_encode(['success' => false, 'message' => 'Keine Berechtigung, Vorschläge zu erstellen.']);
-        exit;
-    }
+if (!isset($_SESSION['username'])) {
+    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
+    exit;
+}
 
-    if (!$vorschlag) {
-        echo json_encode(['success' => false, 'message' => 'Bitte den Vorschlag ausfüllen.']);
-        exit;
-    }
+// Benutzernamen aus der Session holen
+$erstellt_von = $_SESSION['username'];
 
-    try {
-        // Eintrag in die Datenbank erstellen
-        // Hier setzen wir 'name' mit dem Wert von 'erstellt_von', wenn 'name' nicht entfernt werden kann.
-        $stmt = $conn->prepare("INSERT INTO verbesserungsvorschlaege (name, vorschlag, status, erstellt_von) 
-                                VALUES (:name, :vorschlag, :status, :erstellt_von)");
-        $stmt->execute([
-            ':name' => $erstellt_von,  // Setze 'name' auf 'erstellt_von'
-            ':vorschlag' => $vorschlag,
-            ':status' => $status,
-            ':erstellt_von' => $erstellt_von
-        ]);
+// Formulardaten auslesen
+$name = $_POST['name'] ?? '';
+$anfrage = $_POST['anfrage'] ?? '';
+$status = 'Eingetroffen'; // Standardstatus
+$datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
-        // Erfolgreiche Antwort zurückgeben
-        echo json_encode(['success' => true, 'message' => 'Verbesserungsvorschlag erfolgreich erstellt.']);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Erstellen: ' . $e->getMessage()]);
-    }
+// Validierung der Formulardaten
+if (empty($name) || empty($nummer) || empty($anfrage)) {
+    echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
+    exit;
+}
+
+try {
+    // SQL zum Einfügen der Anfrage in die Datenbank
+    $sql = "INSERT INTO verbesserungsvorschlaege (vorname_nachname,, anfrage, datum_uhrzeit, status, erstellt_von)
+            VALUES (:name, :anfrage, :datum_uhrzeit, :status, :erstellt_von)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        ':name' => $name,
+        ':anfrage' => $anfrage,
+        ':datum_uhrzeit' => $datum_uhrzeit,
+        ':status' => $status,
+        ':erstellt_von' => $erstellt_von, // Der Benutzername wird hier gespeichert
+    ]);
+
+    echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 ?>

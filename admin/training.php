@@ -205,7 +205,7 @@ $(document).ready(function() {
                 }
 
                 // Zeile für das Training
-                var row = '<tr data-widget="expandable-table" aria-expanded="false" class="training-row">' +
+                var row = '<tr class="training-row" data-widget="expandable-table" aria-expanded="false">' +
                     '<td>' + training.id + '</td>' +
                     '<td>' + training.datum_zeit + '</td>' +
                     '<td>' + training.grund + '</td>' +
@@ -243,11 +243,13 @@ $(document).ready(function() {
             $('.training-row').on('click', function() {
                 var $this = $(this);
                 var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
-                var isExpanded = $this.attr('aria-expanded') === 'true';
 
                 // Toggle die Sichtbarkeit der Details
-                $expandableRow.toggle();
-                $this.attr('aria-expanded', !isExpanded);  // Toggle den expandierten Status
+                $expandableRow.toggle();  // Wechselt zwischen `display:none` und `display:block`
+
+                // Toggle den expandierten Status (True/False)
+                var isExpanded = $this.attr('aria-expanded') === 'true';
+                $this.attr('aria-expanded', !isExpanded);  // Setzt den Status auf true/false
             });
         }
     });

@@ -40,9 +40,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        // Benutzername des Bearbeiters aus der Session holen
+        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
+
         // Status in der Datenbank aktualisieren
         $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET status = :status WHERE id = :id");
         $stmt->execute([':status' => $newStatus, ':id' => $id]);
+
+        // Log für die Änderung
+        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
+                                VALUES (:user_id, :editor_name, :action)");
+        $stmt->execute([
+            ':user_id' => $id,
+            ':editor_name' => $editor_name,
+            ':action' => 'Status geändert'
+        ]);
 
         // Erfolgreiche Antwort zurückgeben
         echo json_encode(['success' => true, 'message' => 'Status erfolgreich geändert.']);

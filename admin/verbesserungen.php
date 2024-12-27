@@ -199,6 +199,9 @@ include 'include/db.php';
 
 <script>
 function changeStatus(id, action) {
+  console.log('ID:', id);  // Prüfe die ID in der Konsole
+  console.log('Action:', action);  // Prüfe die Aktion in der Konsole
+
   fetch('include/update_status.php', {
     method: 'POST',
     headers: {
@@ -209,17 +212,17 @@ function changeStatus(id, action) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
+        // Erfolgreiche Statusänderung
+        console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
         if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status auf "In Bearbeitung" ändern
+          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
           document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
+            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`;
         } else if (action === 'move_to_eventplanung') {
-          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status auf "Abgeschlossen" ändern
-          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove(); // Anfrage entfernen
-          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove(); // Details entfernen
+          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
         }
       } else {
-        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
+        alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
       }
     })
     .catch((error) => {

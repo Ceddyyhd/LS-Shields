@@ -216,9 +216,11 @@ $(document).ready(function() {
 
                 // Dynamisch die eingetragenen Mitarbeiter abrufen (aus der `mitarbeiter`-Eigenschaft)
                 var mitarbeiterListe = '';
-                training.mitarbeiter.forEach(function(mitarbeiter) {
-                    mitarbeiterListe += '<li>' + mitarbeiter.benutzername + '</li>';
-                });
+                if (training.mitarbeiter) {
+                    training.mitarbeiter.forEach(function(mitarbeiter) {
+                        mitarbeiterListe += '<li>' + mitarbeiter.benutzername + '</li>';
+                    });
+                }
 
                 // Zeile für die Details, die initial verborgen ist
                 var detailsRow = '<tr class="expandable-body" style="display:none;">' +
@@ -244,12 +246,12 @@ $(document).ready(function() {
                 var $this = $(this);
                 var $expandableRow = $this.next('.expandable-body');  // Nächste Zeile, die die Details enthält
 
-                // Toggle die Sichtbarkeit der Details
-                $expandableRow.toggle();  // Wechselt zwischen `display:none` und `display:block`
-
-                // Toggle den expandierten Status (True/False)
+                // Überprüfen, ob die Details-Zeile sichtbar ist oder nicht
                 var isExpanded = $this.attr('aria-expanded') === 'true';
-                $this.attr('aria-expanded', !isExpanded);  // Setzt den Status auf true/false
+
+                // Toggle die Sichtbarkeit der Details-Zeile
+                $expandableRow.toggle();
+                $this.attr('aria-expanded', !isExpanded);  // Toggle den expandierten Status (True/False)
             });
         }
     });

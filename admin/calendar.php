@@ -24,13 +24,14 @@
 <?php
 include 'include/db.php'; // Datenbankverbindung einbinden
 
-// SQL-Abfrage, um den Namen des Mitarbeiters und das Eventdatum zu holen
+// SQL-Abfrage, um den Namen des Mitarbeiters, das Urlaubsdatum und anstehende Ereignisse zu holen
 $query = "
     SELECT v.start_date, v.end_date, v.status, u.name, e.datum_uhrzeit_event
     FROM vacations v
     JOIN users u ON v.user_id = u.id
-    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Beziehung zwischen vacation und eventplanung
-    WHERE v.status IN ('approved', 'pending')
+    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Beziehung zwischen Urlaub und Event
+    WHERE v.status IN ('approved', 'pending') 
+    OR e.datum_uhrzeit_event IS NOT NULL -- Alle anstehenden Events
 ";
 
 $stmt = $conn->prepare($query);
@@ -40,21 +41,27 @@ $stmt->execute();
 $events = [];
 
 while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // Setze die Hintergrundfarbe basierend auf dem Status
+    // Setze die Hintergrundfarbe basierend auf dem Status der Vacation
     $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
     $borderColor     = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
 
     // Bestimme den Event-Titel basierend auf dem Vorhandensein von datum_uhrzeit_event
     if (!empty($vacation['datum_uhrzeit_event'])) {
-        $eventTitle = 'Event: ' . htmlspecialchars($vacation['datum_uhrzeit_event']); // Eventtitel aus der DB
+        // Wenn ein anstehendes Event in der eventplanung vorhanden ist
+        $eventTitle = 'Event: ' . htmlspecialchars($vacation['datum_uhrzeit_event']);
+        $startDate = $vacation['start_date'];
+        $endDate = date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day'));
     } else {
-        $eventTitle = 'Event: in Planung'; // Wenn kein Event-Datum vorhanden ist
+        // Wenn kein anstehendes Event vorhanden ist, nur der Urlaub wird angezeigt
+        $eventTitle = 'Urlaub - ' . htmlspecialchars($vacation['name']);
+        $startDate = $vacation['start_date'];
+        $endDate = date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day'));
     }
 
     $events[] = [
-        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']) . ' - ' . $eventTitle, // Titel: Urlaub - Mitarbeiter Name + Event
-        'start' => $vacation['start_date'],
-        'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
+        'title' => $eventTitle, // Titel: Urlaub - Mitarbeiter Name + Event
+        'start' => $startDate,
+        'end'   => $endDate,
         'backgroundColor' => $backgroundColor,  // Farbe für "approved" oder "pending"
         'borderColor'     => $borderColor,     // Randfarbe gleich der Hintergrundfarbe
     ];

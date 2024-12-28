@@ -24,14 +24,12 @@
 <?php
 include 'include/db.php'; // Datenbankverbindung einbinden
 
-// SQL-Abfrage, um den Namen des Mitarbeiters, das Urlaubsdatum und anstehende Ereignisse zu holen
+// SQL-Abfrage, um den Namen des Mitarbeiters zu holen
 $query = "
-    SELECT v.start_date, v.end_date, v.status, u.name, e.datum_uhrzeit_event
+    SELECT v.start_date, v.end_date, v.status, u.name 
     FROM vacations v
     JOIN users u ON v.user_id = u.id
-    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Beziehung zwischen Urlaub und Event
-    WHERE v.status IN ('approved', 'pending') 
-    OR e.datum_uhrzeit_event IS NOT NULL -- Alle anstehenden Events
+    WHERE v.status IN ('approved', 'pending')
 ";
 
 $stmt = $conn->prepare($query);
@@ -41,27 +39,14 @@ $stmt->execute();
 $events = [];
 
 while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // Setze die Hintergrundfarbe basierend auf dem Status der Vacation
+    // Setze die Hintergrundfarbe basierend auf dem Status
     $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
-    $borderColor     = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
-
-    // Bestimme den Event-Titel basierend auf dem Vorhandensein von datum_uhrzeit_event
-    if (!empty($vacation['datum_uhrzeit_event'])) {
-        // Wenn ein anstehendes Event in der eventplanung vorhanden ist
-        $eventTitle = 'Event: ' . htmlspecialchars($vacation['datum_uhrzeit_event']);
-        $startDate = $vacation['start_date'];
-        $endDate = date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day'));
-    } else {
-        // Wenn kein anstehendes Event vorhanden ist, nur der Urlaub wird angezeigt
-        $eventTitle = 'Urlaub - ' . htmlspecialchars($vacation['name']);
-        $startDate = $vacation['start_date'];
-        $endDate = date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day'));
-    }
+    $borderColor     = $backgroundColor; // Border-Farbe gleich der Hintergrundfarbe
 
     $events[] = [
-        'title' => $eventTitle, // Titel: Urlaub - Mitarbeiter Name + Event
-        'start' => $startDate,
-        'end'   => $endDate,
+        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']), // Titel: Urlaub - Mitarbeiter Name
+        'start' => $vacation['start_date'],
+        'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
         'backgroundColor' => $backgroundColor,  // Farbe für "approved" oder "pending"
         'borderColor'     => $borderColor,     // Randfarbe gleich der Hintergrundfarbe
     ];
@@ -112,41 +97,36 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 <script>
   document.getElementById('submitVacation').addEventListener('click', function () {
-    var start_date = document.getElementById('start_date');
-    var end_date = document.getElementById('end_date');
-    
-    // Überprüfe, ob die Elemente existieren
-    if (start_date && end_date) {
-        var start_date_value = start_date.value;
-        var end_date_value = end_date.value;
+  var name = document.getElementById('name').value;
+  var start_date = document.getElementById('start_date').value;
+  var end_date = document.getElementById('end_date').value;
 
-        if (start_date_value && end_date_value) {
-            var formData = new FormData();
-            formData.append('start_date', start_date_value);
-            formData.append('end_date', end_date_value);
+  if (name && start_date && end_date) {
+    var formData = new FormData();
+    formData.append('name', name);
+    formData.append('start_date', start_date);
+    formData.append('end_date', end_date);
 
-            // AJAX-Anfrage, um den Urlaub zu speichern
-            fetch('include/vacation_create.php', {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Urlaub erfolgreich erstellt!');
-                } else {
-                    alert('Fehler: ' + data.message);
-                }
-            })
-            .catch(error => {
-                alert('Fehler: ' + error.message);
-            });
-        } else {
-            alert('Bitte füllen Sie alle Felder aus!');
-        }
-    } else {
-        console.error('Start- oder End-Datum-Element fehlt!');
-    }
+    // AJAX-Anfrage, um den Urlaub zu speichern
+    fetch('include/vacation_create.php', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Urlaub erfolgreich erstellt!');
+        // Optional: Formular zurücksetzen oder etwas anderes tun
+      } else {
+        alert('Fehler: ' + data.message);
+      }
+    })
+    .catch(error => {
+      alert('Fehler: ' + error.message);
+    });
+  } else {
+    alert('Bitte füllen Sie alle Felder aus!');
+  }
 });
 </script>
           <!-- /.col -->

@@ -33,7 +33,7 @@ $query = "
     UNION
     SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event as event, e.datum_uhrzeit_event
     FROM eventplanung e
-    JOIN users u ON e.event_lead = u.id  -- Verknüpfen über die Spalte event_lead
+    JOIN users u ON e.event_lead = u.id
     WHERE e.datum_uhrzeit_event IS NOT NULL
 ";
 
@@ -46,17 +46,24 @@ $events = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Wenn es sich um ein Event handelt (aus der eventplanung-Tabelle)
     if ($row['datum_uhrzeit_event'] !== null) {
-        $eventTitle = !empty($row['event']) ? 'Event: ' . htmlspecialchars($row['event']) : 'Event: in Planung';
-        $startDate = $row['datum_uhrzeit_event'];
-        $endDate = $row['datum_uhrzeit_event']; // Da kein Enddatum vorhanden, verwenden wir das Startdatum
+        // Formatierung für deutsche Zeit: 5p 17 Uhr
+        $startDate = new DateTime($row['datum_uhrzeit_event']);
+        $startFormatted = $startDate->format('G') . 'p ' . $startDate->format('H') . ' Uhr'; // "5p 17 Uhr"
+        
+        $endDate = $startFormatted; // Endzeit gleich Startzeit
 
+        $eventTitle = !empty($row['event']) ? 'Event: ' . htmlspecialchars($row['event']) : 'Event: in Planung';
         $backgroundColor = '#3498db'; // Blau für Event
         $borderColor = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
     } else {
         // Wenn es sich um einen Urlaub handelt (aus der vacations-Tabelle)
         $eventTitle = 'Urlaub - ' . htmlspecialchars($row['name']);
-        $startDate = $row['start_date'];
-        $endDate = date('Y-m-d', strtotime($row['end_date'] . ' +1 day')); // Enddatum um einen Tag erhöhen
+        $startDate = new DateTime($row['start_date']);
+        $endDate = new DateTime($row['end_date']);
+        $endDate->modify('+1 day'); // Enddatum um einen Tag erhöhen
+
+        $startFormatted = $startDate->format('d.m.Y H:i');
+        $endFormatted = $endDate->format('d.m.Y H:i');
 
         $backgroundColor = ($row['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
         $borderColor = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
@@ -64,8 +71,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $events[] = [
         'title' => $eventTitle,
-        'start' => $startDate,
-        'end' => $endDate,
+        'start' => $startFormatted,
+        'end' => $endFormatted,
         'backgroundColor' => $backgroundColor,
         'borderColor' => $borderColor,
     ];

@@ -88,7 +88,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
+<!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-edit">
     <div class="modal-dialog">
         <div class="modal-content">

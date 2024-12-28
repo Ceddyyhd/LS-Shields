@@ -82,7 +82,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveAusruestung">Speichern</button>
+                <button type="button" class="btn btn-primary" id="saveEditAusruestung">Speichern</button>
             </div>
         </div>
     </div>

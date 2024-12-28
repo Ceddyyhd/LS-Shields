@@ -24,11 +24,12 @@
 <?php
 include 'include/db.php'; // Datenbankverbindung einbinden
 
-// SQL-Abfrage, um den Namen des Mitarbeiters zu holen
+// SQL-Abfrage, um den Namen des Mitarbeiters und das Eventdatum zu holen
 $query = "
-    SELECT v.start_date, v.end_date, v.status, u.name 
+    SELECT v.start_date, v.end_date, v.status, u.name, e.datum_uhrzeit_event
     FROM vacations v
     JOIN users u ON v.user_id = u.id
+    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Angenommen, es gibt eine Beziehung zwischen user_id und eventplanung
     WHERE v.status IN ('approved', 'pending')
 ";
 
@@ -43,8 +44,15 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
     $borderColor     = $backgroundColor; // Border-Farbe gleich der Hintergrundfarbe
 
+    // Bestimme den Event-Titel basierend auf dem Vorhandensein von datum_uhrzeit_event
+    if (!empty($vacation['datum_uhrzeit_event'])) {
+        $eventTitle = 'Event: ' . htmlspecialchars($vacation['datum_uhrzeit_event']); // Eventtitel aus der DB
+    } else {
+        $eventTitle = 'Event: in Planung'; // Wenn kein Event-Datum vorhanden ist
+    }
+
     $events[] = [
-        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']), // Titel: Urlaub - Mitarbeiter Name
+        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']) . ' - ' . $eventTitle, // Titel: Urlaub - Mitarbeiter Name + Event
         'start' => $vacation['start_date'],
         'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
         'backgroundColor' => $backgroundColor,  // Farbe für "approved" oder "pending"

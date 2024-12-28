@@ -259,7 +259,26 @@ $(document).on('click', '.btn-outline-secondary', function() {
         }
     });
 });
+// Wenn der "Speichern"-Button im Erstell Modal geklickt wird
+$('#saveAusruestung').click(function() {
+        const formData = new FormData(document.getElementById('createAusruestungForm'));
 
+        $.ajax({
+            url: 'include/create_ausruestungstyp.php', // URL zum Speichern des neuen Ausrüstungstyps
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('Ausrüstungstyp erfolgreich erstellt.');
+                location.reload(); // Seite neu laden, um die neue Ausrüstung anzuzeigen
+            },
+            error: function(xhr, status, error) {
+                console.error('Fehler beim Erstellen:', error);
+                alert('Fehler beim Erstellen des Ausrüstungstyps.');
+            }
+    });
+});
 // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
 $('#saveEditAusruestung').click(function() {
     const formData = new FormData(document.getElementById('editAusruestungForm'));

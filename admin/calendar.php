@@ -26,12 +26,12 @@ include 'include/db.php'; // Datenbankverbindung einbinden
 
 // SQL-Abfrage, um die Urlaubs- und Eventdaten zu holen
 $query = "
-    SELECT v.start_date, v.end_date, v.status, u.name, NULL as event, NULL as datum_uhrzeit_event
+    SELECT v.start_date, v.end_date, v.status, u.name, NULL as event, NULL as datum_uhrzeit_event, NULL as event_id
     FROM vacations v
     JOIN users u ON v.user_id = u.id
     WHERE v.status IN ('approved', 'pending')
     UNION
-    SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event as event, e.datum_uhrzeit_event
+    SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event as event, e.datum_uhrzeit_event, e.id as event_id
     FROM eventplanung e
     JOIN users u ON e.event_lead = u.id  -- Verknüpfen über die Spalte event_lead
     WHERE e.datum_uhrzeit_event IS NOT NULL
@@ -52,6 +52,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         $backgroundColor = '#3498db'; // Blau für Event
         $borderColor = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
+
+        // URL für das Event (Verlinkung zur Detailseite)
+        $eventLink = 'eventplanung_akte.php?id=' . $row['event_id'];
     } else {
         // Wenn es sich um einen Urlaub handelt (aus der vacations-Tabelle)
         $eventTitle = 'Urlaub - ' . htmlspecialchars($row['name']);
@@ -60,14 +63,19 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         $backgroundColor = ($row['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
         $borderColor = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
+
+        // URL für das Event (verlinkt auf die Urlaubsseite, falls gewünscht)
+        $eventLink = '#'; // Optional: Hier könnte eine andere URL für den Urlaub hinzugefügt werden
     }
 
+    // Füge die URL als weiteres Feld hinzu
     $events[] = [
         'title' => $eventTitle,
         'start' => $startDate,
         'end' => $endDate,
         'backgroundColor' => $backgroundColor,
         'borderColor' => $borderColor,
+        'url' => $eventLink, // Der Link zur Detailseite des Events
     ];
 }
 

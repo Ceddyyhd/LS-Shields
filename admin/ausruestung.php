@@ -164,9 +164,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Dein JavaScript -->
 <script>
   $(document).ready(function() {
-    // AJAX-Anfrage zum Abrufen der Ausbildungstypen direkt beim Laden der Seite
+    // AJAX-Anfrage zum Abrufen der Ausrüstungstypen direkt beim Laden der Seite
     $.ajax({
-        url: 'include/fetch_ausbildungstypen.php', // URL für das Abrufen der Daten
+        url: 'include/fetch_ausruestungstypen.php', // URL für das Abrufen der Daten
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -177,101 +177,101 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 tableBody.empty(); // Leere das Tabellenbody, bevor neue Daten hinzugefügt werden
 
                 // Daten durchlaufen und in die Tabelle einfügen
-                data.forEach(function(ausbildung) {
+                data.forEach(function(ausruestung) {
                     tableBody.append(`
                         <tr>
-                            <td>${ausbildung.id}</td>
-                            <td>${ausbildung.key_name}</td>
-                            <td>${ausbildung.display_name}</td>
-                            <td>${ausbildung.description}</td>
+                            <td>${ausruestung.id}</td>
+                            <td>${ausruestung.key_name}</td>
+                            <td>${ausruestung.display_name}</td>
+                            <td>${ausruestung.description}</td>
                             <td>
                               <!-- Bearbeiten-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
-                              ${ausbildung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausbildung.id + '">Bearbeiten</button>' : ''}
+                              ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '">Bearbeiten</button>' : ''}
                               <!-- Löschen-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
-                              ${ausbildung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(' + ausbildung.id + ')">Löschen</button>' : ''}
+                              ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
                             </td>
                         </tr>
                     `);
                 });
             } else {
-                alert('Keine Ausbildungstypen gefunden.');
+                alert('Keine Ausrüstungstypen gefunden.');
             }
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error); // Fehlerlog
-            alert('Fehler beim Abrufen der Ausbildungstypen.');
+            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error); // Fehlerlog
+            alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
     });
 });
 
 // Wenn der Bearbeiten-Button geklickt wird
 $(document).on('click', '.btn-outline-secondary', function() {
-    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausbildungstyps
+    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausrüstungstyps
     
-    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+    // AJAX-Anfrage, um die Daten des Ausrüstungstyps abzurufen
     $.ajax({
-        url: 'include/fetch_ausbildungstypen.php',
+        url: 'include/fetch_ausruestungstypen.php',
         type: 'GET',
         data: { id: id },
         dataType: 'json',
         success: function(data) {
             if (data && data.length > 0) {
-                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+                const ausruestung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
 
-                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
-                $('#edit_id').val(ausbildung.id); // ID in hidden input
-                $('#edit_key_name').val(ausbildung.key_name); // Key Name
-                $('#edit_display_name').val(ausbildung.display_name); // Display Name
-                $('#edit_description').val(ausbildung.description); // Beschreibung
+                // Setze die Modal-Felder mit den Daten des Ausrüstungstyps
+                $('#edit_id').val(ausruestung.id); // ID in hidden input
+                $('#edit_key_name').val(ausruestung.key_name); // Key Name
+                $('#edit_display_name').val(ausruestung.display_name); // Display Name
+                $('#edit_description').val(ausruestung.description); // Beschreibung
                 
                 // Zeige das Bearbeitungsmodal an
-                $('#modal-ausbildung-edit').modal('show');
+                $('#modal-ausruestung-edit').modal('show');
             } else {
                 alert('Daten konnten nicht geladen werden.');
             }
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
-            alert('Fehler beim Abrufen der Ausbildungstypen.');
+            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error);
+            alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
     });
 });
 
 // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
-$('#saveEditAusbildung').click(function() {
-    const formData = new FormData(document.getElementById('editAusbildungForm'));
+$('#saveEditAusruestung').click(function() {
+    const formData = new FormData(document.getElementById('editAusruestungForm'));
 
     $.ajax({
-        url: 'include/update_ausbildungstyp.php',
+        url: 'include/update_ausruestungstyp.php',
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function(response) {
-            alert('Ausbildungstyp erfolgreich bearbeitet.');
+            alert('Ausrüstungstyp erfolgreich bearbeitet.');
             location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
         },
         error: function(xhr, status, error) {
             console.error('Fehler beim Bearbeiten:', error);
-            alert('Fehler beim Bearbeiten des Ausbildungstyps.');
+            alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
         }
     });
 });
 
 // Löschen-Funktion
-function deleteAusbildungTyp(id) {
-    if (confirm('Möchten Sie diesen Ausbildungstyp wirklich löschen? (Er wird archiviert)')) {
+function deleteAusruestungTyp(id) {
+    if (confirm('Möchten Sie diesen Ausrüstungstyp wirklich löschen? (Er wird archiviert)')) {
         $.ajax({
-            url: 'include/delete_ausbildungstyp.php',
+            url: 'include/delete_ausruestungstyp.php',
             type: 'POST',
             data: { id: id },
             success: function(response) {
-                alert('Ausbildungstyp archiviert');
+                alert('Ausrüstungstyp archiviert');
                 location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
             },
             error: function(xhr, status, error) {
                 console.error('Fehler beim Archivieren:', xhr.responseText);
-                alert('Fehler beim Archivieren des Ausbildungstyps.');
+                alert('Fehler beim Archivieren des Ausrüstungstyps.');
             }
         });
     }

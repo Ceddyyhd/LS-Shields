@@ -21,17 +21,15 @@
 
 <?php include 'include/navbar.php'; ?>
 
-
-
 <?php
 include 'include/db.php'; // Datenbankverbindung einbinden
 
-// SQL-Abfrage, um die anstehenden Events zu holen
+// SQL-Abfrage, um den Namen des Mitarbeiters zu holen
 $query = "
-    SELECT e.datum_uhrzeit_event, e.event_name, u.name
-    FROM eventplanung e
-    JOIN users u ON e.user_id = u.id
-    WHERE e.datum_uhrzeit_event IS NOT NULL
+    SELECT v.start_date, v.end_date, v.status, u.name 
+    FROM vacations v
+    JOIN users u ON v.user_id = u.id
+    WHERE v.status IN ('approved', 'pending')
 ";
 
 $stmt = $conn->prepare($query);
@@ -40,22 +38,23 @@ $stmt->execute();
 // Array für die Events
 $events = [];
 
-while ($event = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // Setze die Hintergrundfarbe für das Event (optional, je nach Status des Events)
-    $backgroundColor = '#3498db'; // Beispiel: Blau für das Event
-    $borderColor     = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
+while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    // Setze die Hintergrundfarbe basierend auf dem Status
+    $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
+    $borderColor     = $backgroundColor; // Border-Farbe gleich der Hintergrundfarbe
 
     $events[] = [
-        'title' => 'Event: ' . htmlspecialchars($event['event_name']) . ' - ' . htmlspecialchars($event['name']), // Titel: Event Name - Mitarbeiter Name
-        'start' => $event['datum_uhrzeit_event'],
-        'end'   => $event['datum_uhrzeit_event'], // Setze Ende gleich dem Start, falls keine Dauer angegeben ist
-        'backgroundColor' => $backgroundColor,  // Hintergrundfarbe des Events
-        'borderColor'     => $borderColor,     // Randfarbe des Events
+        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']), // Titel: Urlaub - Mitarbeiter Name
+        'start' => $vacation['start_date'],
+        'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
+        'backgroundColor' => $backgroundColor,  // Farbe für "approved" oder "pending"
+        'borderColor'     => $borderColor,     // Randfarbe gleich der Hintergrundfarbe
     ];
 }
 
 // Hier kannst du das Array $events weiterverwenden, um es in den Kalender zu laden
 ?>
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->

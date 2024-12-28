@@ -21,39 +21,7 @@
 
 <?php include 'include/navbar.php'; ?>
 
-<?php
-include 'include/db.php'; // Datenbankverbindung einbinden
 
-// SQL-Abfrage, um den Namen des Mitarbeiters zu holen
-$query = "
-    SELECT v.start_date, v.end_date, v.status, u.name 
-    FROM vacations v
-    JOIN users u ON v.user_id = u.id
-    WHERE v.status IN ('approved', 'pending')
-";
-
-$stmt = $conn->prepare($query);
-$stmt->execute();
-
-// Array für die Events
-$events = [];
-
-while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // Setze die Hintergrundfarbe basierend auf dem Status
-    $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
-    $borderColor     = $backgroundColor; // Border-Farbe gleich der Hintergrundfarbe
-
-    $events[] = [
-        'title' => 'Urlaub - ' . htmlspecialchars($vacation['name']), // Titel: Urlaub - Mitarbeiter Name
-        'start' => $vacation['start_date'],
-        'end'   => date('Y-m-d', strtotime($vacation['end_date'] . ' +1 day')), // Enddatum um einen Tag erhöhen
-        'backgroundColor' => $backgroundColor,  // Farbe für "approved" oder "pending"
-        'borderColor'     => $borderColor,     // Randfarbe gleich der Hintergrundfarbe
-    ];
-}
-
-// Hier kannst du das Array $events weiterverwenden, um es in den Kalender zu laden
-?>
 
 <?php
 include 'include/db.php'; // Datenbankverbindung einbinden

@@ -29,7 +29,7 @@ $query = "
     SELECT v.start_date, v.end_date, v.status, u.name, e.datum_uhrzeit_event
     FROM vacations v
     JOIN users u ON v.user_id = u.id
-    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Angenommen, es gibt eine Beziehung zwischen user_id und eventplanung
+    LEFT JOIN eventplanung e ON v.user_id = e.user_id -- Beziehung zwischen vacation und eventplanung
     WHERE v.status IN ('approved', 'pending')
 ";
 
@@ -42,7 +42,7 @@ $events = [];
 while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Setze die Hintergrundfarbe basierend auf dem Status
     $backgroundColor = ($vacation['status'] === 'approved') ? '#00a65a' : '#f39c12'; // Grün für 'approved', Gelb für 'pending'
-    $borderColor     = $backgroundColor; // Border-Farbe gleich der Hintergrundfarbe
+    $borderColor     = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
 
     // Bestimme den Event-Titel basierend auf dem Vorhandensein von datum_uhrzeit_event
     if (!empty($vacation['datum_uhrzeit_event'])) {

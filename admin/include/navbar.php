@@ -109,6 +109,20 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <p>Anfragen</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="calendar.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'calendar.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Kalender</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="verbesserungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'verbesserungen.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Verbesserungsvorschlag</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -126,6 +140,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             <a href="mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'mitarbeiterverwaltung.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Mitarbeiter Verwaltung</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="gekuendigt_mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'gekuendigt_mitarbeiterverwaltung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Gekündigte Mitarbeiter Verwaltung</p>
                             </a>
                         </li>
                         <li class="nav-item">

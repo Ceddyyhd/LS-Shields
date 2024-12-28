@@ -54,6 +54,40 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // Hier kannst du das Array $events weiterverwenden, um es in den Kalender zu laden
 ?>
+
+<?php
+include 'include/db.php'; // Datenbankverbindung einbinden
+
+// SQL-Abfrage, um die anstehenden Events zu holen
+$query = "
+    SELECT e.datum_uhrzeit_event, e.event_name, u.name
+    FROM eventplanung e
+    JOIN users u ON e.user_id = u.id
+    WHERE e.datum_uhrzeit_event IS NOT NULL
+";
+
+$stmt = $conn->prepare($query);
+$stmt->execute();
+
+// Array für die Events
+$events = [];
+
+while ($event = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    // Setze die Hintergrundfarbe für das Event (optional, je nach Status des Events)
+    $backgroundColor = '#3498db'; // Beispiel: Blau für das Event
+    $borderColor     = $backgroundColor; // Randfarbe gleich der Hintergrundfarbe
+
+    $events[] = [
+        'title' => 'Event: ' . htmlspecialchars($event['event_name']) . ' - ' . htmlspecialchars($event['name']), // Titel: Event Name - Mitarbeiter Name
+        'start' => $event['datum_uhrzeit_event'],
+        'end'   => $event['datum_uhrzeit_event'], // Setze Ende gleich dem Start, falls keine Dauer angegeben ist
+        'backgroundColor' => $backgroundColor,  // Hintergrundfarbe des Events
+        'borderColor'     => $borderColor,     // Randfarbe des Events
+    ];
+}
+
+// Hier kannst du das Array $events weiterverwenden, um es in den Kalender zu laden
+?>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -97,36 +131,41 @@ while ($vacation = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 <script>
   document.getElementById('submitVacation').addEventListener('click', function () {
-  var name = document.getElementById('name').value;
-  var start_date = document.getElementById('start_date').value;
-  var end_date = document.getElementById('end_date').value;
+    var start_date = document.getElementById('start_date');
+    var end_date = document.getElementById('end_date');
+    
+    // Überprüfe, ob die Elemente existieren
+    if (start_date && end_date) {
+        var start_date_value = start_date.value;
+        var end_date_value = end_date.value;
 
-  if (name && start_date && end_date) {
-    var formData = new FormData();
-    formData.append('name', name);
-    formData.append('start_date', start_date);
-    formData.append('end_date', end_date);
+        if (start_date_value && end_date_value) {
+            var formData = new FormData();
+            formData.append('start_date', start_date_value);
+            formData.append('end_date', end_date_value);
 
-    // AJAX-Anfrage, um den Urlaub zu speichern
-    fetch('include/vacation_create.php', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Urlaub erfolgreich erstellt!');
-        // Optional: Formular zurücksetzen oder etwas anderes tun
-      } else {
-        alert('Fehler: ' + data.message);
-      }
-    })
-    .catch(error => {
-      alert('Fehler: ' + error.message);
-    });
-  } else {
-    alert('Bitte füllen Sie alle Felder aus!');
-  }
+            // AJAX-Anfrage, um den Urlaub zu speichern
+            fetch('include/vacation_create.php', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Urlaub erfolgreich erstellt!');
+                } else {
+                    alert('Fehler: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Fehler: ' + error.message);
+            });
+        } else {
+            alert('Bitte füllen Sie alle Felder aus!');
+        }
+    } else {
+        console.error('Start- oder End-Datum-Element fehlt!');
+    }
 });
 </script>
           <!-- /.col -->

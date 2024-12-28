@@ -173,9 +173,9 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
+                            <a href="ausruestung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausruestung.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Rang Verwaltung</p>
+                                <p>Ausrüstung Verwaltung</p>
                             </a>
                         </li>
                     </ul>

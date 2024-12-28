@@ -202,6 +202,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
             alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
     });
+
+    // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
+    $.ajax({
+        url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const categorySelect = $('#category, #edit_category'); // Beide Dropdowns für Erstellen und Bearbeiten
+            categorySelect.empty(); // Leere das Dropdown, bevor neue Kategorien hinzugefügt werden
+
+            // Kategorien durchlaufen und im Dropdown-Menü einfügen
+            data.forEach(function(category) {
+                categorySelect.append(`<option value="${category.category}">${category.category}</option>`);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Kategorien:', error); // Fehlerlog
+            alert('Fehler beim Abrufen der Kategorien.');
+        }
+    });
 });
 
 // Wenn der Bearbeiten-Button geklickt wird
@@ -223,6 +243,9 @@ $(document).on('click', '.btn-outline-secondary', function() {
                 $('#edit_key_name').val(ausruestung.key_name); // Key Name
                 $('#edit_display_name').val(ausruestung.display_name); // Display Name
                 $('#edit_description').val(ausruestung.description); // Beschreibung
+                
+                // Setze die Kategorie im Bearbeitungsmodal
+                $('#edit_category').val(ausruestung.category); // Setze die Kategorie im Dropdown
                 
                 // Zeige das Bearbeitungsmodal an
                 $('#modal-ausruestung-edit').modal('show');

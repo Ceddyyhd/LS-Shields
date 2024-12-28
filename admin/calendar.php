@@ -26,12 +26,12 @@ include 'include/db.php'; // Datenbankverbindung einbinden
 
 // SQL-Abfrage, um die Urlaubs- und Eventdaten zu holen
 $query = "
-    SELECT v.start_date, v.end_date, v.status, u.name, NULL as event_name, NULL as datum_uhrzeit_event
+    SELECT v.start_date, v.end_date, v.status, u.name, NULL as event, NULL as datum_uhrzeit_event
     FROM vacations v
     JOIN users u ON v.user_id = u.id
     WHERE v.status IN ('approved', 'pending')
     UNION
-    SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event_name, e.datum_uhrzeit_event
+    SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event as event, e.datum_uhrzeit_event
     FROM eventplanung e
     JOIN users u ON e.user_id = u.id
     WHERE e.datum_uhrzeit_event IS NOT NULL
@@ -46,7 +46,7 @@ $events = [];
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Wenn es sich um ein Event handelt (aus der eventplanung-Tabelle)
     if ($row['datum_uhrzeit_event'] !== null) {
-        $eventTitle = !empty($row['event_name']) ? 'Event: ' . htmlspecialchars($row['event_name']) : 'Event: in Planung';
+        $eventTitle = !empty($row['event']) ? 'Event: ' . htmlspecialchars($row['event']) : 'Event: in Planung';
         $startDate = $row['datum_uhrzeit_event'];
         $endDate = $row['datum_uhrzeit_event']; // Da kein Enddatum vorhanden, verwenden wir das Startdatum
 

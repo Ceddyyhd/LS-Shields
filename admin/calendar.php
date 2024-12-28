@@ -33,7 +33,7 @@ $query = "
     UNION
     SELECT NULL as start_date, NULL as end_date, NULL as status, u.name, e.event as event, e.datum_uhrzeit_event
     FROM eventplanung e
-    JOIN users u ON e.user_id = u.id
+    JOIN users u ON e.event_lead = u.id  -- Verknüpfen über die Spalte event_lead
     WHERE e.datum_uhrzeit_event IS NOT NULL
 ";
 

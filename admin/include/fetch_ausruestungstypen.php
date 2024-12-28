@@ -10,22 +10,23 @@ function has_permission($permission) {
 }
 
 try {
-    // SQL-Abfrage, um alle Ausbildungstypen abzurufen
-    $sql = "SELECT id, key_name, display_name, description FROM ausbildungstypen";
+    // SQL-Abfrage, um alle Ausrüstungstypen abzurufen
+    $sql = "SELECT id, key_name, display_name, category, description FROM ausruestungstypen";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 
-    $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Füge Berechtigungen hinzu
-    foreach ($ausbildungstypen as &$ausbildung) {
-        $ausbildung['can_edit'] = has_permission('ausbildungstyp_update');
-        $ausbildung['can_delete'] = has_permission('ausbildungstyp_remove');
+    foreach ($ausruestungstypen as &$ausruestung) {
+        // Berechtigungen für Bearbeiten und Löschen hinzufügen
+        $ausruestung['can_edit'] = has_permission('ausruestungstyp_update');
+        $ausruestung['can_delete'] = has_permission('ausruestungstyp_remove');
     }
 
     // Header setzen, um die Antwort als JSON zurückzugeben
     header('Content-Type: application/json');
-    echo json_encode($ausbildungstypen);
+    echo json_encode($ausruestungstypen);
 
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);

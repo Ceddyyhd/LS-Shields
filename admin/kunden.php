@@ -1,354 +1,128 @@
+<?php
+include 'include/db.php';
+ini_set('display_errors', 0);
+error_reporting(0);
+
+// Kunden-ID aus der URL holen (z.B. kunden.php?id=1)
+$kunden_id = $_GET['id'] ?? null;
+if (!$kunden_id) {
+    die("Kunden-ID fehlt.");
+}
+
+// Kundeninformationen abrufen
+$sql = "SELECT * FROM Kunden WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['id' => $kunden_id]);
+$kunde = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$kunde) {
+    die("Kunde nicht gefunden.");
+}
+
+?>
+
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
+  <?php include 'include/navbar.php'; ?>
 
-<?php include 'include/navbar.php'; ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-  <!-- Content Wrapper. Contains page content -->
+  <!-- Main content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
+    <section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Starter Page</h1>
-          </div><!-- /.col -->
+            <h1>Kundenprofil</h1>
+          </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
+              <li class="breadcrumb-item active">Kundenprofil</li>
             </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
+          </div>
+        </div>
       </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+    </section>
 
-    <!-- Main content -->
-    <?php
-// Datenbankverbindung einbinden
-include 'include/db.php';
-
-// Anfragen aus der Datenbank abrufen
-$query = "SELECT id, unternehmen_name, ansprechperson_name, ansprechperson_nummer, adresse, unternehmen_art FROM kunden";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunde-create">
-                Kunden erstellen
-            </button>      </div>
-
-
-
-
-<!-- Anfrage erstellen Modal -->
-<div class="modal fade" id="modal-kunde-create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Kunde erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createCustomerForm">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="unternehmen_name">Unternehmen Name</label>
-                            <input type="text" class="form-control" id="unternehmen_name" name="unternehmen_name" placeholder="Enter Unternehmen Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="ansprechperson_name">Ansprechperson Name</label>
-                            <input type="text" class="form-control" id="ansprechperson_name" name="ansprechperson_name" placeholder="Enter Ansprechperson Name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="ansprechperson_nummer">Tel. Nr.</label>
-                            <input type="text" class="form-control" id="ansprechperson_nummer" name="ansprechperson_nummer" placeholder="Enter Telefonnummer" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="adresse">Adresse</label>
-                            <textarea name="adresse" id="adresse" class="form-control" rows="4" placeholder="Enter Adresse" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="unternehmen_art">Unternehmen Art</label>
-                            <input type="text" class="form-control" id="unternehmen_art" name="unternehmen_art" placeholder="Enter Unternehmen Art" required>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveCustomerBtn">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- JavaScript zur Verarbeitung des Formulars -->
-<script>
-    document.getElementById('saveCustomerBtn').addEventListener('click', function() {
-    const formData = new FormData(document.getElementById('createCustomerForm'));
-
-    // Überprüfen, ob alle Felder ausgefüllt sind
-    if (!formData.get('unternehmen_name') || !formData.get('ansprechperson_name') || !formData.get('ansprechperson_nummer') || !formData.get('adresse') || !formData.get('unternehmen_art')) {
-        alert('Bitte alle Felder ausfüllen!');
-        return;
-    }
-
-    // AJAX-Anfrage senden
-    fetch('include/kunden_create.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Kunde erfolgreich erstellt!');
-            $('#modal-kunde-create').modal('hide'); // Schließt das Modal
-            location.reload();  // Optional: Seite neu laden, um die neue Anfrage zu sehen
-        } else {
-            alert('Fehler: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Fehler:', error);
-        alert('Ein unerwarteter Fehler ist aufgetreten.');
-    });
-});
-</script>
-
-
-      <div class="card-body">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Unternehmen</th>
-              <th>Ansprechperson</th>
-              <th>Ansprechperson Nummer</th>
-              <th>Details einblenden</th>
-            </tr>
-          </thead>
-          <tbody>
-<?php foreach ($anfragen as $anfrage): ?>
-  <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
-    <td><?= htmlspecialchars($anfrage['id']) ?></td>
-    <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
-    <td>
-      <?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?>
-    </td>
-    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
-    <td>Details einblenden</td>
-  </tr>
-  <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-    <td colspan="5">
-      <div class="p-3">
-        <div class="mb-3">
-          <strong>Unternehmen:</strong>
-          <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Ansprechperson & Nummer:</strong>
-          <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
-          <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Adresse:</strong>
-          <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Unternehmen Art:</strong>
-          <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
-        </div>
-        <div class="mb-3">
-          <div><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
-                Rechnung erstellen
-            </button></div>
-        </div>
-      </div>
-    </td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Rechnung Erstellen Modal -->
-<div class="modal fade" id="rechnung-erstellen">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Rechnung Erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="invoice-form">
-                    <!-- Verstecktes Feld für Kunden-ID -->
-                    <input type="hidden" id="kunden_id" name="kunden_id">
-                    <div class="form-group">
-                        <label>Unternehmen</label>
-                        <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Ansprechperson</label>
-                        <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Nummer</label>
-                        <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
-                    </div>
-                    <hr>
-                    <!-- Dynamisch hinzufügbare Rechnungszeilen -->
-                    <div id="invoice-items">
-                        <div class="row invoice-item">
-                            <div class="col-5">
-                                <p>Beschreibung</p>
-                                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
-                            </div>
-                            <div class="col-3">
-                                <p>Stück Preis</p>
-                                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
-                            </div>
-                            <div class="col-3">
-                                <p>Anzahl</p>
-                                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="col-3">
-                        <p>Rabatt in %</p>
-                        <input type="text" class="form-control" name="rabatt" placeholder="">
-                    </div>
-
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
-                    </div>
-                </form>
-                <div id="response-message"></div>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+            <!-- Profil Bild -->
+            <div class="card card-primary card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                  <img class="profile-user-img img-fluid img-circle" src="path/to/default/image.jpg" alt="Kundenprofil Bild">
                 </div>
+
+                <h3 class="profile-username text-center"><?php echo htmlspecialchars($kunde['name']); ?></h3>
+                <p class="text-muted text-center"><?php echo htmlspecialchars($kunde['umail']); ?></p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                  <li class="list-group-item">
+                    <b>Telefonnummer:</b> <a class="float-right"><?php echo htmlspecialchars($kunde['nummer']); ?></a>
+                  </li>
+                  <li class="list-group-item">
+                    <b>Erstellt am:</b> <a class="float-right"><?php echo htmlspecialchars($kunde['created_at']); ?></a>
+                  </li>
+                </ul>
+
+                <button type="button" class="btn btn-primary" onclick="window.location.href='kunden_edit.php?id=<?php echo $kunde['id']; ?>'">Kunde Bearbeiten</button>
+              </div>
             </div>
+          </div>
+
+          <!-- Kundendetails -->
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#dokumente" data-toggle="tab">Dokumente</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="dokumente">
+                    <!-- Dokumente Anzeigen (Beispiel) -->
+                    <ul>
+                      <li>Dokument 1</li>
+                      <li>Dokument 2</li>
+                    </ul>
+                  </div>
+
+                  <div class="tab-pane" id="notizen">
+                    <!-- Notizen Anzeigen -->
+                    <p>Notizen zum Kunden</p>
+                  </div>
+
+                  <div class="tab-pane" id="ausruestung">
+                    <!-- Ausrüstung Anzeigen -->
+                    <p>Ausrüstung des Kunden</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-    </div>
-    </div>
-    
-    
-    <script>
-    function checkAndAddRow(input) {
-        const container = document.getElementById('invoice-items');
-        const lastRow = container.lastElementChild;
-        
-        // Neue Zeile hinzufügen, wenn das Feld für Beschreibung nicht leer ist
-        if (input.value !== "" && lastRow === input.closest('.row')) {
-            addNewRow();
-        }
-    }
-
-    // Funktion, um eine neue Zeile hinzuzufügen
-    function addNewRow() {
-        const container = document.getElementById('invoice-items');
-        const newRow = document.createElement('div');
-        newRow.classList.add('row', 'invoice-item');
-        
-        newRow.innerHTML = `
-            <div class="col-5">
-                <p>Beschreibung</p>
-                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
-            </div>
-            <div class="col-3">
-                <p>Stück Preis</p>
-                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
-            </div>
-            <div class="col-3">
-                <p>Anzahl</p>
-                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
-            </div>
-        `;
-        
-        container.appendChild(newRow);
-    }
-
-    // AJAX-Formular senden
-    $('#invoice-form').submit(function(e) {
-        e.preventDefault(); // Verhindert das Standard-Absenden des Formulars
-
-        $.ajax({
-            type: 'POST',
-            url: 'include/create_invoice.php',  // PHP-Datei, die die Daten verarbeitet
-            data: $(this).serialize(),  // Alle Formulardaten serialisieren
-            success: function(response) {
-                $('#response-message').html(response); // Erfolgsnachricht anzeigen
-                $('#invoice-form')[0].reset(); // Formular zurücksetzen
-            },
-            error: function(xhr, status, error) {
-                $('#response-message').html('Fehler beim Erstellen der Rechnung.'); // Fehlermeldung anzeigen
-            }
-        });
-    });
-</script>
-
-
-      
-
-
-    <!-- /.content -->
+      </div>
+    </section>
   </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
-
-  <!-- Main Footer -->
   <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
+    <div class="float-right d-none d-sm-block">
+      <b>Version</b> 3.2.0
     </div>
-    <!-- Default to the left -->
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
 </div>
-<!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
 </body>
 </html>

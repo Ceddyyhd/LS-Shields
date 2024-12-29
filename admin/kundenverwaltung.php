@@ -124,7 +124,7 @@ function loadCustomers() {
                         <td>${new Date(kunde.created_at).toLocaleDateString()}</td>
                         <td>${kunde.geloescht}</td>
                         <td>
-                            <button class="btn btn-warning" onclick="deleteCustomer(${kunde.id})">Löschen</button>
+                            <a href="kunden.php?id=${kunde.id}" class="btn btn-warning">Bearbeiten</a>
                         </td>
                     </tr>
                 `);
@@ -134,24 +134,6 @@ function loadCustomers() {
             alert('Fehler beim Laden der Kunden.');
         }
     });
-}
-
-// Funktion zum Löschen eines Kunden
-function deleteCustomer(kundenId) {
-    if (confirm('Möchten Sie diesen Kunden wirklich löschen?')) {
-        $.ajax({
-            url: 'include/kunden_update.php',
-            type: 'POST',
-            data: { kunden_id: kundenId },
-            success: function(response) {
-                alert('Kunde wurde gelöscht.');
-                loadCustomers();
-            },
-            error: function() {
-                alert('Fehler beim Löschen des Kunden.');
-            }
-        });
-    }
 }
 
 // Formular zur Erstellung eines neuen Kunden

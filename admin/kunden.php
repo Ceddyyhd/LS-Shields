@@ -219,15 +219,15 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="row">
             <div class="col-5">
             <p>Beschreibung</p>
-              <input type="text" class="form-control" placeholder=".col-5">
+              <input type="text" class="form-control" placeholder="">
             </div>
             <div class="col-3">
               <p>Stück Preis</p>
-              <input type="text" class="form-control" placeholder=".col-3">
+              <input type="text" class="form-control" placeholder="">
             </div>
             <div class="col-3">
               <p>Anzahl</p>
-              <input type="text" class="form-control" placeholder=".col-3">
+              <input type="text" class="form-control" placeholder="">
             </div>
                 </div>
 

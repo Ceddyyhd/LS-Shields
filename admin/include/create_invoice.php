@@ -1,6 +1,6 @@
 <?php
 // Include für die Datenbankverbindung
-include('db.php');  // Stellt sicher, dass $pdo richtig gesetzt ist
+include('db.php');  // Dies wird $conn aus db.php einbinden
 
 // Funktion zum Generieren einer zufälligen 5-stelligen Rechnungsnummer
 function generateInvoiceNumber() {
@@ -20,21 +20,21 @@ $passwort = password_hash(uniqid(), PASSWORD_DEFAULT);  // Generiere ein sichere
 
 try {
     // Transaktion starten
-    $pdo->beginTransaction();
+    $conn->beginTransaction();
 
     // Rechnungsdatensatz einfügen
-    $stmt = $pdo->prepare("INSERT INTO Rechnungen (kunden_id, rechnungsnummer, passwort, rabatt) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO Rechnungen (kunden_id, rechnungsnummer, passwort, rabatt) VALUES (?, ?, ?, ?)");
     $stmt->execute([$kundenId, $rechnungsnummer, $passwort, $rabatt]);
 
     // Die einzelnen Rechnungspositionen einfügen
-    $invoiceId = $pdo->lastInsertId();
+    $invoiceId = $conn->lastInsertId();
     foreach ($beschreibung as $index => $desc) {
-        $stmt = $pdo->prepare("INSERT INTO Rechnungspositionen (rechnung_id, beschreibung, stueckpreis, anzahl) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO Rechnungspositionen (rechnung_id, beschreibung, stueckpreis, anzahl) VALUES (?, ?, ?, ?)");
         $stmt->execute([$invoiceId, $desc, $stueckpreis[$index], $anzahl[$index]]);
     }
 
     // Transaktion abschließen
-    $pdo->commit();
+    $conn->commit();
 
     // Erfolgsantwort
     echo json_encode([
@@ -45,7 +45,7 @@ try {
 
 } catch (Exception $e) {
     // Fehlerbehandlung und Rollback bei Fehler
-    $pdo->rollBack();
+    $conn->rollBack();
     echo json_encode([
         'status' => 'error',
         'message' => 'Fehler: ' . $e->getMessage()

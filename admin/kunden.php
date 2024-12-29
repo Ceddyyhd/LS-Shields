@@ -296,7 +296,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $.ajax({
             type: 'POST',
-            url: 'create_invoice.php',  // PHP-Datei, die die Daten verarbeitet
+            url: 'include/create_invoice.php',  // PHP-Datei, die die Daten verarbeitet
             data: $(this).serialize(),  // Alle Formulardaten serialisieren
             success: function(response) {
                 $('#response-message').html(response); // Erfolgsnachricht anzeigen

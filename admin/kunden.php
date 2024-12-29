@@ -194,66 +194,45 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-<div class="container mt-5">
-    <div class="modal fade" id="rechnung-erstellen">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Rechnung Erstellen</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="invoice-form">
-                        <div class="form-group">
-                            <label>Unternehmen</label>
-                            <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Ansprechperson</label>
-                            <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Nummer</label>
-                            <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
-                        </div>
-                        <hr>
-
-                        <!-- Dynamisch hinzufügbare Rechnungszeilen -->
-                        <div id="invoice-items">
-                            <div class="row invoice-item">
-                                <div class="col-5">
-                                    <p>Beschreibung</p>
-                                    <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
-                                </div>
-                                <div class="col-3">
-                                    <p>Stück Preis</p>
-                                    <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
-                                </div>
-                                <div class="col-3">
-                                    <p>Anzahl</p>
-                                    <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="col-3">
-                            <p>Rabatt in %</p>
-                            <input type="text" class="form-control" name="rabatt" placeholder="">
-                        </div>
-
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
-                        </div>
-                    </form>
-                    <div id="response-message"></div>
-                </div>
+<!-- Rechnung Erstellen Modal -->
+<div class="modal fade" id="rechnung-erstellen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Rechnung Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createInvoiceForm">
+                    <!-- Verstecktes Feld für Kunden-ID -->
+                    <input type="hidden" id="kunden_id" name="kunden_id">
+                    <div class="form-group">
+                        <label for="beschreibung">Beschreibung</label>
+                        <input type="text" class="form-control" id="beschreibung" name="beschreibung[]" placeholder="Beschreibung" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stueckpreis">Stückpreis</label>
+                        <input type="number" class="form-control" id="stueckpreis" name="stueckpreis[]" placeholder="Stückpreis" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="anzahl">Anzahl</label>
+                        <input type="number" class="form-control" id="anzahl" name="anzahl[]" placeholder="Anzahl" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rabatt">Rabatt</label>
+                        <input type="number" class="form-control" id="rabatt" name="rabatt" placeholder="Rabatt (%)" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveInvoiceBtn">Rechnung Erstellen</button>
             </div>
         </div>
     </div>
+</div>
     </div>
     
     

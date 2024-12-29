@@ -135,57 +135,55 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
       <div class="card-body">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Unternehmen</th>
-              <th>Ansprechperson</th>
-              <th>Ansprechperson Nummer</th>
-              <th>Details einblenden</th>
-            </tr>
-          </thead>
-          <tbody>
-<?php foreach ($anfragen as $anfrage): ?>
-  <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
-    <td><?= htmlspecialchars($anfrage['id']) ?></td>
-    <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
-    <td>
-      <?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?>
-    </td>
-    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
-    <td>Details einblenden</td>
-  </tr>
-  <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-    <td colspan="5">
-      <div class="p-3">
-        <div class="mb-3">
-          <strong>Unternehmen:</strong>
-          <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Ansprechperson & Nummer:</strong>
-          <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
-          <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Adresse:</strong>
-          <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
-        </div>
-        <div class="mb-3">
-          <strong>Unternehmen Art:</strong>
-          <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
-        </div>
-        <div class="mb-3">
-          <div><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
-                Rechnung erstellen
-            </button></div>
-        </div>
-      </div>
-    </td>
-  </tr>
-<?php endforeach; ?>
-</tbody>
+      <table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Unternehmen</th>
+            <th>Ansprechperson</th>
+            <th>Ansprechperson Nummer</th>
+            <th>Details einblenden</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($anfragen as $anfrage): ?>
+        <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
+            <td><?= htmlspecialchars($anfrage['id']) ?></td>
+            <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
+            <td><?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?></td>
+            <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
+            <td>
+                <!-- Beim Klick auf den Button wird die Kunden-ID gesetzt -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen" onclick="setCustomerId(<?= $anfrage['id'] ?>)">
+                    Rechnung erstellen
+                </button>
+            </td>
+        </tr>
+        <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
+            <td colspan="5">
+                <div class="p-3">
+                    <div class="mb-3">
+                        <strong>Unternehmen:</strong>
+                        <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Ansprechperson & Nummer:</strong>
+                        <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
+                        <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Adresse:</strong>
+                        <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Unternehmen Art:</strong>
+                        <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
         </table>
       </div>
     </div>
@@ -194,62 +192,63 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-<div class="container mt-5">
-    <div class="modal fade" id="rechnung-erstellen">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Rechnung Erstellen</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="invoice-form">
-                        <div class="form-group">
-                            <label>Unternehmen</label>
-                            <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Ansprechperson</label>
-                            <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label>Nummer</label>
-                            <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
-                        </div>
-                        <hr>
-                        <input type="hidden" id="kunden_id" name="kunden_id">
-                        <!-- Dynamisch hinzufügbare Rechnungszeilen -->
-                        <div id="invoice-items">
-                            <div class="row invoice-item">
-                                <div class="col-5">
-                                    <p>Beschreibung</p>
-                                    <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
-                                </div>
-                                <div class="col-3">
-                                    <p>Stück Preis</p>
-                                    <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
-                                </div>
-                                <div class="col-3">
-                                    <p>Anzahl</p>
-                                    <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
-                                </div>
+<!-- Rechnung Erstellen Modal -->
+<div class="modal fade" id="rechnung-erstellen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Rechnung Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="invoice-form">
+                    <!-- Verstecktes Feld für Kunden-ID -->
+                    <input type="hidden" id="kunden_id" name="kunden_id">
+                    <div class="form-group">
+                        <label>Unternehmen</label>
+                        <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Ansprechperson</label>
+                        <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Nummer</label>
+                        <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
+                    </div>
+                    <hr>
+                    <!-- Dynamisch hinzufügbare Rechnungszeilen -->
+                    <div id="invoice-items">
+                        <div class="row invoice-item">
+                            <div class="col-5">
+                                <p>Beschreibung</p>
+                                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+                            </div>
+                            <div class="col-3">
+                                <p>Stück Preis</p>
+                                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
+                            </div>
+                            <div class="col-3">
+                                <p>Anzahl</p>
+                                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
                             </div>
                         </div>
+                    </div>
 
-                        <hr>
-                        <div class="col-3">
-                            <p>Rabatt in %</p>
-                            <input type="text" class="form-control" name="rabatt" placeholder="">
-                        </div>
+                    <hr>
+                    <div class="col-3">
+                        <p>Rabatt in %</p>
+                        <input type="text" class="form-control" name="rabatt" placeholder="">
+                    </div>
 
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
-                        </div>
-                    </form>
-                    <div id="response-message"></div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
+                    </div>
+                </form>
+                <div id="response-message"></div>
                 </div>
             </div>
         </div>

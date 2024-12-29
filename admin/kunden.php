@@ -175,6 +175,10 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <strong>Unternehmen Art:</strong>
           <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
         </div>
+        <div class="mb-3">
+          <strong>Unternehmen Art:</strong>
+          <div><button type="button" class="btn btn-block btn-outline-primary">Rechnung Erstellen</button></div>
+        </div>
       </div>
     </td>
   </tr>
@@ -185,8 +189,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </div>
-
-
 
 
     

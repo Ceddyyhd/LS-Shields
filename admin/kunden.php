@@ -196,9 +196,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="modal fade" id="rechnung-erstellen">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="overlay">
-                <i class="fas fa-2x fa-sync fa-spin"></i>
-            </div>
             <div class="modal-header">
               <h4 class="modal-title">Default Modal</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">

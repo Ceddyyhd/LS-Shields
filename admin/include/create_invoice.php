@@ -8,11 +8,11 @@ function generateInvoiceNumber() {
 }
 
 // Daten aus dem AJAX-Formular
-$kundenId = 1;  // Hier solltest du die Kunden-ID aus der Sitzung oder URL holen
-$beschreibung = $_POST['beschreibung'];
-$stueckpreis = $_POST['stueckpreis'];
-$anzahl = $_POST['anzahl'];
-$rabatt = $_POST['rabatt'];
+$kundenId = $_POST['kunden_id'];  // Kunden-ID aus dem Formular
+$beschreibung = $_POST['beschreibung'];  // Rechnungspositionen (Beschreibung)
+$stueckpreis = $_POST['stueckpreis'];    // Stückpreise der Rechnungspositionen
+$anzahl = $_POST['anzahl'];              // Anzahl der Artikel in den Rechnungspositionen
+$rabatt = $_POST['rabatt'];              // Rabatt auf die gesamte Rechnung
 
 // Rechnungsnummer generieren
 $rechnungsnummer = generateInvoiceNumber();
@@ -41,12 +41,18 @@ try {
     $pdo->commit();
 
     // Erfolgsantwort
-    echo "Rechnung wurde erfolgreich erstellt! <br>";
-    echo "Rechnungsnummer: $rechnungsnummer <br>";
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Rechnung wurde erfolgreich erstellt!',
+        'rechnungsnummer' => $rechnungsnummer
+    ]);
 
 } catch (Exception $e) {
     // Fehlerbehandlung und Rollback bei Fehler
     $pdo->rollBack();
-    echo "Fehler: " . $e->getMessage();
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Fehler: ' . $e->getMessage()
+    ]);
 }
 ?>

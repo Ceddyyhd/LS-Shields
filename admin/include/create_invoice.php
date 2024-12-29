@@ -7,7 +7,11 @@ function generateInvoiceNumber() {
     return strtoupper(substr(md5(uniqid(rand(), true)), 0, 5));
 }
 
-// Daten aus dem AJAX-Formular
+// Überprüfen, ob die Kunden-ID gesetzt wurde und gültig ist
+if (!isset($_POST['kunden_id']) || empty($_POST['kunden_id'])) {
+    die(json_encode(['status' => 'error', 'message' => 'Fehler: Keine gültige Kunden-ID vorhanden.']));
+}
+
 $kundenId = $_POST['kunden_id'];  // Kunden-ID aus dem Formular
 $beschreibung = $_POST['beschreibung'];  // Rechnungspositionen (Beschreibung)
 $stueckpreis = $_POST['stueckpreis'];    // Stückpreise der Rechnungspositionen

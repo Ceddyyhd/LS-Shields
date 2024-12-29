@@ -1,6 +1,6 @@
 <?php
 // Include für Datenbankverbindung
-include('db_connection.php');
+include('db.php');
 
 // Funktion zum Generieren einer zufälligen 5-stelligen Rechnungsnummer
 function generateInvoiceNumber() {

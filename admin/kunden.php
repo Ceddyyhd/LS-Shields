@@ -187,28 +187,7 @@ if (!$kunde) {
     });
 </script>
 
-<div class="mt-4">
-    <h5>Hochgeladene Dokumente:</h5>
-    <?php
-    // Dokumente aus der Datenbank abrufen
-    $stmt = $conn->prepare("SELECT file_name, file_path, uploaded_at FROM customer_documents WHERE customer_id = :customer_id");
-    $stmt->execute(['customer_id' => $customer_id]);
-    $documents = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (!empty($documents)): ?>
-        <ul>
-            <?php foreach ($documents as $doc): ?>
-                <li>
-                    <a href="<?= htmlspecialchars($doc['file_path']); ?>" target="_blank">
-                        <?= htmlspecialchars($doc['file_name']); ?>
-                    </a> (<?= htmlspecialchars($doc['uploaded_at']); ?>)
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    <?php else: ?>
-        <p>Keine Dokumente vorhanden.</p>
-    <?php endif; ?>
-</div>
+
 
 
                   </div>

@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php';
 
 // Anfragen aus der Datenbank abrufen
-$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, erstellt_von, status FROM anfragen ORDER BY datum_uhrzeit DESC";
+$query = "SELECT id, unternehmen_name, ansprechperson_name, ansprechperson_nummer, adresse, unternehmen_art FROM kunden";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -138,10 +138,9 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <thead>
             <tr>
               <th>#</th>
-              <th>Ansprechpartner</th>
-              <th>Anfrage</th>
-              <th>Status</th>
-              <th>Erstellt von</th>
+              <th>Unternehmen</th>
+              <th>Ansprechperson</th>
+              <th>Ansprechperson Nummer</th>
               <th>Details einblenden</th>
             </tr>
           </thead>
@@ -149,39 +148,32 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php foreach ($anfragen as $anfrage): ?>
   <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
     <td><?= htmlspecialchars($anfrage['id']) ?></td>
-    <td><?= htmlspecialchars($anfrage['vorname_nachname']) ?></td>
+    <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
     <td>
-      <?= mb_strimwidth(htmlspecialchars($anfrage['anfrage']), 0, 50, '...') ?>
+      <?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?>
     </td>
-    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
-    <td><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
+    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
     <td>Details einblenden</td>
   </tr>
   <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
     <td colspan="5">
       <div class="p-3">
         <div class="mb-3">
-          <strong>Datum & Uhrzeit:</strong>
-          <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
+          <strong>Unternehmen:</strong>
+          <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
         </div>
         <div class="mb-3">
-          <strong>Telefonnummer:</strong>
-          <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
+          <strong>Ansprechperson & Nummer:</strong>
+          <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
+          <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
         </div>
         <div class="mb-3">
-          <strong>Status:</strong>
-          <div><?= htmlspecialchars($anfrage['status']) ?></div>
+          <strong>Adresse:</strong>
+          <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
         </div>
         <div class="mb-3">
-          <strong>Anfrage:</strong>
-          <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
-        </div>
-        <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-          <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-          <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-            <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
-          <?php endif; ?>
+          <strong>Unternehmen Art:</strong>
+          <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
         </div>
       </div>
     </td>
@@ -194,35 +186,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<script>
-function changeStatus(id, action) {
-  fetch('include/update_status.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `id=${id}&action=${action}`,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
-          document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
-        } else if (action === 'move_to_eventplanung' && data.removed) {
-          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
-          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
-        }
-      } else {
-        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
-      }
-    })
-    .catch((error) => {
-      alert('Ein Fehler ist aufgetreten: ' + error.message);
-    });
-}
-</script>
+
 
 
     

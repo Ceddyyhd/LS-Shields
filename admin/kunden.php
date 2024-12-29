@@ -256,7 +256,58 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     
     
-    
+    <script>
+    function checkAndAddRow(input) {
+        const container = document.getElementById('invoice-items');
+        const lastRow = container.lastElementChild;
+        
+        if (input.value !== "" && lastRow === input.closest('.row')) {
+            addNewRow();
+        }
+    }
+
+    function addNewRow() {
+        const container = document.getElementById('invoice-items');
+        const newRow = document.createElement('div');
+        newRow.classList.add('row', 'invoice-item');
+        
+        newRow.innerHTML = `
+            <div class="col-5">
+                <p>Beschreibung</p>
+                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+            </div>
+            <div class="col-3">
+                <p>Stück Preis</p>
+                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
+            </div>
+            <div class="col-3">
+                <p>Anzahl</p>
+                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
+            </div>
+        `;
+        
+        container.appendChild(newRow);
+    }
+
+    // AJAX-Formular senden
+    $('#invoice-form').submit(function(e) {
+        e.preventDefault(); // Verhindert das Standard-Absenden des Formulars
+
+        $.ajax({
+            type: 'POST',
+            url: 'create_invoice.php',  // PHP-Datei, die die Daten verarbeitet
+            data: $(this).serialize(),  // Alle Formulardaten serialisieren
+            success: function(response) {
+                $('#response-message').html(response); // Erfolgsnachricht anzeigen
+                $('#invoice-form')[0].reset(); // Formular zurücksetzen
+            },
+            error: function(xhr, status, error) {
+                $('#response-message').html('Fehler beim Erstellen der Rechnung.'); // Fehlermeldung anzeigen
+            }
+        });
+    });
+</script>
+
 
       
 

@@ -7,7 +7,7 @@ function generateInvoiceNumber() {
     return strtoupper(substr(md5(uniqid(rand(), true)), 0, 5));
 }
 
-// Daten aus dem Formular
+// Daten aus dem AJAX-Formular
 $kundenId = 1;  // Hier solltest du die Kunden-ID aus der Sitzung oder URL holen
 $beschreibung = $_POST['beschreibung'];
 $stueckpreis = $_POST['stueckpreis'];
@@ -40,7 +40,7 @@ try {
     // Transaktion abschließen
     $pdo->commit();
 
-    // Erfolgreich erstellt
+    // Erfolgsantwort
     echo "Rechnung wurde erfolgreich erstellt! <br>";
     echo "Rechnungsnummer: $rechnungsnummer <br>";
 

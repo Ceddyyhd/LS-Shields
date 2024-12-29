@@ -231,15 +231,10 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
                 </div>
             <hr>
-
-            <div class="col-3">
-            </div>
-            <div class="col-3">
-            </div>
-            <div class="col-3">
+            <div class="col-3" style="margin-left: 20px;">
               <p>Rabatt in %</p>
               <input type="text" class="form-control" placeholder="">
-            </div>
+          </div>
 
             </div>
             <div class="modal-footer justify-content-between">

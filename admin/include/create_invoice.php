@@ -1,6 +1,6 @@
 <?php
-// Include für Datenbankverbindung
-include('db.php');
+// Include für die Datenbankverbindung
+include('db.php');  // Stellt sicher, dass $pdo richtig gesetzt ist
 
 // Funktion zum Generieren einer zufälligen 5-stelligen Rechnungsnummer
 function generateInvoiceNumber() {
@@ -19,10 +19,6 @@ $rechnungsnummer = generateInvoiceNumber();
 $passwort = password_hash(uniqid(), PASSWORD_DEFAULT);  // Generiere ein sicheres Passwort
 
 try {
-    // Datenbankverbindung
-    $pdo = new PDO('mysql:host=localhost;dbname=deineDatenbank', 'deinBenutzer', 'deinPasswort');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     // Transaktion starten
     $pdo->beginTransaction();
 

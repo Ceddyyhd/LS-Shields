@@ -195,15 +195,15 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="modal fade" id="rechnung-erstellen">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+          <div class="modal-content">
+          <div class="modal-header">
                     <h4 class="modal-title">Rechnung Erstellen</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                </div>
-                <div class="modal-body">
-                    <form action="create_invoice.php" method="POST">
+            </div>
+            <div class="modal-body">
+                    <form id="invoice-form">
                         <div class="form-group">
                             <label>Unternehmen</label>
                             <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
@@ -246,10 +246,14 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
                         </div>
-                    </form>
-                </div>
-            </div>
+                        </form>
+                    <div id="response-message"></div>
+
+          </div>
+          <!-- /.modal-content -->
         </div>
+        <!-- /.modal-dialog -->
+      </div>
 
     
     

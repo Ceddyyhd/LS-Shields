@@ -197,7 +197,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
+              <h4 class="modal-title">Rechnung Erstellen</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -228,6 +228,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-3">
               <p>Anzahl</p>
               <input type="text" class="form-control" placeholder="">
+              <i class="fa-solid fa-plus"></i>
             </div>
             </div>
             <hr>
@@ -239,7 +240,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary">Rechnung Erstellen</button>
             </div>
           </div>
           <!-- /.modal-content -->

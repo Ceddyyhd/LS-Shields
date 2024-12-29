@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $document_name = $_POST['document_name'];
         $file_tmp = $_FILES['document_file']['tmp_name'];
         $file_name = $_FILES['document_file']['name'];
-        $file_path = 'uploads/documents/' . basename($file_name);
+        $file_path = 'uploads/' . basename($file_name);
 
         // Verschiebe die Datei ins Zielverzeichnis
         if (move_uploaded_file($file_tmp, $file_path)) {

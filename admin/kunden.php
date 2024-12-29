@@ -228,7 +228,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-3">
               <p>Anzahl</p>
               <input type="text" class="form-control" placeholder="">
-              <i class="fa-solid fa-plus"></i>
             </div>
             </div>
             <hr>

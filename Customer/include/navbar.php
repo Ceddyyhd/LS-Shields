@@ -51,9 +51,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            <div class="image">
-                <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" class="img-circle elevation-2" alt="User Image">
-            </div>
+            
             <div class="info">
                 <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
             </div>
@@ -121,61 +119,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             <a href="verbesserungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'verbesserungen.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Verbesserungsvorschlag</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <!-- Leitungs Bereich -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'leitungsbereich.php' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Leitungs Bereich
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'mitarbeiterverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Mitarbeiter Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="gekuendigt_mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'gekuendigt_mitarbeiterverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Gekündigte Mitarbeiter</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Rang Verwaltung</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'leitungsbereich.php' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Settings
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="ausbildungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausbildungen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ausbildung Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ausruestung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausruestung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ausrüstung Verwaltung</p>
                             </a>
                         </li>
                     </ul>

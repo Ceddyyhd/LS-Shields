@@ -203,7 +203,20 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+              
+            <div class="row">
+                  <div class="col-3">
+                    <input type="text" class="form-control" placeholder=".col-3">
+                  </div>
+                  <div class="col-4">
+                    <input type="text" class="form-control" placeholder=".col-4">
+                  </div>
+                  <div class="col-5">
+                    <input type="text" class="form-control" placeholder=".col-5">
+                  </div>
+                </div>
+
+
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

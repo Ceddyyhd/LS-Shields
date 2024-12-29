@@ -1,23 +1,14 @@
 <?php
 include('db.php');
 
-// Überprüfen, ob das Formular abgesendet wurde
+// Überprüfen, ob die Daten über POST gesendet wurden
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Kunden-Daten aus dem Formular holen
     $umail = $_POST['umail'];
     $name = $_POST['name'];
     $nummer = $_POST['nummer'];
     $kontonummer = $_POST['kontonummer'];
 
-    // Prüfen, ob die E-Mail bereits existiert
-    $stmt = $conn->prepare("SELECT * FROM Kunden WHERE umail = ?");
-    $stmt->execute([$umail]);
-
-    if ($stmt->rowCount() > 0) {
-        die('Fehler: E-Mail existiert bereits!');
-    }
-
-    // SQL-Befehl zum Einfügen eines neuen Kunden
+    // SQL-Abfrage, um den neuen Kunden hinzuzufügen
     $stmt = $conn->prepare("INSERT INTO Kunden (umail, name, nummer, kontonummer) VALUES (?, ?, ?, ?)");
     $stmt->execute([$umail, $name, $nummer, $kontonummer]);
 

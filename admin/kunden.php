@@ -176,8 +176,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
         </div>
         <div class="mb-3">
-          <strong>Unternehmen Art:</strong>
-          <div><button type="button" class="btn btn-block btn-outline-primary">Rechnung Erstellen</button></div>
+          <div><button type="button" class="btn btn-block btn-outline-primary" ata-toggle="modal" data-target="#modal-kunde-create">Rechnung Erstellen</button></div>
         </div>
       </div>
     </td>
@@ -190,6 +189,29 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
+
+
+<div class="modal fade" id="rechnung-erstellen">
+        <div class="modal-dialog">
+          <div class="modal-content bg-primary">
+            <div class="modal-header">
+              <h4 class="modal-title">Primary Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-outline-light">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
 
     
     

@@ -215,7 +215,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <label>Text Disabled</label>
               <input type="text" class="form-control" placeholder="Nummer" disabled>
             </div>
-
+            <hr>
             <div class="row">
             <div class="col-5">
             <p>Beschreibung</p>
@@ -230,7 +230,11 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <input type="text" class="form-control" placeholder="">
             </div>
                 </div>
-
+            <hr>
+            <div class="col-3">
+              <p>Rabatt in %</p>
+              <input type="text" class="form-control" placeholder="">
+            </div>
 
             </div>
             <div class="modal-footer justify-content-between">

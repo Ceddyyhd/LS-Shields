@@ -48,8 +48,8 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="col-12">
     <div class="card">
       <div class="card-header">
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
-                Anfrage erstellen
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunde-create">
+                Kunden erstellen
             </button>      </div>
 
 

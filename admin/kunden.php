@@ -176,7 +176,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
         </div>
         <div class="mb-3">
-          <div><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunde-create">
+          <div><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
                 Rechnung erstellen
             </button></div>
         </div>

@@ -135,55 +135,57 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
       <div class="card-body">
-      <table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Unternehmen</th>
-            <th>Ansprechperson</th>
-            <th>Ansprechperson Nummer</th>
-            <th>Details einblenden</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($anfragen as $anfrage): ?>
-        <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
-            <td><?= htmlspecialchars($anfrage['id']) ?></td>
-            <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
-            <td><?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?></td>
-            <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
-            <td>
-                <!-- Beim Klick auf den Button wird die Kunden-ID gesetzt -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen" onclick="setCustomerId(<?= $anfrage['id'] ?>)">
-                    Rechnung erstellen
-                </button>
-            </td>
-        </tr>
-        <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-            <td colspan="5">
-                <div class="p-3">
-                    <div class="mb-3">
-                        <strong>Unternehmen:</strong>
-                        <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Ansprechperson & Nummer:</strong>
-                        <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
-                        <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Adresse:</strong>
-                        <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
-                    </div>
-                    <div class="mb-3">
-                        <strong>Unternehmen Art:</strong>
-                        <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Unternehmen</th>
+              <th>Ansprechperson</th>
+              <th>Ansprechperson Nummer</th>
+              <th>Details einblenden</th>
+            </tr>
+          </thead>
+          <tbody>
+<?php foreach ($anfragen as $anfrage): ?>
+  <tr data-widget="expandable-table" data-id="<?= $anfrage['id'] ?>" aria-expanded="false">
+    <td><?= htmlspecialchars($anfrage['id']) ?></td>
+    <td><?= htmlspecialchars($anfrage['unternehmen_name']) ?></td>
+    <td>
+      <?= mb_strimwidth(htmlspecialchars($anfrage['ansprechperson_name']), 0, 50, '...') ?>
+    </td>
+    <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></td>
+    <td>Details einblenden</td>
+  </tr>
+  <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
+    <td colspan="5">
+      <div class="p-3">
+        <div class="mb-3">
+          <strong>Unternehmen:</strong>
+          <div><?= htmlspecialchars($anfrage['unternehmen_name']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Ansprechperson & Nummer:</strong>
+          <div><?= htmlspecialchars($anfrage['ansprechperson_name']) ?></div>
+          <div><?= htmlspecialchars($anfrage['ansprechperson_nummer']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Adresse:</strong>
+          <div><?= htmlspecialchars($anfrage['adresse']) ?></div>
+        </div>
+        <div class="mb-3">
+          <strong>Unternehmen Art:</strong>
+          <div><?= htmlspecialchars($anfrage['unternehmen_art']) ?></div>
+        </div>
+        <div class="mb-3">
+          <div><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
+                Rechnung erstellen
+            </button></div>
+        </div>
+      </div>
+    </td>
+  </tr>
+<?php endforeach; ?>
+</tbody>
         </table>
       </div>
     </div>

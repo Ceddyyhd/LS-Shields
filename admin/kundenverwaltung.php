@@ -13,131 +13,178 @@
 <!-- Bootstrap JS -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-<div class="container mt-5">
-    <!-- Kunden-Tabelle -->
-    <table class="table table-bordered table-hover">
+<div class="content-wrapper">
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Kundenverwaltung</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Kundenverwaltung</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <?php if (isset($_SESSION['permissions']['customer_create']) && $_SESSION['permissions']['customer_create']): ?>
+    <div class="card-header">
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunde-create">
+                Kunden erstellen
+            </button>
+        </h3>
+    </div>
+    <?php endif; ?>
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Unternehmen</th>
-                <th>Ansprechperson</th>
-                <th>Telefonnummer</th>
-                <th>Status</th>
-                <th>Aktionen</th>
-            </tr>
+          <tr>
+            <th>Kundenname</th>
+            <th>E-Mail</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Geloescht</th>
+            <th>Aktionen</th>
+          </tr>
         </thead>
-        <tbody>
-        <?php
-        include('db.php');
-        
-        // Alle Kunden abfragen
-        $stmt = $conn->prepare("SELECT * FROM Kunden");
-        $stmt->execute();
-        $kunden = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Kunden anzeigen
-        foreach ($kunden as $kunde):
-        ?>
-            <tr data-id="<?= $kunde['id'] ?>">
-                <td><?= htmlspecialchars($kunde['id']) ?></td>
-                <td><?= htmlspecialchars($kunde['name']) ?></td>
-                <td><?= htmlspecialchars($kunde['nummer']) ?></td>
-                <td><?= htmlspecialchars($kunde['umail']) ?></td>
-                <td><?= htmlspecialchars($kunde['geloescht']) ?></td>
-                <td>
-                    <button type="button" class="btn btn-warning" onclick="markAsDeleted(<?= $kunde['id'] ?>)">Als gelöscht markieren</button>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+        <tbody id="kunden-table-body">
+          <!-- Daten werden dynamisch geladen -->
         </tbody>
-    </table>
+        <tfoot>
+          <tr>
+            <th>Kundenname</th>
+            <th>E-Mail</th>
+            <th>Telefonnummer</th>
+            <th>Beitritt</th>
+            <th>Geloescht</th>
+            <th>Aktionen</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
 
-    <!-- Modal zum Erstellen eines neuen Kunden -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunde-create">Kunden erstellen</button>
-
-    <div class="modal fade" id="modal-kunde-create" tabindex="-1" role="dialog" aria-labelledby="modal-kunde-create-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-kunde-create-label">Kunde erstellen</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="createCustomerForm">
-                        <div class="form-group">
-                            <label for="umail">E-Mail</label>
-                            <input type="email" class="form-control" id="umail" name="umail" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="nummer">Telefonnummer</label>
-                            <input type="text" class="form-control" id="nummer" name="nummer">
-                        </div>
-                        <div class="form-group">
-                            <label for="kontonummer">Kontonummer</label>
-                            <input type="text" class="form-control" id="kontonummer" name="kontonummer">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
-                    <button type="button" class="btn btn-primary" id="saveCustomerBtn">Speichern</button>
-                </div>
+<!-- Kunden Erstellen Modal -->
+<div class="modal fade" id="modal-kunde-create">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Kunden Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createCustomerForm">
+                    <div class="form-group">
+                        <label for="umail">E-Mail</label>
+                        <input type="email" class="form-control" id="umail" name="umail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Kundenname</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nummer">Telefonnummer</label>
+                        <input type="text" class="form-control" id="nummer" name="nummer">
+                    </div>
+                    <div class="form-group">
+                        <label for="kontonummer">Kontonummer</label>
+                        <input type="text" class="form-control" id="kontonummer" name="kontonummer">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Speichern</button>
+                </form>
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
-    // Funktion zum Markieren eines Kunden als gelöscht
-    function markAsDeleted(kundenId) {
+// Funktion zum Laden der Kunden
+function loadCustomers() {
+    $.ajax({
+        url: 'include/fetch_kunden.php',
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+            let tableBody = $('#kunden-table-body');
+            tableBody.empty();
+            data.forEach(kunde => {
+                tableBody.append(`
+                    <tr>
+                        <td>${kunde.name}</td>
+                        <td>${kunde.umail}</td>
+                        <td>${kunde.nummer ? kunde.nummer : 'N/A'}</td>
+                        <td>${new Date(kunde.created_at).toLocaleDateString()}</td>
+                        <td>${kunde.geloescht}</td>
+                        <td>
+                            <button class="btn btn-warning" onclick="deleteCustomer(${kunde.id})">Löschen</button>
+                        </td>
+                    </tr>
+                `);
+            });
+        },
+        error: function(xhr, status, error) {
+            alert('Fehler beim Laden der Kunden.');
+        }
+    });
+}
+
+// Funktion zum Löschen eines Kunden
+function deleteCustomer(kundenId) {
+    if (confirm('Möchten Sie diesen Kunden wirklich löschen?')) {
         $.ajax({
-            url: 'kunden_update.php',
+            url: 'include/kunden_update.php',
             type: 'POST',
-            data: {kunden_id: kundenId},
+            data: { kunden_id: kundenId },
             success: function(response) {
-                alert('Kunde wurde als gelöscht markiert.');
-                location.reload();  // Seite neu laden
+                alert('Kunde wurde gelöscht.');
+                loadCustomers();
             },
             error: function() {
-                alert('Fehler beim Markieren des Kunden.');
+                alert('Fehler beim Löschen des Kunden.');
             }
         });
     }
+}
 
-    // Formular zum Erstellen eines neuen Kunden
-    document.getElementById('saveCustomerBtn').addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('createCustomerForm'));
+// Formular zur Erstellung eines neuen Kunden
+$('#createCustomerForm').submit(function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
 
-        // AJAX-Anfrage zum Erstellen des Kunden
-        fetch('kunden_create.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert('Kunde erfolgreich erstellt!');
-                $('#modal-kunde-create').modal('hide');  // Modal schließen
-                location.reload();  // Seite neu laden
-            } else {
-                alert('Fehler: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Fehler:', error);
-            alert('Ein unerwarteter Fehler ist aufgetreten.');
-        });
+    fetch('include/kunden_create.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Kunde erfolgreich erstellt!');
+            $('#modal-kunde-create').modal('hide');
+            loadCustomers();  // Kunden neu laden
+        } else {
+            alert('Fehler: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein unerwarteter Fehler ist aufgetreten.');
     });
-</script>
+});
 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+// Beim Laden der Seite Kunden laden
+$(document).ready(function() {
+    loadCustomers();
+});
+</script>
 
 </body>
 </html>

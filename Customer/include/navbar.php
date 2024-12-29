@@ -77,7 +77,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                     <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'index.php' ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Mitarbeiter Bereich
+                            Kunden Bereich
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -85,40 +85,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                         <li class="nav-item">
                             <a href="index.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'index.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="eventplanung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'eventplanung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Eventplanung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="training.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'training.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Trainings Kalender</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a href="anfragen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'anfragen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Anfragen</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="calendar.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'calendar.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Kalender</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="verbesserungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'verbesserungen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Verbesserungsvorschlag</p>
+                                <p>Rechnungen</p>
                             </a>
                         </li>
                     </ul>

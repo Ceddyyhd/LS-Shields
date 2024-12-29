@@ -204,15 +204,15 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="modal-body">
             <div class="form-group">
-              <label>Text Disabled</label>
+              <label>Unternehmen</label>
               <input type="text" class="form-control" placeholder="Unternehmen" disabled>
             </div>
             <div class="form-group">
-              <label>Text Disabled</label>
+              <label>Ansprechperson</label>
               <input type="text" class="form-control" placeholder="Ansprechperson" disabled>
             </div>
             <div class="form-group">
-              <label>Text Disabled</label>
+              <label>Nummer</label>
               <input type="text" class="form-control" placeholder="Nummer" disabled>
             </div>
             <hr>

@@ -10,6 +10,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
 <?php include 'include/navbar.php'; ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
   <!-- Content Wrapper. Contains page content -->

@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kundenverwaltung</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-</head>
-<body>
+<html lang="en">
+<?php include 'include/header.php'; ?>
+
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+<?php include 'include/navbar.php'; ?>
+
+<!-- jQuery (notwendig für Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <div class="container mt-5">
     <!-- Kunden-Tabelle -->

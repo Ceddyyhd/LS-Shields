@@ -111,7 +111,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // AJAX-Anfrage senden
-    fetch('include/kunde_create.php', {
+    fetch('include/kunden_create.php', {
         method: 'POST',
         body: formData,
     })

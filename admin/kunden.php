@@ -88,11 +88,77 @@ if (!$kunde) {
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="dokumente">
-                    <!-- Dokumente Anzeigen (Beispiel) -->
-                    <ul>
-                      <li>Dokument 1</li>
-                      <li>Dokument 2</li>
-                    </ul>
+                    
+
+                  <div class="form-group row">
+    <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
+    <div class="col-sm-10">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+            Dokument hochladen
+        </button>
+    </div>
+</div>
+
+<!-- Modal für Dateiupload -->
+<div class="modal fade" id="modal-primary">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                        Datei hochladen
+                    <?php else: ?>
+                        Keine Berechtigung
+                    <?php endif; ?>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
+                <form id="uploadForm" action="include/upload_customer_document.php" method="POST" enctype="multipart/form-data">
+                    <!-- Kunden-ID -->
+                    <input type="hidden" name="customer_id" value="<?= htmlspecialchars($customer_id); ?>">
+
+                    <div class="modal-body">
+                        <!-- Eingabe für den benutzerdefinierten Namen -->
+                        <div class="form-group">
+                            <label for="documentName">Dokumentname</label>
+                            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Vertrag" required>
+                        </div>
+
+                        <!-- Dateiupload -->
+                        <div class="form-group">
+                            <label for="documentFile">Datei auswählen</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="submit" class="btn btn-primary">Hochladen</button>
+                    </div>
+                </form>
+            <?php else: ?>
+                <!-- Nachricht für Benutzer ohne Berechtigung -->
+                <div class="modal-body">
+                    <p>Sie haben keine Berechtigung, Dateien hochzuladen.</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+
+
                   </div>
 
                   <div class="tab-pane" id="notizen">

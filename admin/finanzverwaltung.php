@@ -157,7 +157,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         var formData = $('#finanzenForm').serialize(); // Alle Formulardaten serialisieren
 
         $.ajax({
-            url: 'include/finanzen_add_entry.php',  // Das PHP-Skript, das die Daten verarbeitet
+            url: 'include/finanzen_get_categories.php',  // Das PHP-Skript, das die Daten verarbeitet
             type: 'POST',
             data: formData,  // Die gesammelten Formulardaten
             dataType: 'json',  // Erwartetes Format der Antwort

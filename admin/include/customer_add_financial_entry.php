@@ -8,7 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $betrag = $_POST['betrag'];
     $erstellt_von = $_POST['erstellt_von'];  // Benutzername des angemeldeten Benutzers
 
+    // Debugging: Ausgabe der übergebenen Werte
+    error_log("Daten empfangen: Typ = $typ, Kategorie = $kategorie, Notiz = $notiz, Betrag = $betrag, Erstellt von = $erstellt_von");
+
     try {
+        // Überprüfen, ob Betrag eine Zahl ist
+        if (!is_numeric($betrag)) {
+            throw new Exception("Betrag muss eine Zahl sein.");
+        }
+
         // Einfügen der Finanzdaten in die Tabelle
         $sql = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
                 VALUES (:typ, :kategorie, :notiz, :betrag, :erstellt_von)";
@@ -18,13 +26,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':notiz', $notiz);
         $stmt->bindParam(':betrag', $betrag);
         $stmt->bindParam(':erstellt_von', $erstellt_von);
+
+        // Debugging: Vor dem Ausführen der Anfrage
+        error_log("SQL-Befehl: " . $sql);
+
         $stmt->execute();
 
         // Erfolg zurückgeben
         echo json_encode(['status' => 'success']);
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         // Fehlerbehandlung
+        error_log("Fehler: " . $e->getMessage()); // Fehler ins Log schreiben
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    } catch (PDOException $e) {
+        // Fehlerbehandlung für PDO Fehler
+        error_log("PDO Fehler: " . $e->getMessage()); // Fehler ins Log schreiben
+        echo json_encode(['status' => 'error', 'message' => "Fehler bei der Datenbankabfrage: " . $e->getMessage()]);
     }
 }
 ?>

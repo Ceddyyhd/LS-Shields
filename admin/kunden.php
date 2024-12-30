@@ -818,7 +818,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
-                    
+
                     // Finanzdaten hinzufügen (für Einnahme)
                     $.ajax({
                         url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten

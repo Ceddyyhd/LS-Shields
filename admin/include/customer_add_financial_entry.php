@@ -23,16 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
                 VALUES (:typ, :kategorie, :notiz, :betrag, :erstellt_von)";
         $stmt = $conn->prepare($sql);
+
+        // Gebe den SQL-Befehl und die gebundenen Parameter aus
+        error_log("SQL-Befehl: " . $sql);
+
+        // Parameter binden
         $stmt->bindParam(':typ', $typ);
         $stmt->bindParam(':kategorie', $kategorie);
         $stmt->bindParam(':notiz', $notiz);
         $stmt->bindParam(':betrag', $betrag);
         $stmt->bindParam(':erstellt_von', $erstellt_von);
 
-        // Fehlerprotokollierung: Vor dem Ausführen der Anfrage
-        error_log("SQL-Befehl: " . $sql);
+        // Vor der Ausführung protokollieren
+        error_log("Binde Parameter und führe aus.");
 
-        // SQL-Ausführung
         $stmt->execute();
 
         // Erfolg zurückgeben

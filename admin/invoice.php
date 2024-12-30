@@ -205,24 +205,9 @@ foreach ($settings as $setting) {
               <!-- Print and PDF download -->
               <div class="row no-print">
                 <div class="col-12">
-                <button id="generatePdf" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-    <i class="fas fa-download"></i> Generate PDF
-</button>
-
-<script>
-    document.getElementById('generatePdf').addEventListener('click', function() {
-        // Ersetze diese URL mit der URL deiner generierten PDF-Datei
-        var pdfUrl = ''; 
-        
-        // Öffne das PDF in einem neuen Fenster
-        var printWindow = window.open(pdfUrl, '_blank');
-
-        // Warte, bis das PDF vollständig geladen ist, und öffne das Druckdialogfenster
-        printWindow.onload = function() {
-            printWindow.print(); // Druckdialog öffnen
-        };
-    });
-</script>
+                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;" onclick="window.print();">
+                  <i class="fas fa-download"></i> Generate PDF
+                </button>
                 </div>
               </div>
             </div>

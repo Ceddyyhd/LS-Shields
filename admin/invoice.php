@@ -51,7 +51,7 @@ $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
 // Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
 if (!$customer) {
-    die("Kunde nicht gefunden.");
+    die("Kunde nicht gefunden." + $customer);
 }
 
 ?>

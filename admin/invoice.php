@@ -188,7 +188,7 @@ foreach ($settings as $setting) {
               </div>
 
               <!-- Total amount row -->
-              <div class="row" style="margin-left: 75%;">
+              <div class="row" style="margin-left: 70%;">
                 <div class="col-6">
                   <p class="lead">Amount Due <?= htmlspecialchars($invoice['due_date']); ?></p>
                   <div class="table-responsive">

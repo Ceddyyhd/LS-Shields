@@ -21,7 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Gesamtpreis berechnen
     $total_price = 0;
     foreach ($description as $index => $desc) {
-        $total_price += ($unit_price[$index] * $quantity[$index]);
+        // Umwandlung der Werte in numerische Werte (float für Preis und int für Menge)
+        $price = (float)$unit_price[$index];  // Stückpreis als float
+        $qty = (int)$quantity[$index];         // Anzahl als int
+        
+        // Berechnung des Gesamtpreises der einzelnen Position
+        $total_price += ($price * $qty);
     }
 
     // Rabatt anwenden

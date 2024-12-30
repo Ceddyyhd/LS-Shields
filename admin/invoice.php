@@ -52,11 +52,6 @@ if (!$customer) {
     die("Kunde nicht gefunden.");
 }
 
-// Weiterverarbeitung oder Ausgabe
-echo "Rechnungsnummer: " . htmlspecialchars($invoice['invoice_number']) . "<br>";
-echo "Kunde: " . htmlspecialchars($customer['name']) . "<br>";
-echo "Status: <span class='badge $status_class'>" . htmlspecialchars($invoice['status']) . "</span><br>";
-
 // Weitere Details der Rechnung ausgeben...
 ?>
 

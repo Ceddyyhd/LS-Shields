@@ -166,13 +166,13 @@ if (!$customer) {
                       <td><?= htmlspecialchars($item['quantity']); ?></td>
                       <td><?= $subtotal; ?>$</td>
                     </tr>
+                    <?php endforeach; ?>
                     <tr>
                       <td>Rabatt</td>
                       <td></td>
                       <td></td>
-                      <td>- <?= htmlspecialchars($item['discount']); ?>$</td>
+                      <td>- <?= htmlspecialchars($invoice['discount']); ?>$</td>
                     </tr>
-                    <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>

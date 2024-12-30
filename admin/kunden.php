@@ -660,7 +660,7 @@ $("#noteForm").on("submit", function (e) {
                 
                 <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
             </div>
-            <div class="col-3">
+            <div class="col-3" style="margin-down: 5px;">
                 
                 <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
             </div>

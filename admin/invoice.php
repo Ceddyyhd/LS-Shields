@@ -9,77 +9,49 @@ if (!isset($customer_id) || !is_numeric($customer_id)) {
     die("Ungültige Kunden-ID.");
 }
 
-// Abfrage für die Rechnungen des Kunden (Filtern nach customer_id)
-$sql_invoice = "SELECT * FROM invoices WHERE customer_id = :customer_id ORDER BY created_at DESC";
+// Abfrage für die Rechnung des Kunden
+$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number ORDER BY created_at DESC";
 $stmt_invoice = $conn->prepare($sql_invoice);
-$stmt_invoice->execute(['customer_id' => $customer_id]);
-$invoices = $stmt_invoice->fetchAll(PDO::FETCH_ASSOC);
+$stmt_invoice->execute(['invoice_number' => $customer_id]);
+$invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob Rechnungen für den Kunden gefunden wurden
-if (!$invoices) {
-    die("Keine Rechnungen für diesen Kunden gefunden.");
+// Überprüfen, ob ein Ergebnis für die Rechnung gefunden wurde
+if (!$invoice) {
+    die("Rechnung nicht gefunden.");
 }
 
-// Rechnungen und Rechnungspositionen anzeigen
-foreach ($invoices as $invoice) {
-    // Rechnungspositionen dekodieren (falls die Positionen als JSON gespeichert sind)
-    $invoice_items = json_decode($invoice['description'], true);
+// Rechnungspositionen dekodieren (falls die Positionen als JSON gespeichert sind)
+$invoice_items = json_decode($invoice['description'], true);
 
-    // Überprüfen, ob die Rechnungspositionen erfolgreich dekodiert wurden
-    if (!$invoice_items) {
-        die("Fehler beim Dekodieren der Rechnungspositionen.");
-    }
+// Überprüfen, ob die Rechnungspositionen erfolgreich dekodiert wurden
+if (!$invoice_items) {
+    die("Fehler beim Dekodieren der Rechnungspositionen.");
+}
 
-    // Status der Rechnung auswerten
-    $status_class = '';
-    if ($invoice['status'] == 'Offen') {
-        $status_class = 'badge-warning';  // Offene Rechnung
-    } elseif ($invoice['status'] == 'Überfällig') {
-        $status_class = 'badge-danger';  // Überfällige Rechnung
-    } elseif ($invoice['status'] == 'Bezahlt') {
-        $status_class = 'badge-success';  // Bezahlt
-    }
+// Status der Rechnung auswerten
+$status_class = '';
+if ($invoice['status'] == 'Offen') {
+    $status_class = 'badge-warning';  // Offene Rechnung
+} elseif ($invoice['status'] == 'Überfällig') {
+    $status_class = 'badge-danger';  // Überfällige Rechnung
+} elseif ($invoice['status'] == 'Bezahlt') {
+    $status_class = 'badge-success';  // Bezahlt
+}
 
-    // Ausgabe der Rechnungsdaten
-    echo "<h2>Rechnung #{$invoice['invoice_number']}</h2>";
-    echo "<p>Status: <span class='badge {$status_class}'>{$invoice['status']}</span></p>";
-    echo "<p>Fälligkeitsdatum: {$invoice['due_date']}</p>";
+$sql = "SELECT customer_id FROM invoices WHERE customer_id = :customer_id";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['customer_id' => $customer_id]);
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Rechnungspositionen anzeigen
-    echo "<h3>Rechnungspositionen</h3>";
-    echo "<table border='1' cellpadding='10'>
-            <thead>
-                <tr>
-                    <th>Beschreibung</th>
-                    <th>Einzelpreis</th>
-                    <th>Anzahl</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>";
+// Kundenabfrage
+$sql_customer = "SELECT * FROM kunden WHERE id = :result";
+$stmt_customer = $conn->prepare($sql_customer);
+$stmt_customer->execute(['result' => $result]);
+$customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
-    $total = 0;
-    foreach ($invoice_items as $item) {
-        $subtotal = $item['unit_price'] * $item['quantity'];
-        $total += $subtotal;
-        echo "<tr>
-                <td>{$item['description']}</td>
-                <td>{$item['unit_price']}€</td>
-                <td>{$item['quantity']}</td>
-                <td>{$subtotal}€</td>
-              </tr>";
-    }
-
-    echo "</tbody></table>";
-
-    // Rabatt anzeigen, falls vorhanden
-    if ($invoice['discount'] > 0) {
-        echo "<p>Rabatt: {$invoice['discount']}%</p>";
-    }
-
-    // Endbetrag berechnen und anzeigen
-    $final_total = $total - ($total * ($invoice['discount'] / 100));
-    echo "<p><strong>Endbetrag: {$final_total}€</strong></p>";
+// Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
+if (!$customer) {
+    die("Kunde nicht gefunden.");
 }
 
 ?>

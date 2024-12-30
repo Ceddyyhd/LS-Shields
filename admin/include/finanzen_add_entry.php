@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
             VALUES ('$typ', '$kategorie', '$notiz', '$betrag', '$erstellt_von')";
 
-    if (mysqli_query($conn, $sql)) {
+    if (mysqli_query($stmt, $sql)) {
         echo json_encode(["status" => "success", "message" => "Eintrag erfolgreich hinzugefügt!"]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Fehler: " . mysqli_error($conn)]);
+        echo json_encode(["status" => "error", "message" => "Fehler: " . mysqli_error($stmt)]);
     }
 }
 ?>

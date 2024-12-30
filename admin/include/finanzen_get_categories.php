@@ -1,7 +1,7 @@
 <?php
-include 'db.php';
+include 'db.php';  // Deine Datenbankverbindung
 
-// Abfrage zum Abrufen aller Kategorien
+// SQL-Abfrage zum Abrufen aller Kategorien
 $sql = "SELECT name FROM finanzen_kategorien";
 $result = mysqli_query($conn, $sql);
 
@@ -9,13 +9,13 @@ if (!$result) {
     die("Fehler bei der Abfrage: " . mysqli_error($conn));
 }
 
-// Alle Ergebnisse in ein Array speichern
+// Alle Kategorien in ein Array laden
 $categories = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $categories[] = $row;
 }
 
-// Ausgabe als JSON
+// JSON-Ausgabe der Kategorien
 echo json_encode($categories);
 
 // Schließen der Verbindung

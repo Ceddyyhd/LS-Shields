@@ -96,29 +96,6 @@
               </button>
 
 
-              <script>
-  $(document).ready(function() {
-    $.ajax({
-      url: 'get_categories.php',  // Dein PHP-Skript
-      method: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        if (data.length > 0) {
-          data.forEach(function(category) {
-            $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
-          });
-        } else {
-          $('#kategorie').append('<option value="">Keine Kategorien verfügbar</option>');
-        }
-      },
-      error: function() {
-        alert('Fehler beim Laden der Kategorien.');
-      }
-    });
-  });
-</script>
-
-
               <!-- Modal -->
               <div class="modal fade" id="neuen-kassen-eintrag">
                 <div class="modal-dialog">
@@ -142,7 +119,7 @@
                         <div class="form-group">
                           <label>Kategorie</label>
                           <select class="custom-select" name="kategorie" id="kategorie">
-                              <option value="">Lade Kategorien...</option>
+                              <option value="">Lade Kategorien...</option> <!-- Platzhalter -->
                           </select>
                         </div>
 
@@ -167,6 +144,34 @@
         </div>
       </div>
     </div>
+
+    <script>
+    $(document).ready(function() {
+        // AJAX-Anfrage, um die Kategorien zu laden
+        $.ajax({
+            url: 'get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Dropdown leeren
+                $('#kategorie').empty();
+
+                // Überprüfen, ob Kategorien vorhanden sind
+                if (data.length > 0) {
+                    // Optionen für jedes Element in den abgerufenen Kategorien hinzufügen
+                    data.forEach(function(category) {
+                        $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
+                    });
+                } else {
+                    $('#kategorie').append('<option value="">Keine Kategorien verfügbar</option>');
+                }
+            },
+            error: function() {
+                alert('Es gab einen Fehler beim Laden der Kategorien.');
+            }
+        });
+    });
+</script>
 
     <!-- Table für Finanzdaten -->
     <div class="card">

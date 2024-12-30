@@ -306,7 +306,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+                    <?php if ($_SESSION['permissions']['upload_file1'] ?? false): ?>
                         Datei hochladen
                     <?php else: ?>
                         Keine Berechtigung
@@ -317,7 +317,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
 
-            <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+            <?php if ($_SESSION['permissions']['upload_file1'] ?? false): ?>
                 <!-- Formular zum Hochladen von Dokumenten -->
                     <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
                         <!-- Kunden-ID -->

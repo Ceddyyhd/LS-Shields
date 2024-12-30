@@ -586,15 +586,15 @@ $("#noteForm").on("submit", function (e) {
                     <form id="invoice-form">
                         <div class="form-group">
                             <label>Unternehmen</label>
-                            <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
+                            <input type="text" class="form-control" name="unternehmen" value="<?= $kunden['name'] ?>" disabled>
                         </div>
                         <div class="form-group">
-                            <label>Ansprechperson</label>
-                            <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
+                            <label>UMail</label>
+                            <input type="text" class="form-control" name="ansprechperson" value="<?= $kunden['umail'] ?>" disabled>
                         </div>
                         <div class="form-group">
                             <label>Nummer</label>
-                            <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
+                            <input type="text" class="form-control" name="nummer" value="<?= $kunden['nummer'] ?>" disabled>
                         </div>
                         <hr>
                         <input type="hidden" id="kunden_id" name="kunden_id">

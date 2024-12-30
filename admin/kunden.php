@@ -772,7 +772,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                         <span class="badge <?= $badge_class; ?>"><?= $status; ?></span>
                     </td>
-                    <td><a href="rechnung.php?id=<?= htmlspecialchars($invoice['invoice_number']); ?>">Link zur Rechnung</a></td>
+                    <td><a href="invoice.php?id=<?= htmlspecialchars($invoice['invoice_number']); ?>">Link zur Rechnung</a></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

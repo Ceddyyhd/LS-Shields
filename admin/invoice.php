@@ -2,7 +2,7 @@
 include 'include/db.php';  // Datenbankverbindung einbinden
 
 // Kunden-ID aus der URL holen
-$customer_id = $_GET['id'];  // z.B. ?id=1
+$customer_id = $_GET['invoice_number'];  // z.B. ?id=1
 
 // Überprüfen, ob eine gültige Kunden-ID übergeben wurde
 if (!isset($customer_id) || !is_numeric($customer_id)) {

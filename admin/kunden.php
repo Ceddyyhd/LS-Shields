@@ -639,30 +639,37 @@ $("#noteForm").on("submit", function (e) {
 <script>
     // Formular validieren und per AJAX absenden
     $(document).ready(function () {
-        $("#invoice-form").on("submit", function (e) {
-            e.preventDefault();  // Verhindert das Standardformular-Verhalten (Seitenwechsel)
+    $("#invoice-form").on("submit", function (e) {
+        e.preventDefault();  // Verhindert das Standardformular-Verhalten (Seitenwechsel)
 
-            var formData = new FormData(this);  // Formulardaten sammeln
+        var formData = new FormData(this);  // Formulardaten sammeln
 
-            $.ajax({
-                url: "include/create_invoice.php",  // Ziel-URL
-                type: "POST",
-                data: formData,
-                processData: false,  // Wichtige Option für FormData
-                contentType: false,  // Wichtige Option für FormData
-                success: function (response) {
-                    // Erfolgsnachricht vom Server erhalten
-                    $('#response-message').html(response);  // Zeige die Antwort im Div an
+        $.ajax({
+            url: "include/create_invoice.php",  // Ziel-URL
+            type: "POST",
+            data: formData,
+            processData: false,  // Wichtige Option für FormData
+            contentType: false,  // Wichtige Option für FormData
+            success: function (response) {
+                var res = JSON.parse(response);  // Antwort als JSON parsen
+
+                // Wenn die Anfrage erfolgreich war
+                if (res.status === "success") {
+                    $('#response-message').html("Rechnung erstellt!");  // Zeige die Erfolgsmeldung an
                     $('#rechnung-erstellen').modal('hide');  // Schließe das Modal
+                    $('#invoice-number').text(res.invoice_number);  // Zeige die Rechnungsnummer im Popup an
                     $('#success-popup').modal('show');  // Zeige das Erfolgspopup
-                },
-                error: function (xhr, status, error) {
-                    console.error("Fehler beim Absenden der Anfrage:", error);
-                    alert("Es ist ein Fehler aufgetreten!");
+                } else {
+                    $('#response-message').html(res.message);  // Fehlernachricht anzeigen
                 }
-            });
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler beim Absenden der Anfrage:", error);
+                alert("Es ist ein Fehler aufgetreten!");
+            }
         });
     });
+});
 </script>
 
 <!-- Erfolgs-Popup -->

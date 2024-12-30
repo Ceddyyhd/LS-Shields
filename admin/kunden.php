@@ -318,34 +318,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
-                <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
-                <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
-                    <!-- Kunden-ID -->
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
-                    <!-- Dokumenttyp -->
-                    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
+                <!-- Formular zum Hochladen von Dokumenten -->
+                    <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
+                        <!-- Kunden-ID -->
+                        <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
+                        <!-- Dokumenttyp -->
+                        <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
-                    <div class="modal-body">
-                        <!-- Eingabe für den benutzerdefinierten Namen -->
-                        <div class="form-group">
-                            <label for="documentName">Dokumentname</label>
-                            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
-                        </div>
+                        <div class="modal-body">
+                            <!-- Eingabe für den benutzerdefinierten Namen -->
+                            <div class="form-group">
+                                <label for="documentName">Dokumentname</label>
+                                <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
+                            </div>
 
-                        <!-- Dateiupload -->
-                        <div class="form-group">
-                            <label for="documentFile">Datei auswählen</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
-                                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+                            <!-- Dateiupload -->
+                            <div class="form-group">
+                                <label for="documentFile">Datei auswählen</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                                    <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                        <button type="submit" class="btn btn-primary">Hochladen</button>
-                    </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                            <button type="submit" class="btn btn-primary">Hochladen</button>
+                        </div>
                 </form>
             <?php else: ?>
                 <!-- Nachricht für Benutzer ohne Berechtigung -->

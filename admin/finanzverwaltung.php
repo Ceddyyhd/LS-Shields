@@ -131,7 +131,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
                         <div class="form-group">
                           <label>Kategorie</label>
                           <select class="custom-select" name="kategorie" id="kategorie">
-                              <option value="">Lade Kategorien...</option> <!-- Platzhalter -->
+                            
                           </select>
                         </div>
 

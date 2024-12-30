@@ -634,6 +634,41 @@ $("#noteForm").on("submit", function (e) {
     </div>
     </div>
 
+    <script>
+    function checkAndAddRow(input) {
+        const container = document.getElementById('invoice-items');
+        const lastRow = container.lastElementChild;
+        
+        // Neue Zeile hinzufügen, wenn das Feld für Beschreibung nicht leer ist
+        if (input.value !== "" && lastRow === input.closest('.row')) {
+            addNewRow();
+        }
+    }
+
+    // Funktion, um eine neue Zeile hinzuzufügen
+    function addNewRow() {
+        const container = document.getElementById('invoice-items');
+        const newRow = document.createElement('div');
+        newRow.classList.add('row', 'invoice-item');
+        
+        newRow.innerHTML = `
+            <div class="col-5">
+                <p>Beschreibung</p>
+                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+            </div>
+            <div class="col-3">
+                <p>Stück Preis</p>
+                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
+            </div>
+            <div class="col-3">
+                <p>Anzahl</p>
+                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
+            </div>
+        `;
+        
+        container.appendChild(newRow);
+    }
+</script>
 
             <div class="card-body">
                 <table class="table table-bordered">

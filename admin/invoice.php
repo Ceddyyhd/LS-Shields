@@ -1,3 +1,25 @@
+<?php
+include 'db.php';  // Datenbankverbindung einbinden
+
+// Rechnungs-ID aus der URL holen
+$invoice_id = $_GET['id'];  // z.B. ?id=13745
+
+// Abfrage für die spezifische Rechnung
+$sql_invoice = "SELECT * FROM invoices WHERE id = :invoice_id";
+$stmt_invoice = $conn->prepare($sql_invoice);
+$stmt_invoice->execute(['invoice_id' => $invoice_id]);
+$invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
+
+// Wenn die Rechnung existiert, dekodieren wir die Rechnungspositionen
+$invoice_items = json_decode($invoice['description'], true); // JSON dekodieren
+
+// Berechnung des Gesamtbetrags
+$total_amount = 0;
+foreach ($invoice_items as $item) {
+    $total_amount += $item['unit_price'] * $item['quantity']; // Preis * Menge
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'include/header.php'; ?>
@@ -8,11 +30,8 @@
   <?php include 'include/navbar.php'; ?>
 
   <!-- Main Sidebar Container -->
-<!-- jQuery (notwendig für Bootstrap) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -21,7 +40,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Invoice</h1>
+            <h1>Invoice #<?= htmlspecialchars($invoice['invoice_number']); ?></h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -37,8 +56,6 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-
-
             <!-- Main content -->
             <div class="invoice p-3 mb-3">
               <!-- title row -->
@@ -46,12 +63,23 @@
                 <div class="col-12">
                   <h4>
                     <i class="fas fa-globe"></i> LS Shields
-                    <small class="float-right">Date: 2/10/2014</small>
-                    <span class="badge badge-success">Bezahlt</span>
+                    <small class="float-right">Date: <?= htmlspecialchars($invoice['created_at']); ?></small>
+                    <?php
+                    // Dynamisch Status-Badge basierend auf dem Status der Rechnung
+                    $status_class = '';
+                    if ($invoice['status'] == 'Offen') {
+                        $status_class = 'badge-warning';  // Offene Rechnung
+                    } elseif ($invoice['status'] == 'Überfällig') {
+                        $status_class = 'badge-danger';  // Überfällige Rechnung
+                    } elseif ($invoice['status'] == 'Bezahlt') {
+                        $status_class = 'badge-success';  // Bezahlt
+                    }
+                    ?>
+                    <span class="badge <?= $status_class; ?>"><?= htmlspecialchars($invoice['status']); ?></span>
                   </h4>
                 </div>
-                <!-- /.col -->
               </div>
+
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
@@ -64,28 +92,20 @@
                     Email: XXX@XXX.XXX
                   </address>
                 </div>
-                <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
                   To
                   <address>
-                    <strong>John Doe</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (555) 539-1037<br>
-                    Email: john.doe@example.com
+                    <strong><?= htmlspecialchars($customer['name']); ?></strong><br>
+                    <?= htmlspecialchars($customer['umail']); ?><br>
+                    Phone: <?= htmlspecialchars($customer['nummer']); ?><br>
+                    Email: <?= htmlspecialchars($customer['umail']); ?>
                   </address>
                 </div>
-                <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
-                  <b>Invoice #007612</b><br>
-                  <br>
-                  <b>Order ID:</b> 4F3S8J<br>
-                  <b>Payment Due:</b> 2/22/2014<br>
-                  <b>Account:</b> 968-34567
+                  <b>Invoice #<?= htmlspecialchars($invoice['invoice_number']); ?></b><br>
+                  <b>Payment Due:</b> <?= htmlspecialchars($invoice['due_date']); ?><br>
                 </div>
-                <!-- /.col -->
               </div>
-              <!-- /.row -->
 
               <!-- Table row -->
               <div class="row">
@@ -93,64 +113,45 @@
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>Bescheibung</th>
-                      <th>Stück Anzahl</th>
+                      <th>Beschreibung</th>
+                      <th>Stück Preis</th>
                       <th>Anzahl</th>
                       <th>Subtotal</th>
                     </tr>
                     </thead>
                     <tbody>
+                    <?php
+                    foreach ($invoice_items as $item): 
+                        $subtotal = $item['unit_price'] * $item['quantity'];
+                    ?>
                     <tr>
-                      <td>Mitarbeiter Stunde</td>
-                      <td>10$</td>
-                      <td>10</td>
-                      <td>100§</td>
+                      <td><?= htmlspecialchars($item['description']); ?></td>
+                      <td><?= htmlspecialchars($item['unit_price']); ?>$</td>
+                      <td><?= htmlspecialchars($item['quantity']); ?></td>
+                      <td><?= $subtotal; ?>$</td>
                     </tr>
-                    <tr>
-                      <td>Mitarbeiter Stunde</td>
-                      <td>10$</td>
-                      <td>10</td>
-                      <td>100§</td>
-                    </tr>
-                    <tr>
-                      <td>Mitarbeiter Stunde</td>
-                      <td>10$</td>
-                      <td>10</td>
-                      <td>100§</td>
-                    </tr>
-                    <tr>
-                      <td>Rabatt</td>
-                      <td></td>
-                      <td></td>
-                      <td>5%</td>
-                    </tr>
+                    <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
-                <!-- /.col -->
               </div>
-              <!-- /.row -->
 
-              <div class="row"  style="margin-left: 315px;">
-                <!-- accepted payments column -->
-                <!-- /.col -->
+              <!-- Total amount row -->
+              <div class="row" style="margin-left: 90%;">
                 <div class="col-6">
-                  <p class="lead">Amount Due 2/22/2014</p>
-
+                  <p class="lead">Amount Due <?= htmlspecialchars($invoice['due_date']); ?></p>
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
                         <th>Total:</th>
-                        <td>$265.24</td>
+                        <td><?= $total_amount; ?>$</td>
                       </tr>
                     </table>
                   </div>
                 </div>
-                <!-- /.col -->
               </div>
-              <!-- /.row -->
 
-              <!-- this row will not appear when printing -->
+              <!-- Print and PDF download -->
               <div class="row no-print">
                 <div class="col-12">
                   <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
@@ -159,36 +160,23 @@
                 </div>
               </div>
             </div>
-            <!-- /.invoice -->
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
+
+  <!-- Footer -->
   <footer class="main-footer no-print">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
 </div>
-<!-- ./wrapper -->
 
-<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
 </body>
 </html>

@@ -368,32 +368,33 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     });
 </script>
 <script>
-$(document).ready(function() {
-    $("#uploadForm").on("submit", function(e) {
-        e.preventDefault(); // Verhindert das Standardformularverhalten
+    $(document).ready(function() {
+        $("#uploadForm").on("submit", function(e) {
+            e.preventDefault(); // Verhindert das Standardformularverhalten
 
-        var formData = new FormData(this);
-        
-        console.log("FormData:", formData); // Überprüfen, ob FormData korrekt erstellt wird
+            var formData = new FormData(this);
+            console.log("FormData:", formData); // Logge FormData zur Überprüfung
 
-        $.ajax({
-            url: $(this).attr("action"), // Die URL, an die das Formular gesendet wird
-            type: $(this).attr("method"), // Die Methode (POST)
-            data: formData, // Sende die Formulardaten
-            processData: false, // Verhindert, dass jQuery die Daten verarbeitet
-            contentType: false, // Verhindert, dass jQuery den Content-Type setzt
-            success: function(response) {
-                console.log("Erfolgreich hochgeladen:", response); // Erfolgsnachricht im Log
-                $("#modal-primary").modal("hide"); // Modal schließen
-                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
-            },
-            error: function(xhr, status, error) {
-                console.log("Fehler:", error); // Fehler im Log ausgeben
-                alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
-            }
+            $.ajax({
+                url: $(this).attr("action"), // URL des Formulars
+                type: $(this).attr("method"), // POST-Methode
+                data: formData,
+                processData: false, // Wichtige Einstellung bei FormData
+                contentType: false, // Wichtige Einstellung bei FormData
+                success: function(response) {
+                    console.log("Erfolgreich hochgeladen:", response); // Erfolgslog
+                    $("#modal-primary").modal("hide"); // Modal schließen
+                    location.reload(); // Seite neu laden
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX-Fehler:", error); // Detaillierte Fehlermeldung
+                    console.log("XHR Status:", xhr.status); // HTTP-Status des Requests
+                    console.log("Antwort:", xhr.responseText); // Antwort vom Server
+                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlermeldung anzeigen
+                }
+            });
         });
     });
-});
 </script>
 
 

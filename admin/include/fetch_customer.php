@@ -13,7 +13,6 @@ try {
     $stmt = $conn->prepare("
         SELECT 
             k.id,
-            k.umail,
             k.name,
             k.nummer,
             k.created_at

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Rabatt anwenden
     $total_price = $total_price - ($total_price * ($discount / 100));
-    $discount = $total_price * $discount;
+    $discount = $total_price * ($discount / 100);
 
     // Berechnung der Zahlungsfrist (14 Tage nach dem Erstellungsdatum)
     $due_date = date('Y-m-d', strtotime('+14 days'));

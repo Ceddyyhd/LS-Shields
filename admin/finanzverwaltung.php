@@ -38,25 +38,27 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
   $(document).ready(function() {
     // AJAX-Anfrage zum Abrufen der Finanzdaten
     $.ajax({
-      url: 'include/get_financial_data.php',  // Dein PHP-Skript zum Abrufen der Daten
-      method: 'GET',
-      dataType: 'json',
-      success: function(data) {
-        // Überprüfen, ob Daten erfolgreich abgerufen wurden
-        if (data) {
-          // Aktualisieren der Info-Boxen mit den abgerufenen Werten
-          $('#kontostand').text(data.kontostand.toFixed(2) + ' €');
-          $('#einnahmen').text(data.einnahmen.toFixed(2) + ' €');
-          $('#ausgaben').text(data.ausgaben.toFixed(2) + ' €');
-        } else {
-          alert('Fehler beim Abrufen der Daten.');
+        url: 'include/get_financial_data.php',  // Dein PHP-Skript zum Abrufen der Daten
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log('Erhaltene Daten:', data);  // Füge das hinzu, um die empfangenen Daten zu sehen
+
+            // Überprüfen, ob die Daten korrekt abgerufen wurden
+            if (data && typeof data.einnahmen === 'number' && typeof data.ausgaben === 'number') {
+                // Aktualisieren der Info-Boxen mit den abgerufenen Werten
+                $('#kontostand').text(data.kontostand.toFixed(2) + ' €');
+                $('#einnahmen').text(data.einnahmen.toFixed(2) + ' €');
+                $('#ausgaben').text(data.ausgaben.toFixed(2) + ' €');
+            } else {
+                alert('Fehler beim Abrufen der Daten oder ungültiges Format.');
+            }
+        },
+        error: function() {
+            alert('Es gab einen Fehler bei der Anfrage.');
         }
-      },
-      error: function() {
-        alert('Es gab einen Fehler bei der Anfrage.');
-      }
     });
-  });
+});
 </script>
 
     <!-- Main content -->

@@ -27,6 +27,13 @@ $stmt_documents = $conn->prepare($sql_documents);
 $stmt_documents->execute(['user_id' => $customer_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
+// Notizen abrufen
+$sql_notes = "SELECT type, content, created_at, author FROM notes_customer WHERE user_id = :user_id ORDER BY created_at DESC";
+$stmt_notes = $conn->prepare($sql_notes);
+$stmt_notes->execute(['user_id' => $user_id]);
+$notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
+
+
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name 
                     FROM permissions p

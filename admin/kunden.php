@@ -831,13 +831,15 @@ $(document).ready(function() {
                             erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
                         },
                         success: function(response) {
+                            console.log('Finanzdaten Response:', response);  // Fehlerprotokollierung
                             if (response.status === 'success') {
                                 alert('Finanzdaten erfolgreich hinzugefügt!');
                             } else {
                                 alert('Fehler beim Hinzufügen der Finanzdaten: ' + response.message);
                             }
                         },
-                        error: function() {
+                        error: function(xhr, status, error) {
+                            console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                             alert('Fehler beim Hinzufügen der Finanzdaten.');
                         }
                     });
@@ -845,7 +847,8 @@ $(document).ready(function() {
                     alert('Fehler beim Aktualisieren der Rechnung!');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                 alert('Fehler beim Aktualisieren der Rechnung!');
             }
         });
@@ -880,13 +883,15 @@ $(document).ready(function() {
                             erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
                         },
                         success: function(response) {
+                            console.log('Finanzdaten Response:', response);  // Fehlerprotokollierung
                             if (response.status === 'success') {
                                 alert('Finanzdaten erfolgreich hinzugefügt!');
                             } else {
                                 alert('Fehler beim Hinzufügen der Finanzdaten.');
                             }
                         },
-                        error: function() {
+                        error: function(xhr, status, error) {
+                            console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                             alert('Fehler beim Hinzufügen der Finanzdaten.');
                         }
                     });
@@ -894,7 +899,8 @@ $(document).ready(function() {
                     alert('Fehler beim Aktualisieren der Rechnung!');
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                 alert('Fehler beim Aktualisieren der Rechnung!');
             }
         });

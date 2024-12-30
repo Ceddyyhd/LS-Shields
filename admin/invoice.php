@@ -125,7 +125,7 @@ $setting = $stmt->fetch(PDO::FETCH_ASSOC);
                 <div class="col-sm-4 invoice-col">
                   From
                   <address>
-                    <strong><?= htmlspecialchars($setting['unternehmen_namen']); ?></strong><br>
+                    <strong><?= htmlspecialchars($unternehmens_namen) ?></strong><br>
                     <?= htmlspecialchars($setting['adresse']); ?><br>
                     <?= htmlspecialchars($setting['stadt_adresse']); ?><br>
                     Phone: <?= htmlspecialchars($setting['telefonnummer']); ?><br>

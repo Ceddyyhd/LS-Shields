@@ -790,7 +790,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     // Wenn auf "Bezahlt"-Button geklickt wird
     $('.btn-bezahlt').click(function() {
         var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
@@ -810,36 +810,44 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     // Finanzdaten hinzufügen (für Einnahme)
                     $.ajax({
-                        url: 'include/customer_add_financial_entry.php',
+                        url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
                         method: 'POST',
                         data: {
                             typ: 'Einnahme',
                             kategorie: 'Rechnung',
                             notiz: 'Rechnung #' + invoiceNumber,
-                            betrag: row.find('.price').text(),
+                            betrag: row.find('.price').text(), // Preis aus der Tabelle
                             erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
                         },
                         success: function(response) {
                             if (response.status === 'success') {
                                 alert('Finanzdaten erfolgreich hinzugefügt!');
+                            } else {
+                                alert('Fehler beim Hinzufügen der Finanzdaten.');
                             }
+                        },
+                        error: function() {
+                            alert('Fehler beim Hinzufügen der Finanzdaten.');
                         }
                     });
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung!');
                 }
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren der Rechnung!');
             }
         });
     });
 
     // Wenn auf "Nicht Bezahlt"-Button geklickt wird
     $('.btn-nicht-bezahlt').click(function() {
-        var invoiceNumber = $(this).data('invoice');
+        var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
         var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Offen"
         $.ajax({
-            url: 'include/update_invoice_status.php',
+            url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,
@@ -851,24 +859,32 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     // Finanzdaten hinzufügen (für Ausgabe)
                     $.ajax({
-                        url: 'include/customer_add_financial_entry.php',
+                        url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
                         method: 'POST',
                         data: {
                             typ: 'Ausgabe',
                             kategorie: 'Rechnung',
                             notiz: 'Storno Rechnung #' + invoiceNumber,
-                            betrag: row.find('.price').text(),
+                            betrag: row.find('.price').text(), // Preis aus der Tabelle
                             erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
                         },
                         success: function(response) {
                             if (response.status === 'success') {
                                 alert('Finanzdaten erfolgreich hinzugefügt!');
+                            } else {
+                                alert('Fehler beim Hinzufügen der Finanzdaten.');
                             }
+                        },
+                        error: function() {
+                            alert('Fehler beim Hinzufügen der Finanzdaten.');
                         }
                     });
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung!');
                 }
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren der Rechnung!');
             }
         });
     });

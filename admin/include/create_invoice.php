@@ -46,21 +46,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Rabatt anwenden
     $total_price = $total_price - ($total_price * ($discount / 100));
 
+    // Berechnung der Zahlungsfrist (14 Tage nach dem Erstellungsdatum)
+    $due_date = date('Y-m-d', strtotime('+14 days'));
+
     // Rechnungsdaten in der Datenbank speichern
     if (!empty($invoice_items)) {
-        $sql = "INSERT INTO invoices (customer_id, invoice_number, description, price, discount, created_at) 
-                VALUES (:customer_id, :invoice_number, :description, :price, :discount, NOW())";
+        $sql = "INSERT INTO invoices (customer_id, invoice_number, description, price, discount, created_at, due_date, status) 
+                VALUES (:customer_id, :invoice_number, :description, :price, :discount, NOW(), :due_date, 'Offen')";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             'customer_id' => $customer_id,
             'invoice_number' => $invoice_number,
             'description' => json_encode($invoice_items),  // JSON für alle Positionen
             'price' => $total_price,
-            'discount' => $discount
+            'discount' => $discount,
+            'due_date' => $due_date
         ]);
 
         // Erfolgreiche Antwort zurückgeben
-        echo json_encode(["status" => "success", "invoice_number" => $invoice_number]);
+        echo json_encode(["status" => "success", "invoice_number" => $invoice_number, "due_date" => $due_date]);
     } else {
         echo json_encode(["status" => "error", "message" => "Fehler: Keine gültigen Rechnungspositionen."]);
     }

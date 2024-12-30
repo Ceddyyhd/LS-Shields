@@ -658,6 +658,7 @@ $("#noteForm").on("submit", function (e) {
                     $('#response-message').html("Rechnung erstellt!");  // Zeige die Erfolgsmeldung an
                     $('#rechnung-erstellen').modal('hide');  // Schließe das Modal
                     $('#invoice-number').text(res.invoice_number);  // Zeige die Rechnungsnummer im Popup an
+                    $('#due-date').text(res.due_date);  // Zeige die Zahlungsfrist im Popup an
                     $('#success-popup').modal('show');  // Zeige das Erfolgspopup
                 } else {
                     $('#response-message').html(res.message);  // Fehlernachricht anzeigen

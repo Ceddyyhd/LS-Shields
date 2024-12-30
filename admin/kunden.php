@@ -280,6 +280,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#dokumente" data-toggle="tab">Dokumente</a></li>
                   <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#rechnungen" data-toggle="tab">Rechnungen</a></li>
+
                 </ul>
               </div>
               <div class="card-body">
@@ -562,6 +564,17 @@ $("#noteForm").on("submit", function (e) {
     });
 });
 </script>
+
+
+<div class="tab-pane" id="rechnungen">
+    
+
+
+
+</div>
+
+
+
               </div>
             </div>
           </div>

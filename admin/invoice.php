@@ -1,21 +1,21 @@
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 
-// Kunden-ID aus der URL holen
-$customer_id = $_GET['id'];  // z.B. ?id=1
+// Rechnungsnummer aus der URL holen
+$invoice_number = $_GET['invoice_number'];  // z.B. ?invoice_number=13745
 
-// Überprüfen, ob eine gültige Kunden-ID übergeben wurde
-if (!isset($customer_id) || !is_numeric($customer_id)) {
-    die("Ungültige Kunden-ID.");
+// Überprüfen, ob eine gültige Rechnungsnummer übergeben wurde
+if (!isset($invoice_number) || empty($invoice_number)) {
+    die("Ungültige Rechnungsnummer.");
 }
 
-// Abfrage für die Rechnung des Kunden
-$sql_invoice = "SELECT * FROM invoices WHERE customer_id = :customer_id ORDER BY created_at DESC";
+// Abfrage für die Rechnung anhand der Rechnungsnummer
+$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number";
 $stmt_invoice = $conn->prepare($sql_invoice);
-$stmt_invoice->execute(['customer_id' => $customer_id]);
+$stmt_invoice->execute(['invoice_number' => $invoice_number]);
 $invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob ein Ergebnis für die Rechnung gefunden wurde
+// Überprüfen, ob eine Rechnung gefunden wurde
 if (!$invoice) {
     die("Rechnung nicht gefunden.");
 }
@@ -38,17 +38,16 @@ if ($invoice['status'] == 'Offen') {
     $status_class = 'badge-success';  // Bezahlt
 }
 
-// Kundenabfrage
+// Kundenabfrage (falls du Kundendaten auf der Rechnung anzeigen möchtest)
 $sql_customer = "SELECT * FROM kunden WHERE id = :customer_id";
 $stmt_customer = $conn->prepare($sql_customer);
-$stmt_customer->execute(['customer_id' => $customer_id]);
+$stmt_customer->execute(['customer_id' => $invoice['customer_id']]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
+// Überprüfen, ob der Kunde gefunden wurde
 if (!$customer) {
     die("Kunde nicht gefunden.");
 }
-
 ?>
 
 <!DOCTYPE html>

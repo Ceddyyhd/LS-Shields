@@ -63,9 +63,10 @@ $pdf->Ln(5);
 $pdf->Cell(0, 10, 'Status: ' . htmlspecialchars($invoice['status']), 0, 1);
 
 // Dateiname für das PDF
-$pdf_file = '/admin/invoices/invoice_' . $invoice_number . '.pdf';
+$pdf_file = $_SERVER['DOCUMENT_ROOT'] . '/admin/invoices/invoice_' . $invoice_number . '.pdf';
+$pdf_url = '/admin/invoices/invoice_' . $invoice_number . '.pdf';
 $pdf->Output($pdf_file, 'F');  // Speichern der Datei auf dem Server
 
 // Rückgabe des Pfads zur gespeicherten Datei
-echo $pdf_file;
+echo $pdf_url;
 ?>

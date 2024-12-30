@@ -15,9 +15,10 @@ try {
             k.id,
             k.name,
             k.nummer,
-            k.created_at,
+            k.created_at
         FROM kunden k
-        WHERE u.gekuendigt = 'no_kuendigung';  ");
+        WHERE k.gekuendigt = 'no_kuendigung';
+    ");
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

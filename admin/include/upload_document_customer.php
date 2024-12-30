@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 'user_id' => $customer_id,
-                'file_name' => $unique_name,  // Verwende den eindeutigen Dateinamen
+                'file_name' => $custom_name,
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
             ]);

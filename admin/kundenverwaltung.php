@@ -63,10 +63,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <tfoot>
           <tr>
             <th>Mitarbeiter</th>
-            <th>Rang</th>
             <th>Telefonnummer</th>
-            <th>Beitritt</th>
-            <th>Urlaub</th>
+            <th>Erstellt</th>
             <th>Bearbeiten</th>
           </tr>
         </tfoot>

@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':betrag', $betrag);
         $stmt->bindParam(':erstellt_von', $erstellt_von);
 
+        // Debugging: Vor dem Ausführen der Anfrage
+        error_log("SQL-Befehl: " . $sql);
+
         $stmt->execute();
 
         // Erfolg zurückgeben

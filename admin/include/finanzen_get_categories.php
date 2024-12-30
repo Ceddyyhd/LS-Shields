@@ -3,10 +3,10 @@ include 'db.php';  // Deine Datenbankverbindung
 
 // SQL-Abfrage zum Abrufen aller Kategorien
 $sql = "SELECT name FROM finanzen_kategorien";
-$result = mysqli_query($stmt, $sql);
+$result = mysqli_query($conn, $sql);
 
 if (!$result) {
-    die("Fehler bei der Abfrage: " . mysqli_error($stmt));
+    die("Fehler bei der Abfrage: " . mysqli_error($conn));
 }
 
 // Alle Kategorien in ein Array laden
@@ -20,5 +20,5 @@ echo json_encode($categories);
 
 // Schließen der Verbindung
 mysqli_free_result($result);
-mysqli_close($stmt);
+mysqli_close($conn);
 ?>

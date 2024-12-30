@@ -6,8 +6,8 @@ $sql_einnahmen = "SELECT SUM(betrag) AS einnahmen FROM finanzen WHERE typ = 'Ein
 $sql_ausgaben = "SELECT SUM(betrag) AS ausgaben FROM finanzen WHERE typ = 'Ausgabe'";
 
 // Führt die SQL-Abfragen aus
-$result_einnahmen = mysqli_query($stmt, $sql_einnahmen);
-$result_ausgaben = mysqli_query($stmt, $sql_ausgaben);
+$result_einnahmen = mysqli_query($conn, $sql_einnahmen);
+$result_ausgaben = mysqli_query($conn, $sql_ausgaben);
 
 // Holen der Summen
 $einnahmen = mysqli_fetch_assoc($result_einnahmen)['einnahmen'];

@@ -1,25 +1,3 @@
-<?php
-include 'include/db.php';  // Datenbankverbindung einbinden
-
-// Rechnungs-ID aus der URL holen
-$invoice_id = $_GET['id'];  // z.B. ?id=13745
-
-// Abfrage für die spezifische Rechnung
-$sql_invoice = "SELECT * FROM invoices WHERE id = :invoice_id";
-$stmt_invoice = $conn->prepare($sql_invoice);
-$stmt_invoice->execute(['invoice_id' => $invoice_id]);
-$invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
-
-// Wenn die Rechnung existiert, dekodieren wir die Rechnungspositionen
-$invoice_items = json_decode($invoice['description'], true); // JSON dekodieren
-
-// Berechnung des Gesamtbetrags
-$total_amount = 0;
-foreach ($invoice_items as $item) {
-    $total_amount += $item['unit_price'] * $item['quantity']; // Preis * Menge
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'include/header.php'; ?>
@@ -30,8 +8,64 @@ foreach ($invoice_items as $item) {
   <?php include 'include/navbar.php'; ?>
 
   <!-- Main Sidebar Container -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery (notwendig für Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<?php
+include 'db.php';  // Datenbankverbindung einbinden
+
+// Kunden-ID aus der URL holen
+$customer_id = $_GET['id'];  // z.B. ?id=1
+
+// Überprüfen, ob eine gültige Kunden-ID übergeben wurde
+if (!isset($customer_id) || !is_numeric($customer_id)) {
+    die("Ungültige Kunden-ID.");
+}
+
+// Abfrage für die Rechnung des Kunden
+$sql_invoice = "SELECT * FROM invoices WHERE customer_id = :customer_id ORDER BY created_at DESC";
+$stmt_invoice = $conn->prepare($sql_invoice);
+$stmt_invoice->execute(['customer_id' => $customer_id]);
+$invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
+
+// Überprüfen, ob ein Ergebnis für die Rechnung gefunden wurde
+if (!$invoice) {
+    die("Rechnung nicht gefunden.");
+}
+
+// Rechnungspositionen dekodieren (falls die Positionen als JSON gespeichert sind)
+$invoice_items = json_decode($invoice['description'], true);
+
+// Überprüfen, ob die Rechnungspositionen erfolgreich dekodiert wurden
+if (!$invoice_items) {
+    die("Fehler beim Dekodieren der Rechnungspositionen.");
+}
+
+// Status der Rechnung auswerten
+$status_class = '';
+if ($invoice['status'] == 'Offen') {
+    $status_class = 'badge-warning';  // Offene Rechnung
+} elseif ($invoice['status'] == 'Überfällig') {
+    $status_class = 'badge-danger';  // Überfällige Rechnung
+} elseif ($invoice['status'] == 'Bezahlt') {
+    $status_class = 'badge-success';  // Bezahlt
+}
+
+// Kundenabfrage
+$sql_customer = "SELECT * FROM kunden WHERE id = :customer_id";
+$stmt_customer = $conn->prepare($sql_customer);
+$stmt_customer->execute(['customer_id' => $customer_id]);
+$customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
+
+// Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
+if (!$customer) {
+    die("Kunde nicht gefunden.");
+}
+
+?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -40,7 +74,7 @@ foreach ($invoice_items as $item) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Invoice #<?= htmlspecialchars($invoice['invoice_number']); ?></h1>
+            <h1>Invoice</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -63,23 +97,12 @@ foreach ($invoice_items as $item) {
                 <div class="col-12">
                   <h4>
                     <i class="fas fa-globe"></i> LS Shields
-                    <small class="float-right">Date: <?= htmlspecialchars($invoice['created_at']); ?></small>
-                    <?php
-                    // Dynamisch Status-Badge basierend auf dem Status der Rechnung
-                    $status_class = '';
-                    if ($invoice['status'] == 'Offen') {
-                        $status_class = 'badge-warning';  // Offene Rechnung
-                    } elseif ($invoice['status'] == 'Überfällig') {
-                        $status_class = 'badge-danger';  // Überfällige Rechnung
-                    } elseif ($invoice['status'] == 'Bezahlt') {
-                        $status_class = 'badge-success';  // Bezahlt
-                    }
-                    ?>
+                    <small class="float-right"><?= htmlspecialchars($invoice['created_at']) ?></small>
                     <span class="badge <?= $status_class; ?>"><?= htmlspecialchars($invoice['status']); ?></span>
                   </h4>
                 </div>
+                <!-- /.col -->
               </div>
-
               <!-- info row -->
               <div class="row invoice-info">
                 <div class="col-sm-4 invoice-col">
@@ -92,6 +115,7 @@ foreach ($invoice_items as $item) {
                     Email: XXX@XXX.XXX
                   </address>
                 </div>
+                <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
                   To
                   <address>
@@ -101,11 +125,16 @@ foreach ($invoice_items as $item) {
                     Email: <?= htmlspecialchars($customer['umail']); ?>
                   </address>
                 </div>
+                <!-- /.col -->
                 <div class="col-sm-4 invoice-col">
                   <b>Invoice #<?= htmlspecialchars($invoice['invoice_number']); ?></b><br>
+                  <br>
                   <b>Payment Due:</b> <?= htmlspecialchars($invoice['due_date']); ?><br>
+                  <b>Account:</b> <?= htmlspecialchars($customer['kontonummer']); ?>
                 </div>
+                <!-- /.col -->
               </div>
+              <!-- /.row -->
 
               <!-- Table row -->
               <div class="row">
@@ -113,45 +142,51 @@ foreach ($invoice_items as $item) {
                   <table class="table table-striped">
                     <thead>
                     <tr>
-                      <th>Beschreibung</th>
-                      <th>Stück Preis</th>
-                      <th>Anzahl</th>
+                      <th>Description</th>
+                      <th>Unit Price</th>
+                      <th>Quantity</th>
                       <th>Subtotal</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    foreach ($invoice_items as $item): 
-                        $subtotal = $item['unit_price'] * $item['quantity'];
-                    ?>
+                    <?php foreach ($invoice_items as $item): ?>
                     <tr>
                       <td><?= htmlspecialchars($item['description']); ?></td>
                       <td><?= htmlspecialchars($item['unit_price']); ?>$</td>
                       <td><?= htmlspecialchars($item['quantity']); ?></td>
-                      <td><?= $subtotal; ?>$</td>
+                      <td><?= htmlspecialchars($item['unit_price'] * $item['quantity']); ?>$</td>
                     </tr>
                     <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>
+                <!-- /.col -->
               </div>
+              <!-- /.row -->
 
-              <!-- Total amount row -->
               <div class="row" style="margin-left: 90%;">
                 <div class="col-6">
-                  <p class="lead">Amount Due <?= htmlspecialchars($invoice['due_date']); ?></p>
+                  <p class="lead">Amount Due</p>
+
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
                         <th>Total:</th>
-                        <td><?= $total_amount; ?>$</td>
+                        <td>
+                          <?php
+                          $total = 0;
+                          foreach ($invoice_items as $item) {
+                              $total += $item['unit_price'] * $item['quantity'];
+                          }
+                          echo $total . '$';
+                          ?>
+                        </td>
                       </tr>
                     </table>
                   </div>
                 </div>
               </div>
 
-              <!-- Print and PDF download -->
               <div class="row no-print">
                 <div class="col-12">
                   <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
@@ -160,23 +195,38 @@ foreach ($invoice_items as $item) {
                 </div>
               </div>
             </div>
+            <!-- /.invoice -->
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </section>
+    <!-- /.content -->
   </div>
+  <!-- /.content-wrapper -->
 
-  <!-- Footer -->
   <footer class="main-footer no-print">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.2.0
     </div>
     <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
   </footer>
-</div>
 
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+
 </body>
 </html>

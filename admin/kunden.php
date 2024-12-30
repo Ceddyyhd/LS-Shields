@@ -331,7 +331,7 @@ $(document).ready(function () {
                 <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
                 <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
                     <!-- Benutzer-ID -->
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
                     <!-- Dokumenttyp -->
                     <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 

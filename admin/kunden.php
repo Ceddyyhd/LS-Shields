@@ -570,31 +570,31 @@ $("#noteForm").on("submit", function (e) {
     
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
-                  Rechnung Erstellen
-                </button>
-
-<div class="modal fade" id="rechnung-erstellen">
+                Rechnung erstellen
+            </button>
+<div class="container mt-5">
+    <div class="modal fade" id="rechnung-erstellen">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Rechnung Erstellen</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <form id="invoice-form">
                         <div class="form-group">
                             <label>Unternehmen</label>
-                            <input type="text" class="form-control" name="unternehmen" value="<?= $kunden['name'] ?>" disabled>
+                            <input type="text" class="form-control" name="unternehmen" value="<?= $customerData['unternehmen'] ?>" disabled>
                         </div>
                         <div class="form-group">
-                            <label>UMail</label>
-                            <input type="text" class="form-control" name="umail" value="<?= $kunden['umail'] ?>" disabled>
+                            <label>Ansprechperson</label>
+                            <input type="text" class="form-control" name="ansprechperson" value="<?= $customerData['ansprechperson'] ?>" disabled>
                         </div>
                         <div class="form-group">
                             <label>Nummer</label>
-                            <input type="text" class="form-control" name="nummer" value="<?= $kunden['nummer'] ?>" disabled>
+                            <input type="text" class="form-control" name="nummer" value="<?= $customerData['nummer'] ?>" disabled>
                         </div>
                         <hr>
                         <input type="hidden" id="kunden_id" name="kunden_id">
@@ -626,11 +626,13 @@ $("#noteForm").on("submit", function (e) {
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
                         </div>
-          </div>
-          <!-- /.modal-content -->
+                    </form>
+                    <div id="response-message"></div>
+                </div>
+            </div>
         </div>
-        <!-- /.modal-dialog -->
-      </div>
+    </div>
+    </div>
 
 
             <div class="card-body">

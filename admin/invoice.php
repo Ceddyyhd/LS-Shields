@@ -52,11 +52,17 @@ if (!$customer) {
     die("Kunde nicht gefunden.");
 }
 
-// SQL-Abfrage, um den Wert aus der Tabelle settings zu holen
-$sql = "SELECT value FROM settings WHERE key_name = :key_name";
+// SQL-Abfrage, um alle Einstellungen zu holen
+$sql = "SELECT * FROM settings";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['key_name' => $key_name]);
-$setting = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->execute();
+$settings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// In ein assoziatives Array umwandeln, um später einfach darauf zuzugreifen
+$settings_array = [];
+foreach ($settings as $setting) {
+    $settings_array[$setting['key_name']] = $setting['value'];
+}
 ?>
 
 
@@ -125,7 +131,7 @@ $setting = $stmt->fetch(PDO::FETCH_ASSOC);
                 <div class="col-sm-4 invoice-col">
                   From
                   <address>
-                    <strong><?= htmlspecialchars($unternehmens_namen) ?></strong><br>
+                    <strong><?= htmlspecialchars($settings_array['unternehmen_namen']) ?></strong><br>
                     <?= htmlspecialchars($setting['adresse']); ?><br>
                     <?= htmlspecialchars($setting['stadt_adresse']); ?><br>
                     Phone: <?= htmlspecialchars($setting['telefonnummer']); ?><br>

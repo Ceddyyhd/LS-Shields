@@ -33,14 +33,6 @@ $stmt_notes = $conn->prepare($sql_notes);
 $stmt_notes->execute(['user_id' => $customer_id]);
 $notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
-
-// Rechte des Benutzers abrufen
-$sql_permissions = "SELECT p.name, p.description, p.display_name 
-                    FROM permissions p
-                    JOIN roles r ON r.id = :role_id";
-$stmt_permissions = $conn->prepare($sql_permissions);
-$stmt_permissions->execute(['role_id' => $user['role_id']]);
-$permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -306,7 +298,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    <?php if ($_SESSION['permissions']['upload_file1'] ?? false): ?>
+                    <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
                         Datei hochladen
                     <?php else: ?>
                         Keine Berechtigung
@@ -317,7 +309,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </button>
             </div>
 
-            <?php if ($_SESSION['permissions']['upload_file1'] ?? false): ?>
+            <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
                 <!-- Formular zum Hochladen von Dokumenten -->
                     <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
                         <!-- Kunden-ID -->

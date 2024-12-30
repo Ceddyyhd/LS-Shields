@@ -369,28 +369,31 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 </script>
 <script>
     $(document).ready(function() {
+        // Beim Absenden des Formulars
         $("#uploadForm").on("submit", function(e) {
-            e.preventDefault(); // Verhindert das Standardformularverhalten
+            e.preventDefault();  // Verhindert das Standardverhalten (Seite neu laden)
 
-            var formData = new FormData(this);
-            console.log("FormData:", formData); // Logge FormData zur Überprüfung
+            var formData = new FormData(this);  // Formulardaten holen
 
+            console.log("Formulardaten:", formData);  // Überprüfe, ob die Formulardaten korrekt sind
+
+            // AJAX-Anfrage an die Serverdatei
             $.ajax({
-                url: $(this).attr("action"), // URL des Formulars
-                type: $(this).attr("method"), // POST-Methode
-                data: formData,
-                processData: false, // Wichtige Einstellung bei FormData
-                contentType: false, // Wichtige Einstellung bei FormData
+                url: $(this).attr("action"),  // Die URL, zu der das Formular gesendet wird
+                type: $(this).attr("method"),  // Die Methode (POST)
+                data: formData,  // Sende die Formulardaten
+                processData: false,  // Verhindert die automatische Verarbeitung von FormData durch jQuery
+                contentType: false,  // Verhindert das Setzen des Content-Types
                 success: function(response) {
-                    console.log("Erfolgreich hochgeladen:", response); // Erfolgslog
-                    $("#modal-primary").modal("hide"); // Modal schließen
-                    window.location.href = document.referrer; // Gehe zurück zur vorherigen Seite
+                    console.log("Erfolgreicher Upload:", response);  // Erfolgsnachricht im Log
+                    $("#modal-primary").modal("hide");  // Modal schließen
+                    location.reload();  // Seite neu laden
                 },
                 error: function(xhr, status, error) {
-                    console.log("AJAX-Fehler:", error); // Detaillierte Fehlermeldung
-                    console.log("XHR Status:", xhr.status); // HTTP-Status des Requests
-                    console.log("Antwort:", xhr.responseText); // Antwort vom Server
-                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
+                    console.log("Fehler beim Hochladen:", error);  // Fehler im Log ausgeben
+                    console.log("XHR-Status:", xhr.status);  // HTTP-Status
+                    console.log("Antwort:", xhr.responseText);  // Serverantwort
+                    alert("Es ist ein Fehler aufgetreten: " + error);  // Fehlermeldung anzeigen
                 }
             });
         });

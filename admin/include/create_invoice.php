@@ -1,58 +1,47 @@
 <?php
-// Include für die Datenbankverbindung
-include('db.php');  // Dies wird $conn aus db.php einbinden
+include 'db.php';
+session_start();
 
-// Funktion zum Generieren einer zufälligen 5-stelligen Rechnungsnummer
-function generateInvoiceNumber() {
-    return strtoupper(substr(md5(uniqid(rand(), true)), 0, 5));
-}
+// Überprüfen, ob das Formular abgeschickt wurde
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Eingabedaten erhalten
+    $customer_id = $_POST['kunden_id'] ?? null;
+    $description = $_POST['beschreibung'] ?? [];
+    $unit_price = $_POST['stueckpreis'] ?? [];
+    $quantity = $_POST['anzahl'] ?? [];
+    $discount = $_POST['rabatt'] ?? 0;
 
-// Überprüfen, ob die Kunden-ID gesetzt wurde und gültig ist
-if (!isset($_POST['kunden_id']) || empty($_POST['kunden_id'])) {
-    die(json_encode(['status' => 'error', 'message' => 'Fehler: Keine gültige Kunden-ID vorhanden.']));
-}
-
-$kundenId = $_POST['kunden_id'];  // Kunden-ID aus dem Formular
-$beschreibung = $_POST['beschreibung'];  // Rechnungspositionen (Beschreibung)
-$stueckpreis = $_POST['stueckpreis'];    // Stückpreise der Rechnungspositionen
-$anzahl = $_POST['anzahl'];              // Anzahl der Artikel in den Rechnungspositionen
-$rabatt = $_POST['rabatt'];              // Rabatt auf die gesamte Rechnung
-
-// Rechnungsnummer generieren
-$rechnungsnummer = generateInvoiceNumber();
-$passwort = password_hash(uniqid(), PASSWORD_DEFAULT);  // Generiere ein sicheres Passwort
-
-try {
-    // Transaktion starten
-    $conn->beginTransaction();
-
-    // Rechnungsdatensatz einfügen
-    $stmt = $conn->prepare("INSERT INTO Rechnungen (kunden_id, rechnungsnummer, passwort, rabatt) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$kundenId, $rechnungsnummer, $passwort, $rabatt]);
-
-    // Die einzelnen Rechnungspositionen einfügen
-    $invoiceId = $conn->lastInsertId();
-    foreach ($beschreibung as $index => $desc) {
-        $stmt = $conn->prepare("INSERT INTO Rechnungspositionen (rechnung_id, beschreibung, stueckpreis, anzahl) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$invoiceId, $desc, $stueckpreis[$index], $anzahl[$index]]);
+    if (!$customer_id || empty($description)) {
+        die("Fehler: Kunden-ID oder Rechnungsdaten fehlen.");
     }
 
-    // Transaktion abschließen
-    $conn->commit();
+    // Zufällige 5-stellige Rechnungsnummer generieren
+    $invoice_number = rand(10000, 99999);
 
-    // Erfolgsantwort
-    echo json_encode([
-        'status' => 'success',
-        'message' => 'Rechnung wurde erfolgreich erstellt!',
-        'rechnungsnummer' => $rechnungsnummer
+    // Gesamtpreis berechnen
+    $total_price = 0;
+    foreach ($description as $index => $desc) {
+        $total_price += ($unit_price[$index] * $quantity[$index]);
+    }
+
+    // Rabatt anwenden
+    $total_price = $total_price - ($total_price * ($discount / 100));
+
+    // Rechnungsdaten in der Datenbank speichern
+    $sql = "INSERT INTO invoices (customer_id, invoice_number, description, price, discount, created_at) 
+            VALUES (:customer_id, :invoice_number, :description, :price, :discount, NOW())";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([
+        'customer_id' => $customer_id,
+        'invoice_number' => $invoice_number,
+        'description' => json_encode(array_map(function($desc, $price, $qty) {
+            return ['description' => $desc, 'unit_price' => $price, 'quantity' => $qty];
+        }, $description, $unit_price, $quantity)),
+        'price' => $total_price,
+        'discount' => $discount
     ]);
 
-} catch (Exception $e) {
-    // Fehlerbehandlung und Rollback bei Fehler
-    $conn->rollBack();
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Fehler: ' . $e->getMessage()
-    ]);
+    // Weiterleitung zur Rechnungsansicht oder zur Bestätigungsseite
+    echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
 }
 ?>

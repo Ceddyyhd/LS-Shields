@@ -809,7 +809,7 @@ $(document).ready(function() {
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus und Hinzufügen von Finanzdaten
         $.ajax({
-            url: 'include/update_invoice_status.php', // Dein neues Skript
+            url: 'include/update_invoice_and_add_financial_entry.php', // Dein neues Skript
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,
@@ -833,7 +833,49 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Wenn auf "Nicht Bezahlt"-Button geklickt wird
+    $('.btn-nicht-bezahlt').click(function() {
+        var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
+        var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
+
+        // Holen des Betrags
+        var betrag = row.find('.price').text().trim();
+        console.log('Betrag extrahiert: ' + betrag); // Debugging: Überprüfen des Betrags
+
+        if (isNaN(betrag) || betrag === '') {
+            alert('Fehler: Der Betrag ist ungültig!');
+            return;
+        }
+
+        // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus und Hinzufügen von Finanzdaten
+        $.ajax({
+            url: 'include/update_invoice_and_add_financial_entry.php', // Dein neues Skript
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                status: 'Offen',
+                typ: 'Ausgabe',
+                kategorie: 'Rechnung',
+                notiz: 'Storno Rechnung #' + invoiceNumber,
+                betrag: betrag,
+                erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    row.find('.status').html('<span class="badge badge-warning">Offen</span>');
+                    alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
+                } else {
+                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
+            }
+        });
+    });
 });
+
 </script>
 
 </div>

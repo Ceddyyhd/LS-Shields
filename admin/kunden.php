@@ -748,18 +748,17 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Fälligkeitsdatum</th>
                 <th>Status</th>
                 <th style="width: 40px">Link</th>
-                <th style="width: 40px"><button type="button" class="btn btn-block btn-outline-primary">Bezahlt</button></th>
+                <th style="width: 40px">Bezahlt</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($invoices as $invoice): ?>
+        <?php foreach ($invoices as $invoice): ?>
                 <tr>
                     <td><?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td>Rechnung #<?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td><?= htmlspecialchars($invoice['due_date']); ?></td>
                     <td>
                         <?php
-                        // Berechne den Status der Rechnung
                         $status = $invoice['status'];
                         $badge_class = '';
 
@@ -774,12 +773,107 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <span class="badge <?= $badge_class; ?>"><?= $status; ?></span>
                     </td>
                     <td><a href="invoice.php?id=<?= htmlspecialchars($invoice['invoice_number']); ?>">Link zur Rechnung</a></td>
+                    <td>
+                        <?php if ($invoice['status'] == 'Offen' || $invoice['status'] == 'Überfällig'): ?>
+                            <!-- Button für Bezahlt, wenn die Rechnung offen oder überfällig ist -->
+                            <button type="button" class="btn btn-block btn-outline-success btn-bezahlt" data-invoice="<?= htmlspecialchars($invoice['invoice_number']); ?>">Bezahlt</button>
+                        <?php elseif ($invoice['status'] == 'Bezahlt'): ?>
+                            <!-- Button für Nicht Bezahlt, wenn die Rechnung bereits bezahlt ist -->
+                            <button type="button" class="btn btn-block btn-outline-danger btn-nicht-bezahlt" data-invoice="<?= htmlspecialchars($invoice['invoice_number']); ?>">Nicht Bezahlt</button>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
 
+
+<script>
+    $(document).ready(function() {
+    // Wenn auf "Bezahlt"-Button geklickt wird
+    $('.btn-bezahlt').click(function() {
+        var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
+        var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
+
+        // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Bezahlt"
+        $.ajax({
+            url: 'update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                status: 'Bezahlt'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
+                    
+                    // Finanzdaten hinzufügen (für Einnahme)
+                    $.ajax({
+                        url: 'add_financial_entry.php',
+                        method: 'POST',
+                        data: {
+                            typ: 'Einnahme',
+                            kategorie: 'Rechnung',
+                            notiz: 'Rechnung #' + invoiceNumber,
+                            betrag: row.find('.price').text(),
+                            erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert('Finanzdaten erfolgreich hinzugefügt!');
+                            }
+                        }
+                    });
+                } else {
+                    alert('Fehler beim Aktualisieren der Rechnung!');
+                }
+            }
+        });
+    });
+
+    // Wenn auf "Nicht Bezahlt"-Button geklickt wird
+    $('.btn-nicht-bezahlt').click(function() {
+        var invoiceNumber = $(this).data('invoice');
+        var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
+
+        // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Offen"
+        $.ajax({
+            url: 'update_invoice_status.php',
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                status: 'Offen'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    row.find('.status').html('<span class="badge badge-warning">Offen</span>');
+                    
+                    // Finanzdaten hinzufügen (für Ausgabe)
+                    $.ajax({
+                        url: 'add_financial_entry.php',
+                        method: 'POST',
+                        data: {
+                            typ: 'Ausgabe',
+                            kategorie: 'Rechnung',
+                            notiz: 'Storno Rechnung #' + invoiceNumber,
+                            betrag: row.find('.price').text(),
+                            erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert('Finanzdaten erfolgreich hinzugefügt!');
+                            }
+                        }
+                    });
+                } else {
+                    alert('Fehler beim Aktualisieren der Rechnung!');
+                }
+            }
+        });
+    });
+});
+</script>
 
 
 </div>

@@ -52,7 +52,11 @@ if (!$customer) {
     die("Kunde nicht gefunden.");
 }
 
-// Weitere Details der Rechnung ausgeben...
+// SQL-Abfrage, um den Wert aus der Tabelle settings zu holen
+$sql = "SELECT value FROM settings WHERE key_name = :key_name";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['key_name' => $key_name]);
+$setting = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -98,7 +102,7 @@ if (!$customer) {
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fas fa-globe"></i> LS Shields
+                    <i class="fas fa-globe"></i> <?= htmlspecialchars($customer['name']); ?>
                     <small class="float-right">Date: <?= htmlspecialchars($invoice['created_at']); ?></small>
                     <?php
                     // Dynamisch Status-Badge basierend auf dem Status der Rechnung
@@ -121,11 +125,10 @@ if (!$customer) {
                 <div class="col-sm-4 invoice-col">
                   From
                   <address>
-                    <strong>LS-Shields</strong><br>
-                    Adresse<br>
-                    Los Santos<br>
-                    Phone: XXX<br>
-                    Email: XXX@XXX.XXX
+                    <strong><?= htmlspecialchars($setting['unternehmen_namen']); ?></strong><br>
+                    <?= htmlspecialchars($setting['adresse']); ?><br>
+                    <?= htmlspecialchars($setting['stadt_adresse']); ?><br>
+                    Phone: <?= htmlspecialchars($setting['telefonnummer']); ?><br>
                   </address>
                 </div>
                 <div class="col-sm-4 invoice-col">

@@ -120,7 +120,7 @@
                           <select class="custom-select" name="kategorie">
                           <?php
                             // Verbindung zur Datenbank herstellen
-                            include 'db_connection.php';
+                            include 'db.php';
 
                             // Abfrage zum Abrufen aller Kategorien (unabhängig von "Einnahme" oder "Ausgabe")
                             $sql = "SELECT * FROM finanzen_kategorien";  // Keine Filterung nach 'typ'

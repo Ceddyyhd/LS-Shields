@@ -320,7 +320,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
                 <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
                 <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
-                    <!-- Kunden-ID -->
+                    <!-- Benutzer-ID -->
                     <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
                     <!-- Dokumenttyp -->
                     <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
@@ -368,30 +368,29 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         var nextSibling = this.nextElementSibling;
         nextSibling.innerText = fileName; // Ändert den Text des Labels
     });
-
+</script>
+<script>
     $(document).ready(function() {
-        $("#uploadForm").on("submit", function(e) {
-            e.preventDefault(); // Verhindert das Standardverhalten des Formulars
+    $("#uploadForm").on("submit", function(e) {
+        e.preventDefault();
 
-            var formData = new FormData(this); // Holen der Formulardaten
+        var formData = new FormData(this);
 
-            $.ajax({
-                url: $(this).attr("action"), // Die Ziel-URL des Formulars
-                type: $(this).attr("method"), // Die Methode (POST)
-                data: formData,  // Sende die Formulardaten
-                processData: false,  // Wichtige Einstellung bei FormData
-                contentType: false,  // Wichtige Einstellung bei FormData
-                success: function(response) {
-                    $("#modal-primary").modal("hide"); // Modal schließen
-                    location.reload(); // Seite neu laden, um Änderungen zu sehen
-                },
-                error: function(xhr, status, error) {
-                    console.log("Fehler beim Hochladen:", error); // Fehler im Log ausgeben
-                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
-                }
-            });
+        $.ajax({
+            url: $(this).attr("action"),
+            type: $(this).attr("method"),
+            data: formData,
+            processData: false, // Wichtig für FormData
+            contentType: false, // Wichtig für FormData
+            success: function(response) {
+                $("#modal-primary").modal("hide"); // Modal schließen
+                location.reload(); // Seite neu laden, um Änderungen zu sehen
+            },
+            error: function(xhr, status, error) {
+            }
         });
     });
+});
 </script>
 
 <!-- /.modal -->

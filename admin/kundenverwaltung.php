@@ -51,7 +51,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <table id="example1" class="table table-bordered table-striped">
         <thead>
           <tr>
-            <th>Mitarbeiter</th>
+            <th>Kunde</th>
             <th>Telefonnummer</th>
             <th>Erstellt</th>
             <th>Bearbeiten</th>
@@ -62,7 +62,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </tbody>
         <tfoot>
           <tr>
-            <th>Mitarbeiter</th>
+            <th>Kunde</th>
             <th>Telefonnummer</th>
             <th>Erstellt</th>
             <th>Bearbeiten</th>
@@ -230,7 +230,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <td>${kunden.nummer ? kunden.nummer : 'N/A'}</td>
                     <td>${new Date(kunden.created_at).toLocaleDateString()}</td>
                     <td>
-                        <a href="/admin/profile.php?id=${kunden.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                        <a href="/admin/kunden.php?id=${kunden.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
                     </td>
                 </tr>
             `);

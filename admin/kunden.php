@@ -808,7 +808,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
     },
     success: function(response) {
-        console.log(response); // Antwort vom Server im Browser-Log
+        console.log("Server-Antwort: ", response); // Antwort des Servers im Log
         if (response.status === 'success') {
             alert('Finanzdaten erfolgreich hinzugefügt!');
         } else {
@@ -816,7 +816,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     },
     error: function(xhr, status, error) {
-        console.error(xhr.responseText); // Fehler im Browser-Log
+        console.log("Fehler beim AJAX-Request: ", xhr.responseText); // Fehlerausgabe im Log
         alert('Fehler beim Hinzufügen der Finanzdaten: ' + error);
     }
 });

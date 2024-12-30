@@ -212,6 +212,7 @@ foreach ($settings as $setting) {
 <script>
     document.getElementById('generatePdf').addEventListener('click', function() {
         // Ersetze diese URL mit der URL deiner generierten PDF-Datei
+        var pdfUrl = ''; 
         
         // Öffne das PDF in einem neuen Fenster
         var printWindow = window.open(pdfUrl, '_blank');

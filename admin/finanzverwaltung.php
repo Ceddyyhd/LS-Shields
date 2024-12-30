@@ -33,7 +33,7 @@
   $(document).ready(function() {
     // AJAX-Anfrage zum Abrufen der Finanzdaten
     $.ajax({
-      url: 'get_financial_data.php', // Dein PHP-Skript zum Abrufen der Daten
+      url: 'get_financial_data.php',  // Dein PHP-Skript zum Abrufen der Daten
       method: 'GET',
       dataType: 'json',
       success: function(data) {
@@ -53,36 +53,37 @@
     });
   });
 </script>
+
     <!-- Main content -->
     <div class="card-body">
       <div class="row">
-        <div class="col-md-3 col-sm-6 col-12">
-          <div class="info-box shadow-sm">
-            <span class="info-box-icon bg-info"><i class="far fa-flag"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">Kontostand</span>
-              <span class="info-box-number" id="kontostand">Small</span>
-            </div>
+      <div class="col-md-3 col-sm-6 col-12">
+      <div class="info-box shadow-sm">
+        <span class="info-box-icon bg-info"><i class="far fa-flag"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Kontostand</span>
+          <span class="info-box-number" id="kontostand">$</span> <!-- Kontostand -->
+        </div>
           </div>
         </div>
 
         <div class="col-md-3 col-sm-6 col-12">
-          <div class="info-box shadow-sm">
-            <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">Einnahmen</span>
-              <span class="info-box-number" id="einnahmen">Small</span>
-            </div>
+      <div class="info-box shadow-sm">
+        <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Einnahmen</span>
+          <span class="info-box-number" id="einnahmen">$</span> <!-- Einnahmen -->
+        </div>
           </div>
         </div>
 
         <div class="col-md-3 col-sm-6 col-12">
-          <div class="info-box shadow-sm">
-            <span class="info-box-icon bg-danger"><i class="far fa-flag"></i></span>
-            <div class="info-box-content">
-              <span class="info-box-text">Ausgaben</span>
-              <span class="info-box-number" id="ausgaben">Small</span>
-            </div>
+      <div class="info-box shadow-sm">
+        <span class="info-box-icon bg-danger"><i class="far fa-flag"></i></span>
+        <div class="info-box-content">
+          <span class="info-box-text">Ausgaben</span>
+          <span class="info-box-number" id="ausgaben">$</span> <!-- Ausgaben -->
+        </div>
           </div>
         </div>
 

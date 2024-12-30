@@ -13,6 +13,10 @@ $result_ausgaben = mysqli_query($conn, $sql_ausgaben);
 $einnahmen = mysqli_fetch_assoc($result_einnahmen)['einnahmen'];
 $ausgaben = mysqli_fetch_assoc($result_ausgaben)['ausgaben'];
 
+// Wenn die Werte NULL sind, setze sie auf 0
+$einnahmen = $einnahmen ?? 0;
+$ausgaben = $ausgaben ?? 0;
+
 // Kontostand berechnen
 $kontostand = $einnahmen - $ausgaben;
 

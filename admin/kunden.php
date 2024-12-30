@@ -366,33 +366,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         var nextSibling = this.nextElementSibling;
         nextSibling.innerText = fileName; // Ändert den Text des Labels
     });
+</script>
+<script>
+$(document).ready(function() {
+    $("#uploadForm").on("submit", function(e) {
+        e.preventDefault(); // Verhindert das Standardformularverhalten
 
-    $(document).ready(function() {
-        // Wenn das Formular zum Hochladen von Dokumenten abgesendet wird
-        $("#uploadForm").on("submit", function(e) {
-            e.preventDefault(); // Verhindert das Standardformularverhalten
+        var formData = new FormData(this);
+        
+        console.log("FormData:", formData); // Überprüfen, ob FormData korrekt erstellt wird
 
-            // Erstelle FormData-Objekt mit den Formulardaten
-            var formData = new FormData(this);
-
-            $.ajax({
-                url: $(this).attr("action"), // Die URL, an die das Formular gesendet wird
-                type: $(this).attr("method"), // Die Methode (POST)
-                data: formData, // Sende die Formulardaten
-                processData: false, // Verhindert, dass jQuery die Daten verarbeitet
-                contentType: false, // Verhindert, dass jQuery den Content-Type setzt
-                success: function(response) {
-                    // Wenn der Upload erfolgreich war, Modal schließen und Seite neu laden
-                    $("#modal-primary").modal("hide"); // Modal schließen
-                    location.reload(); // Seite neu laden, um Änderungen anzuzeigen
-                },
-                error: function(xhr, status, error) {
-                    console.error("Fehler beim Hochladen:", error); // Fehler im Konsolenlog ausgeben
-                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
-                }
-            });
+        $.ajax({
+            url: $(this).attr("action"), // Die URL, an die das Formular gesendet wird
+            type: $(this).attr("method"), // Die Methode (POST)
+            data: formData, // Sende die Formulardaten
+            processData: false, // Verhindert, dass jQuery die Daten verarbeitet
+            contentType: false, // Verhindert, dass jQuery den Content-Type setzt
+            success: function(response) {
+                console.log("Erfolgreich hochgeladen:", response); // Erfolgsnachricht im Log
+                $("#modal-primary").modal("hide"); // Modal schließen
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
+            },
+            error: function(xhr, status, error) {
+                console.log("Fehler:", error); // Fehler im Log ausgeben
+                alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
+            }
         });
     });
+});
 </script>
 
 

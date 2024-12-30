@@ -3,11 +3,11 @@ session_start();
 include 'db.php'; // Deine Datenbankverbindung
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Überprüfe, ob der Benutzername in der Session vorhanden ist
-    if (isset($_SESSION['user_name'])) {
-        $erstellt_von = $_SESSION['user_name'];
+    // Überprüfe, ob das unsichtbare Feld 'erstellt_von' gesetzt wurde
+    if (isset($_POST['erstellt_von'])) {
+        $erstellt_von = $_POST['erstellt_von'];
     } else {
-        echo json_encode(["status" => "error", "message" => "Benutzer nicht angemeldet."]);
+        echo json_encode(["status" => "error", "message" => "Benutzer nicht angegeben."]);
         exit();
     }
 
@@ -19,12 +19,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // SQL-Query, um den neuen Eintrag hinzuzufügen
     $sql = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
-            VALUES ('$typ', '$kategorie', '$notiz', '$betrag', '$erstellt_von')";
+            VALUES (:typ, :kategorie, :notiz, :betrag, :erstellt_von)";
 
-    if (mysqli_query($conn, $sql)) {
+    try {
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':typ', $typ);
+        $stmt->bindParam(':kategorie', $kategorie);
+        $stmt->bindParam(':notiz', $notiz);
+        $stmt->bindParam(':betrag', $betrag);
+        $stmt->bindParam(':erstellt_von', $erstellt_von);
+
+        // Query ausführen
+        $stmt->execute();
+
+        // Erfolgreiche Antwort zurückgeben
         echo json_encode(["status" => "success", "message" => "Eintrag erfolgreich hinzugefügt!"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Fehler: " . mysqli_error($conn)]);
+    } catch (PDOException $e) {
+        // Fehlerbehandlung
+        echo json_encode(["status" => "error", "message" => "Fehler: " . $e->getMessage()]);
     }
 }
 ?>

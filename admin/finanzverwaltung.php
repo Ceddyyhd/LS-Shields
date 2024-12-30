@@ -208,7 +208,44 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
       </div>
     </div>
   </div>
+<script>
+  $(document).ready(function() {
+    // AJAX-Anfrage zum Abrufen der Finanzdaten
+    $.ajax({
+        url: 'include/get_financial_data_table.php',  // Dein PHP-Skript zum Abrufen der Daten
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log('Erhaltene Daten:', data);  // Überprüfe die empfangenen Daten
 
+            if (data && data.length > 0) {
+                var tableBody = $('#example1 tbody'); // Ziel-Tabelle
+
+                // Leere die Tabelle, bevor neue Daten hinzugefügt werden
+                tableBody.empty();
+
+                // Füge die Finanzdaten in die Tabelle ein
+                data.forEach(function(entry) {
+                    tableBody.append(
+                        '<tr>' +
+                            '<td>' + entry.typ + '</td>' +
+                            '<td>' + entry.kategorie + '</td>' +
+                            '<td>' + entry.notiz + '</td>' +
+                            '<td>' + entry.erstellt_von + '</td>' +
+                            '<td>' + parseFloat(entry.betrag).toFixed(2) + ' €</td>' +
+                        '</tr>'
+                    );
+                });
+            } else {
+                alert('Keine Finanzdaten gefunden.');
+            }
+        },
+        error: function() {
+            alert('Es gab einen Fehler bei der Anfrage.');
+        }
+    });
+});
+</script>
   <!-- Footer -->
   <footer class="main-footer">
     <strong>&copy; 2024 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.

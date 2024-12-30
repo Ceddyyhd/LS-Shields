@@ -73,7 +73,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
       <div class="info-box shadow-sm">
         <span class="info-box-icon bg-info"><i class="far fa-flag"></i></span>
         <div class="info-box-content">
-          <span class="info-box-text"><?php echo htmlspecialchars($user_name); ?></span>
+          <span class="info-box-text">Kontostand</span>
           <span class="info-box-number" id="kontostand">$</span> <!-- Kontostand -->
         </div>
           </div>

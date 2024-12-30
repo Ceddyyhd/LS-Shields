@@ -792,116 +792,115 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script>
-        $(document).ready(function() {
-            // Wenn auf "Bezahlt"-Button geklickt wird
-            $('.btn-bezahlt').click(function() {
-    var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
-    var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
+$(document).ready(function() {
+    // Wenn auf "Bezahlt"-Button geklickt wird
+    $('.btn-bezahlt').click(function() {
+        var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
+        var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
 
-    // Holen des Betrags
-    var betrag = row.find('.price').text().trim();
-    console.log('Betrag extrahiert: ' + betrag); // Debugging: Überprüfen des Betrags
+        // Holen des Betrags
+        var betrag = row.find('.price').text().trim();
+        console.log('Betrag extrahiert: ' + betrag); // Debugging: Überprüfen des Betrags
 
-    if (isNaN(betrag) || betrag === '') {
-        alert('Fehler: Der Betrag ist ungültig!');
-        return;
-    }
+        if (isNaN(betrag) || betrag === '') {
+            alert('Fehler: Der Betrag ist ungültig!');
+            return;
+        }
 
-    // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Bezahlt"
-    $.ajax({
-        url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
-        method: 'POST',
-        data: {
-            invoice_number: invoiceNumber,
-            status: 'Bezahlt'
-        },
-        success: function(response) {
-            if (response.status === 'success') {
-                row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
+        // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Bezahlt"
+        $.ajax({
+            url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                status: 'Bezahlt'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
 
-                // Finanzdaten hinzufügen (für Einnahme)
-                $.ajax({
-                    url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
-                    method: 'POST',
-                    data: {
-                        typ: 'Einnahme',
-                        kategorie: 'Rechnung',
-                        notiz: 'Rechnung #' + invoiceNumber,
-                        betrag: betrag, // Preis aus der Tabelle
-                        erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            alert('Finanzdaten erfolgreich hinzugefügt!');
-                        } else {
-                            alert('Fehler beim Hinzufügen der Finanzdaten: ' + response.message);
+                    // Finanzdaten hinzufügen (für Einnahme)
+                    $.ajax({
+                        url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
+                        method: 'POST',
+                        data: {
+                            typ: 'Einnahme',
+                            kategorie: 'Rechnung',
+                            notiz: 'Rechnung #' + invoiceNumber,
+                            betrag: betrag, // Preis aus der Tabelle
+                            erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert('Finanzdaten erfolgreich hinzugefügt!');
+                            } else {
+                                alert('Fehler beim Hinzufügen der Finanzdaten: ' + response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Fehler beim Hinzufügen der Finanzdaten.');
                         }
-                    },
-                    error: function() {
-                        alert('Fehler beim Hinzufügen der Finanzdaten.');
-                    }
-                });
-            } else {
+                    });
+                } else {
+                    alert('Fehler beim Aktualisieren der Rechnung!');
+                }
+            },
+            error: function() {
                 alert('Fehler beim Aktualisieren der Rechnung!');
             }
-        },
-        error: function() {
-            alert('Fehler beim Aktualisieren der Rechnung!');
-        }
+        });
+    });
+
+    // Wenn auf "Nicht Bezahlt"-Button geklickt wird
+    $('.btn-nicht-bezahlt').click(function() {
+        var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
+        var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
+
+        // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Offen"
+        $.ajax({
+            url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
+            method: 'POST',
+            data: {
+                invoice_number: invoiceNumber,
+                status: 'Offen'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    row.find('.status').html('<span class="badge badge-warning">Offen</span>');
+
+                    // Finanzdaten hinzufügen (für Ausgabe)
+                    $.ajax({
+                        url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
+                        method: 'POST',
+                        data: {
+                            typ: 'Ausgabe',
+                            kategorie: 'Rechnung',
+                            notiz: 'Storno Rechnung #' + invoiceNumber,
+                            betrag: row.find('.price').text(), // Preis aus der Tabelle
+                            erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert('Finanzdaten erfolgreich hinzugefügt!');
+                            } else {
+                                alert('Fehler beim Hinzufügen der Finanzdaten.');
+                            }
+                        },
+                        error: function() {
+                            alert('Fehler beim Hinzufügen der Finanzdaten.');
+                        }
+                    });
+                } else {
+                    alert('Fehler beim Aktualisieren der Rechnung!');
+                }
+            },
+            error: function() {
+                alert('Fehler beim Aktualisieren der Rechnung!');
+            }
+        });
     });
 });
-
-            // Wenn auf "Nicht Bezahlt"-Button geklickt wird
-            $('.btn-nicht-bezahlt').click(function() {
-                var invoiceNumber = $(this).data('invoice'); // Holen der Rechnungsnummer
-                var row = $(this).closest('tr'); // Holen der Zeile der Rechnung
-
-                // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Offen"
-                $.ajax({
-                    url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
-                    method: 'POST',
-                    data: {
-                        invoice_number: invoiceNumber,
-                        status: 'Offen'
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            row.find('.status').html('<span class="badge badge-warning">Offen</span>');
-
-                            // Finanzdaten hinzufügen (für Ausgabe)
-                            $.ajax({
-                                url: 'include/customer_add_financial_entry.php', // Neues Skript für Finanzdaten
-                                method: 'POST',
-                                data: {
-                                    typ: 'Ausgabe',
-                                    kategorie: 'Rechnung',
-                                    notiz: 'Storno Rechnung #' + invoiceNumber,
-                                    betrag: row.find('.price').text(), // Preis aus der Tabelle
-                                    erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
-                                },
-                                success: function(response) {
-                                    if (response.status === 'success') {
-                                        alert('Finanzdaten erfolgreich hinzugefügt!');
-                                    } else {
-                                        alert('Fehler beim Hinzufügen der Finanzdaten.');
-                                    }
-                                },
-                                error: function() {
-                                    alert('Fehler beim Hinzufügen der Finanzdaten.');
-                                }
-                            });
-                        } else {
-                            alert('Fehler beim Aktualisieren der Rechnung!');
-                        }
-                    },
-                    error: function() {
-                        alert('Fehler beim Aktualisieren der Rechnung!');
-                    }
-                });
-            });
-        });
-    </script>
-
+</script>
 
 </div>
 

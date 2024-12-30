@@ -132,9 +132,9 @@ foreach ($settings as $setting) {
                   From
                   <address>
                     <strong><?= htmlspecialchars($settings_array['unternehmen_namen']) ?></strong><br>
-                    <?= htmlspecialchars($setting['adresse']); ?><br>
-                    <?= htmlspecialchars($setting['stadt_adresse']); ?><br>
-                    Phone: <?= htmlspecialchars($setting['telefonnummer']); ?><br>
+                    <?= htmlspecialchars($settings_array['adresse']) ?><br>
+                    <?= htmlspecialchars($settings_array['stadt_adresse']) ?><br>
+                    Phone: <?= htmlspecialchars($settings_array['telefonnummer']) ?><br>
                   </address>
                 </div>
                 <div class="col-sm-4 invoice-col">

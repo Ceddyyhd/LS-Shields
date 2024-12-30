@@ -43,12 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "INSERT INTO documents_customer (user_id, document_name, file_path, uploaded_at, doc_type) 
                     VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([
+            if ($stmt->execute([
                 'user_id' => $customer_id,
                 'file_name' => $custom_name,
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
-            ]);
+            ])) {
+                echo "Dokument erfolgreich gespeichert.";  // Erfolgsnachricht
+            } else {
+                $error = $stmt->errorInfo();
+                echo "Fehler bei der SQL-Abfrage: " . print_r($error, true);  // SQL-Fehler ausgeben
+            }
 
             // Benutzernamen ermitteln
             $uploaded_by = $_SESSION['username'] ?? null;
@@ -76,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Weiterleitung zur Kunden-Profilseite
+    header("Location: ../kunden.php?id=" . htmlspecialchars($customer_id));
     exit;
 }
 ?>

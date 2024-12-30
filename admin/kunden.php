@@ -385,6 +385,7 @@ $(document).ready(function() {
             success: function(response) {
                 console.log("Erfolgreich hochgeladen:", response); // Erfolgsnachricht im Log
                 $("#modal-primary").modal("hide"); // Modal schließen
+                location.reload(); // Seite neu laden, um Änderungen anzuzeigen
             },
             error: function(xhr, status, error) {
                 console.log("Fehler:", error); // Fehler im Log ausgeben

@@ -685,6 +685,7 @@ $("#noteForm").on("submit", function (e) {
             </div>
             <div class="modal-body">
                 <p>Die Rechnung wurde erfolgreich erstellt. Ihre Rechnungsnummer lautet: <span id="invoice-number"></span>.</p>
+                <p>Die Zahlungsfrist ist der: <span id="due-date"></span>.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
@@ -725,53 +726,58 @@ function addNewRow() {
     container.appendChild(newRow);
 }
 </script>
+<?php
+include 'db.php';  // Datenbankverbindung einbinden
+$customer_id = $_GET['id'];  // Kunden-ID aus der URL
 
-            <div class="card-body">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Rechnung</th>
-                      <th>Status</th>
-                      <th style="width: 40px">Link</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Rechnung #13745</td>
-                      <td>
-                      <span class="badge badge-success">Bezahlt</span>
-                      </td>
-                      <td>link zu rechnung?id=13745</td>
-                    </tr>
-                    <tr>
-                     <td>1.</td>
-                      <td>Rechnung #13745</td>
-                      <td>
-                      <span class="badge badge-success">Bezahlt</span>
-                      </td>
-                      <td>link zu rechnung?id=13745</td>
-                    </tr>
-                    <tr>
-                     <td>1.</td>
-                      <td>Rechnung #13745</td>
-                      <td>
-                      <span class="badge badge-success">Bezahlt</span>
-                      </td>
-                      <td>link zu rechnung?id=13745</td>
-                    </tr>
-                    <tr>
-                      <td>1.</td>
-                      <td>Rechnung #13745</td>
-                      <td>
-                      <span class="badge badge-success">Bezahlt</span>
-                      </td>
-                      <td>link zu rechnung?id=13745</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+// SQL-Abfrage, um alle Rechnungen für den Kunden abzurufen
+$sql = "SELECT * FROM invoices WHERE customer_id = :customer_id ORDER BY created_at DESC";
+$stmt = $conn->prepare($sql);
+$stmt->execute(['customer_id' => $customer_id]);
+
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
+<div class="card-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Rechnung</th>
+                <th>Fälligkeitsdatum</th>
+                <th>Status</th>
+                <th style="width: 40px">Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($invoices as $invoice): ?>
+                <tr>
+                    <td><?= htmlspecialchars($invoice['invoice_number']); ?></td>
+                    <td>Rechnung #<?= htmlspecialchars($invoice['invoice_number']); ?></td>
+                    <td><?= htmlspecialchars($invoice['due_date']); ?></td>
+                    <td>
+                        <?php
+                        // Berechne den Status der Rechnung
+                        $status = $invoice['status'];
+                        $badge_class = '';
+
+                        if ($status == 'Offen') {
+                            $badge_class = 'badge-warning';  // Offene Rechnung
+                        } elseif ($status == 'Überfällig') {
+                            $badge_class = 'badge-danger';  // Überfällige Rechnung
+                        } elseif ($status == 'Bezahlt') {
+                            $badge_class = 'badge-success';  // Bezahlt
+                        }
+                        ?>
+                        <span class="badge <?= $badge_class; ?>"><?= $status; ?></span>
+                    </td>
+                    <td><a href="rechnung.php?id=<?= htmlspecialchars($invoice['invoice_number']); ?>">Link zur Rechnung</a></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 
 

@@ -292,29 +292,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         <!-- Weitere Dokumente -->
         <script>
 $(document).ready(function () {
-    // Speichern-Button
-    $("#saveButton").on("click", function () {
-    var formData = $("#employeeForm").serialize();
-
-    $.ajax({
-        url: "include/save_employee_info.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            try {
-                var res = JSON.parse(response); // JSON-Antwort parsen
-                if (res.success) {
-                } else {
-                }
-            } catch (e) {
-                console.error("Fehler beim Verarbeiten der Antwort:", e);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error("Fehler:", error);
-        },
-    });
-});
     // Datei-Auswahl anzeigen
     $("#documentFile").on("change", function () {
         var fileName = $(this).val().split("\\").pop();

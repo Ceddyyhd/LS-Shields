@@ -206,26 +206,23 @@ foreach ($settings as $setting) {
               <div class="row no-print">
                 <div class="col-12">
                 <button id="generatePdf" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                  <i class="fas fa-download"></i> Generate PDF
-              </button>
-              <script>
-                $(document).ready(function() {
-    $('#generatePdf').on('click', function() {
-        $.ajax({
-            url: 'generate_pdf.php',  // Dein PHP-Skript für die PDF-Erstellung
-            type: 'GET',
-            data: { invoice_number: '<?= htmlspecialchars($invoice['invoice_number']); ?>' }, // Rechnungsnummer an das Skript übergeben
-            success: function(response) {
-                alert('PDF wurde erfolgreich generiert und gespeichert.');
-                window.open(response, '_blank'); // PDF anzeigen
-            },
-            error: function() {
-                alert('Fehler beim Generieren der PDF.');
-            }
-        });
+    <i class="fas fa-download"></i> Generate PDF
+</button>
+
+<script>
+    document.getElementById('generatePdf').addEventListener('click', function() {
+        // Ersetze diese URL mit der URL deiner generierten PDF-Datei
+        var pdfUrl = '/admin/invoices/LS-Shields_Rechnung_71220.pdf'; 
+        
+        // Öffne das PDF in einem neuen Fenster
+        var printWindow = window.open(pdfUrl, '_blank');
+
+        // Warte, bis das PDF vollständig geladen ist, und öffne das Druckdialogfenster
+        printWindow.onload = function() {
+            printWindow.print(); // Druckdialog öffnen
+        };
     });
-});
-              </script>
+</script>
                 </div>
               </div>
             </div>

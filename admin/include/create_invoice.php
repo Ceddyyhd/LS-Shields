@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Rabatt anwenden
+    $end_discount = $total_price * ($discount / 100);
     $total_price = $total_price - ($total_price * ($discount / 100));
-    $discount = $total_price * ($discount / 100);
 
     // Berechnung der Zahlungsfrist (14 Tage nach dem Erstellungsdatum)
     $due_date = date('Y-m-d', strtotime('+14 days'));
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'invoice_number' => $invoice_number,
             'description' => json_encode($invoice_items),  // JSON für alle Positionen
             'price' => $total_price,
-            'discount' => $discount,
+            'discount' => $end_discount,
             'due_date' => $due_date
         ]);
 

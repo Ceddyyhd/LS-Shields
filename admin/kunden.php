@@ -2,41 +2,31 @@
 include 'include/db.php';
 ini_set('display_errors', 0);
 error_reporting(0);
-// Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
-$user_id = $_GET['id'] ?? null;
-if (!$user_id) {
-    die("Benutzer-ID fehlt.");
+
+// Beispiel: Kunden-ID aus der Session oder URL (z. B. profile.php?id=1)
+$customer_id = $_GET['id'] ?? null;
+if (!$customer_id) {
+    die("Kunden-ID fehlt.");
 }
-// Benutzerinformationen abrufen
-$sql = "SELECT * 
-        FROM kunden 
-        WHERE users.id = :id";
+
+// Kundeninformationen abrufen
+$sql = "SELECT k.*, r.name AS role_name 
+        FROM kunden k
+        LEFT JOIN roles r ON k.role_id = r.id
+        WHERE k.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->execute(['id' => $customer_id]);
+$customer = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$user) {
-    die("Benutzer nicht gefunden.");
+if (!$customer) {
+    die("Kunde nicht gefunden.");
 }
 
-// Dokumente abrufen
-$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
+// Dokumente für den Kunden abrufen
+$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents_customer WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
-$stmt_documents->execute(['user_id' => $user_id]);
+$stmt_documents->execute(['user_id' => $customer_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
-
-// Ausrüstung abrufen
-$sql_equipment = "SELECT equipment_name, received FROM equipment WHERE user_id = :user_id";
-$stmt_equipment = $conn->prepare($sql_equipment);
-$stmt_equipment->execute(['user_id' => $user_id]);
-$equipment = $stmt_equipment->fetchAll(PDO::FETCH_ASSOC);
-
-// Notizen abrufen
-$sql_notes = "SELECT type, content, created_at, author FROM notes WHERE user_id = :user_id ORDER BY created_at DESC";
-$stmt_notes = $conn->prepare($sql_notes);
-$stmt_notes->execute(['user_id' => $user_id]);
-$notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
-
 
 
 // Rechte des Benutzers abrufen

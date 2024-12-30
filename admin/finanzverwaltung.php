@@ -118,7 +118,37 @@
                         <div class="form-group">
                           <label>Kategorie</label>
                           <select class="custom-select" name="kategorie">
-                          
+                          <?php
+                            // Verbindung zur Datenbank herstellen
+                            include 'db.php';
+
+                            // Überprüfen der Verbindung
+                            if (!$conn) {
+                                die("Verbindung zur Datenbank fehlgeschlagen: " . mysqli_connect_error());
+                            }
+
+                            // Abfrage zum Abrufen aller Kategorien
+                            $sql = "SELECT * FROM finanzen_kategorien";  // Keine Filterung nach 'typ'
+                            $result = mysqli_query($conn, $sql);
+
+                            // Fehlerbehandlung für die SQL-Abfrage
+                            if (!$result) {
+                                die("Fehler bei der Abfrage: " . mysqli_error($conn));
+                            }
+
+                            // Überprüfen, ob Kategorien existieren
+                            if (mysqli_num_rows($result) > 0) {
+                                // Kategorien aus der Datenbank laden
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+                                }
+                            } else {
+                                echo '<option value="">Keine Kategorien verfügbar</option>';
+                            }
+
+                            // Schließen der Datenbankverbindung
+                            mysqli_close($conn);
+                            ?>
                           </select>
                         </div>
 

@@ -1,7 +1,9 @@
 <?php
+// Fehlerprotokollierung aktivieren
 ini_set('display_errors', 1);  // Fehlerprotokollierung aktivieren
 error_reporting(E_ALL);  // Alle Fehler anzeigen
 
+// Datenbankverbindung einbinden
 include 'db.php';
 session_start();
 
@@ -12,15 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $custom_name = $_POST['document_name'] ?? null;
     $doc_type = $_POST['doc_type'] ?? 'unbekannt';
 
-    // Sicherstellen, dass die erforderlichen Daten vorhanden sind
     if (!$customer_id || !$custom_name) {
         echo "Fehler: Kunden-ID oder Dokumentname fehlt.";
-        exit; // Verhindert Weiterleitung bei Fehler
-    }
-
-    // Überprüfen, ob die Datei korrekt hochgeladen wurde
-    if (!isset($_FILES['document_file']) || $_FILES['document_file']['error'] != UPLOAD_ERR_OK) {
-        echo "Fehler: Beim Hochladen der Datei ist ein Fehler aufgetreten.";
         exit; // Verhindert Weiterleitung bei Fehler
     }
 
@@ -34,70 +29,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Datei hochladen und speichern
-    $file = $_FILES['document_file'];
-    $file_name = basename($file['name']);
-    $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
-    $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+    if (!empty($_FILES['document_file']['name'])) {
+        $file = $_FILES['document_file'];
+        $file_name = basename($file['name']);
+        $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
-    if (!in_array(strtolower($file_extension), $allowed_extensions)) {
-        echo "Fehler: Ungültiger Dateityp. Erlaubte Typen: pdf, jpg, jpeg, png, doc, docx.";
-        exit; // Verhindert Weiterleitung bei Fehler
-    }
-
-    $unique_name = $custom_name . '_' . uniqid('doc_', true) . '.' . $file_extension;
-    $physical_path = $upload_dir . $unique_name;
-    $file_path = '/admin/uploads/' . $unique_name;
-
-    // Datei auf den Server verschieben
-    if (move_uploaded_file($file['tmp_name'], $physical_path)) {
-        echo "Datei erfolgreich hochgeladen.";  // Erfolgsnachricht
-
-        // Dokument in die Datenbank speichern
-        $sql = "INSERT INTO documents_customer (user_id, document_name, file_path, uploaded_at, doc_type) 
-                VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt->execute([
-            'user_id' => $customer_id,
-            'file_name' => $custom_name,
-            'file_path' => $file_path,
-            'doc_type' => $doc_type
-        ])) {
-            echo "Dokument erfolgreich in die Datenbank gespeichert.";  // Erfolgsnachricht
-        } else {
-            $error = $stmt->errorInfo();
-            echo "Fehler bei der SQL-Abfrage: " . print_r($error, true);  // SQL-Fehler ausgeben
+        if (!in_array(strtolower($file_extension), $allowed_extensions)) {
+            echo "Fehler: Ungültiger Dateityp.";
             exit; // Verhindert Weiterleitung bei Fehler
         }
 
-        // Benutzernamen ermitteln
-        $uploaded_by = $_SESSION['username'] ?? null;
-        if (!$uploaded_by) {
-            $stmt_user = $conn->prepare("SELECT name FROM kunden WHERE id = :id");
-            $stmt_user->execute([':id' => $customer_id]);
-            $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
-            $uploaded_by = $user['name'] ?? 'Unbekannt';
-        }
+        $unique_name = $custom_name . '_' . uniqid('doc_', true) . '.' . $file_extension;
+        $physical_path = $upload_dir . $unique_name;
+        $file_path = '/admin/uploads/' . $unique_name;
 
-        // Log in die Datenbank schreiben
-        $sql_log = "INSERT INTO upload_customer_logs (user_id, document_name, uploaded_by, created_at) 
-                    VALUES (:user_id, :document_name, :uploaded_by, NOW())";
-        $stmt_log = $conn->prepare($sql_log);
-        if (!$stmt_log->execute([
-            'user_id' => $customer_id,
-            'document_name' => $custom_name,
-            'uploaded_by' => $uploaded_by
-        ])) {
-            $error_log = $stmt_log->errorInfo();
-            echo "Fehler beim Schreiben des Logs: " . print_r($error_log, true);
+        if (move_uploaded_file($file['tmp_name'], $physical_path)) {
+            echo "Datei erfolgreich hochgeladen.";  // Erfolgsnachricht
+
+            // Dokument in die Datenbank speichern
+            $sql = "INSERT INTO documents_customer (user_id, document_name, file_path, uploaded_at, doc_type) 
+                    VALUES (:user_id, :file_name, :file_path, NOW(), :doc_type)";
+            $stmt = $conn->prepare($sql);
+            if ($stmt->execute([
+                'user_id' => $customer_id,
+                'file_name' => $custom_name,
+                'file_path' => $file_path,
+                'doc_type' => $doc_type
+            ])) {
+                echo "Dokument erfolgreich in die Datenbank gespeichert.";  // Erfolgsnachricht
+            } else {
+                $error = $stmt->errorInfo();
+                echo "Fehler bei der SQL-Abfrage: " . print_r($error, true);  // SQL-Fehler ausgeben
+                exit; // Verhindert Weiterleitung bei Fehler
+            }
+
+            // Benutzernamen ermitteln
+            $uploaded_by = $_SESSION['username'] ?? null;
+
+            if (!$uploaded_by) {
+                // Benutzername aus der Datenbank abrufen, falls nicht in der Session gespeichert
+                $stmt_user = $conn->prepare("SELECT name FROM kunden WHERE id = :id");
+                $stmt_user->execute([':id' => $customer_id]);
+                $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+                $uploaded_by = $user['name'] ?? 'Unbekannt';
+            }
+
+            // Log in die Datenbank schreiben
+            $sql_log = "INSERT INTO upload_customer_logs (user_id, document_name, uploaded_by, created_at) 
+                        VALUES (:user_id, :document_name, :uploaded_by, NOW())";
+            $stmt_log = $conn->prepare($sql_log);
+            if (!$stmt_log->execute([
+                'user_id' => $customer_id,
+                'document_name' => $custom_name,
+                'uploaded_by' => $uploaded_by
+            ])) {
+                $error_log = $stmt_log->errorInfo();
+                echo "Fehler beim Schreiben des Logs: " . print_r($error_log, true);
+                exit; // Verhindert Weiterleitung bei Fehler
+            }
+        } else {
+            echo "Fehler beim Verschieben der Datei.";
             exit; // Verhindert Weiterleitung bei Fehler
         }
     } else {
-        echo "Fehler beim Verschieben der Datei.";
+        echo "Fehler: Keine Datei zum Hochladen ausgewählt.";
         exit; // Verhindert Weiterleitung bei Fehler
     }
 
-    // Hinweis: Weiterleitung wurde entfernt, damit Fehler angezeigt werden.
-    echo "Erfolgreicher Upload und Speicherung in der Datenbank. Keine Weiterleitung.";
+    // Weiterleitung zur Kunden-Profilseite entfernt, damit der Fehler sichtbar bleibt
+    echo "Dokument erfolgreich hochgeladen und gespeichert. Weiterleitung wurde entfernt.";
 }
 ?>

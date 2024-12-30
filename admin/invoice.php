@@ -131,7 +131,7 @@
               </div>
               <!-- /.row -->
 
-              <div class="row">
+              <div class="row"  style="margin-left: 315px;">
                 <!-- accepted payments column -->
                 <!-- /.col -->
                 <div class="col-6">

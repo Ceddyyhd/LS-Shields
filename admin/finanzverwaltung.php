@@ -131,6 +131,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <th>Typ</th>
                     <th>Kategorie</th>
                     <th>Notiz</th>
+                    <th>Erstellt von</th>
                     <th>Betrag</th>
                   </tr>
                   </thead>
@@ -138,6 +139,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <tr>
                     <td>Ausgabe</td>
                     <td>Fahrzeuganschaffung</td>
+                    <td>Cedric Schmidt</td>
                     <td>Baller XXX</td>
                     <td> 4.000$</td>
                   </tr>
@@ -145,6 +147,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <td>Einnahme</td>
                     <td>Rechnung #54257</td>
                     <td>Zahlung einer Rechnung</td>
+                    <td>Cedric Schmidt</td>
                     <td> 10.000$</td>
                   </tr>
                   </tbody>
@@ -153,6 +156,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <th>Typ</th>
                     <th>Kategorie</th>
                     <th>Notiz</th>
+                    <th>Erstellt von</th>
                     <th>Betrag</th>
                   </tr>
                   </tfoot>

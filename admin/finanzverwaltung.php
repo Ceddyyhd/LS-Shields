@@ -35,7 +35,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     
     <div class="card-body">
-
+    <div class="row">
     <div class="col-md-3 col-sm-6 col-12">
       <div class="info-box shadow-sm">
         <span class="info-box-icon bg-info"><i class="far fa-flag"></i></span>
@@ -74,7 +74,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
       <!-- /.info-box -->
     </div>
-
+    </div>
     </div>
 
       <!-- TABLE: LATEST ORDERS -->

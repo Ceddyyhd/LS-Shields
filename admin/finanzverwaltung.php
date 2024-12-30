@@ -33,7 +33,7 @@
   $(document).ready(function() {
     // AJAX-Anfrage zum Abrufen der Finanzdaten
     $.ajax({
-      url: 'get_financial_data.php',  // Dein PHP-Skript zum Abrufen der Daten
+      url: 'include/get_financial_data.php',  // Dein PHP-Skript zum Abrufen der Daten
       method: 'GET',
       dataType: 'json',
       success: function(data) {
@@ -149,7 +149,7 @@
     $(document).ready(function() {
         // AJAX-Anfrage, um die Kategorien zu laden
         $.ajax({
-            url: 'get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
+            url: 'include/get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
             method: 'GET',
             dataType: 'json',
             success: function(data) {
@@ -220,7 +220,7 @@
     var formData = $(this).serialize();
 
     $.ajax({
-      url: 'add_entry.php', // Dein PHP-Skript
+      url: 'include/finanzen_add_entry.php', // Dein PHP-Skript
       method: 'POST',
       data: formData,
       dataType: 'json',

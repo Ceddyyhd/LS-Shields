@@ -1,7 +1,5 @@
 <?php
 include 'db.php'; // Deine PDO-Datenbankverbindung
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $typ = $_POST['typ'];  // 'Einnahme' oder 'Ausgabe'
@@ -21,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     try {
-        // Einfügen der Finanzdaten in die Tabelle
+        // SQL-Abfrage zum Einfügen der Finanzdaten in die Tabelle
         $sql = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
                 VALUES (:typ, :kategorie, :notiz, :betrag, :erstellt_von)";
         $stmt = $conn->prepare($sql);
@@ -31,6 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':betrag', $betrag);
         $stmt->bindParam(':erstellt_von', $erstellt_von);
 
+        // Fehlerprotokollierung: Vor dem Ausführen der Anfrage
+        error_log("SQL-Befehl: " . $sql);
+
+        // SQL-Ausführung
         $stmt->execute();
 
         // Erfolg zurückgeben

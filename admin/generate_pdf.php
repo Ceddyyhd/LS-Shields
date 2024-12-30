@@ -32,14 +32,18 @@ $stmt_customer->execute(['customer_id' => $invoice['customer_id']]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
 // Erstelle eine neue TCPDF-Instanz
-$pdf = new TCPDF();
+$pdf = new TCPDF('P', 'mm', 'A4');
+$pdf->SetMargins(10, 10, 10);  // Setze Ränder
 $pdf->AddPage();
 
-// Setze Schriftart
-$pdf->SetFont('helvetica', '', 12);
+// Setze Schriftart und Größe
+$pdf->SetFont('helvetica', 'B', 16);
 
 // Rechnungsüberschrift
 $pdf->Cell(0, 10, 'Rechnung #' . htmlspecialchars($invoice['invoice_number']), 0, 1, 'C');
+
+// Setze eine kleinere Schriftart für den Text
+$pdf->SetFont('helvetica', '', 12);
 
 // Kundendaten
 $pdf->Ln(5);
@@ -50,6 +54,7 @@ $pdf->Cell(0, 10, 'Email: ' . htmlspecialchars($customer['umail']), 0, 1);
 $pdf->Ln(5);
 $pdf->Cell(0, 10, 'Positionen:', 0, 1);
 foreach ($invoice_items as $item) {
+    $subtotal = $item['unit_price'] * $item['quantity'];
     $pdf->Cell(0, 10, htmlspecialchars($item['description']) . ' - ' . $item['quantity'] . ' x ' . $item['unit_price'] . '$', 0, 1);
 }
 
@@ -62,9 +67,14 @@ $pdf->Cell(0, 10, 'Gesamt: ' . htmlspecialchars($invoice['price']) . '$', 0, 1);
 $pdf->Ln(5);
 $pdf->Cell(0, 10, 'Status: ' . htmlspecialchars($invoice['status']), 0, 1);
 
+// Füge zusätzliche Felder hinzu, falls nötig
+// Zum Beispiel ein Footer, oder eine Fußzeile mit Bankdetails oder weiteren Angaben
+
 // Dateiname für das PDF
-$pdf_file = $_SERVER['DOCUMENT_ROOT'] . '/admin/invoices/invoice_' . $invoice_number . '.pdf';
-$pdf_url = '/admin/invoices/invoice_' . $invoice_number . '.pdf';
+$pdf_file = $_SERVER['DOCUMENT_ROOT'] . '/admin/invoices/LS-Shields_Rechnung_' . $invoice_number . '.pdf';
+$pdf_url = '/admin/invoices/LS-Shields_Rechnung_' . $invoice_number . '.pdf';
+
+// Generiere die PDF und speichere sie auf dem Server
 $pdf->Output($pdf_file, 'F');  // Speichern der Datei auf dem Server
 
 // Rückgabe des Pfads zur gespeicherten Datei

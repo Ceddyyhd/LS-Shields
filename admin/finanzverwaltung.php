@@ -97,7 +97,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+              
+            <div class="form-group">
+                        <label>Typ</label>
+                        <select class="custom-select">
+                          <option>Ausgabe</option>
+                          <option>Einnahme</option>
+                        </select>
+            </div>
+
+            <div class="form-group">
+                        <label>Kategorie</label>
+                        <select class="custom-select">
+                          <option>Soll dynamisch aus der DB mit der Tabelle finanzen_kategorien gezogen werden</option>
+                          <option>Einnahme</option>
+                        </select>
+            </div>
+
+            <div class="col-sm-6">
+                      <!-- text input -->
+                      <div class="form-group">
+                        <label>Notiz</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+                      </div>
+                    </div>
+
+            <div class="col-sm-6">
+              <!-- text input -->
+              <div class="form-group">
+                <label>Betrag</label>
+                <input type="text" class="form-control" placeholder="Enter ...">
+              </div>
+            </div>
+          
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

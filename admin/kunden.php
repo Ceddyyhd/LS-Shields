@@ -746,6 +746,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th style="width: 10px">#</th>
                 <th>Rechnung</th>
                 <th>Fälligkeitsdatum</th>
+                <th>Preis</th>
                 <th>Status</th>
                 <th style="width: 40px">Link</th>
                 <th style="width: 40px">Bezahlt</th>
@@ -757,6 +758,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td>Rechnung #<?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td><?= htmlspecialchars($invoice['due_date']); ?></td>
+                    <td class="price"><?= htmlspecialchars($invoice['betrag']); ?></td>
                     <td>
                         <?php
                         $status = $invoice['status'];

@@ -567,11 +567,12 @@ $("#noteForm").on("submit", function (e) {
 
 
 <div class="tab-pane" id="rechnungen">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
-        Rechnung erstellen
-    </button>
-    
-    <!-- Modal für die Rechnungserstellung -->
+    <!-- Button für das Modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
+    Rechnung erstellen
+</button>
+
+<div class="container mt-5">
     <div class="modal fade" id="rechnung-erstellen">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -582,8 +583,8 @@ $("#noteForm").on("submit", function (e) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="invoice-form" action="include/create_invoice.php" method="POST">
-                        <!-- Kundeninformationen -->
+                    <form id="invoice-form">
+                        <!-- Formularfelder (Unternehmen, UMail, Nummer) -->
                         <div class="form-group">
                             <label>Unternehmen</label>
                             <input type="text" class="form-control" name="unternehmen" value="<?= $kunden['name'] ?>" disabled>
@@ -596,43 +597,89 @@ $("#noteForm").on("submit", function (e) {
                             <label>Nummer</label>
                             <input type="text" class="form-control" name="nummer" value="<?= $kunden['nummer'] ?>" disabled>
                         </div>
-
-                        <!-- Versteckte Kunden-ID -->
-                        <input type="hidden" id="kunden_id" name="kunden_id" value="<?= $kunden['id']; ?>">
+                        <hr>
+                        <input type="hidden" id="kunden_id" name="kunden_id" value="<?= $kunden['id'] ?>">
 
                         <!-- Dynamisch hinzufügbare Rechnungszeilen -->
                         <div id="invoice-items">
                             <div class="row invoice-item">
                                 <div class="col-5">
-                                    <label>Beschreibung</label>
+                                    <p>Beschreibung</p>
                                     <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
                                 </div>
                                 <div class="col-3">
-                                    <label>Stück Preis</label>
+                                    <p>Stück Preis</p>
                                     <input type="number" class="form-control" name="stueckpreis[]" placeholder="Preis">
                                 </div>
                                 <div class="col-3">
-                                    <label>Anzahl</label>
+                                    <p>Anzahl</p>
                                     <input type="number" class="form-control" name="anzahl[]" placeholder="Anzahl">
                                 </div>
                             </div>
                         </div>
 
                         <hr>
-
-                        <!-- Rabatt -->
                         <div class="col-3" style="margin-left: 315px;">
-                            <label>Rabatt in %</label>
+                            <p>Rabatt in %</p>
                             <input type="number" class="form-control" name="rabatt" placeholder="">
                         </div>
 
-                        <!-- Buttons -->
                         <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                             <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
                         </div>
                     </form>
+                    <div id="response-message"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Formular validieren und per AJAX absenden
+    $(document).ready(function () {
+        $("#invoice-form").on("submit", function (e) {
+            e.preventDefault();  // Verhindert das Standardformular-Verhalten (Seitenwechsel)
+
+            var formData = new FormData(this);  // Formulardaten sammeln
+
+            $.ajax({
+                url: "include/create_invoice.php",  // Ziel-URL
+                type: "POST",
+                data: formData,
+                processData: false,  // Wichtige Option für FormData
+                contentType: false,  // Wichtige Option für FormData
+                success: function (response) {
+                    // Erfolgsnachricht vom Server erhalten
+                    $('#response-message').html(response);  // Zeige die Antwort im Div an
+                    $('#rechnung-erstellen').modal('hide');  // Schließe das Modal
+                    $('#success-popup').modal('show');  // Zeige das Erfolgspopup
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler beim Absenden der Anfrage:", error);
+                    alert("Es ist ein Fehler aufgetreten!");
+                }
+            });
+        });
+    });
+</script>
+
+<!-- Erfolgs-Popup -->
+<div class="modal fade" id="success-popup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Erfolgreich!</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Die Rechnung wurde erfolgreich erstellt. Ihre Rechnungsnummer lautet: <span id="invoice-number"></span>.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>
@@ -649,26 +696,26 @@ $("#noteForm").on("submit", function (e) {
     }
 }
 
-    // Funktion, um eine neue Zeile hinzuzufügen
-    function addNewRow() {
-        const container = document.getElementById('invoice-items');
-        const newRow = document.createElement('div');
-        newRow.classList.add('row', 'invoice-item');
-        
-        newRow.innerHTML = `
-            <div class="col-5">
-                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
-            </div>
-            <div class="col-3">
-                <input type="number" class="form-control" name="stueckpreis[]" placeholder="Preis">
-            </div>
-            <div class="col-3">
-                <input type="number" class="form-control" name="anzahl[]" placeholder="Anzahl">
-            </div>
-        `;
-        
-        container.appendChild(newRow);
-    }
+// Funktion, um eine neue Zeile hinzuzufügen
+function addNewRow() {
+    const container = document.getElementById('invoice-items');
+    const newRow = document.createElement('div');
+    newRow.classList.add('row', 'invoice-item');
+    
+    newRow.innerHTML = `
+        <div class="col-5">
+            <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+        </div>
+        <div class="col-3">
+            <input type="number" class="form-control" name="stueckpreis[]" placeholder="Preis">
+        </div>
+        <div class="col-3">
+            <input type="number" class="form-control" name="anzahl[]" placeholder="Anzahl">
+        </div>
+    `;
+    
+    container.appendChild(newRow);
+}
 </script>
 
             <div class="card-body">

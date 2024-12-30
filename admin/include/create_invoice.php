@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $discount = $_POST['rabatt'] ?? 0;
 
     if (!$customer_id || empty($description)) {
-        die("Fehler: Kunden-ID oder Rechnungsdaten fehlen.");
+        echo "Fehler: Kunden-ID oder Rechnungsdaten fehlen.";
+        exit;
     }
 
     // Zufällige 5-stellige Rechnungsnummer generieren
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Überspringe leere Positionen
         if (empty($desc) || $price <= 0 || $qty <= 0) {
-            continue;
+            continue;  // Diese Position überspringen, wenn sie ungültig ist
         }
 
         // Berechnung des Gesamtpreises der einzelnen Position
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'discount' => $discount
         ]);
 
-        // Erfolgreiche Erstellung der Rechnung anzeigen
+        // Erfolgreiche Antwort zurückgeben
         echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
     } else {
         echo "Fehler: Keine gültigen Rechnungspositionen.";

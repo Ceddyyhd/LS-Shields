@@ -30,7 +30,7 @@ $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 // Notizen abrufen
 $sql_notes = "SELECT type, content, created_at, author FROM notes_customer WHERE user_id = :user_id ORDER BY created_at DESC";
 $stmt_notes = $conn->prepare($sql_notes);
-$stmt_notes->execute(['user_id' => $user_id]);
+$stmt_notes->execute(['user_id' => $customer_id]);
 $notes = $stmt_notes->fetchAll(PDO::FETCH_ASSOC);
 
 

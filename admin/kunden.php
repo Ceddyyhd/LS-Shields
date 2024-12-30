@@ -10,9 +10,7 @@ if (!$customer_id) {
 }
 
 // Kundeninformationen abrufen
-$sql = "SELECT k.* 
-        FROM kunden k
-        WHERE k.id = :id";
+$sql = "SELECT k.* FROM kunden k WHERE k.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $customer_id]);
 $customer = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -34,6 +32,7 @@ $sql_permissions = "SELECT p.name, p.description, p.display_name
 $stmt_permissions = $conn->prepare($sql_permissions);
 $stmt_permissions->execute(['role_id' => $customer['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -188,197 +187,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </form>
 <!-- /modal -->
-
-<!-- Tab für Dokumente -->
-<div class="tab-pane" id="dokumente">
-    <form id="employeeForm" class="form-horizontal" method="POST">
-        <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
-
-        <!-- Button für das Modal -->
-        <div class="form-group row">
-            <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
-            <div class="col-sm-10">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
-                    Dokument hochladen
-                </button>
-            </div>
-        </div>
-
-        <!-- Modal für Dateiupload -->
-        <div class="modal fade" id="modal-primary">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Dokument hochladen</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <form id="uploadForm" action="include/upload_customer_document.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
-                        <input type="hidden" name="doc_type" value="arbeitsvertrag">
-
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="documentName">Dokumentname</label>
-                                <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="documentFile">Datei auswählen</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
-                                    <label class="custom-file-label" for="documentFile">Datei auswählen</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                            <button type="submit" class="btn btn-primary">Hochladen</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- Tab für Notizen -->
-<div class="tab-pane" id="notizen">
-    <!-- Notizen hinzufügen -->
-    <?php if ($_SESSION['permissions']['create_note'] ?? false || $_SESSION['permissions']['create_warning'] ?? false || $_SESSION['permissions']['create_termination'] ?? false): ?>
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">Notiz hinzufügen</button>
-    <?php else: ?>
-        <p class="text-muted">Sie haben keine Berechtigung, Notizen hinzuzufügen.</p>
-    <?php endif; ?>
-
-    <div id="timeline" class="timeline timeline-inverse">
-        <?php foreach ($notes as $note): ?>
-            <div>
-                <?php
-                $iconClass = 'fas fa-user bg-secondary';
-                if ($note['type'] === 'notiz') {
-                    $iconClass = 'fas fa-user bg-info';
-                } elseif ($note['type'] === 'verwarnung') {
-                    $iconClass = 'fas fa-user bg-warning';
-                } elseif ($note['type'] === 'kuendigung') {
-                    $iconClass = 'fas fa-user bg-danger';
-                }
-                ?>
-                <i class="<?= $iconClass; ?>"></i>
-                <div class="timeline-item">
-                    <span class="time"><i class="far fa-clock"></i> <?= htmlspecialchars($note['created_at']); ?></span>
-                    <h3 class="timeline-header"><?= htmlspecialchars($note['author'] ?? 'Unbekannt'); ?> fügte eine <?= htmlspecialchars($note['type']); ?> hinzu</h3>
-                    <div class="timeline-body"><?= htmlspecialchars($note['content']); ?></div>
-                </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
-
-<!-- Modal für Notizerstellung -->
-<div class="modal fade" id="modal-default">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Notiz erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="noteForm">
-                <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>"> <!-- Kunden-ID -->
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Typ</label>
-                        <select id="noteType" name="note_type" class="form-control" required>
-                            <?php if ($_SESSION['permissions']['create_note'] ?? false): ?>
-                                <option value="notiz">Notiz</option>
-                            <?php endif; ?>
-                            <?php if ($_SESSION['permissions']['create_warning'] ?? false): ?>
-                                <option value="verwarnung">Verwarnung</option>
-                            <?php endif; ?>
-                            <?php if ($_SESSION['permissions']['create_termination'] ?? false): ?>
-                                <option value="kuendigung">Kündigung</option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Inhalt</label>
-                        <textarea id="noteContent" name="note_content" class="form-control" rows="3" placeholder="Enter ..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Abbrechen</button>
-                    <button type="submit" class="btn btn-primary">Speichern</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-$("#noteForm").on("submit", function (e) {
-    e.preventDefault();
-    var formData = $(this).serialize();
-
-    $.ajax({
-        url: "include/add_note_customer.php",
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            try {
-                response = JSON.parse(response);
-
-                if (response.success) {
-                  $('#modal-default').modal('hide');
-                  $('.modal-backdrop').remove(); // Entfernt den dunklen Hintergrund
-                    $("#noteForm")[0].reset();
-
-                    var iconClass;
-                    switch (response.data.type) {
-                        case "notiz":
-                            iconClass = "fas fa-user bg-info";
-                            break;
-                        case "verwarnung":
-                            iconClass = "fas fa-user bg-warning";
-                            break;
-                        case "kuendigung":
-                            iconClass = "fas fa-user bg-danger";
-                            break;
-                        default:
-                            iconClass = "fas fa-user bg-secondary";
-                            break;
-                    }
-
-                    var newNote = ` 
-                        <div>
-                            <i class="${iconClass}"></i>
-                            <div class="timeline-item">
-                                <span class="time"><i class="far fa-clock"></i> ${response.data.created_at}</span>
-                                <h3 class="timeline-header">${response.data.author} fügte eine ${response.data.type} hinzu</h3>
-                                <div class="timeline-body">${response.data.content}</div>
-                            </div>
-                        </div>`;
-                    $("#timeline").prepend(newNote);
-                } else {
-                    alert(response.message);
-                }
-            } catch (error) {
-                console.error("Fehler beim Parsen der Antwort:", error);
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error("Fehler:", error);
-            alert("Es ist ein Fehler aufgetreten: " + error);
-        },
-    });
-});
-</script>
-
 
               </div>
             </div>

@@ -384,13 +384,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 success: function(response) {
                     console.log("Erfolgreich hochgeladen:", response); // Erfolgslog
                     $("#modal-primary").modal("hide"); // Modal schließen
-                    location.reload(); // Seite neu laden
+                    window.location.href = document.referrer; // Gehe zurück zur vorherigen Seite
                 },
                 error: function(xhr, status, error) {
                     console.log("AJAX-Fehler:", error); // Detaillierte Fehlermeldung
                     console.log("XHR Status:", xhr.status); // HTTP-Status des Requests
                     console.log("Antwort:", xhr.responseText); // Antwort vom Server
-                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlermeldung anzeigen
+                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
                 }
             });
         });

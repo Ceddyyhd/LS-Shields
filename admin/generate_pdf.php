@@ -1,6 +1,6 @@
 <?php
 include 'include/db.php';
-require_once('plugins/tcpdf/src/tcpdf.php'); // Lade die TCPDF-Bibliothek
+require_once('plugins/tcpdf/src/Tcpdf.php'); // Lade die TCPDF-Bibliothek
 
 // Rechnungsnummer aus der Anfrage holen
 $invoice_number = $_GET['invoice_number'] ?? null;

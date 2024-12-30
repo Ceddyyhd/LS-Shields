@@ -386,8 +386,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 contentType: false,  // Verhindert das Setzen des Content-Types
                 success: function(response) {
                     console.log("Erfolgreicher Upload:", response);  // Erfolgsnachricht im Log
-                    $("#modal-primary").modal("hide");  // Modal schließen
-                    location.reload();  // Seite neu laden
                 },
                 error: function(xhr, status, error) {
                     console.log("Fehler beim Hochladen:", error);  // Fehler im Log ausgeben

@@ -170,7 +170,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
 
     // Überprüfung der Pflichtfelder
-    const email = document.querySelector('#email').value.trim();
     const password = document.querySelector('#password').value.trim();
     const confirmPassword = document.querySelector('#confirmPassword').value.trim();
 

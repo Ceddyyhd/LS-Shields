@@ -11,7 +11,8 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
   <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-
+<!-- Stelle sicher, dass jQuery vor deinem JavaScript-Code eingebunden ist -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <?php include 'include/navbar.php'; ?>
 
   <!-- Content Wrapper. Contains page content -->

@@ -653,15 +653,15 @@ $("#noteForm").on("submit", function (e) {
         
         newRow.innerHTML = `
             <div class="col-5">
-                <p>Beschreibung</p>
+                
                 <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
             </div>
             <div class="col-3">
-                <p>Stück Preis</p>
+                
                 <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
             </div>
             <div class="col-3">
-                <p>Anzahl</p>
+                
                 <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
             </div>
         `;

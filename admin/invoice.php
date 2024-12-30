@@ -43,17 +43,23 @@ $stmt = $conn->prepare($sql);
 $stmt->execute(['customer_id' => $customer_id]);
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Überprüfen, ob ein Ergebnis für die Rechnungsabfrage gefunden wurde
+if (!$result) {
+    die("Keine Rechnungen für diesen Kunden gefunden.");
+}
+
 // Kundenabfrage
-$sql_customer = "SELECT * FROM kunden WHERE id = :result";
+$sql_customer = "SELECT * FROM kunden WHERE id = :customer_id";
 $stmt_customer = $conn->prepare($sql_customer);
-$stmt_customer->execute(['result' => $result]);
+$stmt_customer->execute(['customer_id' => $result['customer_id']]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
 // Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
 if (!$customer) {
-    die("Kunde nicht gefunden." + $customer);
+    die("Kunde nicht gefunden: " . htmlspecialchars($result['customer_id']));
 }
 
+echo "Kunde gefunden: " . htmlspecialchars($customer['name']);
 ?>
 
 <!DOCTYPE html>

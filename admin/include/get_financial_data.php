@@ -15,8 +15,8 @@ try {
     $ausgaben = $stmt_ausgaben->fetch(PDO::FETCH_ASSOC)['ausgaben'];
 
     // Wenn die Werte NULL sind, setze sie auf 0
-    $einnahmen = $einnahmen ?? 0;
-    $ausgaben = $ausgaben ?? 0;
+    $einnahmen = isset($einnahmen) ? $einnahmen : 0;
+    $ausgaben = isset($ausgaben) ? $ausgaben : 0;
 
     // Kontostand berechnen
     $kontostand = $einnahmen - $ausgaben;
@@ -31,5 +31,4 @@ try {
     // Fehlerbehandlung: Gebe eine Fehlermeldung zurück, wenn die Datenbankabfragen fehlschlagen
     echo json_encode(["status" => "error", "message" => "Fehler bei der Datenbankabfrage: " . $e->getMessage()]);
 }
-
 ?>

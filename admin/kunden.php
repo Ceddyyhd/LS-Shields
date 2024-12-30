@@ -15,7 +15,7 @@ $sql = "SELECT k.*
         WHERE k.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $customer_id]);
-$customer = $stmt->fetch(PDO::FETCH_ASSOC);
+$kunden = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$customer) {
     die("Kunde nicht gefunden.");

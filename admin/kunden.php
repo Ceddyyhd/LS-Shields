@@ -17,7 +17,7 @@ $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $customer_id]);
 $kunden = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$customer) {
+if (!$kunden) {
     die("Kunde nicht gefunden.");
 }
 

@@ -748,6 +748,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Fälligkeitsdatum</th>
                 <th>Status</th>
                 <th style="width: 40px">Link</th>
+                <th style="width: 40px"><button type="button" class="btn btn-block btn-outline-primary">Bezahlt</button></th>
             </tr>
         </thead>
         <tbody>

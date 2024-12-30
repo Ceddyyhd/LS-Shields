@@ -42,16 +42,21 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         method: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log('Erhaltene Daten:', data);  // Füge das hinzu, um die empfangenen Daten zu sehen
+            console.log('Erhaltene Daten:', data);  // Überprüfe die empfangenen Daten
 
-            // Überprüfen, ob die Daten korrekt abgerufen wurden
-            if (data && typeof data.einnahmen === 'number' && typeof data.ausgaben === 'number') {
+            // Überprüfen, ob die Werte korrekt sind
+            if (data) {
+                // Umwandeln der Werte in numerische Werte
+                var einnahmen = parseFloat(data.einnahmen) || 0;
+                var ausgaben = parseFloat(data.ausgaben) || 0;
+                var kontostand = parseFloat(data.kontostand) || 0;
+
                 // Aktualisieren der Info-Boxen mit den abgerufenen Werten
-                $('#kontostand').text(data.kontostand.toFixed(2) + ' €');
-                $('#einnahmen').text(data.einnahmen.toFixed(2) + ' €');
-                $('#ausgaben').text(data.ausgaben.toFixed(2) + ' €');
+                $('#kontostand').text(kontostand.toFixed(2) + ' €');
+                $('#einnahmen').text(einnahmen.toFixed(2) + ' €');
+                $('#ausgaben').text(ausgaben.toFixed(2) + ' €');
             } else {
-                alert('Fehler beim Abrufen der Daten oder ungültiges Format.');
+                alert('Fehler beim Abrufen der Daten.');
             }
         },
         error: function() {

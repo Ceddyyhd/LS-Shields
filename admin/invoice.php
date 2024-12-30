@@ -1,23 +1,23 @@
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 
-// Kunden-ID aus der URL holen
-$customer_id = $_GET['invoice_number'];  // z.B. ?id=1
+// Rechnungsnummer aus der URL holen
+$invoice_number = $_GET['invoice_number'] ?? null;  // z.B. ?invoice_number=13745
 
-// Überprüfen, ob eine gültige Kunden-ID übergeben wurde
-if (!isset($customer_id) || !is_numeric($customer_id)) {
-    die("Ungültige Kunden-ID.");
+// Überprüfen, ob eine gültige Rechnungsnummer übergeben wurde
+if (!$invoice_number) {
+    die("Fehler: Keine Rechnungsnummer übergeben.");
 }
 
-// Abfrage für die Rechnung des Kunden
-$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number ORDER BY created_at DESC";
+// Abfrage für die Rechnung anhand der Rechnungsnummer
+$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number";
 $stmt_invoice = $conn->prepare($sql_invoice);
-$stmt_invoice->execute(['invoice_number' => $customer_id]);
+$stmt_invoice->execute(['invoice_number' => $invoice_number]);
 $invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob ein Ergebnis für die Rechnung gefunden wurde
+// Überprüfen, ob eine Rechnung gefunden wurde
 if (!$invoice) {
-    die("Rechnung nicht gefunden.");
+    die("Fehler: Rechnung mit dieser Rechnungsnummer nicht gefunden.");
 }
 
 // Rechnungspositionen dekodieren (falls die Positionen als JSON gespeichert sind)
@@ -38,29 +38,28 @@ if ($invoice['status'] == 'Offen') {
     $status_class = 'badge-success';  // Bezahlt
 }
 
-$sql = "SELECT customer_id FROM invoices WHERE customer_id = :customer_id";
-$stmt = $conn->prepare($sql);
-$stmt->execute(['customer_id' => $customer_id]);
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Überprüfen, ob ein Ergebnis für die Rechnungsabfrage gefunden wurde
-if (!$result) {
-    die("Keine Rechnungen für diesen Kunden gefunden.");
-}
+// Holen der customer_id aus der Rechnung
+$customer_id = $invoice['customer_id'];
 
 // Kundenabfrage
 $sql_customer = "SELECT * FROM kunden WHERE id = :customer_id";
 $stmt_customer = $conn->prepare($sql_customer);
-$stmt_customer->execute(['customer_id' => $result['customer_id']]);
+$stmt_customer->execute(['customer_id' => $customer_id]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
 // Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
 if (!$customer) {
-    die("Kunde nicht gefunden: " . htmlspecialchars($result['customer_id']));
+    die("Kunde nicht gefunden.");
 }
 
-echo "Kunde gefunden: " . htmlspecialchars($customer['name']);
+// Weiterverarbeitung oder Ausgabe
+echo "Rechnungsnummer: " . htmlspecialchars($invoice['invoice_number']) . "<br>";
+echo "Kunde: " . htmlspecialchars($customer['name']) . "<br>";
+echo "Status: <span class='badge $status_class'>" . htmlspecialchars($invoice['status']) . "</span><br>";
+
+// Weitere Details der Rechnung ausgeben...
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $discount = $_POST['rabatt'] ?? 0;
 
     if (!$customer_id || empty($description)) {
-        echo "Fehler: Kunden-ID oder Rechnungsdaten fehlen.";
+        echo json_encode(["status" => "error", "message" => "Fehler: Kunden-ID oder Rechnungsdaten fehlen."]);
         exit;
     }
 
@@ -60,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         // Erfolgreiche Antwort zurückgeben
-        echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
+        echo json_encode(["status" => "success", "invoice_number" => $invoice_number]);
     } else {
-        echo "Fehler: Keine gültigen Rechnungspositionen.";
+        echo json_encode(["status" => "error", "message" => "Fehler: Keine gültigen Rechnungspositionen."]);
     }
 }
 ?>

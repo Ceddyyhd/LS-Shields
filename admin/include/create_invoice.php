@@ -20,13 +20,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Gesamtpreis berechnen
     $total_price = 0;
+    $invoice_items = [];
+    
     foreach ($description as $index => $desc) {
-        // Umwandlung der Werte in numerische Werte (float für Preis und int für Menge)
         $price = (float)$unit_price[$index];  // Stückpreis als float
         $qty = (int)$quantity[$index];         // Anzahl als int
         
         // Berechnung des Gesamtpreises der einzelnen Position
         $total_price += ($price * $qty);
+
+        // Füge Rechnungspositionen zu einem Array hinzu
+        $invoice_items[] = [
+            'description' => $desc,
+            'unit_price' => $price,
+            'quantity' => $qty
+        ];
     }
 
     // Rabatt anwenden
@@ -39,14 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([
         'customer_id' => $customer_id,
         'invoice_number' => $invoice_number,
-        'description' => json_encode(array_map(function($desc, $price, $qty) {
-            return ['description' => $desc, 'unit_price' => $price, 'quantity' => $qty];
-        }, $description, $unit_price, $quantity)),
+        'description' => json_encode($invoice_items),  // JSON für alle Positionen
         'price' => $total_price,
         'discount' => $discount
     ]);
 
-    // Weiterleitung zur Rechnungsansicht oder zur Bestätigungsseite
+    // Erfolgreiche Erstellung der Rechnung anzeigen
     echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
 }
 ?>

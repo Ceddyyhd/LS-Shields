@@ -1,22 +1,21 @@
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 
-// Rechnungsnummer aus der URL holen
-$invoice_number = $_GET['invoice_number'] ?? null;
+// Kunden-ID aus der URL holen
+$customer_id = $_GET['id'];  // z.B. ?id=1
 
-if (!$invoice_number) {
-    die("Fehler: Keine Rechnungsnummer übergeben.");
+// Überprüfen, ob eine gültige Kunden-ID übergeben wurde
+if (!isset($customer_id) || !is_numeric($customer_id)) {
+    die("Ungültige Kunden-ID.");
 }
 
-echo "Übergebene Rechnungsnummer: " . htmlspecialchars($invoice_number);  // Debug-Ausgabe
-
-// Abfrage für die Rechnung anhand der Rechnungsnummer
-$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number";
+// Abfrage für die Rechnung des Kunden
+$sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number ORDER BY created_at DESC";
 $stmt_invoice = $conn->prepare($sql_invoice);
-$stmt_invoice->execute(['invoice_number' => $invoice_number]);
+$stmt_invoice->execute(['invoice_number' => $customer_id]);
 $invoice = $stmt_invoice->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob eine Rechnung gefunden wurde
+// Überprüfen, ob ein Ergebnis für die Rechnung gefunden wurde
 if (!$invoice) {
     die("Rechnung nicht gefunden.");
 }
@@ -39,63 +38,16 @@ if ($invoice['status'] == 'Offen') {
     $status_class = 'badge-success';  // Bezahlt
 }
 
-// Kundenabfrage (falls du Kundendaten auf der Rechnung anzeigen möchtest)
+// Kundenabfrage
 $sql_customer = "SELECT * FROM kunden WHERE id = :customer_id";
 $stmt_customer = $conn->prepare($sql_customer);
-$stmt_customer->execute(['customer_id' => $invoice['customer_id']]);
+$stmt_customer->execute(['customer_id' => $customer_id]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
-// Überprüfen, ob der Kunde gefunden wurde
+// Überprüfen, ob ein Ergebnis für den Kunden gefunden wurde
 if (!$customer) {
     die("Kunde nicht gefunden.");
 }
-
-// Ausgabe der Rechnungsdaten
-echo "<h2>Rechnung #{$invoice['invoice_number']}</h2>";
-echo "<p>Status: <span class='badge {$status_class}'>{$invoice['status']}</span></p>";
-echo "<p>Fälligkeitsdatum: {$invoice['due_date']}</p>";
-
-// Kundeninformationen anzeigen
-echo "<h3>Kundendaten</h3>";
-echo "<p>Name: {$customer['name']}</p>";
-echo "<p>UMail: {$customer['umail']}</p>";
-echo "<p>Nummer: {$customer['nummer']}</p>";
-
-// Rechnungspositionen anzeigen
-echo "<h3>Rechnungspositionen</h3>";
-echo "<table border='1' cellpadding='10'>
-        <thead>
-            <tr>
-                <th>Beschreibung</th>
-                <th>Einzelpreis</th>
-                <th>Anzahl</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>";
-
-$total = 0;
-foreach ($invoice_items as $item) {
-    $subtotal = $item['unit_price'] * $item['quantity'];
-    $total += $subtotal;
-    echo "<tr>
-            <td>{$item['description']}</td>
-            <td>{$item['unit_price']}€</td>
-            <td>{$item['quantity']}</td>
-            <td>{$subtotal}€</td>
-          </tr>";
-}
-
-echo "</tbody></table>";
-
-// Rabatt anzeigen, falls vorhanden
-if ($invoice['discount'] > 0) {
-    echo "<p>Rabatt: {$invoice['discount']}%</p>";
-}
-
-// Endbetrag berechnen und anzeigen
-$final_total = $total - ($total * ($invoice['discount'] / 100));
-echo "<p><strong>Endbetrag: {$final_total}€</strong></p>";
 
 ?>
 

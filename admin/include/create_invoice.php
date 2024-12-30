@@ -25,7 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($description as $index => $desc) {
         $price = (float)$unit_price[$index];  // Stückpreis als float
         $qty = (int)$quantity[$index];         // Anzahl als int
-        
+
+        // Überspringe leere Positionen
+        if (empty($desc) || $price <= 0 || $qty <= 0) {
+            continue;
+        }
+
         // Berechnung des Gesamtpreises der einzelnen Position
         $total_price += ($price * $qty);
 
@@ -41,18 +46,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_price = $total_price - ($total_price * ($discount / 100));
 
     // Rechnungsdaten in der Datenbank speichern
-    $sql = "INSERT INTO invoices (customer_id, invoice_number, description, price, discount, created_at) 
-            VALUES (:customer_id, :invoice_number, :description, :price, :discount, NOW())";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        'customer_id' => $customer_id,
-        'invoice_number' => $invoice_number,
-        'description' => json_encode($invoice_items),  // JSON für alle Positionen
-        'price' => $total_price,
-        'discount' => $discount
-    ]);
+    if (!empty($invoice_items)) {
+        $sql = "INSERT INTO invoices (customer_id, invoice_number, description, price, discount, created_at) 
+                VALUES (:customer_id, :invoice_number, :description, :price, :discount, NOW())";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'customer_id' => $customer_id,
+            'invoice_number' => $invoice_number,
+            'description' => json_encode($invoice_items),  // JSON für alle Positionen
+            'price' => $total_price,
+            'discount' => $discount
+        ]);
 
-    // Erfolgreiche Erstellung der Rechnung anzeigen
-    echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
+        // Erfolgreiche Erstellung der Rechnung anzeigen
+        echo "Rechnung erfolgreich erstellt. Rechnungsnummer: " . $invoice_number;
+    } else {
+        echo "Fehler: Keine gültigen Rechnungspositionen.";
+    }
 }
 ?>

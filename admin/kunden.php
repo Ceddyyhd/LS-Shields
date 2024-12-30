@@ -640,14 +640,14 @@ $("#noteForm").on("submit", function (e) {
 
 <script>
     function checkAndAddRow(input) {
-        const container = document.getElementById('invoice-items');
-        const lastRow = container.lastElementChild;
-        
-        // Neue Zeile hinzufügen, wenn das Feld für Beschreibung nicht leer ist
-        if (input.value !== "" && lastRow === input.closest('.row')) {
-            addNewRow();
-        }
+    const container = document.getElementById('invoice-items');
+    const lastRow = container.lastElementChild;
+    
+    // Neue Zeile hinzufügen, wenn das Feld für Beschreibung nicht leer ist
+    if (input.value !== "" && lastRow === input.closest('.row')) {
+        addNewRow();
     }
+}
 
     // Funktion, um eine neue Zeile hinzuzufügen
     function addNewRow() {

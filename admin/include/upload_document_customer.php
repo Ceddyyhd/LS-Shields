@@ -31,14 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
         $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
 
+        // Überprüfen, ob der Dateityp erlaubt ist
         if (!in_array(strtolower($file_extension), $allowed_extensions)) {
             die("Fehler: Ungültiger Dateityp.");
         }
 
+        // Erstellen eines eindeutigen Dateinamens
         $unique_name = $custom_name . '_' . uniqid('doc_', true) . '.' . $file_extension;
         $physical_path = $upload_dir . $unique_name;
         $file_path = '/admin/uploads/customer/' . $unique_name;
 
+        // Verschieben der Datei in das Verzeichnis
         if (move_uploaded_file($file['tmp_name'], $physical_path)) {
             // Dokument in die Datenbank speichern
             $sql = "INSERT INTO documents_customer (user_id, file_name, file_path, uploaded_at, doc_type) 
@@ -46,11 +49,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 'user_id' => $customer_id,
-                'file_name' => $file_name,  // Hier wird file_name verwendet, da document_name in der DB nicht existiert
+                'file_name' => $unique_name,  // Verwende den eindeutigen Dateinamen
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
             ]);
+
+            // Benutzernamen ermitteln
+            $uploaded_by = $_SESSION['username'] ?? null;
+
+            if (!$uploaded_by) {
+                // Benutzername aus der Datenbank abrufen, falls nicht in der Session gespeichert
+                $stmt_user = $conn->prepare("SELECT name FROM kunden WHERE id = :id");
+                $stmt_user->execute([':id' => $customer_id]);
+                $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
+                $uploaded_by = $user['name'] ?? 'Unbekannt';
+            }
+
+            // Log in die Datenbank schreiben
+            $sql_log = "INSERT INTO upload_customer_logs (user_id, document_name, uploaded_by, created_at) 
+                        VALUES (:user_id, :document_name, :uploaded_by, NOW())";
+            $stmt_log = $conn->prepare($sql_log);
+            $stmt_log->execute([
+                'user_id' => $customer_id,
+                'document_name' => $unique_name,  // Verwende den eindeutigen Dateinamen
+                'uploaded_by' => $uploaded_by
+            ]);
         }
+    } else {
+        die("Fehler: Keine Datei zum Hochladen ausgewählt.");
     }
 
     // Weiterleitung zur Kunden-Profilseite entfernt, damit der Fehler sichtbar bleibt

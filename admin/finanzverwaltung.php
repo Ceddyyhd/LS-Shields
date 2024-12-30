@@ -139,8 +139,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <tr>
                     <td>Ausgabe</td>
                     <td>Fahrzeuganschaffung</td>
-                    <td>Cedric Schmidt</td>
                     <td>Baller XXX</td>
+                    <td>Cedric Schmidt</td>
                     <td> 4.000$</td>
                   </tr>
                   <tr>

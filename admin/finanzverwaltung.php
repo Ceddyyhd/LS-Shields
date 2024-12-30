@@ -118,9 +118,26 @@
                         <div class="form-group">
                           <label>Kategorie</label>
                           <select class="custom-select" name="kategorie">
-                            <option value="Einnahme">Einnahme</option>
+                              <?php
+                              // Verbindung zur Datenbank herstellen
+                              include 'db_connection.php';
+
+                              // Abfrage zum Abrufen aller Kategorien (unabhängig von "Einnahme" oder "Ausgabe")
+                              $sql = "SELECT * FROM finanzen_kategorien";  // Keine Filterung nach 'typ'
+                              $result = mysqli_query($conn, $sql);
+
+                              // Überprüfen, ob Kategorien existieren
+                              if (mysqli_num_rows($result) > 0) {
+                                  // Kategorien aus der Datenbank laden
+                                  while ($row = mysqli_fetch_assoc($result)) {
+                                      echo '<option value="' . $row['name'] . '">' . $row['name'] . '</option>';
+                                  }
+                              } else {
+                                  echo '<option value="">Keine Kategorien verfügbar</option>';
+                              }
+                              ?>
                           </select>
-                        </div>
+                      </div>
 
                         <div class="form-group">
                           <label>Notiz</label>

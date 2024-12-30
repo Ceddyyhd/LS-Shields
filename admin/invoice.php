@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<?php include 'include/header.php'; ?>
-
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
-  <!-- Navbar -->
-  <?php include 'include/navbar.php'; ?>
-
-  <!-- Main Sidebar Container -->
-<!-- jQuery (notwendig für Bootstrap) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Bootstrap JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 

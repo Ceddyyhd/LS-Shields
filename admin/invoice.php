@@ -205,9 +205,27 @@ foreach ($settings as $setting) {
               <!-- Print and PDF download -->
               <div class="row no-print">
                 <div class="col-12">
-                  <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                    <i class="fas fa-download"></i> Generate PDF
-                  </button>
+                <button id="generatePdf" type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
+                  <i class="fas fa-download"></i> Generate PDF
+              </button>
+              <script>
+                $(document).ready(function() {
+    $('#generatePdf').on('click', function() {
+        $.ajax({
+            url: 'generate_pdf.php',  // Dein PHP-Skript für die PDF-Erstellung
+            type: 'GET',
+            data: { invoice_number: '<?= htmlspecialchars($invoice['invoice_number']); ?>' }, // Rechnungsnummer an das Skript übergeben
+            success: function(response) {
+                alert('PDF wurde erfolgreich generiert und gespeichert.');
+                window.open(response, '_blank'); // PDF anzeigen
+            },
+            error: function() {
+                alert('Fehler beim Generieren der PDF.');
+            }
+        });
+    });
+});
+              </script>
                 </div>
               </div>
             </div>

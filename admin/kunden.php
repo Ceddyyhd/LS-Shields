@@ -617,7 +617,7 @@ $("#noteForm").on("submit", function (e) {
                         </div>
 
                         <hr>
-                        <div class="col-3">
+                        <div class="col-3" style="margin-left: 315px;">
                             <p>Rabatt in %</p>
                             <input type="text" class="form-control" name="rabatt" placeholder="">
                         </div>

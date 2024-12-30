@@ -152,33 +152,27 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
     <script>
     $(document).ready(function() {
-    // Beim Klick auf den Submit-Button
-    $('#submitBtn').click(function() {
-        var formData = $('#finanzenForm').serialize(); // Alle Formulardaten serialisieren
+    // AJAX-Anfrage zum Abrufen der Kategorien
+    $.ajax({
+        url: 'include/finanzen_get_categories.php',  // Das PHP-Skript zum Abrufen der Kategorien
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            console.log('Erhaltene Kategorien:', data);  // Überprüfen, ob die Daten korrekt zurückgegeben werden
 
-        $.ajax({
-            url: 'include/finanzen_get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
-            method: 'GET', // Ändere POST zu GET, wenn du nur Daten abrufen möchtest
-            dataType: 'json',
-            success: function(data) {
-                console.log('Erhaltene Daten:', data); // Protokolliere die Antwort
-                if (data) {
-                    // Überprüfe, ob Daten vorhanden sind
-                    if (data.length > 0) {
-                        data.forEach(function(category) {
-                            $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
-                        });
-                    } else {
-                        alert('Keine Kategorien gefunden');
-                    }
-                } else {
-                    alert('Fehler beim Abrufen der Daten.');
-                }
-            },
-            error: function(xhr, status, error) {
-                alert('AJAX-Fehler: ' + error);
+            // Wenn Daten vorhanden sind
+            if (data && data.length > 0) {
+                // Kategorien in das Dropdown einfügen
+                data.forEach(function(category) {
+                    $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
+                });
+            } else {
+                $('#kategorie').append('<option value="">Keine Kategorien verfügbar</option>');
             }
-        });
+        },
+        error: function() {
+            alert('Fehler beim Laden der Kategorien.');
+        }
     });
 });
 </script>

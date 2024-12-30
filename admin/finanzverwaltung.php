@@ -136,6 +136,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
                           <label>Betrag</label>
                           <input type="text" class="form-control" name="betrag" placeholder="Enter ...">
                         </div>
+                        <input type="hidden" name="erstellt_von" value="<?php echo htmlspecialchars($user_name); ?>">
 
                         <button type="submit" class="btn btn-primary">Speichern</button>
                       </form>
@@ -151,30 +152,32 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
     <script>
     $(document).ready(function() {
-        // AJAX-Anfrage, um die Kategorien zu laden
-        $.ajax({
-            url: 'include/get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                // Dropdown leeren
-                $('#kategorie').empty();
+    // Beim Klick auf den Submit-Button
+    $('#submitBtn').click(function() {
+        var formData = $('#finanzenForm').serialize(); // Alle Formulardaten serialisieren
 
-                // Überprüfen, ob Kategorien vorhanden sind
-                if (data.length > 0) {
-                    // Optionen für jedes Element in den abgerufenen Kategorien hinzufügen
-                    data.forEach(function(category) {
-                        $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
-                    });
+        $.ajax({
+            url: 'include/finanzen_add_entry.php',  // Das PHP-Skript, das die Daten verarbeitet
+            type: 'POST',
+            data: formData,  // Die gesammelten Formulardaten
+            dataType: 'json',  // Erwartetes Format der Antwort
+            success: function(response) {
+                // Wenn die Antwort "success" ist
+                if (response.status == 'success') {
+                    $('#responseMessage').html('<div class="alert alert-success">' + response.message + '</div>');
+                    // Optionale Funktion: Formular zurücksetzen oder leeren
+                    $('#finanzenForm')[0].reset();
                 } else {
-                    $('#kategorie').append('<option value="">Keine Kategorien verfügbar</option>');
+                    // Fehlernachricht anzeigen
+                    $('#responseMessage').html('<div class="alert alert-danger">' + response.message + '</div>');
                 }
             },
             error: function() {
-                alert('Es gab einen Fehler beim Laden der Kategorien.');
+                $('#responseMessage').html('<div class="alert alert-danger">Es gab einen Fehler beim Absenden des Formulars.</div>');
             }
         });
     });
+});
 </script>
 
     <!-- Table für Finanzdaten -->

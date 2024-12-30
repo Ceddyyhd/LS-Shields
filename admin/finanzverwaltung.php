@@ -35,10 +35,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     
     <div class="card-body">
-    <div class="info-box-content">
+    <div class="info-box shadow-none">
+              <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+              <div class="info-box-content">
                 <span class="info-box-text">Shadows</span>
                 <span class="info-box-number">None</span>
-    </div>>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
     </div>
 
       <!-- TABLE: LATEST ORDERS -->

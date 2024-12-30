@@ -2,7 +2,7 @@
 include 'include/db.php';  // Datenbankverbindung einbinden
 
 // Rechnungsnummer aus der URL holen
-$invoice_number = $_GET['invoice_number'] ?? null;  // z.B. ?invoice_number=13745
+$invoice_number = $_GET['id'] ?? null;  // z.B. ?invoice_number=13745
 
 // Überprüfen, ob eine gültige Rechnungsnummer übergeben wurde
 if (!$invoice_number) {

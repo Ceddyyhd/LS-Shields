@@ -86,6 +86,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <?php echo htmlspecialchars($kunden['name']); ?>
                 </h3>
 
+
+
+
+
+
+
+
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
                 </a>
                 </p>
@@ -532,7 +539,7 @@ $("#noteForm").on("submit", function (e) {
         error: function (xhr, status, error) {
             console.error("Fehler:", error);
             alert("Es ist ein Fehler aufgetreten: " + error);
-        }
+        },
     });
 });
 </script>

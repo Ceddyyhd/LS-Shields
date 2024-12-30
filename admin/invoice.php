@@ -1,5 +1,5 @@
 <?php
-include 'db.php';  // Datenbankverbindung einbinden
+include 'include/db.php';  // Datenbankverbindung einbinden
 
 // Rechnungs-ID aus der URL holen
 $invoice_id = $_GET['id'];  // z.B. ?id=13745

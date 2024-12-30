@@ -809,7 +809,7 @@ $(document).ready(function() {
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus und Hinzufügen von Finanzdaten
         $.ajax({
-            url: 'include/update_invoice_and_add_financial_entry.php', // Dein neues Skript
+            url: 'include/update_invoice_status.php', // Dein neues Skript
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,
@@ -850,7 +850,7 @@ $(document).ready(function() {
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus und Hinzufügen von Finanzdaten
         $.ajax({
-            url: 'include/update_invoice_and_add_financial_entry.php', // Dein neues Skript
+            url: 'include/update_invoice_status.php', // Dein neues Skript
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,

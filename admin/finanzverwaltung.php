@@ -35,11 +35,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     
     <div class="card-body">
-      <div class="callout callout-danger">
-        <h5>Wichtige Ankündigung!</h5>
-
-        <p>Diese Seite befindet sich noch in aufbau!</p>
-      </div>
+    <div class="info-box-content">
+                <span class="info-box-text">Shadows</span>
+                <span class="info-box-number">None</span>
+    </div>>
     </div>
 
       <!-- TABLE: LATEST ORDERS -->

@@ -289,16 +289,23 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <form id="employeeForm" class="form-horizontal" method="POST">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
     
-
+<script>
+    // Datei-Auswahl anzeigen
+    $("#documentFile").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).next(".custom-file-label").text(fileName);
+    });
+</script>        
 <!-- Button für das Modal -->
-<div class="form-group row">
-    <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
-    <div class="col-sm-10">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
-            Dokument hochladen
-        </button>
-    </div>
-</div>
+          <div class="form-group row">
+              <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
+              <div class="col-sm-10">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-primary">
+                      Dokument hochladen
+                  </button>
+              </div>
+          </div>
+    </form>
 
 <!-- Modal für Dateiupload -->
 <div class="modal fade" id="modal-primary">
@@ -393,11 +400,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 });
 </script>
 
-<!-- /.modal -->
+<<!-- /.modal -->
 
-<!-- Liste der hochgeladenen Dokumente -->
-<div class="mt-4">
-    <h5>Hochgeladene Dokumente:</h5>
+    <!-- Liste der hochgeladenen Dokumente -->
+    <div class="mt-4">
+            <h5>Hochgeladene Dokumente:</h5>
     <?php if ($_SESSION['permissions']['view_documents'] ?? false): ?>
         <ul>
             <?php if (!empty($documents)): ?>

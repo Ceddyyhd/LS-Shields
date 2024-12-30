@@ -27,17 +27,14 @@ $stmt_documents = $conn->prepare($sql_documents);
 $stmt_documents->execute(['user_id' => $customer_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);
 
-
 // Rechte des Benutzers abrufen
 $sql_permissions = "SELECT p.name, p.description, p.display_name 
                     FROM permissions p
                     JOIN roles r ON r.id = :role_id";
 $stmt_permissions = $conn->prepare($sql_permissions);
-$stmt_permissions->execute(['role_id' => $user['role_id']]);
+$stmt_permissions->execute(['role_id' => $customer['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'include/header.php'; ?>
@@ -88,13 +85,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <h3 class="profile-username text-center">
                   <?php echo htmlspecialchars($kunden['name']); ?>
                 </h3>
-
-
-
-
-
-
-
 
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
                 </a>
@@ -542,7 +532,7 @@ $("#noteForm").on("submit", function (e) {
         error: function (xhr, status, error) {
             console.error("Fehler:", error);
             alert("Es ist ein Fehler aufgetreten: " + error);
-        },
+        }
     });
 });
 </script>

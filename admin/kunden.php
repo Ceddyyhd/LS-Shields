@@ -569,7 +569,7 @@ $("#noteForm").on("submit", function (e) {
 <div class="tab-pane" id="rechnungen">
     
 
-<button type="button" class="btn btn-default" data-toggle="modal" data-target="#rechnung-erstellen">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
                   Rechnung Erstellen
                 </button>
 
@@ -583,17 +583,91 @@ $("#noteForm").on("submit", function (e) {
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+                    <form id="invoice-form">
+                        <div class="form-group">
+                            <label>Unternehmen</label>
+                            <input type="text" class="form-control" name="unternehmen" value="<?= $kunden['name'] ?>" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>UMail</label>
+                            <input type="text" class="form-control" name="umail" value="<?= $kunden['umail'] ?>" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Nummer</label>
+                            <input type="text" class="form-control" name="nummer" value="<?= $kunden['nummer'] ?>" disabled>
+                        </div>
+                        <hr>
+                        <input type="hidden" id="kunden_id" name="kunden_id">
+                        <!-- Dynamisch hinzufügbare Rechnungszeilen -->
+                        <div id="invoice-items">
+                            <div class="row invoice-item">
+                                <div class="col-5">
+                                    <p>Beschreibung</p>
+                                    <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+                                </div>
+                                <div class="col-3">
+                                    <p>Stück Preis</p>
+                                    <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
+                                </div>
+                                <div class="col-3">
+                                    <p>Anzahl</p>
+                                    <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="col-3">
+                            <p>Rabatt in %</p>
+                            <input type="text" class="form-control" name="rabatt" placeholder="">
+                        </div>
+
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Rechnung Erstellen</button>
+                        </div>
           </div>
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
       </div>
+
+
+      <script>
+    function checkAndAddRow(input) {
+        const container = document.getElementById('invoice-items');
+        const lastRow = container.lastElementChild;
+        
+        // Neue Zeile hinzufügen, wenn das Feld für Beschreibung nicht leer ist
+        if (input.value !== "" && lastRow === input.closest('.row')) {
+            addNewRow();
+        }
+    }
+
+    // Funktion, um eine neue Zeile hinzuzufügen
+    function addNewRow() {
+        const container = document.getElementById('invoice-items');
+        const newRow = document.createElement('div');
+        newRow.classList.add('row', 'invoice-item');
+        
+        newRow.innerHTML = `
+            <div class="col-5">
+                <p>Beschreibung</p>
+                <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
+            </div>
+            <div class="col-3">
+                <p>Stück Preis</p>
+                <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
+            </div>
+            <div class="col-3">
+                <p>Anzahl</p>
+                <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
+            </div>
+        `;
+        
+        container.appendChild(newRow);
+    }
+</script>
 
 
             <div class="card-body">

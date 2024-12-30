@@ -569,6 +569,33 @@ $("#noteForm").on("submit", function (e) {
 <div class="tab-pane" id="rechnungen">
     
 
+<button type="button" class="btn btn-default" data-toggle="modal" data-target="#rechnung-erstellen">
+                  Rechnung Erstellen
+                </button>
+
+<div class="modal fade" id="rechnung-erstellen">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Default Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+
             <div class="card-body">
                 <table class="table table-bordered">
                   <thead>

@@ -652,15 +652,15 @@ $("#noteForm").on("submit", function (e) {
         newRow.classList.add('row', 'invoice-item');
         
         newRow.innerHTML = `
-            <div class="col-5" style="margin-down: 5px;">
+            <div class="col-5" style="margin-down: 15px;">
                 
                 <input type="text" class="form-control" name="beschreibung[]" placeholder="Beschreibung" oninput="checkAndAddRow(this)">
             </div>
-            <div class="col-3" style="margin-down: 5px;">
+            <div class="col-3" style="margin-down: 15px;">
                 
                 <input type="text" class="form-control" name="stueckpreis[]" placeholder="Preis">
             </div>
-            <div class="col-3" style="margin-down: 5px;">
+            <div class="col-3" style="margin-down: 15px;">
                 
                 <input type="text" class="form-control" name="anzahl[]" placeholder="Anzahl">
             </div>

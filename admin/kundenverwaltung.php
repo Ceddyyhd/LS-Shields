@@ -227,7 +227,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         let tableBody = $('#example1 tbody');
         tableBody.empty();
 
-        data.forEach(user => {
+        data.forEach(kunden => {
             tableBody.append(`
                 <tr>
                     <td>${kunden.name}</td>

@@ -1,7 +1,6 @@
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 
-
 // Rechnungsnummer aus der URL holen
 $invoice_number = $_GET['invoice_number'] ?? null;
 
@@ -50,6 +49,54 @@ $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 if (!$customer) {
     die("Kunde nicht gefunden.");
 }
+
+// Ausgabe der Rechnungsdaten
+echo "<h2>Rechnung #{$invoice['invoice_number']}</h2>";
+echo "<p>Status: <span class='badge {$status_class}'>{$invoice['status']}</span></p>";
+echo "<p>Fälligkeitsdatum: {$invoice['due_date']}</p>";
+
+// Kundeninformationen anzeigen
+echo "<h3>Kundendaten</h3>";
+echo "<p>Name: {$customer['name']}</p>";
+echo "<p>UMail: {$customer['umail']}</p>";
+echo "<p>Nummer: {$customer['nummer']}</p>";
+
+// Rechnungspositionen anzeigen
+echo "<h3>Rechnungspositionen</h3>";
+echo "<table border='1' cellpadding='10'>
+        <thead>
+            <tr>
+                <th>Beschreibung</th>
+                <th>Einzelpreis</th>
+                <th>Anzahl</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>";
+
+$total = 0;
+foreach ($invoice_items as $item) {
+    $subtotal = $item['unit_price'] * $item['quantity'];
+    $total += $subtotal;
+    echo "<tr>
+            <td>{$item['description']}</td>
+            <td>{$item['unit_price']}€</td>
+            <td>{$item['quantity']}</td>
+            <td>{$subtotal}€</td>
+          </tr>";
+}
+
+echo "</tbody></table>";
+
+// Rabatt anzeigen, falls vorhanden
+if ($invoice['discount'] > 0) {
+    echo "<p>Rabatt: {$invoice['discount']}%</p>";
+}
+
+// Endbetrag berechnen und anzeigen
+$final_total = $total - ($total * ($invoice['discount'] / 100));
+echo "<p><strong>Endbetrag: {$final_total}€</strong></p>";
+
 ?>
 
 <!DOCTYPE html>

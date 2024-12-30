@@ -1,6 +1,6 @@
 <?php
-include 'include/db.php';
-require_once('plugins/tcpdf/tcpdf.php'); // Lade die TCPDF-Bibliothek
+require_once('tcpdf_include.php');  // TCPDF Bibliothek einbinden
+include 'include/db.php';  // Datenbankverbindung einbinden
 
 // Rechnungsnummer aus der Anfrage holen
 $invoice_number = $_GET['invoice_number'] ?? null;
@@ -31,52 +31,90 @@ $stmt_customer = $conn->prepare($sql_customer);
 $stmt_customer->execute(['customer_id' => $invoice['customer_id']]);
 $customer = $stmt_customer->fetch(PDO::FETCH_ASSOC);
 
-// Erstelle eine neue TCPDF-Instanz
-$pdf = new TCPDF('P', 'mm', 'A4');
-$pdf->SetMargins(10, 10, 10);  // Setze Ränder
+// Erweiterte TCPDF-Klasse für benutzerdefinierte Header und Footer
+class MYPDF extends TCPDF {
+
+    // Header
+    public function Header() {
+        $this->SetFont('helvetica', 'B', 16);
+        $this->Cell(0, 15, 'Rechnung #' . htmlspecialchars($invoice['invoice_number']), 0, 1, 'C');
+        $this->SetFont('helvetica', '', 12);
+        $this->Cell(0, 10, 'Ausgestellt am: ' . htmlspecialchars($invoice['created_at']), 0, 1, 'C');
+    }
+
+    // Footer
+    public function Footer() {
+        $this->SetY(-15);
+        $this->SetFont('helvetica', 'I', 8);
+        $this->Cell(0, 10, 'Seite ' . $this->getAliasNumPage() . ' von ' . $this->getAliasNbPages(), 0, 0, 'C');
+    }
+}
+
+// TCPDF-Dokument erstellen
+$pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// Setze Schriftarten und Dokumentinformationen
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('LS Shields');
+$pdf->SetTitle('Rechnung ' . htmlspecialchars($invoice['invoice_number']));
+$pdf->SetSubject('Rechnung PDF');
+
+// Setze Header und Footer
+$pdf->SetHeaderData('', 0, 'LS Shields', 'Rechnung');
+
+// Setze die Ränder
+$pdf->SetMargins(10, 10, 10);
+$pdf->SetHeaderMargin(5);
+$pdf->SetFooterMargin(5);
+
+// Fügt eine Seite hinzu
 $pdf->AddPage();
 
-// Setze Schriftart und Größe
-$pdf->SetFont('helvetica', 'B', 16);
-
-// Rechnungsüberschrift
-$pdf->Cell(0, 10, 'Rechnung #' . htmlspecialchars($invoice['invoice_number']), 0, 1, 'C');
-
-// Setze eine kleinere Schriftart für den Text
+// Rechnungsinformationen ausgeben
 $pdf->SetFont('helvetica', '', 12);
+$pdf->Ln(10);
 
-// Kundendaten
-$pdf->Ln(5);
+// Kundeninformationen
 $pdf->Cell(0, 10, 'Kunde: ' . htmlspecialchars($customer['name']), 0, 1);
 $pdf->Cell(0, 10, 'Email: ' . htmlspecialchars($customer['umail']), 0, 1);
+$pdf->Cell(0, 10, 'Telefon: ' . htmlspecialchars($customer['nummer']), 0, 1);
 
 // Rechnungspositionen
 $pdf->Ln(5);
 $pdf->Cell(0, 10, 'Positionen:', 0, 1);
+
+$header = array('Beschreibung', 'Einzelpreis', 'Menge', 'Gesamt');
+$data = [];
+
 foreach ($invoice_items as $item) {
-    $subtotal = $item['unit_price'] * $item['quantity'];
-    $pdf->Cell(0, 10, htmlspecialchars($item['description']) . ' - ' . $item['quantity'] . ' x ' . $item['unit_price'] . '$', 0, 1);
+    $data[] = array(
+        'description' => htmlspecialchars($item['description']),
+        'unit_price' => $item['unit_price'] . ' $',
+        'quantity' => $item['quantity'],
+        'total' => ($item['unit_price'] * $item['quantity']) . ' $'
+    );
 }
 
-// Rabatt und Gesamt
-$pdf->Ln(5);
-$pdf->Cell(0, 10, 'Rabatt: -' . htmlspecialchars($invoice['discount']) . '$', 0, 1);
-$pdf->Cell(0, 10, 'Gesamt: ' . htmlspecialchars($invoice['price']) . '$', 0, 1);
+// Ausgabe der Tabelle
+$pdf->SetFont('helvetica', '', 10);
+$pdf->ColoredTable($header, $data);
 
-// Rechnungsstatus
+// Rabatt und Gesamt berechnen
+$pdf->Ln(5);
+$pdf->Cell(0, 10, 'Rabatt: -' . htmlspecialchars($invoice['discount']) . ' $', 0, 1);
+$pdf->Cell(0, 10, 'Gesamt: ' . htmlspecialchars($invoice['price']) . ' $', 0, 1);
+
+// Rechnungsstatus ausgeben
 $pdf->Ln(5);
 $pdf->Cell(0, 10, 'Status: ' . htmlspecialchars($invoice['status']), 0, 1);
 
-// Füge zusätzliche Felder hinzu, falls nötig
-// Zum Beispiel ein Footer, oder eine Fußzeile mit Bankdetails oder weiteren Angaben
-
-// Dateiname für das PDF
+// PDF speichern und ausgeben
 $pdf_file = $_SERVER['DOCUMENT_ROOT'] . '/admin/invoices/LS-Shields_Rechnung_' . $invoice_number . '.pdf';
 $pdf_url = '/admin/invoices/LS-Shields_Rechnung_' . $invoice_number . '.pdf';
 
-// Generiere die PDF und speichere sie auf dem Server
-$pdf->Output($pdf_file, 'F');  // Speichern der Datei auf dem Server
+// PDF generieren und speichern
+$pdf->Output($pdf_file, 'F');
 
-// Rückgabe des Pfads zur gespeicherten Datei
+// Gebe die URL des gespeicherten PDFs zurück
 echo $pdf_url;
 ?>

@@ -319,7 +319,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
             <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
                 <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
-                <form id="uploadForm" action="include/upload_customer_document.php" method="POST" enctype="multipart/form-data">
+                <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
                     <!-- Kunden-ID -->
                     <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
                     <!-- Dokumenttyp -->

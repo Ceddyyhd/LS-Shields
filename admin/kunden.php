@@ -289,12 +289,38 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                   <form id="employeeForm" class="form-horizontal" method="POST">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
     
-<script>
+        <!-- Weitere Dokumente -->
+        <script>
+$(document).ready(function () {
+    // Speichern-Button
+    $("#saveButton").on("click", function () {
+    var formData = $("#employeeForm").serialize();
+
+    $.ajax({
+        url: "include/save_employee_info.php",
+        type: "POST",
+        data: formData,
+        success: function (response) {
+            try {
+                var res = JSON.parse(response); // JSON-Antwort parsen
+                if (res.success) {
+                } else {
+                }
+            } catch (e) {
+                console.error("Fehler beim Verarbeiten der Antwort:", e);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Fehler:", error);
+        },
+    });
+});
     // Datei-Auswahl anzeigen
     $("#documentFile").on("change", function () {
         var fileName = $(this).val().split("\\").pop();
         $(this).next(".custom-file-label").text(fileName);
     });
+});
 </script>        
 <!-- Button für das Modal -->
           <div class="form-group row">
@@ -328,7 +354,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
                 <form id="uploadForm" action="include/upload_document.php" method="POST" enctype="multipart/form-data">
                     <!-- Benutzer-ID -->
-                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
                     <!-- Dokumenttyp -->
                     <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
@@ -400,7 +426,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 });
 </script>
 
-<<!-- /.modal -->
+
+<!-- /.modal -->
 
     <!-- Liste der hochgeladenen Dokumente -->
     <div class="mt-4">

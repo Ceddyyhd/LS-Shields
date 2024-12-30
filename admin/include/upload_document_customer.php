@@ -76,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Weiterleitung zur Kunden-Profilseite
-    header("Location: ../kunden.php?id=" . htmlspecialchars($customer_id));
     exit;
 }
 ?>

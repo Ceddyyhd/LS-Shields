@@ -32,7 +32,7 @@ $sql_permissions = "SELECT p.name, p.description, p.display_name
                     FROM permissions p
                     JOIN roles r ON r.id = :role_id";
 $stmt_permissions = $conn->prepare($sql_permissions);
-$stmt_permissions->execute(['role_id' => $customer['role_id']]);
+$stmt_permissions->execute(['role_id' => $user['role_id']]);
 $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -79,7 +79,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle" src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="User profile picture">
+                  <img class="profile-user-img img-fluid img-circle" src="<?php echo htmlspecialchars($kunden['profile_image']); ?>" alt="User profile picture">
                 </div>
 
                 <h3 class="profile-username text-center">
@@ -171,9 +171,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
                                 <strong><i class="fas fa-envelope mr-1"></i> UMail</strong>
                                 <?php if ($_SESSION['permissions']['edit_umail'] ?? false): ?>
-                                    <input type="text" class="form-control" name="umail" value="<?php echo htmlspecialchars($user['umail']); ?>">
+                                    <input type="text" class="form-control" name="umail" value="<?php echo htmlspecialchars($kunden['umail']); ?>">
                                 <?php else: ?>
-                                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($user['umail']); ?>" disabled>
+                                    <input type="text" class="form-control" placeholder="<?php echo htmlspecialchars($kunden['umail']); ?>" disabled>
                                 <?php endif; ?>
                             </div>
 

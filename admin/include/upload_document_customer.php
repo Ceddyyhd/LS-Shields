@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Verzeichnis für hochgeladene Dateien
-    $upload_dir = '../uploads/';
+    $upload_dir = '../uploads/customer';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $unique_name = $custom_name . '_' . uniqid('doc_', true) . '.' . $file_extension;
         $physical_path = $upload_dir . $unique_name;
-        $file_path = '/admin/uploads/' . $unique_name;
+        $file_path = '/admin/uploads/customer' . $unique_name;
 
         if (move_uploaded_file($file['tmp_name'], $physical_path)) {
             // Dokument in die Datenbank speichern

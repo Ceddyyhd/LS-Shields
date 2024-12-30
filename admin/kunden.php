@@ -368,23 +368,27 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     });
 
     $(document).ready(function() {
+        // Wenn das Formular zum Hochladen von Dokumenten abgesendet wird
         $("#uploadForm").on("submit", function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Verhindert das Standardformularverhalten
 
+            // Erstelle FormData-Objekt mit den Formulardaten
             var formData = new FormData(this);
 
             $.ajax({
-                url: $(this).attr("action"),
-                type: $(this).attr("method"),
-                data: formData,
-                processData: false, // Wichtig für FormData
-                contentType: false, // Wichtig für FormData
+                url: $(this).attr("action"), // Die URL, an die das Formular gesendet wird
+                type: $(this).attr("method"), // Die Methode (POST)
+                data: formData, // Sende die Formulardaten
+                processData: false, // Verhindert, dass jQuery die Daten verarbeitet
+                contentType: false, // Verhindert, dass jQuery den Content-Type setzt
                 success: function(response) {
+                    // Wenn der Upload erfolgreich war, Modal schließen und Seite neu laden
                     $("#modal-primary").modal("hide"); // Modal schließen
-                    location.reload(); // Seite neu laden, um Änderungen zu sehen
+                    location.reload(); // Seite neu laden, um Änderungen anzuzeigen
                 },
                 error: function(xhr, status, error) {
-                    console.error("Fehler beim Hochladen:", error);
+                    console.error("Fehler beim Hochladen:", error); // Fehler im Konsolenlog ausgeben
+                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
                 }
             });
         });

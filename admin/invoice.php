@@ -1,16 +1,15 @@
 <?php
 include 'include/db.php';  // Datenbankverbindung einbinden
 
-// Rechnungsnummer aus der URL holen
-$invoice_number = $_GET['invoice_number'];  // z.B. ?invoice_number=13745
 
-// Debugging: Überprüfen, ob die invoice_number gesetzt wurde
-if (!isset($invoice_number) || empty($invoice_number)) {
-    die("Keine Rechnungsnummer übergeben.");
+// Rechnungsnummer aus der URL holen
+$invoice_number = $_GET['invoice_number'] ?? null;
+
+if (!$invoice_number) {
+    die("Fehler: Keine Rechnungsnummer übergeben.");
 }
 
 echo "Übergebene Rechnungsnummer: " . htmlspecialchars($invoice_number);  // Debug-Ausgabe
-
 
 // Abfrage für die Rechnung anhand der Rechnungsnummer
 $sql_invoice = "SELECT * FROM invoices WHERE invoice_number = :invoice_number";

@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php if (isset($_SESSION['permissions']['customer_create']) && $_SESSION['permissions']['customer_create']): ?>
     <div class="card-header">
         <h3 class="card-title">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kunden-create">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-user-create">
                 Benutzer erstellen
             </button>
         </h3>
@@ -79,7 +79,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 <!-- Dein HTML-Modal -->
-<div class="modal fade" id="modal-kunden-create">
+<div class="modal fade" id="modal-user-create">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -89,7 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
             </div>
             <div class="modal-body">
-            <form id="createkundenForm">
+            <form id="createUserForm">
     <div class="card-body">
         <div class="form-group">
             <label for="name">Name</label>
@@ -155,7 +155,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 
     // Listener nur für den "Save changes"-Button im Modal
-    document.querySelector('#modal-kunden-create .btn-primary').addEventListener('click', function() {
+    document.querySelector('#modal-user-create .btn-primary').addEventListener('click', function() {
     const formData = new FormData();
     formData.append('name', document.querySelector('#name').value.trim());
     formData.append('umail', document.querySelector('#umail').value.trim());
@@ -212,7 +212,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
   $(document).ready(function () {
     $.ajax({
-    url: 'include/fetch_kunden.php',
+    url: 'include/fetch_customer.php',
     type: 'POST',
     dataType: 'json',
     success: function (data) {
@@ -228,7 +228,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         let tableBody = $('#example1 tbody');
         tableBody.empty();
 
-        data.forEach(kunden => {
+        data.forEach(user => {
             tableBody.append(`
                 <tr>
                     <td>${kunden.name}</td>

@@ -157,23 +157,26 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         var formData = $('#finanzenForm').serialize(); // Alle Formulardaten serialisieren
 
         $.ajax({
-            url: 'include/finanzen_get_categories.php',  // Das PHP-Skript, das die Daten verarbeitet
-            type: 'POST',
-            data: formData,  // Die gesammelten Formulardaten
-            dataType: 'json',  // Erwartetes Format der Antwort
-            success: function(response) {
-                // Wenn die Antwort "success" ist
-                if (response.status == 'success') {
-                    $('#responseMessage').html('<div class="alert alert-success">' + response.message + '</div>');
-                    // Optionale Funktion: Formular zurücksetzen oder leeren
-                    $('#finanzenForm')[0].reset();
+            url: 'include/finanzen_get_categories.php',  // Dein PHP-Skript zum Abrufen der Kategorien
+            method: 'GET', // Ändere POST zu GET, wenn du nur Daten abrufen möchtest
+            dataType: 'json',
+            success: function(data) {
+                console.log('Erhaltene Daten:', data); // Protokolliere die Antwort
+                if (data) {
+                    // Überprüfe, ob Daten vorhanden sind
+                    if (data.length > 0) {
+                        data.forEach(function(category) {
+                            $('#kategorie').append('<option value="' + category.name + '">' + category.name + '</option>');
+                        });
+                    } else {
+                        alert('Keine Kategorien gefunden');
+                    }
                 } else {
-                    // Fehlernachricht anzeigen
-                    $('#responseMessage').html('<div class="alert alert-danger">' + response.message + '</div>');
+                    alert('Fehler beim Abrufen der Daten.');
                 }
             },
-            error: function() {
-                $('#responseMessage').html('<div class="alert alert-danger">Es gab einen Fehler beim Absenden des Formulars.</div>');
+            error: function(xhr, status, error) {
+                alert('AJAX-Fehler: ' + error);
             }
         });
     });

@@ -31,4 +31,5 @@ try {
     // Fehlerbehandlung: Gebe eine Fehlermeldung zurück, wenn die Datenbankabfragen fehlschlagen
     echo json_encode(["status" => "error", "message" => "Fehler bei der Datenbankabfrage: " . $e->getMessage()]);
 }
+
 ?>

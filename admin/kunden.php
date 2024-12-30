@@ -798,7 +798,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Bezahlt"
         $.ajax({
-            url: 'update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
+            url: 'include/update_invoice_status.php', // PHP-Skript zum Aktualisieren des Status
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,
@@ -810,7 +810,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     // Finanzdaten hinzufügen (für Einnahme)
                     $.ajax({
-                        url: 'add_financial_entry.php',
+                        url: 'include/customer_add_financial_entry.php',
                         method: 'POST',
                         data: {
                             typ: 'Einnahme',
@@ -839,7 +839,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // AJAX-Anfrage zum Aktualisieren des Rechnungsstatus auf "Offen"
         $.ajax({
-            url: 'update_invoice_status.php',
+            url: 'include/update_invoice_status.php',
             method: 'POST',
             data: {
                 invoice_number: invoiceNumber,
@@ -851,7 +851,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
                     // Finanzdaten hinzufügen (für Ausgabe)
                     $.ajax({
-                        url: 'add_financial_entry.php',
+                        url: 'include/customer_add_financial_entry.php',
                         method: 'POST',
                         data: {
                             typ: 'Ausgabe',

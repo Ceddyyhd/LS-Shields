@@ -166,6 +166,12 @@ if (!$customer) {
                       <td><?= htmlspecialchars($item['quantity']); ?></td>
                       <td><?= $subtotal; ?>$</td>
                     </tr>
+                    <tr>
+                      <td>Rabatt</td>
+                      <td></td>
+                      <td></td>
+                      <td>- <?= htmlspecialchars($item['discount']); ?>$</td>
+                    </tr>
                     <?php endforeach; ?>
                     </tbody>
                   </table>
@@ -179,7 +185,7 @@ if (!$customer) {
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
-                        <th>Total:</th>
+                        <th>Total: <?= htmlspecialchars($invoice['price']); ?></th>
                         <td><?= $total_amount; ?>$</td>
                       </tr>
                     </table>

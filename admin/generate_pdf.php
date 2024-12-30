@@ -1,5 +1,5 @@
 <?php
-require_once('tcpdf_include.php');  // TCPDF Bibliothek einbinden
+require_once('plugins/tcpdf/tcpdf.php');  // TCPDF Bibliothek einbinden
 include 'include/db.php';  // Datenbankverbindung einbinden
 
 // Rechnungsnummer aus der Anfrage holen

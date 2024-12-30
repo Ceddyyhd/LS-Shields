@@ -318,34 +318,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
-                <!-- Formular zum Hochladen von Dokumenten -->
-                    <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
-                        <!-- Kunden-ID -->
-                        <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
-                        <!-- Dokumenttyp -->
-                        <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
+                <!-- Formular nur anzeigen, wenn Berechtigung vorhanden -->
+                <form id="uploadForm" action="include/upload_document_customer.php" method="POST" enctype="multipart/form-data">
+                    <!-- Kunden-ID -->
+                    <input type="hidden" name="user_id" value="<?= htmlspecialchars($customer_id); ?>">
+                    <!-- Dokumenttyp -->
+                    <input type="hidden" name="doc_type" value="arbeitsvertrag"> <!-- Beispiel für den Dokumenttyp -->
 
-                        <div class="modal-body">
-                            <!-- Eingabe für den benutzerdefinierten Namen -->
-                            <div class="form-group">
-                                <label for="documentName">Dokumentname</label>
-                                <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
-                            </div>
-
-                            <!-- Dateiupload -->
-                            <div class="form-group">
-                                <label for="documentFile">Datei auswählen</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
-                                    <label class="custom-file-label" for="documentFile">Datei auswählen</label>
-                                </div>
-                            </div>
+                    <div class="modal-body">
+                        <!-- Eingabe für den benutzerdefinierten Namen -->
+                        <div class="form-group">
+                            <label for="documentName">Dokumentname</label>
+                            <input type="text" id="documentName" name="document_name" class="form-control" placeholder="z.B. Arbeitsvertrag" required>
                         </div>
 
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                            <button type="submit" class="btn btn-primary">Hochladen</button>
+                        <!-- Dateiupload -->
+                        <div class="form-group">
+                            <label for="documentFile">Datei auswählen</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="documentFile" name="document_file" required>
+                                <label class="custom-file-label" for="documentFile">Datei auswählen</label>
+                            </div>
                         </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                        <button type="submit" class="btn btn-primary">Hochladen</button>
+                    </div>
                 </form>
             <?php else: ?>
                 <!-- Nachricht für Benutzer ohne Berechtigung -->
@@ -357,7 +357,9 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php endif; ?>
         </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <script>
@@ -366,44 +368,37 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
         var nextSibling = this.nextElementSibling;
         nextSibling.innerText = fileName; // Ändert den Text des Labels
     });
-</script>
-<script>
+
     $(document).ready(function() {
-        // Beim Absenden des Formulars
         $("#uploadForm").on("submit", function(e) {
-            e.preventDefault();  // Verhindert das Standardverhalten (Seite neu laden)
+            e.preventDefault(); // Verhindert das Standardverhalten des Formulars
 
-            var formData = new FormData(this);  // Formulardaten holen
+            var formData = new FormData(this); // Holen der Formulardaten
 
-            console.log("Formulardaten:", formData);  // Überprüfe, ob die Formulardaten korrekt sind
-
-            // AJAX-Anfrage an die Serverdatei
             $.ajax({
-                url: $(this).attr("action"),  // Die URL, zu der das Formular gesendet wird
-                type: $(this).attr("method"),  // Die Methode (POST)
+                url: $(this).attr("action"), // Die Ziel-URL des Formulars
+                type: $(this).attr("method"), // Die Methode (POST)
                 data: formData,  // Sende die Formulardaten
-                processData: false,  // Verhindert die automatische Verarbeitung von FormData durch jQuery
-                contentType: false,  // Verhindert das Setzen des Content-Types
+                processData: false,  // Wichtige Einstellung bei FormData
+                contentType: false,  // Wichtige Einstellung bei FormData
                 success: function(response) {
-                    console.log("Erfolgreicher Upload:", response);  // Erfolgsnachricht im Log
+                    $("#modal-primary").modal("hide"); // Modal schließen
+                    location.reload(); // Seite neu laden, um Änderungen zu sehen
                 },
                 error: function(xhr, status, error) {
-                    console.log("Fehler beim Hochladen:", error);  // Fehler im Log ausgeben
-                    console.log("XHR-Status:", xhr.status);  // HTTP-Status
-                    console.log("Antwort:", xhr.responseText);  // Serverantwort
-                    alert("Es ist ein Fehler aufgetreten: " + error);  // Fehlermeldung anzeigen
+                    console.log("Fehler beim Hochladen:", error); // Fehler im Log ausgeben
+                    alert("Es ist ein Fehler aufgetreten: " + error); // Fehlerbenachrichtigung
                 }
             });
         });
     });
 </script>
 
-
 <!-- /.modal -->
 
-    <!-- Liste der hochgeladenen Dokumente -->
-    <div class="mt-4">
-            <h5>Hochgeladene Dokumente:</h5>
+<!-- Liste der hochgeladenen Dokumente -->
+<div class="mt-4">
+    <h5>Hochgeladene Dokumente:</h5>
     <?php if ($_SESSION['permissions']['view_documents'] ?? false): ?>
         <ul>
             <?php if (!empty($documents)): ?>

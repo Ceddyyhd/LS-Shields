@@ -758,7 +758,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td>Rechnung #<?= htmlspecialchars($invoice['invoice_number']); ?></td>
                     <td><?= htmlspecialchars($invoice['due_date']); ?></td>
-                    <td class="price"><?= htmlspecialchars($invoice['betrag']); ?></td>
+                    <td class="price"><?= !empty($invoice['betrag']) ? htmlspecialchars($invoice['betrag']) : 'Kein Betrag' ?></td>
                     <td>
                         <?php
                         $status = $invoice['status'];

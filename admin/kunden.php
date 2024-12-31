@@ -825,7 +825,6 @@ $(document).ready(function() {
 
                 if (response.status != 'success') {
                     row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
-                    alert(response.message);  // Verwende die Servernachricht hier
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
                 }
@@ -868,7 +867,6 @@ $(document).ready(function() {
 
     if (response.status != 'success') {
         row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
-        alert(response.message);  // Verwende die Servernachricht hier
         location.reload(); // Seite neu laden, wenn erfolgreich
     } else {
     }

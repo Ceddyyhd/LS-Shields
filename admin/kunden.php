@@ -866,19 +866,20 @@ $(document).ready(function() {
                 erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
             },
             success: function(response) {
-                console.log('Server Antwort (Success):', response);  // Debugging: Protokolliere die Serverantwort
+    console.log('Server Antwort (Success):', response);  // Debugging: Protokolliere die Serverantwort
 
-                if (response.status === 'Success') {
-                    row.find('.status').html('<span class="badge badge-warning">Offen</span>');
-                    alert(response.message);  // Verwende die Servernachricht hier
-                    location.reload(); // Seite neu laden, wenn erfolgreich
-                } else {
-                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
-                }
-            },
-            error: function() {
-                alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
-            }
+    if (response.status === 'success') {
+        row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
+        alert(response.message);  // Verwende die Servernachricht hier
+        location.reload(); // Seite neu laden, wenn erfolgreich
+    } else {
+        alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
+    }
+},
+error: function(xhr, status, error) {
+    console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
+    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
+}
         });
     });
 });

@@ -868,7 +868,7 @@ $(document).ready(function() {
             success: function(response) {
                 console.log('Server Antwort (Success):', response);  // Debugging: Protokolliere die Serverantwort
 
-                if (response.status === 'success') {
+                if (response.status === 'Success') {
                     row.find('.status').html('<span class="badge badge-warning">Offen</span>');
                     alert(response.message);  // Verwende die Servernachricht hier
                     location.reload(); // Seite neu laden, wenn erfolgreich

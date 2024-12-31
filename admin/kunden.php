@@ -828,7 +828,7 @@ $(document).ready(function() {
                     alert(response.message);  // Verwende die Servernachricht hier
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
-                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
+                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: Test ' + (response.message || 'Unbekannter Fehler'));
                 }
             },
             error: function(xhr, status, error) {

@@ -824,6 +824,7 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
+                    location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
                 }
@@ -865,6 +866,7 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-warning">Offen</span>');
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
+                    location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
                 }
@@ -875,6 +877,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 </script>
 

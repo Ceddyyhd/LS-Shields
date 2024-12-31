@@ -828,7 +828,7 @@ $(document).ready(function() {
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
-                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
+                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
                 }
             },
             error: function(xhr, status, error) {
@@ -873,11 +873,10 @@ $(document).ready(function() {
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
-                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
+                    alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
                 }
             },
-            error: function(xhr, status, error) {
-                console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
+            error: function() {
                 alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
             }
         });

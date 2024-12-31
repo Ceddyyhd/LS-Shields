@@ -26,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Überprüfen, ob die Statusaktualisierung erfolgreich war
         if ($stmt->rowCount() > 0) {
             // 2. Einfügen der Finanzdaten in die Tabelle 'finanzen'
-            if (!is_numeric($betrag)) {
-                throw new Exception("Betrag muss eine Zahl sein.");
+            if (!is_numeric($betrag) || empty($betrag)) {
+                throw new Exception("Betrag muss eine Zahl sein und darf nicht leer sein.");
             }
 
             // SQL-Abfrage zum Einfügen der Finanzdaten
@@ -41,8 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmtFinanzen->bindParam(':erstellt_von', $erstellt_von);
             $stmtFinanzen->execute();
 
-            // Wenn beide Operationen erfolgreich waren
-            echo json_encode(['status' => 'success']);
+            // Überprüfen, ob das Insert erfolgreich war
+            if ($stmtFinanzen->rowCount() > 0) {
+                // Wenn beide Operationen erfolgreich waren
+                echo json_encode(['status' => 'success', 'message' => 'Rechnung und Finanzdaten erfolgreich aktualisiert!']);
+            } else {
+                throw new Exception("Fehler beim Einfügen der Finanzdaten.");
+            }
+
         } else {
             throw new Exception("Fehler: Keine Änderung des Rechnungsstatus vorgenommen.");
         }

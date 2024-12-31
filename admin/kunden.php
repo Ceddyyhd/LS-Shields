@@ -821,6 +821,8 @@ $(document).ready(function() {
                 erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
             },
             success: function(response) {
+                console.log('Server Antwort (Success):', response);  // Debugging: Protokolliere die Serverantwort
+
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
@@ -829,7 +831,8 @@ $(document).ready(function() {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                 alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
             }
         });
@@ -863,6 +866,8 @@ $(document).ready(function() {
                 erstellt_von: '<?= $user_name; ?>' // Benutzername aus der Session
             },
             success: function(response) {
+                console.log('Server Antwort (Success):', response);  // Debugging: Protokolliere die Serverantwort
+
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-warning">Offen</span>');
                     alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
@@ -871,7 +876,8 @@ $(document).ready(function() {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + response.message);
                 }
             },
-            error: function() {
+            error: function(xhr, status, error) {
+                console.error("AJAX Fehler: " + status + ": " + error);  // Fehlerprotokollierung
                 alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten!');
             }
         });

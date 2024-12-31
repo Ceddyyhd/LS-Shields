@@ -825,7 +825,7 @@ $(document).ready(function() {
 
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-success">Bezahlt</span>');
-                    alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
+                    alert(response.message);  // Verwende die Servernachricht hier
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));
@@ -870,7 +870,7 @@ $(document).ready(function() {
 
                 if (response.status === 'success') {
                     row.find('.status').html('<span class="badge badge-warning">Offen</span>');
-                    alert('Rechnung und Finanzdaten erfolgreich aktualisiert!');
+                    alert(response.message);  // Verwende die Servernachricht hier
                     location.reload(); // Seite neu laden, wenn erfolgreich
                 } else {
                     alert('Fehler beim Aktualisieren der Rechnung und Finanzdaten: ' + (response.message || 'Unbekannter Fehler'));

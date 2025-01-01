@@ -29,6 +29,9 @@ $stmt_approved = $conn->prepare($query_approved_vacations);
 $stmt_approved->execute();
 $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <!DOCTYPE html>
 <html lang="en">
     <?php include 'include/header.php'; ?>
@@ -197,7 +200,10 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="form-group">
                 <label>Status</label>
-                <input type="text" class="form-control" id="edit-status" required> <!-- Hier Status bearbeiten -->
+                <select class="form-control" id="edit-status" name="status" required>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Notiz</label>

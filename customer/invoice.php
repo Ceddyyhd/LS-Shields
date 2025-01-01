@@ -191,10 +191,10 @@ foreach ($settings as $setting) {
                 <!-- accepted payments column -->
                 <div class="col-6">
                   <p class="lead">Payment Methods:</p>
-                  <img src="../../dist/img/credit/visa.png" alt="Visa">
-                  <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-                  <img src="../../dist/img/credit/american-express.png" alt="American Express">
-                  <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+                  <img src="dist/img/credit/visa.png" alt="Visa">
+                  <img src="dist/img/credit/mastercard.png" alt="Mastercard">
+                  <img src="dist/img/credit/american-express.png" alt="American Express">
+                  <img src="dist/img/credit/paypal2.png" alt="Paypal">
 
                   <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
                     Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem

@@ -109,30 +109,30 @@ $(document).ready(function () {
     }
 
     $.ajax({
-      url: 'register.php', // Hier wird die PHP-Registrierungsdatei aufgerufen
-      type: 'POST',
-      data: {
-        name: name,
-        umail: umail,
-        password: password,
-        repassword: repassword
-      },
-      dataType: 'json',
-      success: function (response) {
-        if (response.success) {
-          alert(response.message);
-          window.location.href = 'login.php'; // Weiterleitung zur Login-Seite
-        } else {
-          alert(response.message);
-        }
-      },
-      error: function (xhr, status, error) {
-        console.log('Fehlerdetails:', xhr.responseText);
-        console.log('Status:', status);
-        console.log('Error:', error);
-        alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
-      }
-    });
+  url: 'include/register.php', // Hier wird die PHP-Registrierungsdatei aufgerufen
+  type: 'POST',
+  data: {
+    name: name,
+    umail: umail,
+    password: password,
+    repassword: repassword
+  },
+  dataType: 'json', // Wir erwarten JSON als Antwort
+  success: function (response) {
+    if (response.success) {
+      alert(response.message);
+      window.location.href = 'login.php'; // Weiterleitung zur Login-Seite
+    } else {
+      alert(response.message);
+    }
+  },
+  error: function (xhr, status, error) {
+    console.log('Fehlerdetails:', xhr.responseText);
+    console.log('Status:', status);
+    console.log('Error:', error);
+    alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+  }
+});
   });
 });
 </script>

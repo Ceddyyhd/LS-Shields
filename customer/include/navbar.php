@@ -6,10 +6,8 @@ $user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
 
 include 'include/db.php';
 
-// Benutzerinformationen abrufen
-$sql = "SELECT kunden.*, roles.name AS role_name, kunden.profile_image 
+$sql = "SELECT kunden.*, kunden.profile_image 
         FROM kunden 
-        LEFT JOIN roles ON kunden.role_id = roles.id 
         WHERE kunden.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]); // Beachte, dass hier 'id' der Parametername ist

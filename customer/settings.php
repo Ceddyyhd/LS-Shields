@@ -49,51 +49,77 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC); // fetch statt fetchAll, da nur ein Date
 
 
 <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Quick Example</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <form>
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">UMail Adresse</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="<?= htmlspecialchars($user['umail']); ?>">
-                  </div>
+  <div class="card-header">
+    <h3 class="card-title">Benutzereinstellungen</h3>
+  </div>
+  <!-- /.card-header -->
+  <!-- form start -->
+  <form id="settingsForm">
+    <div class="card-body">
+      <div class="form-group">
+        <label for="exampleInputEmail1">UMail Adresse</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" name="umail" placeholder="Enter email" value="<?= htmlspecialchars($user['umail']); ?>" required>
+      </div>
 
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">(Firmen) Name</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['name']); ?>">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Nummer</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['nummer']); ?>">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Kontonummer</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['kontonummer']); ?>">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Passwort</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Passwort Bestätigen</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">(Firmen) Name</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" name="name" placeholder="Enter Name" value="<?= htmlspecialchars($user['name']); ?>" required>
+      </div>
 
-                </div>
-                <!-- /.card-body -->
+      <div class="form-group">
+        <label for="exampleInputPassword1">Nummer</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" name="nummer" placeholder="Enter Nummer" value="<?= htmlspecialchars($user['nummer']); ?>" required>
+      </div>
 
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
-            </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Kontonummer</label>
+        <input type="text" class="form-control" id="exampleInputPassword1" name="kontonummer" placeholder="Enter Kontonummer" value="<?= htmlspecialchars($user['kontonummer']); ?>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="exampleInputPassword1">Passwort</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Enter new password">
+      </div>
+
+      <div class="form-group">
+        <label for="exampleInputPassword1">Passwort Bestätigen</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password_confirm" placeholder="Confirm new password">
+      </div>
+    </div>
+    <!-- /.card-body -->
+
+    <div class="card-footer">
+      <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    </div>
+  </form>
+</div>
+
+<!-- JavaScript (AJAX) -->
+<script>
+  document.getElementById('settingsForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // Verhindert das normale Absenden des Formulars
+
+    const formData = new FormData(this); // Holt die Formulardaten
+
+    // AJAX-Anfrage senden
+    fetch('update_settings_ajax.php', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Daten wurden erfolgreich aktualisiert.');
+      } else {
+        alert('Fehler: ' + data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Fehler:', error);
+      alert('Es gab ein Problem beim Speichern der Daten.');
+    });
+  });
+</script>
 
     
     

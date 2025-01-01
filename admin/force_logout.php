@@ -79,28 +79,33 @@
     <!-- JavaScript für Force-Logout -->
     <script>
       function forceLogout(userId) {
-        if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
-          fetch('include/force_logout.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `user_id=${userId}`,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                alert('Benutzer wurde erfolgreich abgemeldet.');
-                location.reload();  // Seite neu laden, um die Änderungen zu sehen
-              } else {
-                alert('Fehler: ' + data.message);
-              }
-            })
-            .catch((error) => {
-              alert('Ein Fehler ist aufgetreten: ' + error.message);
-            });
+  if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
+    fetch('include/force_logout.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `user_id=${userId}`,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Netzwerkantwort war nicht okay.');
         }
-      }
+        return response.json();  // Versuche, die JSON-Antwort zu parsen
+      })
+      .then((data) => {
+        if (data.success) {
+          alert('Benutzer wurde erfolgreich abgemeldet.');
+          location.reload();  // Seite neu laden, um die Änderungen zu sehen
+        } else {
+          alert('Fehler: ' + data.message);
+        }
+      })
+      .catch((error) => {
+        alert('Es ist ein Fehler aufgetreten: ' + error.message);
+      });
+  }
+}
     </script>
 
   </div>

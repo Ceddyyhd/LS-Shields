@@ -45,3 +45,4 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
 }
+?>

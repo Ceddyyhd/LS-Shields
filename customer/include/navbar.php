@@ -4,6 +4,7 @@ session_start();
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 $user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
 
+include 'include/db.php';
 
 // Benutzerinformationen abrufen
 $sql = "SELECT kunden.*, roles.name AS role_name, kunden.profile_image 

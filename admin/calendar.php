@@ -104,7 +104,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <div class="sticky-top mb-3">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Create Event</h3>
+        <h3 class="card-title">Urlaub einreichen</h3>
       </div>
       <div class="card-body">
         <form id="vacationForm">
@@ -162,6 +162,39 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 });
 </script>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card card-primary">
+              <div class="card-body p-0">
+                <!-- THE CALENDAR -->
+                <div id="calendar"></div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+      <div class="container-fluid">
+      <div class="row">
+      <div class="col-md-3">
+  <div class="sticky-top mb-3">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Urlaub entfernen</h3>
+      </div>
+      <div class="card-body">
+        <form id="vacationForm">
+          <button type="button" class="btn btn-primary" id="submitVacation">Urlaub entfernen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
           <!-- /.col -->
           <div class="col-md-9">
             <div class="card card-primary">

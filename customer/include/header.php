@@ -63,7 +63,7 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     if ($_SESSION['user_id'] == $user_id_to_logout) {
         session_unset();
         session_destroy();
-        header('Location: login.php');  // Weiterleitung zur Login-Seite
+        header('Location: index.html');  // Weiterleitung zur Login-Seite
         exit;
     }
     

@@ -50,7 +50,7 @@ $query = "SELECT * FROM kunden WHERE id = :kunde_id";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':kunde_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
-$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$user = $stmt->fetch(PDO::FETCH_ASSOC); // fetch statt fetchAll, da nur ein Datensatz erwartet wird
 
 ?>
 

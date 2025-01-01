@@ -201,14 +201,10 @@
         </table>
     </div>
     <div class="card-footer clearfix">
-        <ul class="pagination pagination-sm m-0 float-right">
-            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-        </ul>
-    </div>
+    <ul class="pagination pagination-sm m-0 float-right">
+        <!-- Pagination Links werden hier durch JavaScript eingefügt -->
+    </ul>
+</div>
 </div>
 
     </div>
@@ -300,12 +296,16 @@ $(document).ready(function() {
         });
     });
     $(document).ready(function() {
+    var currentPage = 1;  // Startseite
+    var totalPages = 1;   // Gesamtseitenzahl
+
     // Logs per AJAX abrufen
-    function loadVehicleLogs() {
+    function loadVehicleLogs(page) {
         $.ajax({
-            url: 'include/vehicle_logs_fetch.php',  // Die PHP-Datei, die die Logs als JSON zurückgibt
+            url: 'include/vehicle_logs_fetch.php',  // PHP-Datei, die Logs und Seitenanzahl zurückgibt
             method: 'GET',
-            dataType: 'json', // Sicherstellen, dass die Antwort als JSON interpretiert wird
+            data: { page: page },  // Die aktuelle Seite übergeben
+            dataType: 'json',
             success: function(response) {
                 if (response.success === false) {
                     alert('Fehler beim Abrufen der Logs: ' + response.message);
@@ -314,9 +314,9 @@ $(document).ready(function() {
 
                 var logsTable = $('#logsTable');  // Die Tabelle im HTML, wo die Logs eingefügt werden
                 logsTable.empty();  // Leere die Tabelle, bevor neue Daten eingefügt werden
-                
-                // Durch die Logs iterieren und sie in die Tabelle einfügen
-                response.forEach(function(log) {
+
+                // Logs in die Tabelle einfügen
+                response.logs.forEach(function(log) {
                     var logRow = '<tr>';
                     logRow += '<td>' + log.id + '</td>';
                     logRow += '<td>' + log.action + '</td>';
@@ -325,6 +325,10 @@ $(document).ready(function() {
                     logRow += '</tr>';
                     logsTable.append(logRow);
                 });
+
+                // Pagination anzeigen
+                totalPages = response.total_pages;
+                updatePagination();
             },
             error: function() {
                 alert('Fehler beim Abrufen der Logs');
@@ -332,8 +336,32 @@ $(document).ready(function() {
         });
     }
 
+    // Pagination-Links aktualisieren
+    function updatePagination() {
+        var pagination = $('.pagination');
+        pagination.empty();  // Leere die Pagination vor dem Hinzufügen neuer Links
+
+        // „Zurück“-Link
+        pagination.append('<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" onclick="changePage(' + (currentPage - 1) + ')">&laquo;</a></li>');
+
+        // Seiten-Links
+        for (var i = 1; i <= totalPages; i++) {
+            pagination.append('<li class="page-item ' + (i == currentPage ? 'active' : '') + '"><a class="page-link" href="#" onclick="changePage(' + i + ')">' + i + '</a></li>');
+        }
+
+        // „Weiter“-Link
+        pagination.append('<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" onclick="changePage(' + (currentPage + 1) + ')">&raquo;</a></li>');
+    }
+
+    // Funktion zum Seitenwechsel
+    window.changePage = function(page) {
+        if (page < 1 || page > totalPages) return;  // Seiten außerhalb des Bereichs vermeiden
+        currentPage = page;
+        loadVehicleLogs(currentPage);
+    };
+
     // Lade die Logs beim Start der Seite
-    loadVehicleLogs();
+    loadVehicleLogs(currentPage);
 });
 });
 </script>

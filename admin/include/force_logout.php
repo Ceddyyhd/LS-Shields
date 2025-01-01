@@ -20,7 +20,7 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 
     try {
         // 1. Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
-        $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
+        $query = "DELETE FROM kunden_sessions WHERE user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();

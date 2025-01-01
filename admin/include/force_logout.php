@@ -1,6 +1,8 @@
 <?php
 session_start();
-include 'db.php';  // Hier wird die Datei mit der Datenbankverbindung eingebunden
+
+// Datenbankverbindung einbinden
+include 'include/db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
 // Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
 if ($_SESSION['role'] !== 'admin') {
@@ -34,13 +36,13 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
         // 3. Lösche das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
 
-        // 4. Falls der Admin den Logout für den gleichen Benutzer ausführt
+        // 4. Wenn der Admin den Logout für den gleichen Benutzer ausführt
         if ($_SESSION['user_id'] == $user_id_to_logout) {
-            // Session-Daten löschen
+            // Lösche alle Session-Daten
             session_unset();  // Löscht alle Session-Daten
             session_destroy();  // Zerstört die Session
 
-            // Lösche den PHP-Session-Cookie
+            // Lösche das PHP-Session-Cookie
             setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht den PHP-Session-Cookie
 
             // Weiterleitung zur Login-Seite

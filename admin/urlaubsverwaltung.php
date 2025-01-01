@@ -60,51 +60,51 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
         <div class="row">
           <!-- Urlaub Formular für Admin -->
           <div class="col-md-3">
-            <div class="sticky-top mb-3">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Urlaub einreichen</h3>
-                </div>
-                <div class="card-body">
-                  <form id="vacationForm">
+    <div class="sticky-top mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Urlaub einreichen</h3>
+            </div>
+            <div class="card-body">
+                <form id="vacationForm">
                     <div class="form-group">
-                      <label>Mitarbeiter</label>
-                      <select class="form-control" name="user_id" required>
-                        <option value="">Wählen Sie einen Mitarbeiter</option>
-                        <?php foreach ($users as $user): ?>
-                            <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
-                        <?php endforeach; ?>
-                      </select>
+                        <label>Mitarbeiter</label>
+                        <select class="form-control" name="user_id" required>
+                            <option value="">Wählen Sie einen Mitarbeiter</option>
+                            <?php foreach ($users as $user): ?>
+                                <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <div class="form-group">
-                      <label>Start Datum</label>
-                      <input type="date" class="form-control" name="start_date" required>
+                        <label>Start Datum</label>
+                        <input type="date" class="form-control" name="start_date" required>
                     </div>
                     <div class="form-group">
-                      <label>End Datum</label>
-                      <input type="date" class="form-control" name="end_date" required>
+                        <label>End Datum</label>
+                        <input type="date" class="form-control" name="end_date" required>
                     </div>
                     <div class="form-group">
-                      <label>Status</label>
-                      <select class="form-control" name="status" required>
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
+                        <label>Status</label>
+                        <select class="form-control" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                      <label>Notiz</label>
-                      <input type="text" class="form-control" name="note">
+                        <label>Notiz</label>
+                        <input type="text" class="form-control" name="note">
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Urlaub Erstellen</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Urlaub Erstellen</button>
                     </div>
-                  </form>
-                </div>
-              </div>
+                </form>
             </div>
-          </div>
+        </div>
+    </div>
+</div>
 
           <!-- Urlaubsanträge mit Status 'pending' -->
           <div class="col-md-9">
@@ -253,6 +253,33 @@ $(document).ready(function() {
             }
         });
     });
+
+    $(document).ready(function() {
+    $('#vacationForm').on('submit', function(e) {
+        e.preventDefault(); // Verhindert das Standardverhalten (Seite neu laden)
+
+        var formData = $(this).serialize(); // Alle Formulardaten sammeln
+
+        // AJAX-Anfrage zum Erstellen des Urlaubsantrags und Loggen
+        $.ajax({
+            url: 'include/vacation_create_leitung.php', // PHP-Skript zum Erstellen des Urlaubsantrags
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                var data = JSON.parse(response); // Antwort als JSON parsen
+                if (data.success) {
+                    alert('Urlaubsantrag erfolgreich erstellt!');
+                    $('#vacationForm')[0].reset(); // Formular zurücksetzen
+                } else {
+                    alert('Fehler beim Erstellen des Urlaubsantrags: ' + data.message);
+                }
+            },
+            error: function() {
+                alert('Fehler bei der Anfrage!');
+            }
+        });
+    });
+});
 
     // Änderungen speichern
     $('#saveVacationChanges').on('click', function() {

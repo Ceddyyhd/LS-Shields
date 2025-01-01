@@ -37,7 +37,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Fahrzeuge</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-create">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-create">
                         Fahrzeug Hinzufügen
                         </button>
               </div>
@@ -61,7 +61,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <td>LSABC1234</td>
                       <th>Firma</th>
                       <td><span class="badge bg-warning">14.01.2025</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-bearbeiten">
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
                         Fahrzeug Bearbeiten
                         </button>
                     </td>
@@ -72,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <td>LSABC1234</td>
                       <th>Firma</th>
                       <td><span class="badge bg-danger">31.12.2024</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-bearbeiten">
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
                         Fahrzeug Bearbeiten
                         </button>
                     </td>
@@ -83,7 +83,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <td>LSABC1234</td>
                       <th>Firma</th>
                       <td><span class="badge bg-success">14.03.2025</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-bearbeiten">
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
                         Fahrzeug Bearbeiten
                         </button>
                     </td>
@@ -106,7 +106,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
 
 
-            <div class="modal fade" id="vehicle-bearbeiten">
+            <div class="modal fade" id="vacation-bearbeiten">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -118,36 +118,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
 
             <div class="form-group">
-                        <label>Modell</label>
+            <label>Start Datum</label>
+            <input type="date" class="form-control" id="start_date" required>
+          </div>
+
+          <div class="form-group">
+            <label>End Datum</label>
+            <input type="date" class="form-control" id="end_date" required>
+          </div>
+
+          <div class="form-group">
+                        <label>Status Dropdown</label>
                         <input type="text" class="form-control" placeholder="Enter ...">
             </div>
-
+            
             <div class="form-group">
-                        <label>Kennzeichen</label>
+                        <label>Notiz</label>
                         <input type="text" class="form-control" placeholder="Enter ...">
             </div>
-
-            <div class="form-group">
-                        <label>Standort</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-
-            <div class="form-group">
-                        <label>Nächste Inspektion</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-
-            <div class="row">
-            <div class="form-group">
-            <label>Getankt bei </label>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                        <input type="text" class="form-control" placeholder="Enter ...">
-                        </div>
-                        
-            </div>
-            </div>
-
 
             </div>
             <div class="modal-footer justify-content-between">
@@ -161,11 +149,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
 
 
-      <div class="modal fade" id="vehicle-create">
+      <div class="modal fade" id="vacation-create">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Fahrzeug Hinzufügen</h4>
+              <h4 class="modal-title">Urlaub Hinzufügen</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -173,24 +161,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
 
             <div class="form-group">
-                        <label>Modell</label>
+                        <label>Mitarbeiter Drop Down</label>
                         <input type="text" class="form-control" placeholder="Enter ...">
             </div>
 
             <div class="form-group">
-                        <label>Kennzeichen</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
+            <label>Start Datum</label>
+            <input type="date" class="form-control" id="start_date" required>
+          </div>
 
-            <div class="form-group">
-                        <label>Standort</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-
-            <div class="form-group">
-                        <label>Nächste Inspektion</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
+          <div class="form-group">
+            <label>End Datum</label>
+            <input type="date" class="form-control" id="end_date" required>
+          </div>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -206,7 +189,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Fahrzeuge Logs</h3>
+                <h3 class="card-title">Aktuelle/Kommende Urlaube</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -217,6 +200,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <th>Task</th>
                       <th>Progress</th>
                       <th style="width: 40px">Label</th>
+                      <th>Bearbeiten</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -229,6 +213,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </td>
                       <td><span class="badge bg-danger">55%</span></td>
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
+                        Fahrzeug Bearbeiten
+                        </button></td>
                     </tr>
                     <tr>
                       <td>2.</td>
@@ -239,6 +226,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </td>
                       <td><span class="badge bg-warning">70%</span></td>
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
+                        Fahrzeug Bearbeiten
+                        </button></td>
                     </tr>
                     <tr>
                       <td>3.</td>
@@ -249,6 +239,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </td>
                       <td><span class="badge bg-primary">30%</span></td>
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
+                        Fahrzeug Bearbeiten
+                        </button></td>
                     </tr>
                     <tr>
                       <td>4.</td>
@@ -259,6 +252,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                       </td>
                       <td><span class="badge bg-success">90%</span></td>
+                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
+                        Fahrzeug Bearbeiten
+                        </button></td>
                     </tr>
                   </tbody>
                 </table>

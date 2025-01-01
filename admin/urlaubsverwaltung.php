@@ -263,7 +263,7 @@ $(document).ready(function() {
         var formData = $(this).serialize();  // Alle Formulardaten sammeln (einschließlich des 'user_name' versteckten Feldes)
 
         $.ajax({
-            url: 'vacation_create_leitung.php',  // Die PHP-Datei für die Erstellung des Urlaubsantrags
+            url: 'include/vacation_create_leitung.php',  // Die PHP-Datei für die Erstellung des Urlaubsantrags
             method: 'POST',
             data: formData,  // Formulardaten, einschließlich 'user_name'
             success: function(response) {

@@ -186,20 +186,48 @@ foreach ($settings as $setting) {
                   </table>
                 </div>
               </div>
-
-              <!-- Total amount row -->
-              <div class="row" style="margin-left: 70%;">
+              
+              <div class="row">
+                <!-- accepted payments column -->
                 <div class="col-6">
-                  <p class="lead">Amount Due <?= htmlspecialchars($invoice['due_date']); ?></p>
+                  <p class="lead">Payment Methods:</p>
+                  <img src="../../dist/img/credit/visa.png" alt="Visa">
+                  <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
+                  <img src="../../dist/img/credit/american-express.png" alt="American Express">
+                  <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+
+                  <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                    plugg
+                    dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                  </p>
+                </div>
+                <!-- /.col -->
+                <div class="col-6">
+                  <p class="lead">Amount Due 2/22/2014</p>
+
                   <div class="table-responsive">
                     <table class="table">
                       <tr>
-                        <th>Total: <?= htmlspecialchars($invoice['price']); ?></th>
-                        <td><?= $total_amount; ?>$</td>
+                        <th style="width:50%">Subtotal:</th>
+                        <td>$250.30</td>
+                      </tr>
+                      <tr>
+                        <th>Tax (9.3%)</th>
+                        <td>$10.34</td>
+                      </tr>
+                      <tr>
+                        <th>Shipping:</th>
+                        <td>$5.80</td>
+                      </tr>
+                      <tr>
+                        <th>Total:</th>
+                        <td>$265.24</td>
                       </tr>
                     </table>
                   </div>
                 </div>
+                <!-- /.col -->
               </div>
 
               <!-- Print and PDF download -->

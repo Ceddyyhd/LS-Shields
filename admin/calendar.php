@@ -17,7 +17,7 @@ $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
 
 // Alle Urlaubsanträge des Benutzers holen
-$vacati
+$vacations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <head>

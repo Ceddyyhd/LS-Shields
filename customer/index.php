@@ -5,6 +5,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
     <?php include 'include/header.php'; 
+
+function getInvoiceStatusClass($status) {
+  switch ($status) {
+      case 'Offen':
+          return 'warning';  // Gelb
+      case 'Überfällig':
+          return 'danger';   // Rot
+      case 'Bezahlt':
+          return 'success';  // Grün
+      default:
+          return 'secondary'; // Grau, für alle anderen Fälle
+  }
+}
+
+
     $user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
     include 'include/db.php';
     
@@ -111,20 +126,6 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <!-- /.card-footer -->
       </div>
-<script>
-  function getInvoiceStatusClass($status) {
-    switch ($status) {
-        case 'Offen':
-            return 'warning';  // Gelb
-        case 'Überfällig':
-            return 'danger';   // Rot
-        case 'Bezahlt':
-            return 'success';  // Grün
-        default:
-            return 'secondary'; // Grau, für alle anderen Fälle
-    }
-}
-</script>
 
     <!-- /.content -->
   </div>

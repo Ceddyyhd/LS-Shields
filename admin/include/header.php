@@ -1,21 +1,18 @@
 <?php
 session_start();
 
-// Erneute Session-ID generieren, um Session-Fixation zu vermeiden
 session_regenerate_id(true);
 
-// HTTP-Header, um Caching und das Speichern von Seiten zu verhindern
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-
-include 'db.php';
+include 'include/db.php';
 include 'auth.php'; // Authentifizierungslogik einbinden
 
-// Session-Wiederherstellung prüfen (wenn "Remember Me" verwendet wird)
+// Session-Wiederherstellung prüfen
 restoreSessionIfRememberMe($conn);
 
-// Überprüfen, ob der Benutzer eingeloggt ist
+// Prüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['user_id'])) {
     // Prüfen, ob ein "Remember Me"-Cookie existiert
     if (isset($_COOKIE['remember_me'])) {
@@ -42,22 +39,6 @@ if (!isset($_SESSION['user_id'])) {
     }
 }
 
-// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingeloggt ist
-$query = "SELECT * FROM user_sessions WHERE user_id = :user_id AND session_id = :session_id";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':user_id', $_SESSION['user_id']);
-$stmt->bindParam(':session_id', session_id()); // überprüfe session_id() hier
-$stmt->execute();
-$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Debugging: Ausgabe der Session-Abfrage-Ergebnisse
-if (!$sessionCheck) {
-    var_dump($sessionCheck); // Überprüfe, was in $sessionCheck gespeichert ist
-    // Kein Eintrag gefunden -> Der Benutzer ist ausgeloggt, zur Login-Seite umleiten
-    header('Location: index.html');
-    exit;
-}
-
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
 $stmt->execute([':id' => $_SESSION['user_id']]);
@@ -77,13 +58,6 @@ if ($userRole) {
             $_SESSION['permissions'] = [];
         }
     }
-}
-
-// Überprüfen, ob der Benutzer Zugang zum Admin-Bereich hat
-if (isset($_SESSION['user_id']) && $_SESSION['role'] !== 'admin' || (isset($_SESSION['admin_bereich']) && $_SESSION['admin_bereich'] != 1)) {
-    // Wenn der Benutzer kein Admin ist, zur Fehlerseite oder Login-Seite weiterleiten
-    header("Location: index.html"); // Weiterleitung zur Login-Seite oder zu einer Fehlerseite
-    exit;
 }
 ?>
 

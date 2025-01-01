@@ -147,34 +147,42 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Urlaubsanträge mit Status 'approved' -->
             <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Genehmigte Urlaubsanträge</h3>
-              </div>
-              <div class="card-body">
-                <table class="table table-bordered">
-                  <thead>
+    <div class="card-header">
+        <h3 class="card-title">Genehmigte Urlaubsanträge</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mitarbeiter</th>
+                    <th>Start Datum</th>
+                    <th>End Datum</th>
+                    <th>Status</th>
+                    <th>Aktion</th> <!-- Neue Spalte für den Bearbeiten-Button -->
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($approved_vacations as $vacation): ?>
                     <tr>
-                      <th>#</th>
-                      <th>Mitarbeiter</th>
-                      <th>Start Datum</th>
-                      <th>End Datum</th>
-                      <th>Status</th>
+                        <td><?php echo $vacation['id']; ?></td>
+                        <td><?php echo $vacation['employee_name']; ?></td>
+                        <td><?php echo $vacation['start_date']; ?></td>
+                        <td><?php echo $vacation['end_date']; ?></td>
+                        <td><span class="badge bg-success"><?php echo ucfirst($vacation['status']); ?></span></td>
+                        <!-- Bearbeiten-Button hinzufügen -->
+                        <td>
+                            <button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">
+                                Bearbeiten
+                            </button>
+                        </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <?php foreach ($approved_vacations as $vacation): ?>
-                        <tr>
-                          <td><?php echo $vacation['id']; ?></td>
-                          <td><?php echo $vacation['employee_name']; ?></td>
-                          <td><?php echo $vacation['start_date']; ?></td>
-                          <td><?php echo $vacation['end_date']; ?></td>
-                          <td><span class="badge bg-success"><?php echo ucfirst($vacation['status']); ?></span></td>
-                        </tr>
-                    <?php endforeach; ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
           </div>
         </div>
       </div><!-- /.container-fluid -->

@@ -321,7 +321,7 @@ $(document).ready(function() {
                     logRow += '<td>' + log.id + '</td>';
                     logRow += '<td>' + log.action + '</td>';
                     logRow += '<td>' + log.timestamp + '</td>';
-                    logRow += '<td><span class="badge bg-success">Erfolgreich</span></td>';
+                    logRow += '<td>' + log.user_name + '</td>';
                     logRow += '</tr>';
                     logsTable.append(logRow);
                 });

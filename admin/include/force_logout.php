@@ -2,7 +2,7 @@
 session_start();
 
 // Datenbankverbindung einbinden
-include 'include/db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
+include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
 // Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
 if ($_SESSION['role'] !== 'admin') {

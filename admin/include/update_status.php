@@ -9,6 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerrechte aus der Session laden
     $permissions = $_SESSION['permissions'] ?? [];
 
+    // Benutzername aus der Session
+    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';
+
     // Rechteprüfung: Status "in Bearbeitung" ändern
     if ($action === 'change_status') {
         if (!($permissions['change_to_in_bearbeitung'] ?? false)) {
@@ -19,6 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Status auf "in Bearbeitung" setzen
         $stmt = $conn->prepare("UPDATE anfragen SET status = 'in Bearbeitung' WHERE id = :id");
         $stmt->execute([':id' => $id]);
+
+        // Log-Eintrag für diese Aktion erstellen
+        $action_log = "Status auf 'in Bearbeitung' gesetzt";
+        $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+        $logStmt->execute([
+            ':erstellt_von' => $erstellt_von,
+            ':action' => $action_log,
+            ':id' => $id
+        ]);
+
         echo json_encode(['success' => true, 'new_status' => 'in Bearbeitung']);
     } 
     
@@ -43,6 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':telefonnummer' => $anfrage['telefonnummer'],
                 ':anfrage' => $anfrage['anfrage'],
                 ':datum_uhrzeit' => $anfrage['datum_uhrzeit'],
+            ]);
+
+            // Log-Eintrag für das Verschieben der Anfrage
+            $action_log = "Anfrage in die Eventplanung verschoben";
+            $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+            $logStmt->execute([
+                ':erstellt_von' => $erstellt_von,
+                ':action' => $action_log,
+                ':id' => $id
             ]);
 
             // Anfrage aus Tabelle `anfragen` löschen

@@ -11,7 +11,7 @@ header("Pragma: no-cache");
 
 // Datenbankverbindung einbinden
 include 'include/db.php';
-include 'include/auth.php';  // Authentifizierungslogik einbinden
+include 'auth.php';  // Authentifizierungslogik einbinden
 
 // Überprüfen, ob der Benutzer eingeloggt ist, wenn nicht, zur Login-Seite weiterleiten
 if (!isset($_SESSION['user_id'])) {
@@ -38,6 +38,19 @@ if (!isset($_SESSION['user_id'])) {
         header('Location: index.html');  // Umleitung zur Login-Seite
         exit;
     }
+}
+
+// Überprüfen, ob der Benutzer in der `kunden_sessions`-Tabelle eingetragen ist
+$query = "SELECT * FROM kunden_sessions WHERE user_id = :user_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user_id', $_SESSION['user_id']);
+$stmt->execute();
+$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$sessionCheck) {
+    // Kein Eintrag für diese Benutzer-ID gefunden -> Umleitung zur Login-Seite
+    header('Location: index.html');
+    exit;
 }
 
 // Überprüfen, ob der Benutzer ein Admin ist und ob eine Force-Logout-Anfrage vorliegt

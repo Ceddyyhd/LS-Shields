@@ -225,31 +225,30 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
   <!-- /.content-wrapper -->
   <script>
 $(document).ready(function() {
-    // Beim Klick auf "Bearbeiten"-Button die Daten laden
-    $('.edit-button').on('click', function() {
-        var vacationId = $(this).data('id'); // ID des Urlaubsantrags holen
+    // Event-Listener für den Klick auf den Bearbeiten-Button
+    $('[data-toggle="modal"][data-target="#vacation-bearbeiten"]').on('click', function() {
+        var vacationId = $(this).data('id'); // Hole die Urlaubs-ID aus dem data-id-Attribut
 
         $.ajax({
-            url: 'include/vacation_fetch.php',  // PHP-Skript zum Abrufen der Urlaubsantragsdaten
+            url: 'include/vacation_fetch.php', // PHP-Skript, um die Urlaubsdaten zu holen
             method: 'GET',
-            data: { id: vacationId },
+            data: { id: vacationId },  // Sende die Urlaubs-ID an das Skript
             success: function(response) {
-                var vacation = JSON.parse(response);  // Antwort als JSON parsen
-                
+                var vacation = JSON.parse(response);  // Die Antwort wird als JSON geparsed
+
                 if (vacation.success) {
-                    // Fülle das Modal mit den abgerufenen Daten
+                    // Fülle die Modal-Felder mit den abgerufenen Daten
                     $('#edit-vacation_id').val(vacation.id);
-                    $('#edit-user_id').val(vacation.user_id);
                     $('#edit-start_date').val(vacation.start_date);
                     $('#edit-end_date').val(vacation.end_date);
                     $('#edit-status').val(vacation.status);
-                    $('#edit-note').val(vacation.note);  // Notiz ins Modal einfügen
+                    $('#edit-note').val(vacation.note); // Füge die Notiz hinzu
                 } else {
                     alert('Fehler beim Laden der Urlaubsantragsdaten: ' + vacation.message);
                 }
             },
             error: function() {
-                alert('Fehler bei der Anfrage!');  // Fehlerfall behandeln
+                alert('Fehler bei der Anfrage!');
             }
         });
     });

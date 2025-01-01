@@ -179,7 +179,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
   </div><!-- /.content-wrapper -->
 
   <!-- Modal zum Bearbeiten eines Urlaubs -->
-<div class="modal fade" id="vacation-bearbeiten">
+  <div class="modal fade" id="vacation-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,11 +192,11 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                 <form id="vacationEditForm">
                     <div class="form-group">
                         <label>Start Datum</label>
-                        <input type="date" class="form-control" id="edit-start_date" required>
+                        <input type="date" class="form-control" id="edit-start_date" name="start_date" required>
                     </div>
                     <div class="form-group">
                         <label>End Datum</label>
-                        <input type="date" class="form-control" id="edit-end_date" required>
+                        <input type="date" class="form-control" id="edit-end_date" name="end_date" required>
                     </div>
                     <div class="form-group">
                         <label>Status</label>
@@ -208,12 +208,12 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <div class="form-group">
                         <label>Notiz</label>
-                        <input type="text" class="form-control" id="edit-note">
+                        <input type="text" class="form-control" id="edit-note" name="note" placeholder="Notiz">
                     </div>
-                    <input type="hidden" id="edit-vacation_id">
+                    <input type="hidden" id="edit-vacation_id" name="vacation_id">
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" id="saveVacationChanges" class="btn btn-primary">Speichern</button>
+                        <button type="submit" class="btn btn-primary" id="saveVacationChanges">Speichern</button>
                     </div>
                 </form>
             </div>
@@ -225,26 +225,31 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
   <!-- /.content-wrapper -->
   <script>
 $(document).ready(function() {
-    // Urlaubsantrag laden und ins Modal einfügen
+    // Beim Klick auf "Bearbeiten"-Button die Daten laden
     $('.edit-button').on('click', function() {
-        var vacationId = $(this).data('id'); // Urlaubsantrags-ID über das Daten-Attribut
+        var vacationId = $(this).data('id'); // ID des Urlaubsantrags holen
 
         $.ajax({
-            url: 'include/vacation_fetch.php', // PHP-Skript zum Abrufen der Urlaubsantragsdaten
+            url: 'include/vacation_fetch.php',  // PHP-Skript zum Abrufen der Urlaubsantragsdaten
             method: 'GET',
             data: { id: vacationId },
             success: function(response) {
-                var vacation = JSON.parse(response);
-                if (vacation.success !== false) {
+                var vacation = JSON.parse(response);  // Antwort als JSON parsen
+                
+                if (vacation.success) {
                     // Fülle das Modal mit den abgerufenen Daten
                     $('#edit-vacation_id').val(vacation.id);
+                    $('#edit-user_id').val(vacation.user_id);
                     $('#edit-start_date').val(vacation.start_date);
                     $('#edit-end_date').val(vacation.end_date);
-                    $('#edit-status').val(vacation.status); // Status wird nun als Dropdown gesetzt
-                    $('#edit-note').val(vacation.note); // Notiz wird hier geladen
+                    $('#edit-status').val(vacation.status);
+                    $('#edit-note').val(vacation.note);  // Notiz ins Modal einfügen
                 } else {
-                    alert('Fehler beim Laden der Urlaubsantragsdaten.');
+                    alert('Fehler beim Laden der Urlaubsantragsdaten: ' + vacation.message);
                 }
+            },
+            error: function() {
+                alert('Fehler bei der Anfrage!');  // Fehlerfall behandeln
             }
         });
     });

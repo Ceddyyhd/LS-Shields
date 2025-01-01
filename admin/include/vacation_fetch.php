@@ -1,21 +1,17 @@
 <?php
-include 'db.php';  // Verbindung zur Datenbank
+include 'db.php';  // Datenbankverbindung einbinden
 
 if (isset($_GET['id'])) {
-    $vacationId = $_GET['id'];
+    $vacation_id = $_GET['id'];
 
-    // SQL-Abfrage, um den Urlaubsantrag mit der entsprechenden ID zu holen
-    $query = "SELECT v.*, u.name as employee_name
-              FROM vacations v
-              JOIN users u ON v.user_id = u.id
-              WHERE v.id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->execute([$vacationId]);
-    
+    // Abrufen der Urlaubsdaten
+    $sql = "SELECT * FROM vacations WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$vacation_id]);
     $vacation = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($vacation) {
-        // Rückgabe der Urlaubsantragsdaten als JSON
+        // Erfolgreiches Abrufen der Daten
         echo json_encode([
             'success' => true,
             'id' => $vacation['id'],
@@ -23,12 +19,12 @@ if (isset($_GET['id'])) {
             'start_date' => $vacation['start_date'],
             'end_date' => $vacation['end_date'],
             'status' => $vacation['status'],
-            'note' => $vacation['note']
+            'note' => $vacation['note']  // Notiz hinzufügen
         ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Urlaubsantrag nicht gefunden']);
+        echo json_encode(['success' => false, 'message' => 'Urlaubsantrag nicht gefunden.']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Fehlende ID']);
+    echo json_encode(['success' => false, 'message' => 'Keine ID übergeben.']);
 }
 ?>

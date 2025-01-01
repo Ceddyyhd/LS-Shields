@@ -102,7 +102,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC); // fetch statt fetchAll, da nur ein Date
     const formData = new FormData(this); // Holt die Formulardaten
 
     // AJAX-Anfrage senden
-    fetch('update_settings_ajax.php', {
+    fetch('include/update_settings_ajax.php', {
       method: 'POST',
       body: formData,
     })

@@ -91,6 +91,7 @@ function forceLogout(userId) {
       .then((data) => {
         if (data.success) {
           alert('Benutzer wurde erfolgreich abgemeldet.');
+          // Nach dem Logout des Benutzers erfolgt keine Umleitung des Admins, nur eine Benachrichtigung
           location.reload();  // Seite neu laden, um die Änderungen zu sehen
         } else {
           alert('Fehler: ' + data.message);
@@ -102,6 +103,7 @@ function forceLogout(userId) {
   }
 }
 </script>
+
   </div>
   <!-- /.content-wrapper -->
 

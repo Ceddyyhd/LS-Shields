@@ -13,6 +13,33 @@ header("Pragma: no-cache");
 include 'include/db.php';
 include 'auth.php';  // Authentifizierungslogik einbinden
 
+// Überprüfen, ob der Benutzer eingeloggt ist, wenn nicht, zur Login-Seite weiterleiten
+if (!isset($_SESSION['user_id'])) {
+    // Prüfen, ob ein "Remember Me"-Cookie existiert
+    if (isset($_COOKIE['remember_me'])) {
+        $token = $_COOKIE['remember_me'];
+
+        // Token in der Datenbank prüfen
+        $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = :token");
+        $stmt->execute([':token' => $token]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            // Benutzer automatisch einloggen
+            $_SESSION['user_id'] = $user['id'];
+        } else {
+            // Ungültiges Token -> Cookie löschen
+            setcookie('remember_me', '', time() - 3600, '/');
+        }
+    }
+
+    // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php');  // Umleitung zur Login-Seite
+        exit;
+    }
+}
+
 // Überprüfen, ob der Benutzer ein Admin ist und ob eine Force-Logout-Anfrage vorliegt
 if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     $user_id_to_logout = $_GET['force_logout_user_id'];
@@ -42,36 +69,6 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     
     echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
     exit;
-}
-
-// Session-Wiederherstellung prüfen (falls der Benutzer mit "Remember Me" eingeloggt ist)
-restoreSessionIfRememberMe($conn);
-
-// Prüfen, ob der Benutzer eingeloggt ist
-if (!isset($_SESSION['user_id'])) {
-    // Prüfen, ob ein "Remember Me"-Cookie existiert
-    if (isset($_COOKIE['remember_me'])) {
-        $token = $_COOKIE['remember_me'];
-
-        // Token in der Datenbank prüfen
-        $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = :token");
-        $stmt->execute([':token' => $token]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
-            // Benutzer automatisch einloggen
-            $_SESSION['user_id'] = $user['id'];
-        } else {
-            // Ungültiges Token -> Cookie löschen
-            setcookie('remember_me', '', time() - 3600, '/');
-        }
-    }
-
-    // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: index.html');
-        exit;
-    }
 }
 
 // Berechtigungen bei jedem Seitenaufruf neu laden

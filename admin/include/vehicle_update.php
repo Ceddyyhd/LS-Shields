@@ -18,6 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_select->execute([$vehicle_id]);
         $old_vehicle = $stmt_select->fetch(PDO::FETCH_ASSOC);
 
+        // Überprüfen, ob das Fahrzeug existiert
+        if (!$old_vehicle) {
+            echo json_encode(['success' => false, 'message' => 'Fahrzeug nicht gefunden.']);
+            exit;
+        }
+
         // Fahrzeugdaten in der DB aktualisieren
         $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ? WHERE id = ?";
         $stmt_update = $conn->prepare($sql_update);
@@ -38,19 +44,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $changes[] = "Nächste Inspektion: " . $old_vehicle['next_inspection'] . " -> " . $next_inspection;
         }
 
+        // Wenn keine Änderungen vorgenommen wurden
+        if (empty($changes)) {
+            echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
+            exit;
+        }
+
         // Log-Eintrag für die Änderungen erstellen
         $action = "Fahrzeug bearbeitet ($license_plate) (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
 
         // Log-Eintrag in die vehicle_logs-Tabelle einfügen
-        $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
+        $log_sql = "INSERT INTO vehicle_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
         $log_stmt = $conn->prepare($log_sql);
         $log_stmt->execute([$vehicle_id, $action, $user_name]);  // Benutzername zum Log hinzufügen
 
         // Erfolgsantwort zurückgeben
         echo json_encode(['success' => true]);
     } catch (PDOException $e) {
-        // Fehlerbehandlung
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        // Fehlerprotokollierung für PDO-Fehler
+        error_log("PDO Fehler beim Bearbeiten des Fahrzeugs: " . $e->getMessage());
+
+        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+    } catch (Exception $e) {
+        // Allgemeine Fehlerbehandlung
+        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
 }
 ?>

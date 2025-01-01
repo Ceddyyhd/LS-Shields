@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Benutzer anhand der E-Mail-Adresse suchen
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+        // Benutzer anhand der E-Mail-Adresse suchen (Kunde)
+        $stmt = $conn->prepare("SELECT * FROM kunden WHERE umail = :email");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -29,15 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Session-Daten setzen
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];
-            $_SESSION['email'] = $user['email'];
+            $_SESSION['email'] = $user['umail'];
 
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));
                 setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
 
-                // Token in der Datenbank speichern
-                $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
+                // Token in der Kunden-Datenbank speichern
+                $stmt = $conn->prepare("UPDATE kunden SET remember_token = :token WHERE id = :id");
                 $stmt->execute([':token' => $token, ':id' => $user['id']]);
             }
 

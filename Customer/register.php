@@ -23,9 +23,9 @@
     <div class="card-body">
       <p class="login-box-msg">Register a new membership</p>
 
-      <form action="index.html" method="post">
+      <form id="registerForm" method="post">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Name">
+          <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="UEmail">
+          <input type="email" class="form-control" id="umail" name="umail" placeholder="UEmail" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password">
+          <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Retype password">
+          <input type="password" class="form-control" id="repassword" name="repassword" placeholder="Retype password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -61,7 +61,7 @@
             <div class="icheck-primary">
               <input type="checkbox" id="agreeTerms" name="terms" value="agree">
               <label for="agreeTerms">
-               I agree to the <a href="#">terms</a>
+                I agree to the <a href="#">terms</a>
               </label>
             </div>
           </div>
@@ -86,5 +86,55 @@
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
+
+<script>
+$(document).ready(function () {
+  $('#registerForm').submit(function (e) {
+    e.preventDefault();
+
+    const name = $('#name').val();
+    const umail = $('#umail').val();
+    const password = $('#password').val();
+    const repassword = $('#repassword').val();
+    const terms = $('#agreeTerms').is(':checked');
+
+    if (password !== repassword) {
+      alert("Die Passwörter stimmen nicht überein.");
+      return;
+    }
+
+    if (!terms) {
+      alert("Du musst den Bedingungen zustimmen.");
+      return;
+    }
+
+    $.ajax({
+      url: 'register.php', // Hier wird die PHP-Registrierungsdatei aufgerufen
+      type: 'POST',
+      data: {
+        name: name,
+        umail: umail,
+        password: password,
+        repassword: repassword
+      },
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          alert(response.message);
+          window.location.href = 'login.php'; // Weiterleitung zur Login-Seite
+        } else {
+          alert(response.message);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.log('Fehlerdetails:', xhr.responseText);
+        console.log('Status:', status);
+        console.log('Error:', error);
+        alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+      }
+    });
+  });
+});
+</script>
 </body>
 </html>

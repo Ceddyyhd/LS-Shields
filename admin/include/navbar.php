@@ -117,7 +117,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="kunden.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'kunden.php' ? 'active' : '' ?>">
+                            <a href="kundenverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'kundenverwaltung.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Kunden Verwaltung</p>
                             </a>

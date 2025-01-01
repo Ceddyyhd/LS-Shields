@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db.php';  // Hier wird die Datei mit der Datenbankverbindung eingebunden
 
 // Nur Admins dürfen Benutzer abmelden
 if ($_SESSION['role'] !== 'admin') {

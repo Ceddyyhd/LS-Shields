@@ -226,7 +226,9 @@
 
 <!-- AJAX-Skripte -->
 <script>
-$('#addVehicleForm').on('submit', function(e) {
+$(document).ready(function() {
+    // Fahrzeug Hinzufügen (AJAX)
+    $('#addVehicleForm').on('submit', function(e) {
     e.preventDefault();
     var formData = $(this).serialize();
     

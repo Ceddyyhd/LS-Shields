@@ -44,7 +44,7 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     exit;
 }
 
-// Session-Wiederherstellung prüfen
+// Session-Wiederherstellung prüfen (falls der Benutzer mit "Remember Me" eingeloggt ist)
 restoreSessionIfRememberMe($conn);
 
 // Prüfen, ob der Benutzer eingeloggt ist
@@ -95,7 +95,6 @@ if ($userRole) {
     }
 }
 ?>
-
 
 <head>
   <meta charset="utf-8">

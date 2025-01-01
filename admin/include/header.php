@@ -42,6 +42,20 @@ if (!isset($_SESSION['user_id'])) {
     }
 }
 
+// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingeloggt ist
+$query = "SELECT * FROM user_sessions WHERE user_id = :user_id AND session_id = :session_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user_id', $_SESSION['user_id']);
+$stmt->bindParam(':session_id', session_id());
+$stmt->execute();
+$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$sessionCheck) {
+    // Kein Eintrag gefunden -> Der Benutzer ist ausgeloggt, zur Login-Seite umleiten
+    header('Location: index.html');
+    exit;
+}
+
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
 $stmt->execute([':id' => $_SESSION['user_id']]);

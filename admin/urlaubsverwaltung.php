@@ -186,30 +186,30 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
           </button>
         </div>
         <div class="modal-body">
-          <form id="vacationEditForm">
+        <form id="vacationEditForm">
             <div class="form-group">
-              <label>Start Datum</label>
-              <input type="date" class="form-control" id="edit-start_date" required>
+                <label>Start Datum</label>
+                <input type="date" class="form-control" id="edit-start_date" required>
             </div>
             <div class="form-group">
-              <label>End Datum</label>
-              <input type="date" class="form-control" id="edit-end_date" required>
+                <label>End Datum</label>
+                <input type="date" class="form-control" id="edit-end_date" required>
             </div>
             <div class="form-group">
-              <label>Status</label>
-              <input type="text" class="form-control" id="edit-status" disabled>
+                <label>Status</label>
+                <input type="text" class="form-control" id="edit-status" required> <!-- Hier Status bearbeiten -->
             </div>
             <div class="form-group">
-              <label>Notiz</label>
-              <input type="text" class="form-control" id="edit-note">
+                <label>Notiz</label>
+                <input type="text" class="form-control" id="edit-note">
             </div>
             <input type="hidden" id="edit-vacation_id">
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Speichern</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" id="saveVacationChanges" class="btn btn-primary">Speichern</button>
             </div>
-          </form>
-        </div>
+        </form>
+    </div>
       </div>
     </div>
   </div>
@@ -234,7 +234,7 @@ $(document).ready(function() {
                     $('#edit-user_id').val(vacation.user_id);
                     $('#edit-start_date').val(vacation.start_date);
                     $('#edit-end_date').val(vacation.end_date);
-                    $('#edit-status').val(vacation.status);
+                    $('#edit-status').val(vacation.status); // Status wird ebenfalls gesetzt
                     $('#edit-note').val(vacation.note);
                 } else {
                     alert('Fehler beim Laden der Urlaubsantragsdaten.');
@@ -245,7 +245,7 @@ $(document).ready(function() {
 
     // Änderungen speichern
     $('#saveVacationChanges').on('click', function() {
-        var formData = $('#editVacationForm').serialize(); // Alle Formulardaten sammeln
+        var formData = $('#vacationEditForm').serialize(); // Alle Formulardaten sammeln
 
         $.ajax({
             url: 'include/vacation_update.php', // PHP-Skript zum Bearbeiten des Urlaubsantrags

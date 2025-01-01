@@ -128,6 +128,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <p>Verbesserungsvorschlag</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="fahrzeugverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'fahrzeugverwaltung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Fahrzeugverwaltung</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
@@ -163,6 +169,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             <a href="finanzverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'finanzverwaltung.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Finanzverwaltung</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="urlaubsverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'urlaubsverwaltung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Urlaubsverwaltung</p>
                             </a>
                         </li>
                     </ul>

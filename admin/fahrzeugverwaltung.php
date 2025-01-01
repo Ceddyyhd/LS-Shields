@@ -30,9 +30,11 @@
     <div class="card">
     <div class="card-header">
         <h3 class="card-title">Fahrzeuge</h3>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-create">
-            Fahrzeug Hinzufügen
-        </button>
+        <?php if ($_SESSION['permissions']['add_vehicle'] ?? false): ?>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-create">
+        Fahrzeug Hinzufügen
+    </button>
+    <?php endif; ?>
     </div>
     <!-- /.card-header -->
     <div class="card-body">

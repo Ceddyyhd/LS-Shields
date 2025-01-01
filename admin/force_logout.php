@@ -87,12 +87,7 @@
       },
       body: `user_id=${userId}`,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Netzwerkantwort war nicht okay.');
-        }
-        return response.json();  // Versuche, die JSON-Antwort zu parsen
-      })
+      .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           alert('Benutzer wurde erfolgreich abgemeldet.');

@@ -2,13 +2,13 @@
 session_start();
 include 'db.php';  // Hier wird die Datei mit der Datenbankverbindung eingebunden
 
-// Nur Admins dürfen Benutzer abmelden
+// Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
 if ($_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
 }
 
-// Benutzer-ID prüfen
+// Überprüfe, ob eine Benutzer-ID übergeben wurde
 if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
     $user_id_to_logout = $_POST['user_id'];
 
@@ -34,12 +34,17 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
         // 3. Lösche das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
 
-        // 4. Falls der Benutzer der gerade eingeloggte Admin ist, sicherstellen, dass auch seine Session gelöscht wird
+        // 4. Falls der Admin den Logout für den gleichen Benutzer ausführt
         if ($_SESSION['user_id'] == $user_id_to_logout) {
+            // Session-Daten löschen
             session_unset();  // Löscht alle Session-Daten
             session_destroy();  // Zerstört die Session
+
+            // Lösche den PHP-Session-Cookie
             setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht den PHP-Session-Cookie
-            header('Location: login.php');  // Weiterleitung zur Login-Seite
+
+            // Weiterleitung zur Login-Seite
+            header('Location: login.php');  // Umleitung zur Login-Seite
             exit;
         }
 

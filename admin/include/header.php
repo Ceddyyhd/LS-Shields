@@ -1,18 +1,21 @@
 <?php
 session_start();
 
+// Erneute Session-ID generieren, um Session-Fixation zu vermeiden
 session_regenerate_id(true);
 
+// HTTP-Header, um Caching und das Speichern von Seiten zu verhindern
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+
 include 'include/db.php';
 include 'auth.php'; // Authentifizierungslogik einbinden
 
-// Session-Wiederherstellung prüfen
+// Session-Wiederherstellung prüfen (wenn "Remember Me" verwendet wird)
 restoreSessionIfRememberMe($conn);
 
-// Prüfen, ob der Benutzer eingeloggt ist
+// Überprüfen, ob der Benutzer eingeloggt ist
 if (!isset($_SESSION['user_id'])) {
     // Prüfen, ob ein "Remember Me"-Cookie existiert
     if (isset($_COOKIE['remember_me'])) {
@@ -59,7 +62,15 @@ if ($userRole) {
         }
     }
 }
+
+// Überprüfen, ob der Benutzer Zugang zum Admin-Bereich hat
+if (isset($_SESSION['user_id']) && $_SESSION['role'] !== 'admin' || (isset($_SESSION['admin_bereich']) && $_SESSION['admin_bereich'] != 1)) {
+    // Wenn der Benutzer kein Admin ist, zur Fehlerseite oder Login-Seite weiterleiten
+    header("Location: ../../index.php"); // Weiterleitung zur Login-Seite oder zu einer Fehlerseite
+    exit;
+}
 ?>
+
 
 <head>
   <meta charset="utf-8">

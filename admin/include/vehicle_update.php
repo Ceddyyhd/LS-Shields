@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Log-Eintrag für die Änderungen erstellen
-        $action = "Fahrzeug bearbeitet (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
+        $action = "Fahrzeug bearbeitet ($license_plate) (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
 
         // Log-Eintrag in die vehicle_logs-Tabelle einfügen
         $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";

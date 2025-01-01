@@ -44,6 +44,14 @@ $stmt = $conn->prepare($query);
 $stmt->bindParam(':kunde_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
 $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+$query = "SELECT * FROM kunden WHERE id = :kunde_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':kunde_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="row">
@@ -72,11 +80,11 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?php echo htmlspecialchars($name); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="nummer">Tel. Nr.</label>
-                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer" required>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer" value="<?php echo htmlspecialchars($nummer); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="anfrage">Anfrage</label>

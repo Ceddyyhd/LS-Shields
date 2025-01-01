@@ -1,6 +1,5 @@
 <?php
 session_start();
-include 'db.php';  // Stelle sicher, dass du eine gültige DB-Verbindung hast
 
 // Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
 if ($_SESSION['role'] !== 'admin') {
@@ -12,9 +11,15 @@ if ($_SESSION['role'] !== 'admin') {
 if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
     $user_id_to_logout = $_POST['user_id'];
 
+    // Stelle sicher, dass der Admin nicht sich selbst logoutet
+    if ($user_id_to_logout == $_SESSION['user_id']) {
+        echo json_encode(['success' => false, 'message' => 'Admin kann nicht sich selbst ausloggen.']);
+        exit;
+    }
+
     try {
         // 1. Lösche die Sitzung des Benutzers aus der `user_sessions`-Tabelle
-        $query = "DELETE FROM kunden_sessions WHERE user_id = :user_id";
+        $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
@@ -28,16 +33,15 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
         // 3. Optional: Entferne auch das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');
 
-        // 4. Zerstöre die PHP-Session für den Benutzer, um ihn sofort abzumelden
-        session_start(); // Sicherstellen, dass die Session aktiv ist
-        session_unset(); // Alle Session-Daten löschen
-        session_destroy(); // Session zerstören
-
-        echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
+        // 4. Wenn der Admin den Logout für einen Benutzer ausführt, aber nicht für sich selbst
+        if ($_SESSION['user_id'] != $user_id_to_logout) {
+            echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Admin-Session bleibt bestehen.']);
+        }
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
 }
-?>

@@ -35,7 +35,7 @@ if (!isset($_SESSION['user_id'])) {
 
     // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
     if (!isset($_SESSION['user_id'])) {
-        header('Location: login.php');  // Umleitung zur Login-Seite
+        header('Location: index.html');  // Umleitung zur Login-Seite
         exit;
     }
 }

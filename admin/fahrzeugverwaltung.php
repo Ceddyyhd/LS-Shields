@@ -91,8 +91,7 @@
                 </ul>
               </div>
             </div>
-
-            <!-- Modal for Editing Vehicle -->
+<!-- Modal for Editing Vehicle -->
 <div class="modal fade" id="vehicle-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -160,6 +159,7 @@
         </div>
     </div>
 </div>
+
 <script>
   $(document).ready(function() {
     // Bei Änderung der Checkbox den Zustand des Textfeldes steuern
@@ -179,6 +179,22 @@
     }
 });
 </script>
+
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;  /* Fügt einen Abstand zwischen den Formularfeldern hinzu */
+    }
+
+    /* Für die Checkbox */
+    .form-check-input {
+        margin-right: 10px;  /* Fügt Abstand zwischen Checkbox und Label hinzu */
+    }
+
+    /* Für das Textfeld für "Wo?" */
+    #edit-fuel-location {
+        margin-top: 10px;  /* Fügt Abstand nach der Checkbox hinzu */
+    }
+</style>
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">
         <div class="modal-dialog">

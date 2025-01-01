@@ -80,11 +80,11 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?php echo htmlspecialchars($name); ?>" required>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?= htmlspecialchars($user['name']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="nummer">Tel. Nr.</label>
-                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer" value="<?php echo htmlspecialchars($nummer); ?>" required>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer" value="<?= htmlspecialchars($user['nummer']); ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="anfrage">Anfrage</label>

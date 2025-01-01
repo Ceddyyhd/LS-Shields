@@ -305,13 +305,18 @@ $(document).ready(function() {
         $.ajax({
             url: 'include/vehicle_logs_fetch.php',  // Die PHP-Datei, die die Logs als JSON zurückgibt
             method: 'GET',
+            dataType: 'json', // Sicherstellen, dass die Antwort als JSON interpretiert wird
             success: function(response) {
-                var logs = JSON.parse(response);
-                var logsTable = $('#logsTable tbody');  // Die Tabelle im HTML, wo die Logs eingefügt werden
+                if (response.success === false) {
+                    alert('Fehler beim Abrufen der Logs: ' + response.message);
+                    return;
+                }
+
+                var logsTable = $('#logsTable');  // Die Tabelle im HTML, wo die Logs eingefügt werden
                 logsTable.empty();  // Leere die Tabelle, bevor neue Daten eingefügt werden
                 
                 // Durch die Logs iterieren und sie in die Tabelle einfügen
-                logs.forEach(function(log) {
+                response.forEach(function(log) {
                     var logRow = '<tr>';
                     logRow += '<td>' + log.id + '</td>';
                     logRow += '<td>' + log.action + '</td>';

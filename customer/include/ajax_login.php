@@ -32,6 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email'] = $user['umail'];
             $_SESSION['role'] = 'customer'; // Setze Rolle für Kunden
 
+            // Sitzungsinformationen in der Datenbank speichern
+            $session_id = session_id();       // Die aktuelle Session-ID
+            $ip_address = $_SERVER['REMOTE_ADDR'];  // IP-Adresse des Benutzers
+            $query = "INSERT INTO kunden_sessions (user_id, session_id, ip_address) VALUES (:user_id, :session_id, :ip_address)";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':user_id', $_SESSION['user_id']);
+            $stmt->bindParam(':session_id', $session_id);
+            $stmt->bindParam(':ip_address', $ip_address);
+            $stmt->execute();
+
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));

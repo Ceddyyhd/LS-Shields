@@ -2,7 +2,7 @@
 include 'db.php';
 
 // SQL-Query, um die letzten 25 Logs zu holen
-$sql_logs = "SELECT * FROM vehicle_logs ORDER BY timestamp DESC LIMIT 25";
+$sql_logs = "SELECT * FROM vehicles_logs ORDER BY timestamp DESC LIMIT 25";
 $stmt = $conn->prepare($sql_logs);
 $stmt->execute();
 

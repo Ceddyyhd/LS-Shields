@@ -3,13 +3,8 @@ include 'db.php'; // Datenbankverbindung
 
 session_start(); // Sitzung starten
 
-if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
-    exit;
-}
-
-// Benutzernamen aus der Session holen
-$erstellt_von = $_SESSION['username'];
+// Benutzernamen aus dem POST-Daten ziehen
+$erstellt_von = $_POST['erstellt_von'] ?? '';
 
 // Formulardaten auslesen
 $name = $_POST['name'] ?? '';
@@ -19,7 +14,7 @@ $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
 // Validierung der Formulardaten
-if (empty($name) || empty($nummer) || empty($anfrage)) {
+if (empty($name) || empty($nummer) || empty($anfrage) || empty($erstellt_von)) {
     echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
     exit;
 }
@@ -43,4 +38,5 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
+
 ?>

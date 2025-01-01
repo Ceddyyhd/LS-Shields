@@ -27,7 +27,7 @@ if (empty($name) || empty($nummer) || empty($anfrage)) {
 
 try {
     // SQL zum Einfügen der Anfrage in die Datenbank
-    $sql = "INSERT INTO anfragen (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, erstellt_von, user_id)
+    $sql = "INSERT INTO anfragen (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, erstellt_von, kunden_id)
             VALUES (:name, :nummer, :anfrage, :datum_uhrzeit, :status, :erstellt_von, :user_id)";
 
     $stmt = $conn->prepare($sql);

@@ -57,34 +57,34 @@
 
 <script src="plugins/jquery/jquery.min.js"></script>
 <script>
-$(document).ready(function () {
-  $('#loginForm').submit(function (e) {
-    e.preventDefault();
-    const email = $('#email').val();
-    const password = $('#password').val();
-    const remember = $('#remember').is(':checked');
-
-    $.ajax({
-    url: 'include/ajax_login.php',
-    type: 'POST',
-    data: { email, password, remember },
-    dataType: 'json',
-    success: function (response) {
-        if (response.success) {
-            window.location.href = 'index.php';
-        } else {
-            $('#loginMessage').text(response.message);
-        }
-    },
-    error: function (xhr, status, error) {
-        console.log('Fehlerdetails:', xhr.responseText); // Serverantwort
-        console.log('Status:', status); // Status des Requests
-        console.log('Error:', error); // Fehlerbeschreibung
-        $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-    }
-});
-});
-});
-</script>
+  $(document).ready(function () {
+    $('#loginForm').submit(function (e) {
+      e.preventDefault();
+      const email = $('#email').val();
+      const password = $('#password').val();
+      const remember = $('#remember').is(':checked');
+  
+      $.ajax({
+      url: 'include/ajax_login.php', // Hier wird die PHP-Registrierungsdatei für Kunden aufgerufen
+      type: 'POST',
+      data: { email, password, remember },
+      dataType: 'json',
+      success: function (response) {
+          if (response.success) {
+              window.location.href = 'index.php'; // Weiterleitung zur Kunden-Seite
+          } else {
+              $('#loginMessage').text(response.message);
+          }
+      },
+      error: function (xhr, status, error) {
+          console.log('Fehlerdetails:', xhr.responseText);
+          console.log('Status:', status);
+          console.log('Error:', error);
+          $('#loginMessage').text('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+      }
+  });
+  });
+  });
+  </script>
 </body>
 </html>

@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Benutzer anhand der E-Mail-Adresse suchen
+        // Benutzer anhand der E-Mail-Adresse suchen (Mitarbeiter)
         $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -30,13 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = 'admin'; // Setze Rolle für Admin
 
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));
                 setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
 
-                // Token in der Datenbank speichern
+                // Token in der Mitarbeiter-Datenbank speichern
                 $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
                 $stmt->execute([':token' => $token, ':id' => $user['id']]);
             }
@@ -47,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'session_data' => [
                     'user_id' => $_SESSION['user_id'],
                     'username' => $_SESSION['username'],
-                    'email' => $_SESSION['email']
+                    'email' => $_SESSION['email'],
+                    'role' => $_SESSION['role']
                 ]
             ]);
         } else {

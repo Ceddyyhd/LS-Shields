@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['umail'];
+            $_SESSION['role'] = 'customer'; // Setze Rolle für Kunden
 
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
@@ -47,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'session_data' => [
                     'user_id' => $_SESSION['user_id'],
                     'username' => $_SESSION['username'],
-                    'email' => $_SESSION['email']
+                    'email' => $_SESSION['email'],
+                    'role' => $_SESSION['role']
                 ]
             ]);
         } else {

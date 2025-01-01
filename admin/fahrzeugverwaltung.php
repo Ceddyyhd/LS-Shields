@@ -49,7 +49,7 @@
                   </thead>
                   <tbody>
                     <?php
-                    include 'db.php'; // Datenbankverbindung einbinden
+                    include 'include/db.php'; // Datenbankverbindung einbinden
                     $limit = 25;
                     $page = isset($_GET['page']) ? $_GET['page'] : 1;
                     $offset = ($page - 1) * $limit;

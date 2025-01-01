@@ -82,6 +82,8 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <label for="anfrage">Anfrage</label>
                             <textarea name="anfrage" id="anfrage" class="form-control" rows="4" placeholder="Bitte teilen Sie uns Ihre Anfrage mit." required></textarea>
                         </div>
+                        <!-- Verstecktes Input für user_id -->
+                        <input type="hidden" name="user_id" id="user_id" value="<?php echo $_SESSION['user_id']; ?>">
                     </div>
                 </form>
             </div>
@@ -92,7 +94,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
-
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {

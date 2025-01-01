@@ -125,14 +125,12 @@
 
                     <!-- Checkbox für "Getankt" -->
                     <div class="form-group">
-                        <label for="edit-fuel-checkbox">Getankt</label>
-                        <input type="checkbox" class="form-check-input" id="edit-fuel-checkbox" name="fuel_checked">
-                    </div>
-
-                    <!-- Textfeld für "Wo?" -->
-                    <div class="form-group">
-                        <label for="edit-fuel-location">Wo?</label>
-                        <input type="text" class="form-control" id="edit-fuel-location" name="fuel_location" placeholder="Wo wurde getankt?" disabled>
+                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
+                        <div class="form-check">
+                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked">
+                            <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
+                        </div>
+                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?" disabled>
                     </div>
 
                     <!-- Notizen-Feld -->
@@ -143,8 +141,11 @@
 
                     <!-- Ausgemustert-Checkbox -->
                     <div class="form-group">
-                        <label for="edit-decommissioned">Ausgemustert</label>
-                        <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned">
+                        <strong><i class="fas fa-trash-alt mr-1"></i> Ausgemustert</strong>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned">
+                            <label for="edit-decommissioned" class="form-check-label">Ausgemustert</label>
+                        </div>
                     </div>
 
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
@@ -179,22 +180,6 @@
     }
 });
 </script>
-
-<style>
-    .form-group {
-        margin-bottom: 1.5rem;  /* Fügt einen Abstand zwischen den Formularfeldern hinzu */
-    }
-
-    /* Für die Checkbox */
-    .form-check-input {
-        margin-right: 10px;  /* Fügt Abstand zwischen Checkbox und Label hinzu */
-    }
-
-    /* Für das Textfeld für "Wo?" */
-    #edit-fuel-location {
-        margin-top: 10px;  /* Fügt Abstand nach der Checkbox hinzu */
-    }
-</style>
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">
         <div class="modal-dialog">

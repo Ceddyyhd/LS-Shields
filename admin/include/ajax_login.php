@@ -1,101 +1,80 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
-// Erneute Session-ID generieren, um Session-Fixation zu vermeiden
-session_regenerate_id(true);
+include 'db.php';
 
-// HTTP-Header, um Caching und das Speichern von Seiten zu verhindern
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+header('Content-Type: application/json');
 
-include 'include/db.php';
-include 'auth.php'; // Authentifizierungslogik einbinden
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['remember']) && $_POST['remember'] === 'true';
 
-// Session-Wiederherstellung prüfen (wenn "Remember Me" verwendet wird)
-restoreSessionIfRememberMe($conn);
-
-// Überprüfen, ob der Benutzer eingeloggt ist
-if (!isset($_SESSION['user_id'])) {
-    // Prüfen, ob ein "Remember Me"-Cookie existiert
-    if (isset($_COOKIE['remember_me'])) {
-        $token = $_COOKIE['remember_me'];
-
-        // Token in der Datenbank prüfen
-        $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = :token");
-        $stmt->execute([':token' => $token]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
-            // Benutzer automatisch einloggen
-            $_SESSION['user_id'] = $user['id'];
-        } else {
-            // Ungültiges Token -> Cookie löschen
-            setcookie('remember_me', '', time() - 3600, '/');
-        }
-    }
-
-    // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: index.html');
+    if (empty($email) || empty($password)) {
+        echo json_encode(['success' => false, 'message' => 'Bitte alle Felder ausfüllen.']);
         exit;
     }
-}
 
-// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingeloggt ist
-$query = "SELECT * FROM user_sessions WHERE user_id = :user_id AND session_id = :session_id";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':user_id', $_SESSION['user_id']);
-$stmt->bindParam(':session_id', session_id()); // überprüfe session_id() hier
-$stmt->execute();
-$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
+    try {
+        // Benutzer anhand der E-Mail-Adresse suchen (Mitarbeiter)
+        $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Debugging: Ausgabe der Session-Abfrage-Ergebnisse
-if (!$sessionCheck) {
-    var_dump($sessionCheck); // Überprüfe, was in $sessionCheck gespeichert ist
-    // Kein Eintrag gefunden -> Der Benutzer ist ausgeloggt, zur Login-Seite umleiten
-    header('Location: index.html');
-    exit;
-}
+        if ($user && password_verify($password, $user['password'])) {
+            // Überprüfen, ob der Benutzer Zugang zum Admin-Bereich hat
+            if ($user['admin_bereich'] == 1) {
+                // Session-Daten setzen
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['name'];
+                $_SESSION['email'] = $user['email'];
 
-// Berechtigungen bei jedem Seitenaufruf neu laden
-$stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
-$stmt->execute([':id' => $_SESSION['user_id']]);
-$userRole = $stmt->fetch(PDO::FETCH_ASSOC);
+                // Sitzungsinformationen in der Datenbank speichern (für Mitarbeiter)
+                $session_id = session_id();  // Die aktuelle Session-ID
+                $ip_address = $_SERVER['REMOTE_ADDR'];  // IP-Adresse des Benutzers
+                $query = "INSERT INTO user_sessions (user_id, session_id, ip_address) VALUES (:user_id, :session_id, :ip_address)";
+                $stmt = $conn->prepare($query);
+                $stmt->bindParam(':user_id', $_SESSION['user_id']);
+                $stmt->bindParam(':session_id', $session_id);
+                $stmt->bindParam(':ip_address', $ip_address);
+                $stmt->execute();
 
-if ($userRole) {
-    $roleId = $userRole['role_id'];
-    $stmt = $conn->prepare("SELECT permissions FROM roles WHERE id = :role_id");
-    $stmt->execute([':role_id' => $roleId]);
-    $role = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($remember) {
+                    // Token für "Remember Me"-Funktion erstellen
+                    $token = bin2hex(random_bytes(32));
+                    setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
 
-    if ($role) {
-        $permissionsArray = json_decode($role['permissions'], true);
-        if (is_array($permissionsArray)) {
-            $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+                    // Token in der Datenbank speichern
+                    $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
+                    $stmt->execute([':token' => $token, ':id' => $user['id']]);
+                }
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Login erfolgreich.',
+                    'session_data' => [
+                        'user_id' => $_SESSION['user_id'],
+                        'username' => $_SESSION['username'],
+                        'email' => $_SESSION['email'],
+                        'role' => $_SESSION['role']
+                    ]
+                ]);
+            } else {
+                // Benutzer hat keinen Zugang zum Admin-Bereich
+                echo json_encode(['success' => false, 'message' => 'Kein Zugriff auf den Admin-Bereich.']);
+            }
         } else {
-            $_SESSION['permissions'] = [];
+            echo json_encode(['success' => false, 'message' => 'Ungültige Anmeldedaten.']);
         }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
-}
-
-// Überprüfen, ob der Benutzer Zugang zum Admin-Bereich hat
-if (isset($_SESSION['user_id']) && $_SESSION['role'] !== 'admin' || (isset($_SESSION['admin_bereich']) && $_SESSION['admin_bereich'] != 1)) {
-    // Wenn der Benutzer kein Admin ist, zur Fehlerseite oder Login-Seite weiterleiten
-    header("Location: index.html"); // Weiterleitung zur Login-Seite oder zu einer Fehlerseite
     exit;
 }
-?>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LS-Shields | Mitarbeiterverwaltung</title>
-
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css?v=<?= time(); ?>">
-</head>
+// Falls die Anfrage keine POST-Anfrage ist
+echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);

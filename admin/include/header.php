@@ -46,11 +46,13 @@ if (!isset($_SESSION['user_id'])) {
 $query = "SELECT * FROM user_sessions WHERE user_id = :user_id AND session_id = :session_id";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':user_id', $_SESSION['user_id']);
-$stmt->bindParam(':session_id', session_id());
+$stmt->bindParam(':session_id', session_id()); // überprüfe session_id() hier
 $stmt->execute();
 $sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Debugging: Ausgabe der Session-Abfrage-Ergebnisse
 if (!$sessionCheck) {
+    var_dump($sessionCheck); // Überprüfe, was in $sessionCheck gespeichert ist
     // Kein Eintrag gefunden -> Der Benutzer ist ausgeloggt, zur Login-Seite umleiten
     header('Location: index.html');
     exit;
@@ -84,7 +86,6 @@ if (isset($_SESSION['user_id']) && $_SESSION['role'] !== 'admin' || (isset($_SES
     exit;
 }
 ?>
-
 
 <head>
   <meta charset="utf-8">

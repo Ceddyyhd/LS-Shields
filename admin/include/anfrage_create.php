@@ -34,9 +34,30 @@ try {
         ':erstellt_von' => $erstellt_von, // Der Benutzername wird hier gespeichert
     ]);
 
+    // Hole die ID der neu eingefügten Anfrage
+    $anfrage_id = $conn->lastInsertId(); // Letzte eingefügte ID (Anfrage-ID)
+
+    // Hole die ID des Benutzers (erstellt_von) aus der Session oder POST-Daten
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username");
+    $stmt->execute([':username' => $erstellt_von]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user) {
+        $user_id = $user['id'];
+
+        // Log-Daten in der anfragen_logs-Tabelle speichern
+        $action = "Anfrage erstellt";  // Beschreibung der Aktion
+        $logSql = "INSERT INTO anfragen_logs (user_id, action, anfrage_id) VALUES (:user_id, :action, :anfrage_id)";
+        $logStmt = $conn->prepare($logSql);
+        $logStmt->execute([
+            ':user_id' => $user_id,
+            ':action' => $action,
+            ':anfrage_id' => $anfrage_id // Verknüpfen mit der ID der neu erstellten Anfrage
+        ]);
+    }
+
     echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
-
 ?>

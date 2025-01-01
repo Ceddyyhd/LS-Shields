@@ -217,24 +217,55 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
 </div><!-- ./wrapper -->
 
 <script>
-  // Bearbeiten Button im Modal
-  $('.btn-primary').on('click', function() {
-    var vacationId = $(this).data('id');
-    
-    $.ajax({
-      url: 'include/vacation_fetch.php',
-      method: 'GET',
-      data: { id: vacationId },
-      success: function(response) {
-        var vacation = JSON.parse(response);
-        $('#edit-start_date').val(vacation.start_date);
-        $('#edit-end_date').val(vacation.end_date);
-        $('#edit-status').val(vacation.status);
-        $('#edit-note').val(vacation.note);
-        $('#edit-vacation_id').val(vacation.id);
-      }
+$(document).ready(function() {
+    // Urlaubsantrag laden und ins Modal einfügen
+    $('.edit-button').on('click', function() {
+        var vacationId = $(this).data('id'); // Urlaubsantrags-ID über das Daten-Attribut
+
+        $.ajax({
+            url: 'include/vacation_fetch.php', // PHP-Skript zum Abrufen der Urlaubsantragsdaten
+            method: 'GET',
+            data: { id: vacationId },
+            success: function(response) {
+                var vacation = JSON.parse(response);
+                if (vacation.success !== false) {
+                    // Fülle das Modal mit den abgerufenen Daten
+                    $('#edit-vacation_id').val(vacation.id);
+                    $('#edit-user_id').val(vacation.user_id);
+                    $('#edit-start_date').val(vacation.start_date);
+                    $('#edit-end_date').val(vacation.end_date);
+                    $('#edit-status').val(vacation.status);
+                    $('#edit-note').val(vacation.note);
+                } else {
+                    alert('Fehler beim Laden der Urlaubsantragsdaten.');
+                }
+            }
+        });
     });
-  });
+
+    // Änderungen speichern
+    $('#saveVacationChanges').on('click', function() {
+        var formData = $('#editVacationForm').serialize(); // Alle Formulardaten sammeln
+
+        $.ajax({
+            url: 'include/vacation_update.php', // PHP-Skript zum Bearbeiten des Urlaubsantrags
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                var data = JSON.parse(response); // Antwort als JSON parsen
+                if (data.success) {
+                    alert('Urlaubsantrag erfolgreich bearbeitet!');
+                    location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+                } else {
+                    alert('Fehler beim Bearbeiten des Urlaubsantrags: ' + data.message);
+                }
+            },
+            error: function() {
+                alert('Fehler bei der Anfrage!');
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

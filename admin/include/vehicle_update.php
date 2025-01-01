@@ -11,9 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $next_inspection = $_POST['next_inspection'];
     $user_name = $_SESSION['username'];  // Benutzername aus der Session holen
 
-    // Überprüfen, ob die Checkbox "Getankt" aktiviert wurde
-    $fuel_checked = isset($_POST['fuel_checked']) ? 1 : 0;  // 1, wenn die Checkbox aktiviert ist, sonst 0
-    $fuel_location = isset($_POST['fuel_location']) ? $_POST['fuel_location'] : NULL;  // Der Wert des Textfeldes
+    // Zusätzliche Felder
+    $fuel_checked = isset($_POST['fuel_checked']) ? 1 : 0;  // Checkbox "Getankt"
+    $fuel_location = isset($_POST['fuel_location']) ? $_POST['fuel_location'] : NULL;  // Textfeld "Wo?"
+    $notes = isset($_POST['notes']) ? $_POST['notes'] : NULL;  // Notizen
+    $decommissioned = isset($_POST['decommissioned']) ? 1 : 0;  // Checkbox "Ausgemustert"
 
     try {
         // Vorherige Fahrzeugdaten abrufen
@@ -22,16 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_select->execute([$vehicle_id]);
         $old_vehicle = $stmt_select->fetch(PDO::FETCH_ASSOC);
 
-        // Überprüfen, ob das Fahrzeug existiert
-        if (!$old_vehicle) {
-            echo json_encode(['success' => false, 'message' => 'Fahrzeug nicht gefunden.']);
-            exit;
-        }
-
         // Fahrzeugdaten in der DB aktualisieren
-        $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ? WHERE id = ?";
+        $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ?, fuel_checked = ?, fuel_location = ?, notes = ?, decommissioned = ? WHERE id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $vehicle_id]);
+        $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $fuel_checked, $fuel_location, $notes, $decommissioned, $vehicle_id]);
 
         // Änderungen ermitteln und formatieren
         $changes = [];
@@ -52,6 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         if ($fuel_location !== $old_vehicle['fuel_location']) {
             $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
+        }
+        if ($notes !== $old_vehicle['notes']) {
+            $changes[] = "Notizen: " . $old_vehicle['notes'] . " -> " . $notes;
+        }
+        if ($decommissioned !== $old_vehicle['decommissioned']) {
+            $changes[] = "Ausgemustert: " . ($decommissioned ? 'Ja' : 'Nein');
         }
 
         // Wenn keine Änderungen vorgenommen wurden
@@ -80,4 +82,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
 }
-?>

@@ -133,7 +133,7 @@
                     <!-- Textfeld für "Wo?" -->
                     <div class="form-group">
                         <label for="edit-fuel-location">Wo?</label>
-                        <input type="text" class="form-control" id="edit-fuel-location" name="fuel_location" placeholder="Wo wurde getankt?" disabled>
+                        <input type="text" class="form-control" id="edit-fuel-location" name="fuel_location" placeholder="Wo wurde getankt?">
                     </div>
 
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
@@ -148,25 +148,6 @@
         </div>
     </div>
 </div>
-<script>
-  $(document).ready(function() {
-    // Bei Änderung der Checkbox den Zustand des Textfeldes steuern
-    $('#edit-fuel-checkbox').on('change', function() {
-        if (this.checked) {
-            // Wenn die Checkbox aktiviert ist, das Textfeld aktivieren
-            $('#edit-fuel-location').prop('disabled', false);
-        } else {
-            // Wenn die Checkbox deaktiviert ist, das Textfeld wieder deaktivieren
-            $('#edit-fuel-location').prop('disabled', true).val('');
-        }
-    });
-
-    // Beim Laden des Formulars sicherstellen, dass das Textfeld deaktiviert ist, falls die Checkbox nicht aktiviert ist
-    if (!$('#edit-fuel-checkbox').is(':checked')) {
-        $('#edit-fuel-location').prop('disabled', true);
-    }
-});
-</script>
 
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">

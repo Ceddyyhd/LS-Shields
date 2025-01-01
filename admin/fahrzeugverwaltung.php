@@ -229,26 +229,27 @@
 $(document).ready(function() {
     // Fahrzeug Hinzufügen (AJAX)
     $('#addVehicleForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
-        
-        $.ajax({
-            url: 'include/vehicle_create.php',
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                if(response.success) {
-                    alert('Fahrzeug erfolgreich hinzugefügt');
-                    location.reload();
-                } else {
-                    alert('Fehler beim Hinzufügen des Fahrzeugs');
-                }
-            },
-            error: function() {
-                alert('Ein Fehler ist aufgetreten');
+    e.preventDefault();
+    var formData = $(this).serialize();
+    
+    $.ajax({
+        url: 'include/vehicle_create.php',
+        method: 'POST',
+        data: formData,
+        success: function(response) {
+            console.log(response);  // Ausgabe der Antwort zur Überprüfung
+            if (response.success) {
+                alert('Fahrzeug erfolgreich hinzugefügt');
+                location.reload();
+            } else {
+                alert('Fehler beim Hinzufügen des Fahrzeugs: ' + response.message);
             }
-        });
+        },
+        error: function() {
+            alert('Ein Fehler ist aufgetreten');
+        }
     });
+});
 
     // Fahrzeug Bearbeiten (AJAX)
     $('.edit-button').on('click', function() {

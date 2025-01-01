@@ -11,12 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $next_inspection = $_POST['next_inspection'];
     $user_name = $_SESSION['username'];  // Benutzername aus der Session holen
 
-    // Zusätzliche Felder
+    // Zusätzliche Felder (für Logs)
     $fuel_checked = isset($_POST['fuel_checked']) ? 1 : 0;  // Checkbox "Getankt"
     $fuel_location = isset($_POST['fuel_location']) ? $_POST['fuel_location'] : NULL;  // Textfeld "Wo?"
-    $notes = isset($_POST['notes']) ? $_POST['notes'] : NULL;  // Notizen
-    $decommissioned = isset($_POST['decommissioned']) ? 1 : 0;  // Checkbox "Ausgemustert"
-
+    
     try {
         // Vorherige Fahrzeugdaten abrufen
         $sql_select = "SELECT * FROM vehicles WHERE id = ?";
@@ -24,10 +22,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_select->execute([$vehicle_id]);
         $old_vehicle = $stmt_select->fetch(PDO::FETCH_ASSOC);
 
-        // Fahrzeugdaten in der DB aktualisieren
-        $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ?, fuel_checked = ?, fuel_location = ?, notes = ?, decommissioned = ? WHERE id = ?";
+        // Überprüfen, ob das Fahrzeug existiert
+        if (!$old_vehicle) {
+            echo json_encode(['success' => false, 'message' => 'Fahrzeug nicht gefunden.']);
+            exit;
+        }
+
+        // Fahrzeugdaten in der DB aktualisieren (Ohne fuel_checked und fuel_location)
+        $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ? WHERE id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $fuel_checked, $fuel_location, $notes, $decommissioned, $vehicle_id]);
+        $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $vehicle_id]);
 
         // Änderungen ermitteln und formatieren
         $changes = [];
@@ -43,27 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($next_inspection !== $old_vehicle['next_inspection']) {
             $changes[] = "Nächste Inspektion: " . $old_vehicle['next_inspection'] . " -> " . $next_inspection;
         }
-        if ($fuel_checked !== $old_vehicle['fuel_checked']) {
-            $changes[] = "Getankt: " . ($fuel_checked ? 'Ja' : 'Nein');
+
+        // Log-Eintrag für die Änderungen erstellen (inkl. fuel_checked und fuel_location)
+        $action = "Fahrzeug bearbeitet ($license_plate) (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
+
+        // Wenn fuel_checked oder fuel_location geändert wurden, fügen wir das zu den Logs hinzu
+        if ($fuel_checked != $old_vehicle['fuel_checked']) {
+            $action .= " | Getankt: " . ($fuel_checked ? 'Ja' : 'Nein');
         }
         if ($fuel_location !== $old_vehicle['fuel_location']) {
-            $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
+            $action .= " | Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
         }
-        if ($notes !== $old_vehicle['notes']) {
-            $changes[] = "Notizen: " . $old_vehicle['notes'] . " -> " . $notes;
-        }
-        if ($decommissioned !== $old_vehicle['decommissioned']) {
-            $changes[] = "Ausgemustert: " . ($decommissioned ? 'Ja' : 'Nein');
-        }
-
-        // Wenn keine Änderungen vorgenommen wurden
-        if (empty($changes)) {
-            echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
-            exit;
-        }
-
-        // Log-Eintrag für die Änderungen erstellen
-        $action = "Fahrzeug bearbeitet ($license_plate) (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
 
         // Log-Eintrag in die vehicle_logs-Tabelle einfügen
         $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
@@ -82,3 +76,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
 }
+?>

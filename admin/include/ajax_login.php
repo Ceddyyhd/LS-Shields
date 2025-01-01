@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 session_start();
 
-include 'db.php';
+include 'db.php';  // Wenn die db.php und die ajax_login.php im selben Verzeichnis liegen
 
 header('Content-Type: application/json');
 

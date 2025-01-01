@@ -8,13 +8,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
     include 'include/db.php';
     
-    // SQL-Abfrage, um die Rechnungen für den aktuellen Kunden abzurufen
-$sql = "SELECT invoice_number, description, price, discount, created_at, due_date, status 
-FROM invoices 
-WHERE customer_id = :user_id 
-ORDER BY created_at DESC"; // Optional: nach dem Erstellungsdatum sortieren
+// SQL-Abfrage, um Rechnungsdaten abzurufen
+$sql = "SELECT id, invoice_number, price, created_at, due_date, status 
+        FROM invoices 
+        WHERE customer_id = :user_id 
+        ORDER BY created_at DESC"; // Optional: nach dem Erstellungsdatum sortieren
 $stmt = $conn->prepare($sql);
-$stmt->execute(['user_id' => $user_id]);
+$stmt->execute(['user_id' => $user_id]); 
 $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -57,8 +57,8 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       <!-- TABLE: LATEST ORDERS -->
       <div class="card">
-        <div class="card-header border-transparent">
-          <h3 class="card-title">Latest Orders</h3>
+  <div class="card-header border-transparent">
+    <h3 class="card-title">Latest Invoices</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">

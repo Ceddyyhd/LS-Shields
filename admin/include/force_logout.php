@@ -36,7 +36,8 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
         // 3. Lösche das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
 
-        // 4. Falls der geloggte Benutzer derselbe ist, auch seine Session zerstören
+        // 4. Hier ist der kritische Punkt: Falls der geloggte Benutzer derselbe ist,
+        // wird seine Session auch zerstört
         if ($_SESSION['user_id'] == $user_id_to_logout) {
             // Lösche alle Session-Daten
             session_unset();  // Löscht alle Session-Daten
@@ -45,12 +46,7 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
             // Lösche das PHP-Session-Cookie
             setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
 
-            // Setze den Cache-Control Header, um sicherzustellen, dass der Browser die Seite nicht cached
-            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-            header("Cache-Control: post-check=0, pre-check=0", false);
-            header("Pragma: no-cache");
-
-            // Weiterleitung zur Login-Seite
+            // Weiterleitung zur Login-Seite (falls der Admin sich selbst ausgeloggt hat)
             header('Location: login.php');  // Umleitung zur Login-Seite
             exit;
         }

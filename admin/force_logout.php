@@ -78,7 +78,7 @@
 
     <!-- JavaScript für Force-Logout -->
     <script>
-      function forceLogout(userId) {
+function forceLogout(userId) {
   if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
     fetch('include/force_logout.php', {
       method: 'POST',
@@ -101,8 +101,7 @@
       });
   }
 }
-    </script>
-
+</script>
   </div>
   <!-- /.content-wrapper -->
 

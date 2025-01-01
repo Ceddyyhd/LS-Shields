@@ -208,7 +208,8 @@ foreach ($settings as $setting) {
                     <table class="table">
                       <tr>
                         <th style="width:50%">Subtotal:</th>
-                        <td><?= number_format($invoice['price'] + $invoice['discount'], 2); ?></td>
+                        <td>
+                        <?= htmlspecialchars($invoice['price'] + $invoice['discount']); ?></td>
                       </tr>
                       <tr>
                         <th>Rabatt</th>

@@ -4,7 +4,19 @@ This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
 <html lang="en">
-    <?php include 'include/header.php'; ?>
+    <?php include 'include/header.php'; 
+    $user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
+    include 'include/db.php';
+    
+    // SQL-Abfrage, um die Rechnungen für den aktuellen Kunden abzurufen
+$sql = "SELECT invoice_number, description, price, discount, created_at, due_date, status 
+FROM invoices 
+WHERE customer_id = :user_id 
+ORDER BY created_at DESC"; // Optional: nach dem Erstellungsdatum sortieren
+$stmt = $conn->prepare($sql);
+$stmt->execute(['user_id' => $user_id]);
+$invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -42,101 +54,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </div>
 
-      <!-- TABLE: LATEST ORDERS -->
-      <div class="card">
-        <div class="card-header border-transparent">
-          <h3 class="card-title">Latest Orders</h3>
+    <div class="card">
+  <div class="card-header border-transparent">
+    <h3 class="card-title">Latest Invoices</h3>
 
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table m-0">
-              <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Item</th>
-                <th>Status</th>
-                <th>Popularity</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                <td>Call of Duty IV</td>
-                <td><span class="badge badge-success">Shipped</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-warning">Pending</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>iPhone 6 Plus</td>
-                <td><span class="badge badge-danger">Delivered</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-info">Processing</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-warning">Pending</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>iPhone 6 Plus</td>
-                <td><span class="badge badge-danger">Delivered</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                <td>Call of Duty IV</td>
-                <td><span class="badge badge-success">Shipped</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.table-responsive -->
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer clearfix">
-          <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
-          <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
-        </div>
-        <!-- /.card-footer -->
-      </div>
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table m-0">
+        <thead>
+          <tr>
+            <th>Invoice Number</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            // Überprüfen, ob Rechnungen vorhanden sind
+            if (!empty($invoices)) {
+                foreach ($invoices as $invoice) {
+                    echo "<tr>";
+                    echo "<td><a href='invoice_detail.php?id=" . $invoice['invoice_number'] . "'>" . $invoice['invoice_number'] . "</a></td>";
+                    echo "<td>" . htmlspecialchars($invoice['description']) . "</td>";
+                    echo "<td><span class='badge badge-" . getInvoiceStatusClass($invoice['status']) . "'>" . $invoice['status'] . "</span></td>";
+                    $totalAmount = $invoice['price'] - $invoice['discount'];
+                    echo "<td>" . number_format($totalAmount, 2) . " €</td>"; // Gesamtbetrag nach Rabatt
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='4'>No invoices found.</td></tr>";
+            }
+          ?>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.table-responsive -->
+  </div>
+  <!-- /.card-body -->
+</div>
 
 
     <!-- /.content -->

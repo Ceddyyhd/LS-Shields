@@ -36,14 +36,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 // Datenbankverbindung einbinden
 include 'include/db.php';
-$user_id = $_SESSION['user_id'] ?? 'Keine ID vorhanden';
 
 // Anfragen aus der Datenbank abrufen
-$sql = "SELECT * FROM anfragen WHERE kunde_id = :kunde_id";
-$stmt = $pdo->prepare($sql);
-$stmt->bindParam(':kunde_id', $user_id, PDO::PARAM_INT);
+$query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, erstellt_von, status FROM anfragen ORDER BY datum_uhrzeit DESC";
+$stmt = $conn->prepare($query);
 $stmt->execute();
-$anfragen = $stmt->fetchAll();
+$anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="row">

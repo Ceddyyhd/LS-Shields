@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $permissions = $_SESSION['permissions'] ?? [];
 
     // Benutzername aus den POST-Daten holen (erstellt_von)
-    $erstellt_von = $_POST['erstellt_von'] ?? 'Unbekannt';
+    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';
 
     // Rechteprüfung: Status "in Bearbeitung" ändern
     if ($action === 'change_status') {

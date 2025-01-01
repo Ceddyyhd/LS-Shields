@@ -112,7 +112,7 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo "<td>" . number_format($totalAmount, 2) . " €</td>"; // Anzeige des Gesamtbetrags
                     echo "<td><span class='badge badge-" . getInvoiceStatusClass($invoice['status']) . "'>" . $invoice['status'] . "</span></td>";
                     echo "<td>" . $invoice['due_date'] . "</td>";
-                    echo "<td><a href='invoice_detail.php?id=" . $invoice['invoice_number'] . "'>View Invoice</a></td>"; // Link zur Rechnung
+                    echo "<td><a href='invoice.php?id=" . $invoice['invoice_number'] . "'>View Invoice</a></td>"; // Link zur Rechnung
                     echo "</tr>";
                 }
             } else {

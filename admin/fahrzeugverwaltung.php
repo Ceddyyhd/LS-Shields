@@ -28,69 +28,86 @@
 
     <!-- Main content -->
     <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Fahrzeuge</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-create">
-                        Fahrzeug Hinzufügen
-                </button>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Modell</th>
-                      <th>Kennzeichen</th>
-                      <th>Standort</th>
-                      <th>Nächste Inspektion</th>
-                      <th>Button</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php
-                    include 'include/db.php'; // Datenbankverbindung einbinden
-                    $limit = 25;
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $offset = ($page - 1) * $limit;
+    <div class="card-header">
+        <h3 class="card-title">Fahrzeuge</h3>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vehicle-create">
+            Fahrzeug Hinzufügen
+        </button>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 10px">#</th>
+                    <th>Modell</th>
+                    <th>Kennzeichen</th>
+                    <th>Standort</th>
+                    <th>Nächste Inspektion</th>
+                    <th>Button</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                include 'include/db.php'; // Datenbankverbindung einbinden
+                $limit = 25;
+                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                $offset = ($page - 1) * $limit;
 
-                    $sql = "SELECT * FROM vehicles LIMIT $limit OFFSET $offset";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->execute();
-                    $vehicles = $stmt->fetchAll();
+                // Nur Fahrzeuge mit decommissioned = 0
+                $sql = "SELECT * FROM vehicles WHERE decommissioned = 0 LIMIT $limit OFFSET $offset";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $vehicles = $stmt->fetchAll();
 
-                    foreach ($vehicles as $vehicle) {
-                        echo '<tr>';
-                        echo '<td>' . $vehicle['id'] . '</td>';
-                        echo '<td>' . $vehicle['model'] . '</td>';
-                        echo '<td>' . $vehicle['license_plate'] . '</td>';
-                        echo '<td>' . $vehicle['location'] . '</td>';
-                        echo '<td><span class="badge bg-warning">' . $vehicle['next_inspection'] . '</span></td>';
-                        echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
-                        echo '</tr>';
+                foreach ($vehicles as $vehicle) {
+                    // Berechne das Datum der letzten Inspektion
+                    $inspection_date = strtotime($vehicle['next_inspection']);
+                    $current_date = strtotime(date('Y-m-d'));
+                    $two_weeks_later = strtotime('+2 weeks', $current_date);
+
+                    // Bestimme den Badge-Typ je nach Inspektionsdatum
+                    if ($inspection_date <= $current_date) {
+                        $badge_class = 'bg-danger'; // Gefahr (Vergangen oder Heute)
+                    } elseif ($inspection_date <= $two_weeks_later) {
+                        $badge_class = 'bg-warning'; // Warnung (In den nächsten 2 Wochen)
+                    } else {
+                        $badge_class = 'bg-success'; // Erfolg (Mehr als 2 Wochen)
                     }
-                    ?>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm m-0 float-right">
-                  <?php
-                  // Pagination
-                  $sql_count = "SELECT COUNT(*) AS total FROM vehicles";
-                  $stmt_count = $conn->prepare($sql_count);
-                  $stmt_count->execute();
-                  $count = $stmt_count->fetch();
-                  $total_pages = ceil($count['total'] / $limit);
 
-                  for ($i = 1; $i <= $total_pages; $i++) {
-                      echo "<li class='page-item'><a class='page-link' href='?page=$i'>$i</a></li>";
-                  }
-                  ?>
-                </ul>
-              </div>
-            </div>
+                    // Gebe die Fahrzeugdaten aus
+                    echo '<tr>';
+                    echo '<td>' . $vehicle['id'] . '</td>';
+                    echo '<td>' . $vehicle['model'] . '</td>';
+                    echo '<td>' . $vehicle['license_plate'] . '</td>';
+                    echo '<td>' . $vehicle['location'] . '</td>';
+                    echo '<td><span class="badge ' . $badge_class . '">' . date('d.m.Y', $inspection_date) . '</span></td>';
+                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
+                    echo '</tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer clearfix">
+        <ul class="pagination pagination-sm m-0 float-right">
+            <?php
+            // Pagination (Fahrzeuge)
+            $sql_count = "SELECT COUNT(*) AS total FROM vehicles WHERE decommissioned = 0";
+            $stmt_count = $conn->prepare($sql_count);
+            $stmt_count->execute();
+            $count = $stmt_count->fetch();
+            $total_pages = ceil($count['total'] / $limit);
+
+            // Pagination für Fahrzeuge, angepasst für die Konfliktvermeidung
+            for ($i = 1; $i <= $total_pages; $i++) {
+                echo "<li class='page-item'><a class='page-link' href='?page=$i'>$i</a></li>";
+            }
+            ?>
+        </ul>
+    </div>
+</div>
 <!-- Modal for Editing Vehicle -->
 <div class="modal fade" id="vehicle-bearbeiten">
     <div class="modal-dialog">

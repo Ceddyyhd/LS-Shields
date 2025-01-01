@@ -1,8 +1,35 @@
+<?php
+include 'include/db.php';  // Datenbankverbindung einbinden
+
+// Mitarbeiter (users) Dropdown
+$query_users = "SELECT id, name FROM users";
+$stmt_users = $conn->prepare($query_users);
+$stmt_users->execute();
+$users = $stmt_users->fetchAll(PDO::FETCH_ASSOC);
+
+// SQL-Abfrage für Urlaubsanträge mit Status 'pending'
+$query_pending_vacations = "
+    SELECT v.*, u.name as employee_name
+    FROM vacations v
+    JOIN users u ON v.user_id = u.id
+    WHERE v.status = 'pending' AND v.end_date >= CURDATE()
+";
+$stmt_pending = $conn->prepare($query_pending_vacations);
+$stmt_pending->execute();
+$pending_vacations = $stmt_pending->fetchAll(PDO::FETCH_ASSOC);
+
+// SQL-Abfrage für Urlaubsanträge mit Status 'approved'
+$query_approved_vacations = "
+    SELECT v.*, u.name as employee_name
+    FROM vacations v
+    JOIN users u ON v.user_id = u.id
+    WHERE v.status = 'approved' AND v.end_date >= CURDATE()
+";
+$stmt_approved = $conn->prepare($query_approved_vacations);
+$stmt_approved->execute();
+$approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
     <?php include 'include/header.php'; ?>
 <body class="hold-transition sidebar-mini">
@@ -17,13 +44,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Starter Page</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
-            </ol>
+            <h1 class="m-0">Urlaubsverwaltung</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -31,280 +52,189 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.content-header -->
 
     <!-- Main content -->
-    
-
-
-    <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Fahrzeuge</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-create">
-                        Fahrzeug Hinzufügen
-                        </button>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Modell</th>
-                      <th>Kennzeichen</th>
-                      <th>Standort</th>
-                      <th>Nächste Inspektion</th>
-                      <th>Button</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Chevrolet Tahoe</td>
-                      <td>LSABC1234</td>
-                      <th>Firma</th>
-                      <td><span class="badge bg-warning">14.01.2025</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button>
-                    </td>
-                    </tr>
-                    <tr>
-                      <td>1.</td>
-                      <td>Chevrolet Tahoe</td>
-                      <td>LSABC1234</td>
-                      <th>Firma</th>
-                      <td><span class="badge bg-danger">31.12.2024</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button>
-                    </td>
-                    </tr>
-                    <tr>
-                      <td>1.</td>
-                      <td>Chevrolet Tahoe</td>
-                      <td>LSABC1234</td>
-                      <th>Firma</th>
-                      <td><span class="badge bg-success">14.03.2025</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button>
-                    </td>
-                    </tr>
-                    <tr>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                </ul>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Urlaub Formular für Admin -->
+          <div class="col-md-3">
+            <div class="sticky-top mb-3">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Urlaub einreichen</h3>
+                </div>
+                <div class="card-body">
+                  <form id="vacationForm">
+                    <div class="form-group">
+                      <label>Mitarbeiter</label>
+                      <select class="form-control" name="user_id" required>
+                        <option value="">Wählen Sie einen Mitarbeiter</option>
+                        <?php foreach ($users as $user): ?>
+                            <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Start Datum</label>
+                      <input type="date" class="form-control" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                      <label>End Datum</label>
+                      <input type="date" class="form-control" name="end_date" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Status</label>
+                      <select class="form-control" name="status" required>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Notiz</label>
+                      <input type="text" class="form-control" name="note">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Urlaub Erstellen</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-
-
-            <div class="modal fade" id="vacation-bearbeiten">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Default Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-
-            <div class="form-group">
-            <label>Start Datum</label>
-            <input type="date" class="form-control" id="start_date" required>
           </div>
 
-          <div class="form-group">
-            <label>End Datum</label>
-            <input type="date" class="form-control" id="end_date" required>
-          </div>
-
-          <div class="form-group">
-                        <label>Status Dropdown</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-            
-            <div class="form-group">
-                        <label>Notiz</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-
-
-      <div class="modal fade" id="vacation-create">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Urlaub Hinzufügen</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-
-            <div class="form-group">
-                        <label>Mitarbeiter Drop Down</label>
-                        <input type="text" class="form-control" placeholder="Enter ...">
-            </div>
-
-            <div class="form-group">
-            <label>Start Datum</label>
-            <input type="date" class="form-control" id="start_date" required>
-          </div>
-
-          <div class="form-group">
-            <label>End Datum</label>
-            <input type="date" class="form-control" id="end_date" required>
-          </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-
-
-
+          <!-- Urlaubsanträge mit Status 'pending' -->
+          <div class="col-md-9">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Aktuelle/Kommende Urlaube</h3>
+                <h3 class="card-title">Urlaubsanträge (Pending)</h3>
               </div>
-              <!-- /.card-header -->
               <div class="card-body">
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Task</th>
-                      <th>Progress</th>
-                      <th style="width: 40px">Label</th>
-                      <th>Bearbeiten</th>
+                      <th>#</th>
+                      <th>Mitarbeiter</th>
+                      <th>Start Datum</th>
+                      <th>End Datum</th>
+                      <th>Status</th>
+                      <th>Aktion</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Update software</td>
-                      <td>
-                        <div class="progress progress-xs">
-                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-danger">55%</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>2.</td>
-                      <td>Clean database</td>
-                      <td>
-                        <div class="progress progress-xs">
-                          <div class="progress-bar bg-warning" style="width: 70%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-warning">70%</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>3.</td>
-                      <td>Cron job running</td>
-                      <td>
-                        <div class="progress progress-xs progress-striped active">
-                          <div class="progress-bar bg-primary" style="width: 30%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-primary">30%</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button></td>
-                    </tr>
-                    <tr>
-                      <td>4.</td>
-                      <td>Fix and squish bugs</td>
-                      <td>
-                        <div class="progress progress-xs progress-striped active">
-                          <div class="progress-bar bg-success" style="width: 90%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-success">90%</span></td>
-                      <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten">
-                        Fahrzeug Bearbeiten
-                        </button></td>
-                    </tr>
+                    <?php foreach ($pending_vacations as $vacation): ?>
+                        <tr>
+                          <td><?php echo $vacation['id']; ?></td>
+                          <td><?php echo $vacation['employee_name']; ?></td>
+                          <td><?php echo $vacation['start_date']; ?></td>
+                          <td><?php echo $vacation['end_date']; ?></td>
+                          <td><span class="badge bg-warning"><?php echo ucfirst($vacation['status']); ?></span></td>
+                          <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">Bearbeiten</button>
+                          </td>
+                        </tr>
+                    <?php endforeach; ?>
                   </tbody>
                 </table>
               </div>
-              <!-- /.card-body -->
-              <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                </ul>
-              </div>
             </div>
 
+            <!-- Urlaubsanträge mit Status 'approved' -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Genehmigte Urlaubsanträge</h3>
+              </div>
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Mitarbeiter</th>
+                      <th>Start Datum</th>
+                      <th>End Datum</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($approved_vacations as $vacation): ?>
+                        <tr>
+                          <td><?php echo $vacation['id']; ?></td>
+                          <td><?php echo $vacation['employee_name']; ?></td>
+                          <td><?php echo $vacation['start_date']; ?></td>
+                          <td><?php echo $vacation['end_date']; ?></td>
+                          <td><span class="badge bg-success"><?php echo ucfirst($vacation['status']); ?></span></td>
+                        </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+  </div><!-- /.content-wrapper -->
 
-    <!-- /.content -->
+  <!-- Modal zum Bearbeiten eines Urlaubs -->
+  <div class="modal fade" id="vacation-bearbeiten">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Urlaub Bearbeiten</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="vacationEditForm">
+            <div class="form-group">
+              <label>Start Datum</label>
+              <input type="date" class="form-control" id="edit-start_date" required>
+            </div>
+            <div class="form-group">
+              <label>End Datum</label>
+              <input type="date" class="form-control" id="edit-end_date" required>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" class="form-control" id="edit-status" disabled>
+            </div>
+            <div class="form-group">
+              <label>Notiz</label>
+              <input type="text" class="form-control" id="edit-note">
+            </div>
+            <input type="hidden" id="edit-vacation_id">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Speichern</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- /.content-wrapper -->
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
+</div><!-- ./wrapper -->
 
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
-</div>
-<!-- ./wrapper -->
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
+<script>
+  // Bearbeiten Button im Modal
+  $('.btn-primary').on('click', function() {
+    var vacationId = $(this).data('id');
+    
+    $.ajax({
+      url: 'include/vacation_fetch.php',
+      method: 'GET',
+      data: { id: vacationId },
+      success: function(response) {
+        var vacation = JSON.parse(response);
+        $('#edit-start_date').val(vacation.start_date);
+        $('#edit-end_date').val(vacation.end_date);
+        $('#edit-status').val(vacation.status);
+        $('#edit-note').val(vacation.note);
+        $('#edit-vacation_id').val(vacation.id);
+      }
+    });
+  });
+</script>
 </body>
 </html>

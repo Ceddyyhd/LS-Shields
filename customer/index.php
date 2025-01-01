@@ -111,7 +111,20 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <!-- /.card-footer -->
       </div>
-
+<script>
+  function getInvoiceStatusClass($status) {
+    switch ($status) {
+        case 'Offen':
+            return 'warning';  // Gelb
+        case 'Überfällig':
+            return 'danger';   // Rot
+        case 'Bezahlt':
+            return 'success';  // Grün
+        default:
+            return 'secondary'; // Grau, für alle anderen Fälle
+    }
+}
+</script>
 
     <!-- /.content -->
   </div>

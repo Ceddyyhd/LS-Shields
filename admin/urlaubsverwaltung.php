@@ -214,9 +214,9 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 
-</div><!-- ./wrapper -->
-
-<script>
+  </div>
+  <!-- /.content-wrapper -->
+  <script>
 $(document).ready(function() {
     // Urlaubsantrag laden und ins Modal einfügen
     $('.edit-button').on('click', function() {
@@ -242,7 +242,61 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Änderungen speichern
+    $('#saveVacationChanges').on('click', function() {
+        var formData = $('#editVacationForm').serialize(); // Alle Formulardaten sammeln
+
+        $.ajax({
+            url: 'include/vacation_update.php', // PHP-Skript zum Bearbeiten des Urlaubsantrags
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                var data = JSON.parse(response); // Antwort als JSON parsen
+                if (data.success) {
+                    alert('Urlaubsantrag erfolgreich bearbeitet!');
+                    location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+                } else {
+                    alert('Fehler beim Bearbeiten des Urlaubsantrags: ' + data.message);
+                }
+            },
+            error: function() {
+                alert('Fehler bei der Anfrage!');
+            }
+        });
+    });
 });
 </script>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+    <div class="p-3">
+      <h5>Title</h5>
+      <p>Sidebar content</p>
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+      Anything you want
+    </div>
+    <!-- Default to the left -->
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
 </body>
 </html>

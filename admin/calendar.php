@@ -95,6 +95,21 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Calendar</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Calendar</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -162,39 +177,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     }
 });
 </script>
-          <!-- /.col -->
-          <div class="col-md-9">
-            <div class="card card-primary">
-              <div class="card-body p-0">
-                <!-- THE CALENDAR -->
-                <div id="calendar"></div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-
-    <section class="content">
-      <div class="container-fluid">
-      <div class="row">
-      <div class="col-md-3">
-  <div class="sticky-top mb-3">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Urlaub entfernen</h3>
-      </div>
-      <div class="card-body">
-        <form id="vacationForm">
-          <button type="button" class="btn btn-primary" id="submitVacation">Urlaub entfernen</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
           <!-- /.col -->
           <div class="col-md-9">
             <div class="card card-primary">

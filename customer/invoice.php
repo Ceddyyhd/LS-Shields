@@ -208,19 +208,15 @@ foreach ($settings as $setting) {
                     <table class="table">
                       <tr>
                         <th style="width:50%">Subtotal:</th>
-                        <td>$250.30</td>
+                        <td><?= number_format($invoice['price'] - $invoice['discount'], 2); ?></td>
                       </tr>
                       <tr>
-                        <th>Tax (9.3%)</th>
-                        <td>$10.34</td>
-                      </tr>
-                      <tr>
-                        <th>Shipping:</th>
-                        <td>$5.80</td>
+                        <th>Rabatt</th>
+                        <td><?= htmlspecialchars($invoice['discount']); ?></td>
                       </tr>
                       <tr>
                         <th>Total:</th>
-                        <td>$265.24</td>
+                        <td><?= htmlspecialchars($invoice['price']); ?></td>
                       </tr>
                     </table>
                   </div>

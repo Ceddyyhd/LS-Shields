@@ -179,46 +179,47 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
   </div><!-- /.content-wrapper -->
 
   <!-- Modal zum Bearbeiten eines Urlaubs -->
-  <div class="modal fade" id="vacation-bearbeiten">
+<div class="modal fade" id="vacation-bearbeiten">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Urlaub Bearbeiten</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Urlaub Bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="vacationEditForm">
+                    <div class="form-group">
+                        <label>Start Datum</label>
+                        <input type="date" class="form-control" id="edit-start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Datum</label>
+                        <input type="date" class="form-control" id="edit-end_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control" id="edit-status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notiz</label>
+                        <input type="text" class="form-control" id="edit-note">
+                    </div>
+                    <input type="hidden" id="edit-vacation_id">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" id="saveVacationChanges" class="btn btn-primary">Speichern</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-        <form id="vacationEditForm">
-            <div class="form-group">
-                <label>Start Datum</label>
-                <input type="date" class="form-control" id="edit-start_date" required>
-            </div>
-            <div class="form-group">
-                <label>End Datum</label>
-                <input type="date" class="form-control" id="edit-end_date" required>
-            </div>
-            <div class="form-group">
-                <label>Status</label>
-                <select class="form-control" id="edit-status" name="status" required>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Notiz</label>
-                <input type="text" class="form-control" id="edit-note">
-            </div>
-            <input type="hidden" id="edit-vacation_id">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" id="saveVacationChanges" class="btn btn-primary">Speichern</button>
-            </div>
-        </form>
     </div>
-      </div>
-    </div>
-  </div>
+</div>
 
   </div>
   <!-- /.content-wrapper -->
@@ -237,11 +238,10 @@ $(document).ready(function() {
                 if (vacation.success !== false) {
                     // Fülle das Modal mit den abgerufenen Daten
                     $('#edit-vacation_id').val(vacation.id);
-                    $('#edit-user_id').val(vacation.user_id);
                     $('#edit-start_date').val(vacation.start_date);
                     $('#edit-end_date').val(vacation.end_date);
-                    $('#edit-status').val(vacation.status); // Status wird ebenfalls gesetzt
-                    $('#edit-note').val(vacation.note);
+                    $('#edit-status').val(vacation.status); // Status wird nun als Dropdown gesetzt
+                    $('#edit-note').val(vacation.note); // Notiz wird hier geladen
                 } else {
                     alert('Fehler beim Laden der Urlaubsantragsdaten.');
                 }

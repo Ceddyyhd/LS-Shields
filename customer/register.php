@@ -121,7 +121,7 @@ $(document).ready(function () {
   success: function (response) {
     if (response.success) {
       alert(response.message);
-      window.location.href = ''; // Weiterleitung zur Login-Seite
+      window.location.href = 'index.html'; // Weiterleitung zur Login-Seite
     } else {
       alert(response.message);
     }

@@ -57,29 +57,35 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC); // fetch statt fetchAll, da nur ein Date
               <form>
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    <label for="exampleInputEmail1">UMail Adresse</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="<?= htmlspecialchars($user['umail']); ?>">
                   </div>
+
                   <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
+                    <label for="exampleInputPassword1">(Firmen) Name</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['name']); ?>">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Nummer</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['nummer']); ?>">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Kontonummer</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" value="<?= htmlspecialchars($user['kontonummer']); ?>">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Passwort</label>
                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                   </div>
+                  
                   <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="exampleInputFile">
-                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                      </div>
-                      <div class="input-group-append">
-                        <span class="input-group-text">Upload</span>
-                      </div>
-                    </div>
+                    <label for="exampleInputPassword1">Passwort Bestätigen</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                   </div>
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                  </div>
+
                 </div>
                 <!-- /.card-body -->
 

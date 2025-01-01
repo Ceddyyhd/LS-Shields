@@ -113,7 +113,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+
+            <div class="form-group">
+                        <label>Modell</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Kennzeichen</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Standort</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="form-group">
+                        <label>Nächste Inspektion</label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+
+            <div class="row">
+            <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox">
+                          <label class="form-check-label">Checkbox</label>
+                        </div>
+                        <label>Getankt bei </label>
+                        <input type="text" class="form-control" placeholder="Enter ...">
+            </div>
+            </div>
+
+
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

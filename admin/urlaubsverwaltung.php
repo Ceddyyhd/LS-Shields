@@ -133,7 +133,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                           <td><?php echo $vacation['end_date']; ?></td>
                           <td><span class="badge bg-warning"><?php echo ucfirst($vacation['status']); ?></span></td>
                           <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">Bearbeiten</button>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">Bearbeiten</button>
                           </td>
                         </tr>
                     <?php endforeach; ?>

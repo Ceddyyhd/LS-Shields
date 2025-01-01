@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'include/header.php'; ?>
+<?php include 'include/header.php'; 
+// ID des aktuellen Benutzers aus der Session holen
+$user_id = $_SESSION['user_id'];
+
+// SQL-Abfrage, um nur die Urlaubsanträge des aktuellen Benutzers anzuzeigen, deren `end_date` heute oder in der Zukunft liegt
+$query = "
+    SELECT * FROM vacations 
+    WHERE user_id = :user_id 
+    AND end_date >= CURDATE()  -- Nur Anträge, deren Enddatum heute oder in der Zukunft liegt
+    AND status IN ('approved', 'pending')
+";
+
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+
+// Alle Urlaubsanträge des Benutzers holen
+$vacati
+?>
 
 <head>
   <meta charset="utf-8">
@@ -122,28 +140,63 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
               <!-- /.card-header -->
               <div class="card-body">
-              <label>Urlaub zurückziehen</label>
+    <label>Urlaub zurückziehen</label>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Entfernen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($vacations as $vacation): ?>
+                <tr>
+                    <td><?php echo $vacation['start_date']; ?></td>
+                    <td><?php echo $vacation['end_date']; ?></td>
+                    <td>
+                        <span class="badge bg-<?php echo ($vacation['status'] == 'approved') ? 'success' : 'warning'; ?>">
+                            <?php echo ucfirst($vacation['status']); ?>
+                        </span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-block btn-outline-danger" onclick="deleteVacation(<?php echo $vacation['id']; ?>)">
+                            X
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<script>
+    // Funktion zum Löschen des Urlaubsantrags
+    function deleteVacation(vacationId) {
+        if (confirm('Möchten Sie diesen Urlaub zurückziehen?')) {
+            // AJAX-Anfrage zum Löschen des Urlaubsantrags
+            var formData = new FormData();
+            formData.append('vacation_id', vacationId);
 
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Start Date</th>
-                      <th>End Date</th>
-                      <th>Status</th>
-                      <th>entfernen</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>2025-01-01</td>
-                      <td>2025-01-05</td>
-                      <td><span class="badge bg-success">Approved</span></td>
-                      <td><button type="button" class="btn btn-block btn-outline-primary">X</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
+            fetch('include/vacation_delete.php', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Urlaub erfolgreich zurückgezogen!');
+                    location.reload();  // Seite neu laden, um den Antrag zu entfernen
+                } else {
+                    alert('Fehler: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Fehler: ' + error.message);
+            });
+        }
+    }
+</script>
       </div>
     </div>
   </div>

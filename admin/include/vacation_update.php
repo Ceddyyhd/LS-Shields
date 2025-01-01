@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $end_date = $_POST['end_date'];
     $status = $_POST['status'];
     $note = $_POST['note'];  // Die Notiz aus dem Formular holen
-    $user_name = $_SESSION['username'];  // Benutzername aus der Session holen
+    $user_name = $_POST['user_name'];  // Benutzername aus dem hidden Input holen
 
     try {
         // SQL-Abfrage zum Aktualisieren des Urlaubsantrags mit der Notiz

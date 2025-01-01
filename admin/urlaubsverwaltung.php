@@ -215,6 +215,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" id="saveVacationChanges">Speichern</button>
                     </div>
+                    <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
                 </form>
             </div>
         </div>

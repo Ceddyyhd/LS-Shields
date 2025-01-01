@@ -120,6 +120,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           <button type="button" class="btn btn-primary" id="submitVacation">Urlaub Anmelden</button>
         </form>
 
+              <label>Urlaub zurückziehen</label>
               <!-- /.card-header -->
               <div class="card-body">
                 <table class="table table-bordered">

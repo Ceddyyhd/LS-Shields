@@ -11,6 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $next_inspection = $_POST['next_inspection'];
     $user_name = $_SESSION['username'];  // Benutzername aus der Session holen
 
+    // Überprüfen, ob die Checkbox "Getankt" aktiviert wurde
+    $fuel_checked = isset($_POST['fuel_checked']) ? 1 : 0;  // 1, wenn die Checkbox aktiviert ist, sonst 0
+    $fuel_location = isset($_POST['fuel_location']) ? $_POST['fuel_location'] : NULL;  // Der Wert des Textfeldes
+
     try {
         // Vorherige Fahrzeugdaten abrufen
         $sql_select = "SELECT * FROM vehicles WHERE id = ?";
@@ -42,6 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         if ($next_inspection !== $old_vehicle['next_inspection']) {
             $changes[] = "Nächste Inspektion: " . $old_vehicle['next_inspection'] . " -> " . $next_inspection;
+        }
+        if ($fuel_checked !== $old_vehicle['fuel_checked']) {
+            $changes[] = "Getankt: " . ($fuel_checked ? 'Ja' : 'Nein');
+        }
+        if ($fuel_location !== $old_vehicle['fuel_location']) {
+            $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
         }
 
         // Wenn keine Änderungen vorgenommen wurden

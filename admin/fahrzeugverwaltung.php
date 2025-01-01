@@ -93,14 +93,14 @@
             </div>
 
             <!-- Modal for Editing Vehicle -->
-            <div class="modal fade" id="vehicle-bearbeiten">
-        <div class="modal-dialog">
-          <div class="modal-content">
+<div class="modal fade" id="vehicle-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Fahrzeug Bearbeiten</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h4 class="modal-title">Fahrzeug Bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <form id="editVehicleForm">
@@ -124,18 +124,49 @@
                         <input type="date" class="form-control" name="next_inspection" id="edit-next_inspection" placeholder="Enter ...">
                     </div>
 
+                    <!-- Checkbox für "Getankt" -->
+                    <div class="form-group">
+                        <label for="edit-fuel-checkbox">Getankt</label>
+                        <input type="checkbox" class="form-check-input" id="edit-fuel-checkbox" name="fuel_checked">
+                    </div>
+
+                    <!-- Textfeld für "Wo?" -->
+                    <div class="form-group">
+                        <label for="edit-fuel-location">Wo?</label>
+                        <input type="text" class="form-control" id="edit-fuel-location" name="fuel_location" placeholder="Wo wurde getankt?" disabled>
+                    </div>
+
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
 
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                     <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
                 </form>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+</div>
+<script>
+  $(document).ready(function() {
+    // Bei Änderung der Checkbox den Zustand des Textfeldes steuern
+    $('#edit-fuel-checkbox').on('change', function() {
+        if (this.checked) {
+            // Wenn die Checkbox aktiviert ist, das Textfeld aktivieren
+            $('#edit-fuel-location').prop('disabled', false);
+        } else {
+            // Wenn die Checkbox deaktiviert ist, das Textfeld wieder deaktivieren
+            $('#edit-fuel-location').prop('disabled', true).val('');
+        }
+    });
+
+    // Beim Laden des Formulars sicherstellen, dass das Textfeld deaktiviert ist, falls die Checkbox nicht aktiviert ist
+    if (!$('#edit-fuel-checkbox').is(':checked')) {
+        $('#edit-fuel-location').prop('disabled', true);
+    }
+});
+</script>
 
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">

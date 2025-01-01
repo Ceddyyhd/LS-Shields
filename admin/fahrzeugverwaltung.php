@@ -89,24 +89,6 @@
             </tbody>
         </table>
     </div>
-    <!-- /.card-body -->
-    <div class="card-footer clearfix">
-        <ul class="pagination pagination-sm m-0 float-right">
-            <?php
-            // Pagination (Fahrzeuge)
-            $sql_count = "SELECT COUNT(*) AS total FROM vehicles WHERE decommissioned = 0";
-            $stmt_count = $conn->prepare($sql_count);
-            $stmt_count->execute();
-            $count = $stmt_count->fetch();
-            $total_pages = ceil($count['total'] / $limit);
-
-            // Pagination für Fahrzeuge, angepasst für die Konfliktvermeidung
-            for ($i = 1; $i <= $total_pages; $i++) {
-                echo "<li class='page-item'><a class='page-link' href='?page=$i'>$i</a></li>";
-            }
-            ?>
-        </ul>
-    </div>
 </div>
 <!-- Modal for Editing Vehicle -->
 <div class="modal fade" id="vehicle-bearbeiten">

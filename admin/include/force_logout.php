@@ -28,6 +28,11 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
         // 3. Optional: Entferne auch das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');
 
+        // 4. Zerstöre die PHP-Session für den Benutzer, um ihn sofort abzumelden
+        session_start(); // Sicherstellen, dass die Session aktiv ist
+        session_unset(); // Alle Session-Daten löschen
+        session_destroy(); // Session zerstören
+
         echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
@@ -35,3 +40,4 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
 }
+?>

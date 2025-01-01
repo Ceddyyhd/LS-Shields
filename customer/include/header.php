@@ -1,13 +1,48 @@
 <?php
 session_start();
 
+// Session-Regeneration sicherstellen (gibt dem Benutzer eine neue Session-ID für mehr Sicherheit)
 session_regenerate_id(true);
 
+// Cache-Control-Header setzen, um die Seite nicht zu cachen
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+
+// Datenbankverbindung einbinden
 include 'include/db.php';
-include 'auth.php'; // Authentifizierungslogik einbinden
+include 'auth.php';  // Authentifizierungslogik einbinden
+
+// Überprüfen, ob der Benutzer ein Admin ist und ob eine Force-Logout-Anfrage vorliegt
+if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
+    $user_id_to_logout = $_GET['force_logout_user_id'];
+
+    // Session des Benutzers aus der `user_sessions`-Tabelle entfernen
+    $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id_to_logout);
+    $stmt->execute();
+
+    // Das 'remember_token' des Benutzers löschen
+    $query = "UPDATE kunden SET remember_token = NULL WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id_to_logout);
+    $stmt->execute();
+
+    // Lösche das 'remember_me' Cookie, falls gesetzt
+    setcookie('remember_me', '', time() - 3600, '/');
+
+    // Falls der geloggte Benutzer derselbe ist, auch seine Session zerstören
+    if ($_SESSION['user_id'] == $user_id_to_logout) {
+        session_unset();
+        session_destroy();
+        header('Location: login.php');  // Weiterleitung zur Login-Seite
+        exit;
+    }
+    
+    echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
+    exit;
+}
 
 // Session-Wiederherstellung prüfen
 restoreSessionIfRememberMe($conn);
@@ -60,6 +95,7 @@ if ($userRole) {
     }
 }
 ?>
+
 
 <head>
   <meta charset="utf-8">

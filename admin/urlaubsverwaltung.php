@@ -242,29 +242,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Änderungen speichern
-    $('#saveVacationChanges').on('click', function() {
-        var formData = $('#editVacationForm').serialize(); // Alle Formulardaten sammeln
-
-        $.ajax({
-            url: 'include/vacation_update.php', // PHP-Skript zum Bearbeiten des Urlaubsantrags
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                var data = JSON.parse(response); // Antwort als JSON parsen
-                if (data.success) {
-                    alert('Urlaubsantrag erfolgreich bearbeitet!');
-                    location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
-                } else {
-                    alert('Fehler beim Bearbeiten des Urlaubsantrags: ' + data.message);
-                }
-            },
-            error: function() {
-                alert('Fehler bei der Anfrage!');
-            }
-        });
-    });
 });
 </script>
 </body>

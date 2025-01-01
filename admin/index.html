@@ -70,7 +70,7 @@
       dataType: 'json',
       success: function (response) {
           if (response.success) {
-              window.location.href = 'admin_dashboard.php'; // Weiterleitung zur Admin-Seite
+              window.location.href = 'index.php'; // Weiterleitung zur Admin-Seite
           } else {
               $('#loginMessage').text(response.message);
           }

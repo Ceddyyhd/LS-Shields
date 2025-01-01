@@ -139,9 +139,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox">
                           <label class="form-check-label">Checkbox</label>
-                        </div>
-                        <label>Getankt bei </label>
+                          <label>Getankt bei </label>
                         <input type="text" class="form-control" placeholder="Enter ...">
+                        </div>
+                        
             </div>
             </div>
 

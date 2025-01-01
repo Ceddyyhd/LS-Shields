@@ -1,5 +1,6 @@
 <?php
-include 'db.php';
+include 'db.php'; // Datenbankverbindung
+
 session_start(); // Session starten, um Benutzerrechte abzurufen
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -9,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerrechte aus der Session laden
     $permissions = $_SESSION['permissions'] ?? [];
 
-    // Benutzername aus der Session
-    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';
+    // Benutzername aus den POST-Daten holen (erstellt_von)
+    $erstellt_von = $_POST['erstellt_von'] ?? 'Unbekannt';
 
     // Rechteprüfung: Status "in Bearbeitung" ändern
     if ($action === 'change_status') {
@@ -25,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Log-Eintrag für diese Aktion erstellen
         $action_log = "Status auf 'in Bearbeitung' gesetzt";
-        $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+        $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
+                                   VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
         $logStmt->execute([
             ':erstellt_von' => $erstellt_von,
             ':action' => $action_log,
@@ -60,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Log-Eintrag für das Verschieben der Anfrage
             $action_log = "Anfrage in die Eventplanung verschoben";
-            $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+            $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
+                                       VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
             $logStmt->execute([
                 ':erstellt_von' => $erstellt_von,
                 ':action' => $action_log,

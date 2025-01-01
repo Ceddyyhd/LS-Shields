@@ -36,11 +36,6 @@ try {
 
     // Hole die ID der neu eingefügten Anfrage
     $anfrage_id = $conn->lastInsertId(); // Letzte eingefügte ID (Anfrage-ID)
-
-    // Hole die ID des Benutzers (erstellt_von) aus der Session oder POST-Daten
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = :username");
-    $stmt->execute([':username' => $erstellt_von]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if ($user) {
         $user_id = $user['id'];

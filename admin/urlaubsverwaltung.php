@@ -96,8 +96,10 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                         <label>Notiz</label>
                         <input type="text" class="form-control" name="note">
                     </div>
+                    <!-- Hidden Input für den Benutzernamen -->
+                    <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Urlaub Erstellen</button>
                     </div>
                 </form>
@@ -105,6 +107,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
 
           <!-- Urlaubsanträge mit Status 'pending' -->
           <div class="col-md-9">
@@ -254,22 +257,20 @@ $(document).ready(function() {
         });
     });
 
-    $(document).ready(function() {
     $('#vacationForm').on('submit', function(e) {
-        e.preventDefault(); // Verhindert das Standardverhalten (Seite neu laden)
+        e.preventDefault();  // Verhindert das Standardverhalten des Formulars
 
-        var formData = $(this).serialize(); // Alle Formulardaten sammeln
+        var formData = $(this).serialize();  // Alle Formulardaten sammeln (einschließlich des 'user_name' versteckten Feldes)
 
-        // AJAX-Anfrage zum Erstellen des Urlaubsantrags und Loggen
         $.ajax({
-            url: 'include/vacation_create_leitung.php', // PHP-Skript zum Erstellen des Urlaubsantrags
+            url: 'vacation_create_leitung.php',  // Die PHP-Datei für die Erstellung des Urlaubsantrags
             method: 'POST',
-            data: formData,
+            data: formData,  // Formulardaten, einschließlich 'user_name'
             success: function(response) {
-                var data = JSON.parse(response); // Antwort als JSON parsen
+                var data = JSON.parse(response);
                 if (data.success) {
                     alert('Urlaubsantrag erfolgreich erstellt!');
-                    $('#vacationForm')[0].reset(); // Formular zurücksetzen
+                    location.reload();  // Seite neu laden, um den neuen Antrag anzuzeigen
                 } else {
                     alert('Fehler beim Erstellen des Urlaubsantrags: ' + data.message);
                 }
@@ -279,7 +280,7 @@ $(document).ready(function() {
             }
         });
     });
-});
+
 
     // Änderungen speichern
     $('#saveVacationChanges').on('click', function() {

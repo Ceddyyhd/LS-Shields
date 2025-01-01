@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $end_date = $_POST['end_date'];
     $status = $_POST['status'];
     $note = $_POST['note'];  // Notiz
-    $created_by = $_SESSION['username'];  // Wer hat den Urlaub erstellt?
+    $created_by = $_POST['user_name'];  // Benutzername direkt aus dem Formular (hidden input)
 
     try {
         // SQL-Abfrage zum Einfügen des neuen Urlaubsantrags

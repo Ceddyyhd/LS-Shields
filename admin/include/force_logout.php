@@ -4,7 +4,7 @@ session_start();
 // Datenbankverbindung einbinden
 include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
-// Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
+// Sicherstellen, dass der Admin die Sitzung eines Benutzers beendet
 if ($_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
@@ -44,6 +44,11 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 
             // Lösche das PHP-Session-Cookie
             setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
+
+            // Setze den Cache-Control Header, um sicherzustellen, dass der Browser die Seite nicht cached
+            header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
 
             // Weiterleitung zur Login-Seite
             header('Location: login.php');  // Umleitung zur Login-Seite

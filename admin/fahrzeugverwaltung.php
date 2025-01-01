@@ -226,9 +226,7 @@
 
 <!-- AJAX-Skripte -->
 <script>
-$(document).ready(function() {
-    // Fahrzeug Hinzufügen (AJAX)
-    $('#addVehicleForm').on('submit', function(e) {
+$('#addVehicleForm').on('submit', function(e) {
     e.preventDefault();
     var formData = $(this).serialize();
     
@@ -236,6 +234,7 @@ $(document).ready(function() {
         url: 'include/vehicle_create.php',
         method: 'POST',
         data: formData,
+        dataType: 'json',  // Füge dies hinzu, um die Antwort als JSON zu behandeln
         success: function(response) {
             console.log(response);  // Ausgabe der Antwort zur Überprüfung
             if (response.success) {

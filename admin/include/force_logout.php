@@ -22,7 +22,7 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 
     try {
         // 1. Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
-        $query = "DELETE FROM kunden_sessions WHERE user_id = :user_id";
+        $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
@@ -38,11 +38,10 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
 
         // 4. Falls der Admin nicht ausgeloggt werden soll, löschen wir seine Session nicht
         if ($_SESSION['user_id'] == $user_id_to_logout) {
-            // Lösche alle Session-Daten
             session_unset();  // Löscht alle Session-Daten
             session_destroy();  // Zerstört die Session
             setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
-            header('Location: login.php');  // Umleitung zur Login-Seite
+            header('Location: index.html');  // Weiterleitung zur Login-Seite
             exit;
         }
 

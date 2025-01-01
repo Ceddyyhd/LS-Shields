@@ -11,7 +11,7 @@ header("Pragma: no-cache");
 
 // Datenbankverbindung einbinden
 include 'include/db.php';
-include 'auth.php';  // Authentifizierungslogik einbinden
+include 'include/auth.php';  // Authentifizierungslogik einbinden
 
 // Überprüfen, ob der Benutzer eingeloggt ist, wenn nicht, zur Login-Seite weiterleiten
 if (!isset($_SESSION['user_id'])) {
@@ -63,6 +63,7 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     if ($_SESSION['user_id'] == $user_id_to_logout) {
         session_unset();
         session_destroy();
+        setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
         header('Location: index.html');  // Weiterleitung zur Login-Seite
         exit;
     }

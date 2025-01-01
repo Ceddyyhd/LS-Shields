@@ -3,6 +3,7 @@ include 'db.php';  // Datenbankverbindung einbinden
 session_start();   // Session starten, um auf $_SESSION zuzugreifen
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Werte aus dem POST holen
     $vehicle_id = $_POST['vehicle_id'];
     $model = $_POST['model'];
     $license_plate = $_POST['license_plate'];

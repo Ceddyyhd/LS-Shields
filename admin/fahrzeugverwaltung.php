@@ -275,27 +275,31 @@ $(document).ready(function() {
     });
 
     // Fahrzeug Bearbeiten speichern (AJAX)
-    $('#editVehicleForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
-        
-        $.ajax({
-            url: 'include/vehicle_update.php',
-            method: 'POST',
-            data: formData,
-            success: function(response) {
-                if(response.success) {
-                    alert('Fahrzeug erfolgreich bearbeitet');
-                    location.reload();
-                } else {
-                    alert('Fehler beim Bearbeiten des Fahrzeugs');
-                }
-            },
-            error: function() {
-                alert('Ein Fehler ist aufgetreten');
+    $('#addVehicleForm').on('submit', function(e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
+
+    $.ajax({
+        url: 'vehicle_update.php',
+        method: 'POST',
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Erfolgreich bearbeitet
+                alert('Fahrzeug erfolgreich bearbeitet!');
+                location.reload();  // Seite neu laden oder etwas anderes tun
+            } else {
+                // Fehlernachricht ausgeben
+                alert('Fehler: ' + response.message);
             }
-        });
+        },
+        error: function(xhr, status, error) {
+            // Falls der AJAX-Request selbst fehlschlägt, Fehler anzeigen
+            alert('Ein Fehler ist beim Senden der Anfrage aufgetreten: ' + error);
+        }
     });
+});
     $(document).ready(function() {
     // Logs per AJAX abrufen
     function loadVehicleLogs() {

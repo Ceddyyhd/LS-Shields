@@ -105,45 +105,53 @@
                 <form id="editVehicleForm">
                     <div class="form-group">
                         <label>Modell</label>
-                        <input type="text" class="form-control" name="model" id="edit-model" placeholder="Enter ...">
+                        <input type="text" class="form-control" name="model" id="edit-model" placeholder="Enter ..."
+                            <?php if (!($_SESSION['permissions']['edit_model'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
                     <div class="form-group">
                         <label>Kennzeichen</label>
-                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ...">
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
+                            <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
                     <div class="form-group">
                         <label>Standort</label>
-                        <input type="text" class="form-control" name="location" id="edit-location" placeholder="Enter ...">
+                        <input type="text" class="form-control" name="location" id="edit-location" placeholder="Enter ..."
+                            <?php if (!($_SESSION['permissions']['edit_location'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
                     <div class="form-group">
                         <label>Nächste Inspektion</label>
-                        <input type="date" class="form-control" name="next_inspection" id="edit-next_inspection" placeholder="Enter ...">
+                        <input type="date" class="form-control" name="next_inspection" id="edit-next_inspection" placeholder="Enter ..."
+                            <?php if (!($_SESSION['permissions']['edit_next_inspection'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
                     <!-- Checkbox für "Getankt" -->
                     <div class="form-group">
                         <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
                         <div class="form-check">
-                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked">
+                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked"
+                                <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
                             <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
                         </div>
-                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?">
+                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?"
+                            <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
                     <!-- Notizen-Feld -->
                     <div class="form-group">
                         <label for="edit-notes">Notizen</label>
-                        <textarea class="form-control" id="edit-notes" name="notes" placeholder="Notizen..."></textarea>
+                        <textarea class="form-control" id="edit-notes" name="notes" placeholder="Notizen..."
+                            <?php if (!($_SESSION['permissions']['edit_notes'] ?? false)) echo 'disabled'; ?>></textarea>
                     </div>
 
                     <!-- Ausgemustert-Checkbox -->
                     <div class="form-group">
                         <strong><i class="fas fa-trash-alt mr-1"></i> Ausgemustert</strong>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned">
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
+                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
                             <label for="edit-decommissioned" class="form-check-label">Ausgemustert</label>
                         </div>
                     </div>

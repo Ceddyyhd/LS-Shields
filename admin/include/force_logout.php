@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'db.php';  // Hier wird die Datei mit der Datenbankverbindung eingebunden
 
 // Nur Admins sollten die Sitzung eines Benutzers beenden dürfen
 if ($_SESSION['role'] !== 'admin') {

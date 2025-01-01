@@ -62,28 +62,28 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC); // fetch statt fetchAll, da nur ein Date
       </div>
 
       <div class="form-group">
-        <label for="exampleInputPassword1">(Firmen) Name</label>
-        <input type="text" class="form-control" id="exampleInputPassword1" name="name" placeholder="Enter Name" value="<?= htmlspecialchars($user['name']); ?>" required>
+        <label for="exampleInputName">Firmen Name</label>
+        <input type="text" class="form-control" id="exampleInputName" name="name" placeholder="Enter Name" value="<?= htmlspecialchars($user['name']); ?>" required>
       </div>
 
       <div class="form-group">
-        <label for="exampleInputPassword1">Nummer</label>
-        <input type="text" class="form-control" id="exampleInputPassword1" name="nummer" placeholder="Enter Nummer" value="<?= htmlspecialchars($user['nummer']); ?>" required>
+        <label for="exampleInputNummer">Nummer</label>
+        <input type="text" class="form-control" id="exampleInputNummer" name="nummer" placeholder="Enter Nummer" value="<?= htmlspecialchars($user['nummer']); ?>" required>
       </div>
 
       <div class="form-group">
-        <label for="exampleInputPassword1">Kontonummer</label>
-        <input type="text" class="form-control" id="exampleInputPassword1" name="kontonummer" placeholder="Enter Kontonummer" value="<?= htmlspecialchars($user['kontonummer']); ?>" required>
+        <label for="exampleInputKontonummer">Kontonummer</label>
+        <input type="text" class="form-control" id="exampleInputKontonummer" name="kontonummer" placeholder="Enter Kontonummer" value="<?= htmlspecialchars($user['kontonummer']); ?>" required>
       </div>
 
       <div class="form-group">
-        <label for="exampleInputPassword1">Passwort</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Enter new password">
+        <label for="exampleInputPassword">Passwort</label>
+        <input type="password" class="form-control" id="exampleInputPassword" name="password" placeholder="Enter new password">
       </div>
 
       <div class="form-group">
-        <label for="exampleInputPassword1">Passwort Bestätigen</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" name="password_confirm" placeholder="Confirm new password">
+        <label for="exampleInputPasswordConfirm">Passwort Bestätigen</label>
+        <input type="password" class="form-control" id="exampleInputPasswordConfirm" name="password_confirm" placeholder="Confirm new password">
       </div>
     </div>
     <!-- /.card-body -->

@@ -283,23 +283,29 @@ $(document).ready(function() {
 
     // Fahrzeug Bearbeiten (AJAX)
     $('.edit-button').on('click', function() {
-        var vehicleId = $(this).data('vehicle-id');
-        
-        // Fahrzeugdaten laden
-        $.ajax({
-            url: 'include/vehicle_fetch.php',
-            method: 'GET',
-            data: { vehicle_id: vehicleId },
-            success: function(response) {
-                var vehicle = JSON.parse(response);
-                $('#edit-model').val(vehicle.model);
-                $('#edit-license_plate').val(vehicle.license_plate);
-                $('#edit-location').val(vehicle.location);
-                $('#edit-next_inspection').val(vehicle.next_inspection);
-                $('#edit-vehicle_id').val(vehicle.id);
-            }
-        });
+    var vehicleId = $(this).data('vehicle-id');
+    
+    // Fahrzeugdaten laden
+    $.ajax({
+        url: 'include/vehicle_fetch.php',
+        method: 'GET',
+        data: { vehicle_id: vehicleId },
+        success: function(response) {
+            var vehicle = JSON.parse(response);
+            
+            // Werte in die Formularfelder einfügen
+            $('#edit-model').val(vehicle.model);
+            $('#edit-license_plate').val(vehicle.license_plate);
+            $('#edit-location').val(vehicle.location);
+            $('#edit-next_inspection').val(vehicle.next_inspection);
+            $('#edit-vehicle_id').val(vehicle.id);
+            
+            // Notizen und Ausgemustert-Status einfügen
+            $('#edit-notes').val(vehicle.notes);  // Notizen
+            $('#edit-decommissioned').prop('checked', vehicle.decommissioned == 1);  // Ausgemustert
+        }
     });
+});
 
     // Fahrzeug Bearbeiten speichern (AJAX)
     $('#editVehicleForm').on('submit', function(e) {

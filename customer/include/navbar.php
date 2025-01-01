@@ -5,12 +5,12 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
 
 // Benutzerinformationen abrufen
-$sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
-            FROM users 
-            LEFT JOIN roles ON users.role_id = roles.id 
-            WHERE users.id = :id";
+$sql = "SELECT kunden.*, roles.name AS role_name, kunden.profile_image 
+        FROM kunden 
+        LEFT JOIN roles ON kunden.role_id = roles.id 
+        WHERE kunden.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $user_id]);
+$stmt->execute(['id' => $user_id]); // Beachte, dass hier 'id' der Parametername ist
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!-- Navbar -->
@@ -54,6 +54,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
             <div class="info">
                 <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+                <?php echo htmlspecialchars($user_id); ?>
             </div>
         </div>
 

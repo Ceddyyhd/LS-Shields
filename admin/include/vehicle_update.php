@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_update = $conn->prepare($sql_update);
         $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $vehicle_id]);
 
-        // Änderungen ermitteln
+        // Änderungen ermitteln und formatieren
         $changes = [];
         if ($model !== $old_vehicle['model']) {
             $changes[] = "Modell: " . $old_vehicle['model'] . " -> " . $model;
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Log-Eintrag für die Änderungen erstellen
-        $action = "Fahrzeug bearbeitet: " . implode(", ", $changes);  // Alle Änderungen als String zusammenfügen
+        $action = "Fahrzeug bearbeitet (" . implode(", ", $changes) . ")";  // Änderungen in der gewünschten Formatierung zusammenfügen
 
         // Log-Eintrag in die vehicle_logs-Tabelle einfügen
         $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";

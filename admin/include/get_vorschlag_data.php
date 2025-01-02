@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 $vorschlag_id = (int)$_GET['id'];
 
 // Vorschlagsdaten aus der Datenbank holen
-$stmt = $conn->prepare("SELECT vorschlag, betreff, status, notiz FROM verbesserungsvorschlaege WHERE id = :id");
+$stmt = $conn->prepare("SELECT vorschlag, betreff, status, notiz, erstellt_von FROM verbesserungsvorschlaege WHERE id = :id");
 $stmt->bindParam(':id', $vorschlag_id, PDO::PARAM_INT);
 $stmt->execute();
 $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);

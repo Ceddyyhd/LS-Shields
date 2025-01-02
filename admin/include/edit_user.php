@@ -44,9 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-        // Gekündigt verarbeiten (hier stellen wir sicher, dass nur die gültigen Werte gespeichert werden)
-        $gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
-        $updates['gekuendigt'] = $gekuendigt;  // Den "gekuendigt"-Wert in das Updates-Array einfügen
+    // Bewerber und admin_bereich verarbeiten
+    $bewerber = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'ja' : 'nein';
+    $admin_bereich = ($bewerber === 'nein') ? 1 : 0;  // Wenn Bewerber 'nein', setze admin_bereich auf 1, andernfalls auf 0
+
+    $updates['bewerber'] = $bewerber;  // Den Bewerber-Wert in das Updates-Array einfügen
+    $updates['admin_bereich'] = $admin_bereich;  // Den admin_bereich-Wert in das Updates-Array einfügen
 
     // Daten aktualisieren
     if (!empty($updates)) {
@@ -72,3 +75,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
 }
+?>

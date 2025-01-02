@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// Benutzernamen aus der Session holen, wenn nicht anonym
+// Überprüfen, ob die Anonym-Checkbox aktiviert ist
 $erstellt_von = (isset($_POST['fuel_checked']) && $_POST['fuel_checked'] === 'true') ? 'Anonym' : $_SESSION['username'];
 
 // Formulardaten auslesen

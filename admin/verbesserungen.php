@@ -85,12 +85,12 @@ include 'include/db.php';
                   </select>
               </div>
 
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked" 
-                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-                        </div>
-                    </div>
+              <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" value="true">
+                    <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                </div>
+            </div>
 
                     <div class="form-group">
                         <label for="betreff">Betreff</label>

@@ -240,7 +240,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel"><?php echo $_SESSION['username']; ?></h5>
+                <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -310,6 +310,9 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     $('#saveEditBtn').on('click', function() {
+    const saveButton = $(this);
+    saveButton.prop('disabled', true); // Button deaktivieren, um mehrfaches Klicken zu verhindern
+
     const formData = new FormData(document.getElementById('editSuggestionForm'));
     const suggestionId = $('#editSuggestionForm').data('id'); // Die ID des Vorschlags
 
@@ -334,8 +337,12 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
     .catch(error => {
         console.error('Fehler:', error);
         alert('Ein unerwarteter Fehler ist aufgetreten.');
+    })
+    .finally(() => {
+        saveButton.prop('disabled', false); // Button wieder aktivieren
     });
 });
+
 
     $('#modal-vorschlag-bearbeiten').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button, der das Modal geöffnet hat

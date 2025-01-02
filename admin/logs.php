@@ -51,6 +51,21 @@ include 'db.php';
 $stmt = $conn->prepare("SELECT * FROM anfragen_logs ORDER BY timestamp DESC");
 $stmt->execute();
 $anfrage_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Logs aus der Datenbank abfragen
+$stmt = $conn->prepare("SELECT * FROM ausbildung_logs ORDER BY timestamp DESC");
+$stmt->execute();
+$ausbildung_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Logs aus der Datenbank abfragen
+$stmt = $conn->prepare("SELECT * FROM ausruestung_log ORDER BY timestamp DESC");
+$stmt->execute();
+$ausruestung_log = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Logs aus der Datenbank abfragen
+$stmt = $conn->prepare("SELECT * FROM kunden_logs ORDER BY timestamp DESC");
+$stmt->execute();
+$kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
   <div class="row">
           <div class="col-12 col-sm-6">
@@ -61,13 +76,13 @@ $anfrage_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a class="nav-link active" id="anfrage-logs-tab" data-toggle="pill" href="#anfrage-logs" role="tab" aria-controls="anfrage-logs" aria-selected="true">Anfrage Logs</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Profile</a>
+                    <a class="nav-link" id="ausbildungs-logs-tab" data-toggle="pill" href="#ausbildungs-logs" role="tab" aria-controls="ausbildungs-logs" aria-selected="false">Ausbildungs Logs</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#custom-tabs-one-messages" role="tab" aria-controls="custom-tabs-one-messages" aria-selected="false">Messages</a>
+                    <a class="nav-link" id="ausruestung-logs-tab" data-toggle="pill" href="#ausruestung-logs" role="tab" aria-controls="ausruestung-logs" aria-selected="false">Ausruestung Logs</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Settings</a>
+                    <a class="nav-link" id="kunden-logs-tab" data-toggle="pill" href="#kunden-logs" role="tab" aria-controls="kunden-logs" aria-selected="false">Kunden Logs</a>
                   </li>
                 </ul>
               </div>
@@ -117,7 +132,7 @@ $anfrage_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
                 </div>
-                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                  <div class="tab-pane fade" id="ausbildungs-logs" role="tabpanel" aria-labelledby="ausbildungs-logs-tab">
 
                   <div class="card">
                     <div class="card-body">
@@ -134,13 +149,13 @@ $anfrage_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tbody>
                           <?php
                           // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
-                          foreach ($logs as $log) {
+                          foreach ($ausbildung_logs as $ausbildung_log) {
                               echo "<tr>";
-                              echo "<td>" . htmlspecialchars($log['id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($log['action']) . "</td>";
-                              echo "<td>" . htmlspecialchars($log['timestamp']) . "</td>";
-                              echo "<td>" . htmlspecialchars($log['anfrage_id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($log['username']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['anfrage_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['username']) . "</td>";
                               echo "</tr>";
                           }
                           ?>
@@ -159,12 +174,90 @@ $anfrage_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   </div>
 
                 </div>
-                  <div class="tab-pane fade" id="custom-tabs-one-messages" role="tabpanel" aria-labelledby="custom-tabs-one-messages-tab">
-                     Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
+                  <div class="tab-pane fade" id="ausruestung-logs" role="tabpanel" aria-labelledby="ausruestung-logs-tab">
+
+                  <div class="card">
+                    <div class="card-body">
+                      <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
+                          foreach ($ausruestung_logs as $ausruestung_log) {
+                              echo "<tr>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['anfrage_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['username']) . "</td>";
+                              echo "</tr>";
+                          }
+                          ?>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
-                  <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
-                     Pellentesque vestibulum commodo nibh nec blandit. Maecenas neque magna, iaculis tempus turpis ac, ornare sodales tellus. Mauris eget blandit dolor. Quisque tincidunt venenatis vulputate. Morbi euismod molestie tristique. Vestibulum consectetur dolor a vestibulum pharetra. Donec interdum placerat urna nec pharetra. Etiam eget dapibus orci, eget aliquet urna. Nunc at consequat diam. Nunc et felis ut nisl commodo dignissim. In hac habitasse platea dictumst. Praesent imperdiet accumsan ex sit amet facilisis.
+
+                </div>
+                  <div class="tab-pane fade" id="kunden-logs" role="tabpanel" aria-labelledby="kunden-logs-tab">
+
+                  <div class="card">
+                    <div class="card-body">
+                      <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
+                          foreach ($kunden_logs as $kunden_log) {
+                              echo "<tr>";
+                              echo "<td>" . htmlspecialchars($kunden_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['anfrage_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['username']) . "</td>";
+                              echo "</tr>";
+                          }
+                          ?>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
+
+                </div>
                 </div>
               </div>
               <!-- /.card -->

@@ -145,11 +145,11 @@ include 'include/db.php';
         <thead>
             <tr>
                 <th>#</th>
-                <th>Ansprechpartner</th>
-                <th>Anfrage</th>
+                <th>Bereich</th>
+                <th>Vorschlag</th>
+                <th>Betreff</th>
+                <th>datum_uhrzeit</th>
                 <th>Status</th>
-                <th>Erstellt von</th>
-                <th>Erstellt Am</th>
                 <th>Details einblenden</th>
             </tr>
         </thead>
@@ -158,9 +158,10 @@ include 'include/db.php';
                 <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
                     <td><?= htmlspecialchars($vorschlag['id']) ?></td>
                     <td><?= mb_strimwidth(htmlspecialchars($vorschlag['vorschlag']), 0, 50, '...') ?></td>
-                    <td id="status-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['status']) ?></td>
-                    <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>
+                    <td><?= mb_strimwidth(htmlspecialchars($vorschlag['Betreff']), 0, 25, '...') ?></td>
                     <td><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['status']) ?></td>
+                    <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>
                     <td>Details einblenden</td>
                 </tr>
                 <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">

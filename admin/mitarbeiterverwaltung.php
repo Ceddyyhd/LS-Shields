@@ -35,7 +35,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
   </div>
   <!-- /.content-header -->
-
+<style>
+  @media (min-width: 576px) {
+    .col-sm-6 {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+</style>
   <div class="row">
           <div class="col-12 col-sm-6">
             <div class="card card-primary card-tabs">

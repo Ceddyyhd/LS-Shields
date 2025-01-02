@@ -58,60 +58,71 @@
         </thead>
         <tbody>
         <?php
-        // Zähler für die Reihenfolge der ID (wird hier von der kleinsten ID bis zur größten gezählt)
-        foreach ($events as $event) {
-            // Für jedes Event die Team-Mitglieder abfragen
-            $teamQuery = "
-                SELECT u.id AS employee_id, u.name, u.profile_image
-                FROM event_mitarbeiter_anmeldung eam
-                JOIN users u ON eam.employee_id = u.id
-                WHERE eam.event_id = :event_id";
+    // Zähler für die Reihenfolge der ID (wird hier von der kleinsten ID bis zur größten gezählt)
+    $eventQuery = "
+        SELECT * 
+        FROM events 
+        ORDER BY 
+            datum_uhrzeit DESC NULLS LAST";  // Sortiere nach datum_uhrzeit, Null-Werte am Ende
 
-            $teamStmt = $conn->prepare($teamQuery);
-            $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-            $teamStmt->execute();
-            $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+    $eventStmt = $conn->prepare($eventQuery);
+    $eventStmt->execute();
+    $events = $eventStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($event['id']) . "</td>"; // Hier wird die ID der DB angezeigt
-            echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
-            echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
-            echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
-            echo "<td><span>" . htmlspecialchars($event['datum_uhrzeit']) . "</span></td>";
+    foreach ($events as $event) {
+        // Für jedes Event die Team-Mitglieder abfragen
+        $teamQuery = "
+            SELECT u.id AS employee_id, u.name, u.profile_image
+            FROM event_mitarbeiter_anmeldung eam
+            JOIN users u ON eam.employee_id = u.id
+            WHERE eam.event_id = :event_id";
 
-            // Team-Mitglieder anzeigen
-            echo "<td><ul class='list-inline'>";
-            if (empty($team_members)) {
-                echo "<li>No team members available</li>";
-            } else {
-                foreach ($team_members as $member) {
-                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                    echo "</li>";
-                }
+        $teamStmt = $conn->prepare($teamQuery);
+        $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+        $teamStmt->execute();
+        $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($event['id']) . "</td>"; // Hier wird die ID der DB angezeigt
+        echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
+        echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
+        echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
+        echo "<td><span>" . htmlspecialchars($event['datum_uhrzeit']) . "</span></td>";
+
+        // Team-Mitglieder anzeigen
+        echo "<td><ul class='list-inline'>";
+        if (empty($team_members)) {
+            echo "<li>No team members available</li>";
+        } else {
+            foreach ($team_members as $member) {
+                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                echo "</li>";
             }
-            echo "</ul></td>";
-
-            // Status anzeigen
-            echo "<td class='project-state'>";
-            if ($event['status'] == 'in Planung') {
-                echo "<span class='badge badge-warning'>In Planung</span>";
-            } elseif ($event['status'] == 'in Durchführung') {
-                echo "<span class='badge badge-danger'>In Durchführung</span>";
-            } elseif ($event['status'] == 'Abgeschlossen') {
-                echo "<span class='badge badge-success'>Abgeschlossen</span>";
-            }
-            echo "</td>";
-
-            // Aktionen
-            echo "<td class='project-actions text-right'>";
-            echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
-            echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
-            echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
-            echo "</td>";
-            echo "</tr>";
         }
-        ?>
+        echo "</ul></td>";
+
+        // Status anzeigen
+        echo "<td class='project-state'>";
+        if ($event['status'] == 'in Planung') {
+            echo "<span class='badge badge-warning'>In Planung</span>";
+        } elseif ($event['status'] == 'in Durchführung') {
+            echo "<span class='badge badge-danger'>In Durchführung</span>";
+        } elseif ($event['status'] == 'Abgeschlossen') {
+            echo "<span class='badge badge-success'>Abgeschlossen</span>";
+        }
+        echo "</td>";
+
+        // Aktionen
+        echo "<td class='project-actions text-right'>";
+        echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
+        echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
+        echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
+        echo "</td>";
+        echo "</tr>";
+    }
+?>
+
         </tbody>
     </table>
 </div>

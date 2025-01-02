@@ -1,54 +1,46 @@
 <?php
 include 'db.php'; // Datenbankverbindung
-session_start();
 
-// Überprüfen, ob der Benutzer eingeloggt ist
-if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'Benutzer ist nicht eingeloggt.']);
-    exit;
-}
+session_start(); // Sitzung starten
 
-// Formulardaten auslesen
-$vorschlag_id = $_POST['id'] ?? '';
-$zustimmung = $_POST['zustimmung'] ?? false; // TRUE = Zustimmung, FALSE = Ablehnung
-$user_id = $_SESSION['user_id']; // Die Benutzer-ID aus der Session
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Holen der POST-Daten
+    $vorschlagId = (int) $_POST['id'];
+    $zustimmung = ($_POST['zustimmung'] === 'true') ? 1 : 0;  // Umwandeln von 'true'/'false' in 1/0
+    $userId = $_SESSION['user_id'];  // Benutzer-ID aus der Session holen
 
-// Überprüfen, ob die Eingaben korrekt sind
-if (!$vorschlag_id || !isset($zustimmung)) {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
-    exit;
-}
+    // Überprüfen, ob der Benutzer bereits abgestimmt hat
+    $checkStmt = $conn->prepare("SELECT * FROM vorschlag_zustimmungen WHERE vorschlag_id = :vorschlag_id AND user_id = :user_id");
+    $checkStmt->execute([
+        ':vorschlag_id' => $vorschlagId,
+        ':user_id' => $userId
+    ]);
+    $existingVote = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-try {
-    // Prüfen, ob der Benutzer den Vorschlag bereits bewertet hat
-    $stmt = $conn->prepare("SELECT * FROM vorschlag_zustimmungen WHERE vorschlag_id = :vorschlag_id AND user_id = :user_id");
-    $stmt->execute([':vorschlag_id' => $vorschlag_id, ':user_id' => $user_id]);
-    $existingRating = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($existingRating) {
-        echo json_encode(['success' => false, 'message' => 'Sie haben diesen Vorschlag bereits bewertet.']);
+    if ($existingVote) {
+        // Wenn der Benutzer bereits abgestimmt hat, Fehlermeldung zurückgeben
+        echo json_encode(['success' => false, 'message' => 'Sie haben bereits abgestimmt.']);
         exit;
     }
 
-    // Eintrag für Zustimmung oder Ablehnung in die Tabelle vorschlag_zustimmungen
+    // Speichern der Zustimmung/Ablehnung
     $stmt = $conn->prepare("INSERT INTO vorschlag_zustimmungen (vorschlag_id, user_id, zustimmung) VALUES (:vorschlag_id, :user_id, :zustimmung)");
-    $stmt->execute([':vorschlag_id' => $vorschlag_id, ':user_id' => $user_id, ':zustimmung' => $zustimmung]);
+    $stmt->execute([
+        ':vorschlag_id' => $vorschlagId,
+        ':user_id' => $userId,
+        ':zustimmung' => $zustimmung
+    ]);
 
-    // Aktualisieren der Zustimmungen/Ablehnungen in der Haupttabelle
-    if ($zustimmung) {
-        $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET zustimmungen = zustimmungen + 1 WHERE id = :id");
+    // Aktualisieren der Zähler in der `verbesserungsvorschlaege`-Tabelle
+    if ($zustimmung === 1) {
+        $updateStmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET zustimmungen = zustimmungen + 1 WHERE id = :id");
     } else {
-        $stmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET ablehnungen = ablehnungen + 1 WHERE id = :id");
+        $updateStmt = $conn->prepare("UPDATE verbesserungsvorschlaege SET ablehnungen = ablehnungen + 1 WHERE id = :id");
     }
-    $stmt->execute([':id' => $vorschlag_id]);
 
-    // Holen der neuen Zustimmungs-/Ablehnungszahlen
-    $stmt = $conn->prepare("SELECT zustimmungen, ablehnungen FROM verbesserungsvorschlaege WHERE id = :id");
-    $stmt->execute([':id' => $vorschlag_id]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $updateStmt->execute([':id' => $vorschlagId]);
 
-    echo json_encode(['success' => true, 'zustimmungen' => $result['zustimmungen'], 'ablehnungen' => $result['ablehnungen']]);
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+    // Rückmeldung
+    echo json_encode(['success' => true, 'message' => 'Ihre Stimme wurde gezählt.']);
 }
 ?>

@@ -217,7 +217,6 @@ include 'include/db.php';
 </div>
 
 <script>
-// Funktion zum Zustimmen/Ablehnen des Vorschlags
 function rateSuggestion(vorschlagId, zustimmung) {
     fetch('include/rate_vorschlag.php', {
         method: 'POST',
@@ -229,7 +228,7 @@ function rateSuggestion(vorschlagId, zustimmung) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Aktualisiere die Zähler für Zustimmungen und Ablehnungen
+            // Die Zustimmungen und Ablehnungen in der Tabelle aktualisieren
             document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
             document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
         } else {

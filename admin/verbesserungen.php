@@ -313,7 +313,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <!-- Notiz -->
                     <div class="form-group">
                         <label for="notiz">Notiz</label>
-                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['notiz']); ?></textarea>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['vorschlag']); ?></textarea>
                     </div>
                 </form>
             </div>

@@ -172,7 +172,7 @@ include 'include/db.php';
                 <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
                     <td><?= htmlspecialchars($vorschlag['id']) ?></td>
                     <td><?= mb_strimwidth(htmlspecialchars($vorschlag['vorschlag']), 0, 50, '...') ?></td>
-                    <td><?= mb_strimwidth(htmlspecialchars($vorschlag['Betreff']), 0, 25, '...') ?></td>
+                    <td><?= mb_strimwidth(htmlspecialchars($vorschlag['betreff']), 0, 25, '...') ?></td>
                     <td><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></td>
                     <td><?= htmlspecialchars($vorschlag['status']) ?></td>
                     <td><?= htmlspecialchars($vorschlag['erstellt_von']) ?></td>

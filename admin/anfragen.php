@@ -175,15 +175,15 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
         </div>
         <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-        <form id="status-form-<?= $anfrage['id'] ?>">
-          <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>"> <!-- Benutzername aus der Session -->
-          <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
+    <form id="status-form-<?= $anfrage['id'] ?>">
+        <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>"> <!-- Benutzername aus der Session -->
+        <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
             <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-          <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
+        <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
             <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
-          <?php endif; ?>
-        </form>
-        </div>
+        <?php endif; ?>
+    </form>
+</div>
       </div>
     </td>
   </tr>
@@ -197,12 +197,19 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 function changeStatus(id, action) {
+  // Finde das zugehörige Formular für die Anfrage-ID
+  const form = document.getElementById(`status-form-${id}`);
+  const formData = new FormData(form);
+  
+  // Überprüfe, ob alle Felder ausgefüllt sind
+  if (!formData.get('erstellt_von')) {
+    alert('Benutzername nicht verfügbar.');
+    return;
+  }
+
   fetch('include/update_status.php', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `id=${id}&action=${action}`,
+    body: formData, // Sende die Formulardaten, einschließlich 'erstellt_von'
   })
     .then((response) => response.json())
     .then((data) => {

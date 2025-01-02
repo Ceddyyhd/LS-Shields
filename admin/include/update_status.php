@@ -10,8 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerrechte aus der Session laden
     $permissions = $_SESSION['permissions'] ?? [];
 
-    // Benutzername aus den POST-Daten holen (erstellt_von)
-    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt';
+    // Benutzername aus den POST-Daten holen (erstellt_von) 
+    // oder direkt aus der Session die user_id holen
+    $erstellt_von = $_SESSION['username'] ?? 'Unbekannt'; // Benutzername, der in Log eingetragen wird
+    $user_id = $_SESSION['user_id'] ?? null;  // user_id, wenn du diese direkt speichern möchtest
+
+    if (!$user_id) {
+        echo json_encode(['success' => false, 'error' => 'Benutzer-ID nicht in der Session vorhanden']);
+        exit;
+    }
 
     // Rechteprüfung: Status "in Bearbeitung" ändern
     if ($action === 'change_status') {
@@ -27,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Log-Eintrag für diese Aktion erstellen
         $action_log = "Status auf 'in Bearbeitung' gesetzt";
         $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
-                                   VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+                                   VALUES (:user_id, :action, :id)");
         $logStmt->execute([
-            ':erstellt_von' => $erstellt_von,
+            ':user_id' => $user_id,  // Direkt die user_id aus der Session verwenden
             ':action' => $action_log,
             ':id' => $id
         ]);
@@ -63,9 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Log-Eintrag für das Verschieben der Anfrage
             $action_log = "Anfrage in die Eventplanung verschoben";
             $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
-                                       VALUES ((SELECT id FROM users WHERE username = :erstellt_von), :action, :id)");
+                                       VALUES (:user_id, :action, :id)");
             $logStmt->execute([
-                ':erstellt_von' => $erstellt_von,
+                ':user_id' => $user_id,  // Direkt die user_id aus der Session verwenden
                 ':action' => $action_log,
                 ':id' => $id
             ]);

@@ -196,31 +196,49 @@ include 'include/db.php';
                 // Sicherstellen, dass alle Felder korrekt gefüllt werden
                 if (vorschlag) {
                     // Bereich
-                    document.getElementById('bereich').value = vorschlag.bereich;
+                    const bereichElement = document.getElementById('bereich');
+                    if (bereichElement) {
+                        bereichElement.value = vorschlag.bereich;
+                    }
 
                     // Anonym (Checkbox)
-                    document.getElementById('anonym').checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist (als String)
+                    const anonymElement = document.getElementById('anonym');
+                    if (anonymElement) {
+                        anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist (als String)
+                    }
 
                     // Betreff
-                    document.getElementById('betreff').value = vorschlag.betreff;
+                    const betreffElement = document.getElementById('betreff');
+                    if (betreffElement) {
+                        betreffElement.value = vorschlag.betreff;
+                    }
 
                     // Vorschlag
-                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
+                    const vorschlagElement = document.getElementById('vorschlag');
+                    if (vorschlagElement) {
+                        vorschlagElement.value = vorschlag.vorschlag;
+                    }
 
                     // Status
-                    document.getElementById('status').value = vorschlag.status;
+                    const statusElement = document.getElementById('status');
+                    if (statusElement) {
+                        statusElement.value = vorschlag.status;
+                    }
 
                     // Notiz
-                    document.getElementById('notiz').value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
+                    const notizElement = document.getElementById('notiz');
+                    if (notizElement) {
+                        notizElement.value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
+                    }
 
                     // Überprüfen, ob das Modal mit den richtigen Daten gefüllt wird
                     console.log("Modal-Daten nach dem Setzen:", {
-                        betreff: document.getElementById('betreff').value,
-                        vorschlag: document.getElementById('vorschlag').value,
-                        status: document.getElementById('status').value,
-                        notiz: document.getElementById('notiz').value,
-                        anonym: document.getElementById('anonym').checked,
-                        bereich: document.getElementById('bereich').value
+                        betreff: betreffElement ? betreffElement.value : undefined,
+                        vorschlag: vorschlagElement ? vorschlagElement.value : undefined,
+                        status: statusElement ? statusElement.value : undefined,
+                        notiz: notizElement ? notizElement.value : undefined,
+                        anonym: anonymElement ? anonymElement.checked : undefined,
+                        bereich: bereichElement ? bereichElement.value : undefined
                     });
 
                     // Öffne das Modal
@@ -234,6 +252,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
 
 

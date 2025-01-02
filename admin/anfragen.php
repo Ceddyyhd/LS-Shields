@@ -156,39 +156,62 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td>Details einblenden</td>
             </tr>
             <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-                <td colspan="5">
-                    <div class="p-3">
-                        <div class="mb-3">
-                            <strong>Datum & Uhrzeit:</strong>
-                            <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Telefonnummer:</strong>
-                            <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Status:</strong>
-                            <div><?= htmlspecialchars($anfrage['status']) ?></div>
-                        </div>
-                        <div class="mb-3">
-                            <strong>Anfrage:</strong>
-                            <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
-                        </div>
-                        <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
-                            <!-- Form für Statusänderung -->
-                            <form id="status-form-<?= $anfrage['id'] ?>">
-                                <input type="hidden" name="id" value="<?= $anfrage['id'] ?>"> <!-- ID aus der Anfrage -->
-                                <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>"> <!-- Benutzername aus der Session -->
-                                <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
-                                    <button class="btn btn-block btn-outline-warning" type="button" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
-                                <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
-                                    <button class="btn btn-block btn-outline-info btn-lg" type="button" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
-                                <?php endif; ?>
-                            </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+    <td colspan="5">
+        <div class="p-3">
+            <div class="mb-3">
+                <strong>Datum & Uhrzeit:</strong>
+                <div><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></div>
+            </div>
+            <div class="mb-3">
+                <strong>Telefonnummer:</strong>
+                <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
+            </div>
+            <div class="mb-3">
+                <strong>Status:</strong>
+                <div><?= htmlspecialchars($anfrage['status']) ?></div>
+            </div>
+            <div class="mb-3">
+                <strong>Anfrage:</strong>
+                <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
+            </div>
+            <div class="mb-3" id="buttons-<?= $anfrage['id'] ?>">
+                <!-- Form für Statusänderung -->
+                <form id="status-form-<?= $anfrage['id'] ?>">
+                    <input type="hidden" name="id" value="<?= $anfrage['id'] ?>"> <!-- ID aus der Anfrage -->
+                    <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>"> <!-- Benutzername aus der Session -->
+                    <?php if ($anfrage['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung'] ?? false)): ?>
+                        <button class="btn btn-block btn-outline-warning" type="button" onclick="changeStatus(<?= $anfrage['id'] ?>, 'change_status')">in Bearbeitung</button>
+                    <?php elseif ($anfrage['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung'] ?? false)): ?>
+                        <button class="btn btn-block btn-outline-info btn-lg" type="button" onclick="changeStatus(<?= $anfrage['id'] ?>, 'move_to_eventplanung')">in Planung</button>
+                    <?php endif; ?>
+                </form>
+            </div>
+
+            <!-- Logs anzeigen -->
+            <div class="mt-3">
+                <strong>Log-Einträge:</strong>
+                <ul>
+                    <?php
+                    // Logs für diese Anfrage aus der anfragen_logs-Tabelle abfragen
+                    $stmt = $conn->prepare("SELECT * FROM anfragen_logs WHERE anfrage_id = :id ORDER BY timestamp DESC");
+                    $stmt->execute([':id' => $anfrage['id']]);
+                    $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    // Logs ausgeben
+                    if ($logs) {
+                        foreach ($logs as $log) {
+                            echo '<li>' . htmlspecialchars($log['action']) . ' - ' . htmlspecialchars($log['timestamp']) . '</li>';
+                        }
+                    } else {
+                        echo '<li>Keine Log-Einträge gefunden.</li>';
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </td>
+</tr>
+
         <?php endforeach; ?>
         </tbody>
         </table>

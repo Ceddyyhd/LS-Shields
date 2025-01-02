@@ -257,12 +257,10 @@ try {
             data: formData,
             success: function(response) {
                 var responseData = JSON.parse(response);
-                alert(responseData.message); // Rückmeldung vom Server anzeigen
                 $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
                 window.location.reload();  // Seite neu laden
             },
             error: function() {
-                alert('Es gab einen Fehler beim Speichern der Änderungen.');
             }
         });
     });
@@ -361,7 +359,6 @@ margin: 0;
                 });
             } else {
                 console.log("Keine Teams gefunden.");
-                alert('Keine Teams gefunden.');
             }
         },
         error: function(xhr, status, error) {
@@ -454,7 +451,6 @@ margin: 0;
                         });
                     } else {
                         console.log("Keine Teams gefunden.");
-                        alert('Keine Teams gefunden.');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -586,7 +582,6 @@ margin: 0;
         // Holen der Event-ID aus der URL
         var eventId = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
         if (eventId === null) {
-            alert('Event-ID fehlt in der URL!');
             return;
         }
 
@@ -677,11 +672,9 @@ margin: 0;
                     },
                     success: function(response) {
                         console.log(response);  // Antwort des Servers in der Konsole
-                        alert('Daten wurden gespeichert!');
                     },
                     error: function(xhr, status, error) {
                         console.log('Fehler:', error);  // Fehlerdetails in der Konsole
-                        alert('Fehler beim Speichern der Daten!');
                     }
                 });
             });
@@ -776,15 +769,12 @@ margin: 0;
                 },
                 success: function(response) {
                     console.log('Antwort vom Server:', response);
-                    alert('Anmeldung erfolgreich!');
                 },
                 error: function(xhr, status, error) {
                     console.log('AJAX-Fehler: ', error);
-                    alert('Fehler bei der Anmeldung!');
                 }
             });
         } else {
-            alert('Bitte wählen Sie mindestens einen Mitarbeiter aus!');
         }
     });
 });
@@ -920,16 +910,13 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status == 'success') {
-                    alert(response.message);  // Erfolgsmeldung anzeigen
                 } else {
-                    alert('Fehler: ' + response.message);  // Fehlermeldung anzeigen
                 }
             },
             error: function(xhr, status, error) {
               console.log("Status: " + status);  // Gibt den Status des Fehlers aus
               console.log("Fehler: " + error);   // Gibt den Fehlertext aus
               console.log("Antwort: " + xhr.responseText);  // Gibt die vollständige Antwort des Servers aus
-              alert('Fehler bei der Anfrage! Siehe Konsole für Details.');
           }
         });
     });

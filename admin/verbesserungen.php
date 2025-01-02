@@ -203,10 +203,10 @@ include 'include/db.php';
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
-                              Zustimmen <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['zustimmungen']) ?></span>
+                              Zustimmen 
                           </button>
                           <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
-                              Ablehnen <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['ablehnungen']) ?></span>
+                              Ablehnen 
                           </button>                          
                       </div>
                         </div>

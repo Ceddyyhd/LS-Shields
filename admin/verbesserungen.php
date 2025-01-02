@@ -184,11 +184,11 @@ include 'include/db.php';
                             </div>
 
                             <div class="mb-3">
-                                <strong>Zustimmungen:</strong> <?= $vorschlag['zustimmungen'] ?>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Ablehnungen:</strong> <?= $vorschlag['ablehnungen'] ?>
-                            </div>
+                              <strong>Zustimmungen:</strong> <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['zustimmungen'] ?></span>
+                          </div>
+                          <div class="mb-3">
+                              <strong>Ablehnungen:</strong> <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['ablehnungen'] ?></span>
+                          </div>
 
                             <div class="mb-3" id="buttons-<?= $vorschlag['id'] ?>">
                                 <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung_verbesserungen'] ?? false)): ?>
@@ -202,10 +202,8 @@ include 'include/db.php';
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
-                                <strong>Zustimmungen:</strong> <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['zustimmungen'] ?></span>
-                            </div>
-                            <div class="mb-3">
-                                <strong>Ablehnungen:</strong> <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['ablehnungen'] ?></span>
+                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?></button>
+                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?></button>
                             </div>
                         </div>
                     </td>

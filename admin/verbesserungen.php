@@ -112,6 +112,7 @@ include 'include/db.php';
 </div>
 
 
+<!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -175,6 +176,7 @@ include 'include/db.php';
         </div>
     </div>
 </div>
+
 <script>
  function openEditModal(vorschlagId) {
     // Hole die Daten des Vorschlags aus der Datenbank
@@ -184,6 +186,12 @@ include 'include/db.php';
             if (data.success) {
                 const vorschlag = data.vorschlag;
                 console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
+
+                // Überprüfen, ob die Felder im Modal korrekt gesetzt werden
+                console.log('Betreff:', vorschlag.betreff);
+                console.log('Vorschlag:', vorschlag.vorschlag);
+                console.log('Status:', vorschlag.status);
+                console.log('Notiz:', vorschlag.notiz);
 
                 // Füllen der Felder im Modal
                 document.getElementById('betreff').value = vorschlag.betreff || ''; // Wenn leer, setze auf leer
@@ -201,6 +209,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
 
   document.getElementById('saveEditBtn').addEventListener('click', function() {

@@ -69,7 +69,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <th>Telefonnummer</th>
             <th>Beitritt</th>
             <th>Urlaub</th>
-            <th>Bearbeiten</th>
+            <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+              <th>Bearbeiten</th>
+           <?php endif; ?>
           </tr>
         </tfoot>
       </table>

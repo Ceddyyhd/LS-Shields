@@ -228,9 +228,16 @@ function rateSuggestion(vorschlagId, zustimmung) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Die Zustimmungen und Ablehnungen in der Tabelle aktualisieren
-            document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
-            document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
+            // Überprüfe, ob das Element existiert, bevor du den Text änderst
+            const zustimmungenElement = document.getElementById(`zustimmungen-${vorschlagId}`);
+            if (zustimmungenElement) {
+                zustimmungenElement.innerText = data.zustimmungen;
+            }
+            
+            const ablehnungenElement = document.getElementById(`ablehnungen-${vorschlagId}`);
+            if (ablehnungenElement) {
+                ablehnungenElement.innerText = data.ablehnungen;
+            }
         } else {
             alert('Fehler: ' + data.message);
         }

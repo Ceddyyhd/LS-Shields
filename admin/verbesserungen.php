@@ -10,7 +10,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <div class="wrapper">
 
 <?php include 'include/navbar.php'; ?>
+<?php
+include 'include/db.php'; // Datenbankverbindung
+session_start(); // Sitzung starten
 
+// SQL-Abfrage, um alle Vorschläge zu erhalten, einschließlich der Anzahl der Zustimmungen und Ablehnungen
+$query = "SELECT id, vorschlag, status, erstellt_von, datum_uhrzeit, zustimmungen, ablehnungen FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

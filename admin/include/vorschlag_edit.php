@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];
         $notiz = $_POST['notiz'];
         $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
-        $user = $_SESSION['username']; // Benutzername des angemeldeten Benutzers
-
+        $user_name = $_POST['user_name']; // Benutzername aus dem versteckten Input
+       
         // Abrufen der aktuellen Vorschlagsdaten für das Log
         $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
         $stmt = $conn->prepare($query);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Log-Eintrag erstellen
-        $logMessage = "Vorschlag ID $id geändert von $user.\n";
+        $logMessage = "Vorschlag ID $id geändert von $user_name.\n";
         $logMessage .= "Änderungen: \n";
         
         // Vergleiche alte und neue Daten, um die Änderungen zu protokollieren
@@ -62,10 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($anonym != $oldData['anonym']) $logMessage .= "Anonym geändert: {$oldData['anonym']} -> $anonym\n";
 
         // SQL zum Hinzufügen eines Log-Eintrags
-        $logQuery = "INSERT INTO vorschlag_logs (vorschlag_id, user, change_details) VALUES (:vorschlag_id, :user, :change_details)";
+        $logQuery = "INSERT INTO vorschlag_logs (vorschlag_id, user_name, change_details) VALUES (:vorschlag_id, :user_name, :change_details)";
         $logStmt = $conn->prepare($logQuery);
         $logStmt->bindParam(':vorschlag_id', $id);
-        $logStmt->bindParam(':user', $user);
+        $logStmt->bindParam(':user_name', $user_name);
         $logStmt->bindParam(':change_details', $logMessage);
 
         if ($logStmt->execute()) {
@@ -76,7 +76,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
 }
 ?>

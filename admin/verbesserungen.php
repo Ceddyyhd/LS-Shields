@@ -296,6 +296,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <label for="notiz">Notiz</label>
                         <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['notiz']); ?></textarea>
                     </div>
+                    <input type="hidden" id="erstellt_von" name="erstellt_von" value="<?php echo $_SESSION['username']; ?>">
                 </form>
             </div>
             <div class="modal-footer">

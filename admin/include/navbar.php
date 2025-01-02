@@ -55,7 +55,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+                <a href="#" class="d-block"><?php echo htmlspecialchars($user_id); ?></a>
             </div>
         </div>
 

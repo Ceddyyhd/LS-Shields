@@ -246,38 +246,67 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
             </div>
             <div class="modal-body">
-            <form id="createUserForm">
-    <div class="card-body">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for="email">Email Adresse</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="umail">Umail Adresse</label>
-            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="kontonummer">Kontonummer</label>
-            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
-        </div>
-        <div class="form-group">
-            <label for="nummer">Tel. Nr.</label>
-            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
-        </div>
-    </div>
-</form>
+                <form id="createUserForm">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Adresse</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="umail">Umail Adresse</label>
+                            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter umail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kontonummer">Kontonummer</label>
+                            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
+                        </div>
+                        <div class="form-group">
+                            <label for="nummer">Tel. Nr.</label>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
+                        </div>
+                        <!-- Admin Bereich (Wird auf 0 gesetzt) -->
+                        <input type="hidden" name="admin_bereich" value="0">
+                        <!-- Bewerber (Wird auf 'ja' gesetzt) -->
+                        <input type="hidden" name="bewerber" value="ja">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="saveUserBtn">Save changes</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+$('#saveUserBtn').on('click', function() {
+    const formData = new FormData(document.getElementById('createUserForm'));
+
+    // Sende das Formular per AJAX an das PHP-Skript
+    fetch('create_user.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Benutzer erfolgreich erstellt!');
+            $('#modal-user-create-bewerber').modal('hide'); // Modal schließen
+            location.reload(); // Optional: Seite neu laden, um den neuen Benutzer zu sehen
+        } else {
+            alert('Fehler: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein unerwarteter Fehler ist aufgetreten.');
+    });
+});
+</script>
 
     <!-- Dein JavaScript -->
     <script>

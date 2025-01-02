@@ -126,53 +126,53 @@ include 'include/db.php';
                 <form id="editSuggestionForm">
                     <!-- Bereich (disabled) -->
                     <div class="form-group">
-                        <label>Bereich</label>
-                        <select class="custom-select" name="bereich" id="bereich" disabled>
-                            <option value="Personal">Personal</option>
-                            <option value="Ausrüstung">Ausrüstung</option>
-                            <option value="Ausbildung">Ausbildung</option>
-                            <option value="IT">IT</option>
-                            <option value="Sonstiges">Sonstiges</option>
-                        </select>
-                    </div>
+    <label>Bereich</label>
+    <select class="custom-select" name="bereich" id="bereich" readonly>
+        <option value="Personal">Personal</option>
+        <option value="Ausrüstung">Ausrüstung</option>
+        <option value="Ausbildung">Ausbildung</option>
+        <option value="IT">IT</option>
+        <option value="Sonstiges">Sonstiges</option>
+    </select>
+</div>
 
-                    <!-- Anonym Checkbox -->
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
-                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-                        </div>
-                    </div>
+<!-- Anonym Checkbox (readonly funktioniert hier nicht, da Checkbox eine andere Art von Interaktion hat) -->
+<div class="form-group">
+    <div class="form-check">
+        <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" readonly>
+        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+    </div>
+</div>
 
-                    <!-- Betreff -->
-                    <div class="form-group">
-                        <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
-                    </div>
+<!-- Betreff -->
+<div class="form-group">
+    <label for="betreff">Betreff</label>
+    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" readonly>
+</div>
 
-                    <!-- Vorschlag -->
-                    <div class="form-group">
-                        <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
-                    </div>
+<!-- Vorschlag -->
+<div class="form-group">
+    <label for="vorschlag">Vorschlag</label>
+    <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" readonly></textarea>
+</div>
 
-                    <!-- Status -->
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select class="custom-select" name="status" id="status">
-                            <option value="Angefragt">Angefragt</option>
-                            <option value="in Bearbeitung">in Bearbeitung</option>
-                            <option value="Rückfragen">Rückfragen</option>
-                            <option value="Angenommen">Angenommen</option>
-                            <option value="Abgelehnt">Abgelehnt</option>
-                        </select>
-                    </div>
+<!-- Status (hier bleibt es als select und editierbar) -->
+<div class="form-group">
+    <label>Status</label>
+    <select class="custom-select" name="status" id="status">
+        <option value="Angefragt">Angefragt</option>
+        <option value="in Bearbeitung">in Bearbeitung</option>
+        <option value="Rückfragen">Rückfragen</option>
+        <option value="Angenommen">Angenommen</option>
+        <option value="Abgelehnt">Abgelehnt</option>
+    </select>
+</div>
 
-                    <!-- Notiz -->
-                    <div class="form-group">
-                        <label for="notiz">Notiz</label>
-                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-                    </div>
+<!-- Notiz (editierbar) -->
+<div class="form-group">
+    <label for="notiz">Notiz</label>
+    <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+</div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -195,9 +195,9 @@ include 'include/db.php';
 
                 // Sicherstellen, dass alle Felder korrekt gefüllt werden
                 if (vorschlag) {
-                    document.getElementById('bereich').placeholder = vorschlag.bereich;
-                    document.getElementById('betreff').placeholder = vorschlag.betreff;
-                    document.getElementById('vorschlag').placeholder = vorschlag.vorschlag;
+                    document.getElementById('bereich').value = vorschlag.bereich;
+                    document.getElementById('betreff').value = vorschlag.betreff;
+                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
                     document.getElementById('status').value = vorschlag.status;
                     document.getElementById('notiz').value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
 

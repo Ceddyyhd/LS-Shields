@@ -124,31 +124,49 @@ include 'include/db.php';
             </div>
             <div class="modal-body">
                 <form id="editSuggestionForm">
-                <div class="form-group">
-                  <label for="betreff">Betreff</label>
-                  <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
-              </div>
+                    <div class="form-group">
+                        <label>Bereich</label>
+                        <select class="custom-select" name="bereich" disabled>
+                            <option value="Personal">Personal</option>
+                            <option value="Ausrüstung">Ausrüstung</option>
+                            <option value="Ausbildung">Ausbildung</option>
+                            <option value="IT">IT</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
 
-              <div class="form-group">
-                  <label for="vorschlag">Vorschlag</label>
-                  <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
-              </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
+                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        </div>
+                    </div>
 
-              <div class="form-group">
-                  <label>Status</label>
-                  <select class="custom-select" name="status">
-                      <option value="Angefragt">Angefragt</option>
-                      <option value="in Bearbeitung">in Bearbeitung</option>
-                      <option value="Rückfragen">Rückfragen</option>
-                      <option value="Angenommen">Angenommen</option>
-                      <option value="Abgelehnt">Abgelehnt</option>
-                  </select>
-              </div>
+                    <div class="form-group">
+                        <label for="betreff">Betreff</label>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
+                    </div>
 
-              <div class="form-group">
-                  <label for="notiz">Notiz</label>
-                  <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-              </div>
+                    <div class="form-group">
+                        <label for="vorschlag">Vorschlag</label>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="custom-select" name="status">
+                            <option value="Angefragt">Angefragt</option>
+                            <option value="in Bearbeitung">in Bearbeitung</option>
+                            <option value="Rückfragen">Rückfragen</option>
+                            <option value="Angenommen">Angenommen</option>
+                            <option value="Abgelehnt">Abgelehnt</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notiz">Notiz</label>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -166,7 +184,8 @@ include 'include/db.php';
         .then(data => {
             if (data.success) {
                 const vorschlag = data.vorschlag;
-
+                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
+                
                 // Füllen der Felder im Modal
                 document.getElementById('betreff').value = vorschlag.betreff;
                 document.getElementById('vorschlag').value = vorschlag.vorschlag;

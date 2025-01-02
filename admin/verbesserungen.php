@@ -195,9 +195,9 @@ include 'include/db.php';
 
                 // Sicherstellen, dass alle Felder korrekt gefüllt werden
                 if (vorschlag) {
-                    document.getElementById('bereich').value = vorschlag.bereich;
-                    document.getElementById('betreff').value = vorschlag.betreff;
-                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
+                    document.getElementById('bereich').placeholder = vorschlag.bereich;
+                    document.getElementById('betreff').placeholder = vorschlag.betreff;
+                    document.getElementById('vorschlag').placeholder = vorschlag.vorschlag;
                     document.getElementById('status').value = vorschlag.status;
                     document.getElementById('notiz').value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
 

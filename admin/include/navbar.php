@@ -154,12 +154,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="gekuendigt_mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'gekuendigt_mitarbeiterverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Gekündigte Mitarbeiter</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Rang Verwaltung</p>

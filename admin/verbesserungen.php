@@ -346,16 +346,6 @@ include 'include/db.php';
                               <strong>Ablehnungen:</strong> <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['ablehnungen'] ?></span>
                           </div>
 
-                            <div class="mb-3" id="buttons-<?= $vorschlag['id'] ?>">
-                                <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung_verbesserungen'] ?? false)): ?>
-                                    <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status')">in Bearbeitung</button>
-                                <?php elseif ($vorschlag['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung_verbesserungen'] ?? false)): ?>
-                                    <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
-                                <?php elseif ($vorschlag['status'] === 'Abgeschlossen'): ?>
-                                    <span class="badge badge-success">Abgeschlossen</span>
-                                <?php endif; ?>
-                            </div>
-
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">

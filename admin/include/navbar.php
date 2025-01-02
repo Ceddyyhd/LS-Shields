@@ -2,6 +2,7 @@
 session_start();
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
+$user_id = $_SESSION['user_id'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 
 
 // Benutzerinformationen abrufen

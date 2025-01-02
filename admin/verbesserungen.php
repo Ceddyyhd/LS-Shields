@@ -238,6 +238,7 @@ include 'include/db.php';
 
                     // Öffne das Modal
                     $('#modal-vorschlag-bearbeiten').modal('show');
+                        console.log('Modal wurde geöffnet');
                 }
             } else {
                 alert("Fehler: " + data.message);

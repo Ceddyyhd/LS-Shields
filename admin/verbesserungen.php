@@ -179,7 +179,7 @@ include 'include/db.php';
 <script>
   function openEditModal(vorschlagId) {
     // Hier laden wir die Daten für den Vorschlag aus der Datenbank und setzen sie in das Modal
-    fetch(`get_vorschlag_data.php?id=${vorschlagId}`)
+    fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {

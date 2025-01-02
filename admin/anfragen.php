@@ -170,7 +170,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="mb-3">
                 <strong>Status:</strong>
-                <div><?= htmlspecialchars($anfrage['status']) ?></div>
+                <div class="status-detail"><?= htmlspecialchars($anfrage['status']) ?></div> <!-- Hinzugefügt: Die Klasse `status-detail` -->
             </div>
             <div class="mb-3">
                 <strong>Anfrage:</strong>
@@ -202,7 +202,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     // Logs ausgeben
                     if ($logs) {
                         foreach ($logs as $log) {
-                            echo '<li>'.htmlspecialchars($log['username']).' - ' . htmlspecialchars($log['action']) . ' - ' . htmlspecialchars($log['timestamp']) . '</li>';
+                            echo '<li>' . htmlspecialchars($log['username']) . ' - ' . htmlspecialchars($log['action']) . ' - ' . htmlspecialchars($log['timestamp']) . '</li>';
                         }
                     } else {
                         echo '<li>Keine Log-Einträge gefunden.</li>';
@@ -230,9 +230,6 @@ function changeStatus(id, action) {
   // Füge die action manuell hinzu
   formData.append('action', action);
 
-  // Überprüfe, ob die ID korrekt übermittelt wird
-  console.log("FormData:", formData);
-
   fetch('include/update_status.php', {
     method: 'POST',
     body: formData,
@@ -242,17 +239,20 @@ function changeStatus(id, action) {
       if (data.success) {
         // Aktualisiere den Status in der Tabelle
         if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
-          
+          const statusInTable = document.getElementById(`status-${id}`);
+          statusInTable.innerText = 'in Bearbeitung'; // Update in der Tabelle
+
           // Aktualisiere den Status in der Detailansicht
-          const statusInDetail = document.querySelector(`tr[data-id="${id}"] .expandable-body #status-${id}`);
+          const statusInDetail = document.querySelector(`tr[data-id="${id}"] .expandable-body .status-detail`);
           if (statusInDetail) {
-            statusInDetail.innerText = 'in Bearbeitung';
+            statusInDetail.innerText = 'in Bearbeitung'; // Update in der Detailansicht
           }
 
+          // Status-Button in der Tabelle ändern
           document.getElementById(`buttons-${id}`).innerHTML =
             `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
         } else if (action === 'move_to_eventplanung' && data.removed) {
+          // Entfernen der Zeilen bei erfolgreichem Move
           document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
           document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
         }
@@ -264,6 +264,7 @@ function changeStatus(id, action) {
       alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
 }
+
 </script>
 
 

@@ -52,9 +52,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Mitarbeiter Verwaltung</a>
                   </li>
+                  <?php if (isset($_SESSION['permissions']['view_gekuendigte_mitarbeiter']) && $_SESSION['permissions']['view_gekuendigte_mitarbeiter']): ?>
                   <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Gekündigte Mitarbeiter Verwaltung</a>
                   </li>
+                  <?php endif; ?>
                 </ul>
               </div>
               <div class="card-body">

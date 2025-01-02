@@ -126,53 +126,53 @@ include 'include/db.php';
                 <form id="editSuggestionForm">
                     <!-- Bereich (disabled) -->
                     <div class="form-group">
-    <label>Bereich</label>
-    <select class="custom-select" name="bereich" id="bereich">
-        <option value="Personal">Personal</option>
-        <option value="Ausrüstung">Ausrüstung</option>
-        <option value="Ausbildung">Ausbildung</option>
-        <option value="IT">IT</option>
-        <option value="Sonstiges">Sonstiges</option>
-    </select>
-</div>
+                        <label for="bereich">Bereich</label>
+                        <select class="custom-select" name="bereich" id="bereich">
+                            <option value="Personal">Personal</option>
+                            <option value="Ausrüstung">Ausrüstung</option>
+                            <option value="Ausbildung">Ausbildung</option>
+                            <option value="IT">IT</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
 
-<!-- Anonym Checkbox (readonly funktioniert hier nicht, da Checkbox eine andere Art von Interaktion hat) -->
-<div class="form-group">
-    <div class="form-check">
-        <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
-        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-    </div>
-</div>
+                    <!-- Anonym Checkbox (readonly funktioniert hier nicht, da Checkbox eine andere Art von Interaktion hat) -->
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
+                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        </div>
+                    </div>
 
-<!-- Betreff -->
-<div class="form-group">
-    <label for="betreff">Betreff</label>
-    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
-</div>
+                    <!-- Betreff -->
+                    <div class="form-group">
+                        <label for="betreff">Betreff</label>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
+                    </div>
 
-<!-- Vorschlag -->
-<div class="form-group">
-    <label for="vorschlag">Vorschlag</label>
-    <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
-</div>
+                    <!-- Vorschlag -->
+                    <div class="form-group">
+                        <label for="vorschlag">Vorschlag</label>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
+                    </div>
 
-<!-- Status (hier bleibt es als select und editierbar) -->
-<div class="form-group">
-    <label>Status</label>
-    <select class="custom-select" name="status" id="status">
-        <option value="Angefragt">Angefragt</option>
-        <option value="in Bearbeitung">in Bearbeitung</option>
-        <option value="Rückfragen">Rückfragen</option>
-        <option value="Angenommen">Angenommen</option>
-        <option value="Abgelehnt">Abgelehnt</option>
-    </select>
-</div>
+                    <!-- Status -->
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="custom-select" name="status" id="status">
+                            <option value="Angefragt">Angefragt</option>
+                            <option value="in Bearbeitung">in Bearbeitung</option>
+                            <option value="Rückfragen">Rückfragen</option>
+                            <option value="Angenommen">Angenommen</option>
+                            <option value="Abgelehnt">Abgelehnt</option>
+                        </select>
+                    </div>
 
-<!-- Notiz (editierbar) -->
-<div class="form-group">
-    <label for="notiz">Notiz</label>
-    <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-</div>
+                    <!-- Notiz -->
+                    <div class="form-group">
+                        <label for="notiz">Notiz</label>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -185,60 +185,72 @@ include 'include/db.php';
 
 <script>
  function openEditModal(vorschlagId) {
+    // Hole die Daten des Vorschlags aus der Datenbank
     fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
-            console.log('Rohdaten:', data); // Gib die Rohdaten aus
             if (data.success) {
                 const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag);
+                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
 
                 if (vorschlag) {
                     // Bereich
                     const bereichElement = document.getElementById('bereich');
                     if (bereichElement) {
-                        console.log('Bereich:', vorschlag.bereich);
+                        console.log('Bereich wird gesetzt:', vorschlag.bereich);
                         bereichElement.value = vorschlag.bereich;
+                    } else {
+                        console.log('Fehler: Bereich-Element nicht gefunden');
                     }
 
                     // Anonym (Checkbox)
                     const anonymElement = document.getElementById('anonym');
                     if (anonymElement) {
-                        console.log('Anonym:', vorschlag.anonym);
+                        console.log('Anonym wird gesetzt:', vorschlag.anonym);
                         anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist
+                    } else {
+                        console.log('Fehler: Anonym-Element nicht gefunden');
                     }
 
                     // Betreff
                     const betreffElement = document.getElementById('betreff');
                     if (betreffElement) {
-                        console.log('Betreff:', vorschlag.betreff);
+                        console.log('Betreff wird gesetzt:', vorschlag.betreff);
                         betreffElement.value = vorschlag.betreff;
+                    } else {
+                        console.log('Fehler: Betreff-Element nicht gefunden');
                     }
 
                     // Vorschlag
                     const vorschlagElement = document.getElementById('vorschlag');
                     if (vorschlagElement) {
-                        console.log('Vorschlag:', vorschlag.vorschlag);
+                        console.log('Vorschlag wird gesetzt:', vorschlag.vorschlag);
                         vorschlagElement.value = vorschlag.vorschlag;
+                    } else {
+                        console.log('Fehler: Vorschlag-Element nicht gefunden');
                     }
 
                     // Status
                     const statusElement = document.getElementById('status');
                     if (statusElement) {
-                        console.log('Status:', vorschlag.status);
+                        console.log('Status wird gesetzt:', vorschlag.status);
                         statusElement.value = vorschlag.status;
+                    } else {
+                        console.log('Fehler: Status-Element nicht gefunden');
                     }
 
                     // Notiz
                     const notizElement = document.getElementById('notiz');
                     if (notizElement) {
-                        console.log('Notiz:', vorschlag.notiz);
+                        console.log('Notiz wird gesetzt:', vorschlag.notiz);
                         notizElement.value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
+                    } else {
+                        console.log('Fehler: Notiz-Element nicht gefunden');
                     }
 
-                    // Öffne das Modal
+                    // Öffne das Modal NUR nachdem alle Daten gesetzt wurden
                     $('#modal-vorschlag-bearbeiten').modal('show');
-                        console.log('Modal wurde geöffnet');
+                    console.log('Modal wurde geöffnet');
                 }
             } else {
                 alert("Fehler: " + data.message);

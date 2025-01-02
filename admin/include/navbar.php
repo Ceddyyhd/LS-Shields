@@ -10,7 +10,7 @@ $sql = "SELECT users.*, roles.name AS role_name, users.profile_image
             LEFT JOIN roles ON users.role_id = roles.id 
             WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $user_id1]);
+$stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!-- Navbar -->

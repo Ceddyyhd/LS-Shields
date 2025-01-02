@@ -203,11 +203,11 @@ include 'include/db.php';
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
-                            Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?>
-                        </button>
-                        <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
-                            Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?>
-                        </button>                            
+                              Zustimmen <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['zustimmungen']) ?></span>
+                          </button>
+                          <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
+                              Ablehnen <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= htmlspecialchars($vorschlag['ablehnungen']) ?></span>
+                          </button>                          
                       </div>
                         </div>
                     </td>
@@ -236,7 +236,7 @@ function rateSuggestion(vorschlagId, zustimmung) {
             document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
             document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
             
-            // Buttons deaktivieren, wenn der Benutzer abgestimmt hat
+            // Deaktiviere die Buttons, wenn der Benutzer abgestimmt hat
             document.getElementById(`btn-accept-${vorschlagId}`).disabled = true;
             document.getElementById(`btn-reject-${vorschlagId}`).disabled = true;
         } else {

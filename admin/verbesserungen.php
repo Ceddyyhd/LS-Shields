@@ -185,61 +185,56 @@ include 'include/db.php';
 
 <script>
  function openEditModal(vorschlagId) {
-    // Hole die Daten des Vorschlags aus der Datenbank
     fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
+            console.log('Rohdaten:', data); // Gib die Rohdaten aus
             if (data.success) {
                 const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
+                console.log('Vorschlag-Daten:', vorschlag);
 
-                // Sicherstellen, dass alle Felder korrekt gefüllt werden
                 if (vorschlag) {
                     // Bereich
                     const bereichElement = document.getElementById('bereich');
                     if (bereichElement) {
+                        console.log('Bereich:', vorschlag.bereich);
                         bereichElement.value = vorschlag.bereich;
                     }
 
                     // Anonym (Checkbox)
                     const anonymElement = document.getElementById('anonym');
                     if (anonymElement) {
-                        anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist (als String)
+                        console.log('Anonym:', vorschlag.anonym);
+                        anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist
                     }
 
                     // Betreff
                     const betreffElement = document.getElementById('betreff');
                     if (betreffElement) {
+                        console.log('Betreff:', vorschlag.betreff);
                         betreffElement.value = vorschlag.betreff;
                     }
 
                     // Vorschlag
                     const vorschlagElement = document.getElementById('vorschlag');
                     if (vorschlagElement) {
+                        console.log('Vorschlag:', vorschlag.vorschlag);
                         vorschlagElement.value = vorschlag.vorschlag;
                     }
 
                     // Status
                     const statusElement = document.getElementById('status');
                     if (statusElement) {
+                        console.log('Status:', vorschlag.status);
                         statusElement.value = vorschlag.status;
                     }
 
                     // Notiz
                     const notizElement = document.getElementById('notiz');
                     if (notizElement) {
+                        console.log('Notiz:', vorschlag.notiz);
                         notizElement.value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
                     }
-
-                    // Überprüfen, ob das Modal mit den richtigen Daten gefüllt wird
-                    console.log("Modal-Daten nach dem Setzen:", {
-                        betreff: betreffElement ? betreffElement.value : undefined,
-                        vorschlag: vorschlagElement ? vorschlagElement.value : undefined,
-                        status: statusElement ? statusElement.value : undefined,
-                        notiz: notizElement ? notizElement.value : undefined,
-                        anonym: anonymElement ? anonymElement.checked : undefined,
-                        bereich: bereichElement ? bereichElement.value : undefined
-                    });
 
                     // Öffne das Modal
                     $('#modal-vorschlag-bearbeiten').modal('show');

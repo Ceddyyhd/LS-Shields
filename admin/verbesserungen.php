@@ -22,6 +22,12 @@ $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Abruf aller Vorschläge aus der Datenbank
+$query = "SELECT * FROM verbesserungsvorschlaege";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$vorschlaege1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -225,7 +231,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<?php if ($vorschlag): ?>
+<?php if ($vorschlaege1): ?>
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
@@ -242,18 +248,18 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-group">
                         <label for="bereich">Bereich</label>
                         <select class="custom-select" name="bereich" id="bereich">
-                            <option value="Personal" <?php echo ($vorschlag['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
-                            <option value="Ausrüstung" <?php echo ($vorschlag['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
-                            <option value="Ausbildung" <?php echo ($vorschlag['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
-                            <option value="IT" <?php echo ($vorschlag['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
-                            <option value="Sonstiges" <?php echo ($vorschlag['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
+                            <option value="Personal" <?php echo ($vorschlaege1['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
+                            <option value="Ausrüstung" <?php echo ($vorschlaege1['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
+                            <option value="Ausbildung" <?php echo ($vorschlaege1['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
+                            <option value="IT" <?php echo ($vorschlaege1['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
+                            <option value="Sonstiges" <?php echo ($vorschlaege1['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
                         </select>
                     </div>
 
                     <!-- Anonym Checkbox -->
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlag['anonym'] == '1') ? 'checked' : ''; ?>>
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlaege1['anonym'] == '1') ? 'checked' : ''; ?>>
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
@@ -261,31 +267,31 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Betreff -->
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlag['betreff']); ?>">
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlaege1['betreff']); ?>">
                     </div>
 
                     <!-- Vorschlag -->
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"><?php echo htmlspecialchars($vorschlag['vorschlag']); ?></textarea>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"><?php echo htmlspecialchars($vorschlaege1['vorschlag']); ?></textarea>
                     </div>
 
                     <!-- Status -->
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="custom-select" name="status" id="status">
-                            <option value="Angefragt" <?php echo ($vorschlag['status'] == 'Angefragt') ? 'selected' : ''; ?>>Angefragt</option>
-                            <option value="in Bearbeitung" <?php echo ($vorschlag['status'] == 'in Bearbeitung') ? 'selected' : ''; ?>>in Bearbeitung</option>
-                            <option value="Rückfragen" <?php echo ($vorschlag['status'] == 'Rückfragen') ? 'selected' : ''; ?>>Rückfragen</option>
-                            <option value="Angenommen" <?php echo ($vorschlag['status'] == 'Angenommen') ? 'selected' : ''; ?>>Angenommen</option>
-                            <option value="Abgelehnt" <?php echo ($vorschlag['status'] == 'Abgelehnt') ? 'selected' : ''; ?>>Abgelehnt</option>
+                            <option value="Angefragt" <?php echo ($vorschlaege1['status'] == 'Angefragt') ? 'selected' : ''; ?>>Angefragt</option>
+                            <option value="in Bearbeitung" <?php echo ($vorschlaege1['status'] == 'in Bearbeitung') ? 'selected' : ''; ?>>in Bearbeitung</option>
+                            <option value="Rückfragen" <?php echo ($vorschlaege1['status'] == 'Rückfragen') ? 'selected' : ''; ?>>Rückfragen</option>
+                            <option value="Angenommen" <?php echo ($vorschlaege1['status'] == 'Angenommen') ? 'selected' : ''; ?>>Angenommen</option>
+                            <option value="Abgelehnt" <?php echo ($vorschlaege1['status'] == 'Abgelehnt') ? 'selected' : ''; ?>>Abgelehnt</option>
                         </select>
                     </div>
 
                     <!-- Notiz -->
                     <div class="form-group">
                         <label for="notiz">Notiz</label>
-                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['notiz']); ?></textarea>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlaege1['notiz']); ?></textarea>
                     </div>
                 </form>
             </div>

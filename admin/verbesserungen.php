@@ -74,10 +74,16 @@ include 'include/db.php';
             </div>
             <div class="modal-body">
                 <form id="createSuggestionForm">
-                   <div class="form-group">
-                        <label for="bereich">Bereich (Personal, Ausruestung, Ausbildung, IT, Sonstiges)</label>
-                        <input type="text" name="bereich" id="bereich" class="form-control" placeholder="Bereich eingeben" required>
-                    </div>
+                <div class="form-group">
+                        <label>Bereich</label>
+                        <select multiple class="custom-select">
+                          <option>Personal</option>
+                          <option>Ausrüstung</option>
+                          <option>Ausbildung</option>
+                          <option>IT</option>
+                          <option>Sonstiges</option>
+                        </select>
+                      </div>
                     
                     <div class="form-group">
                         <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>

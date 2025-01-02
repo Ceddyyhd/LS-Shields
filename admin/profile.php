@@ -320,8 +320,8 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     <div class="form-group">
         <strong><i class="fas fa-user-times mr-1"></i> Bewerber</strong> 
         <div class="form-check">
-            <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['gekuendigt'] === 'gekuendigt' ? 'checked' : ''; ?>>
-            <label for="gekuendigtCheckbox" class="form-check-label">Benutzer als gekuendigt markieren</label>
+            <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['bewerber'] === 'ja' ? 'checked' : ''; ?>>
+            <label for="gekuendigtCheckbox" class="form-check-label">Bewerber (Checkbox = User ist Bewerber / Checkbox uncheck = User wurde angenommen)</label>
         </div>
     </div>
 <?php endif; ?>

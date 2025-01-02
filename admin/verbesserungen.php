@@ -210,9 +210,19 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               Ablehnen 
                           </button>      
                           <!-- Button zum Öffnen des Modals -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-vorschlag-bearbeiten">
-                            Launch Primary Modal
-                            </button>            
+                          <button type="button" class="btn btn-primary" 
+                            data-toggle="modal" 
+                            data-target="#modal-vorschlag-bearbeiten"
+                            data-id="<?= $vorschlag['id'] ?>"
+                            data-bereich="<?= htmlspecialchars($vorschlag['bereich']) ?>"
+                            data-betreff="<?= htmlspecialchars($vorschlag['betreff']) ?>"
+                            data-vorschlag="<?= htmlspecialchars($vorschlag['vorschlag']) ?>"
+                            data-status="<?= htmlspecialchars($vorschlag['status']) ?>"
+                            data-notiz="<?= htmlspecialchars($vorschlag['notiz']) ?>"
+                            data-anonym="<?= $vorschlag['anonym'] ?>"
+                        >
+                            Bearbeiten
+                        </button>            
                       </div>
                         </div>
                     </td>
@@ -225,7 +235,6 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<?php if ($vorschlag): ?>
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
@@ -296,10 +305,28 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
-<?php endif; ?>
 
 
 <script>
+    $('#modal-vorschlag-bearbeiten').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button, der das Modal geöffnet hat
+    var id = button.data('id');
+    var bereich = button.data('bereich');
+    var betreff = button.data('betreff');
+    var vorschlag = button.data('vorschlag');
+    var status = button.data('status');
+    var notiz = button.data('notiz');
+    var anonym = button.data('anonym');
+
+    var modal = $(this);
+    modal.find('#bereich').val(bereich);
+    modal.find('#betreff').val(betreff);
+    modal.find('#vorschlag').val(vorschlag);
+    modal.find('#status').val(status);
+    modal.find('#notiz').val(notiz);
+    modal.find('#anonym').prop('checked', anonym == '1');
+    modal.find('#editSuggestionForm').data('id', id); // Speichert die ID im Formular
+});
 function rateSuggestion(vorschlagId, zustimmung) {
     fetch('include/rate_vorschlag.php', {
         method: 'POST',

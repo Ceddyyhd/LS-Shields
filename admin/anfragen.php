@@ -200,7 +200,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     // Logs ausgeben
                     if ($logs) {
                         foreach ($logs as $log) {
-                            echo '<li>'.htmlspecialchars($log['username']).'-' . htmlspecialchars($log['action']) . ' - ' . htmlspecialchars($log['timestamp']) . '</li>';
+                            echo '<li>'.htmlspecialchars($log['username']).' - ' . htmlspecialchars($log['action']) . ' - ' . htmlspecialchars($log['timestamp']) . '</li>';
                         }
                     } else {
                         echo '<li>Keine Log-Einträge gefunden.</li>';

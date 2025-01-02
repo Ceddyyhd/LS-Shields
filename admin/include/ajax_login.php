@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['profile_image'] = $user['profile_image']; // Profilbild speichern
 
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen

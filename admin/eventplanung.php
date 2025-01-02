@@ -50,6 +50,7 @@
                 <th style="width: 20%">Ansprechpartner</th>
                 <th style="width: 20%">Event</th>
                 <th style="width: 20%">Anmerkung</th>
+                <th style="width: 20%">Datum & Uhrzeit</th>
                 <th style="width: 30%">Team Members</th>
                 <th>Status</th>
                 <th style="width: 20%">Actions</th>
@@ -76,6 +77,7 @@
             echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
             echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
             echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
+            echo "<td><span>" . htmlspecialchars($event['datum_uhrzeit']) . "</span></td>";
 
             // Team-Mitglieder anzeigen
             echo "<td><ul class='list-inline'>";

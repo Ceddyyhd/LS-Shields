@@ -169,10 +169,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div><?= htmlspecialchars($anfrage['telefonnummer']) ?></div>
             </div>
             <div class="mb-3">
-                <strong>Status:</strong>
-                <div class="status-detail"><?= htmlspecialchars($anfrage['status']) ?></div> <!-- Hinzugefügt: Die Klasse `status-detail` -->
-            </div>
-            <div class="mb-3">
                 <strong>Anfrage:</strong>
                 <div><?= htmlspecialchars($anfrage['anfrage']) ?></div>
             </div>

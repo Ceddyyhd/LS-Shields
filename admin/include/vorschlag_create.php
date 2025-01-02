@@ -12,23 +12,33 @@ if (!isset($_SESSION['username'])) {
 $erstellt_von = $_SESSION['username'];
 
 // Formulardaten auslesen
+$bereich = $_POST['bereich'] ?? '';  // Bereich
+$anonym = isset($_POST['anonym']) ? 1 : 0; // Checkbox für Anonymität
+$betreff = $_POST['betreff'] ?? '';  // Betreff
 $vorschlag = $_POST['vorschlag'] ?? ''; // Vorschlag
-$name = $_SESSION['username'] ?? ''; // Der Name wird aus der Session geholt
 $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
+// Überprüfen, ob alle erforderlichen Felder vorhanden sind
+if (empty($bereich) || empty($betreff) || empty($vorschlag)) {
+    echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
+    exit;
+}
+
 try {
     // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, name, datum_uhrzeit, status, erstellt_von)
-            VALUES (:vorschlag, :name, :datum_uhrzeit, :status, :erstellt_von)";
+    $sql = "INSERT INTO verbesserungsvorschlaege (bereich, anonym, vorschlag, betreff, datum_uhrzeit, status, erstellt_von)
+            VALUES (:bereich, :anonym, :vorschlag, :betreff, :datum_uhrzeit, :status, :erstellt_von)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([
+        ':bereich' => $bereich,
+        ':anonym' => $anonym,  // Anonymität als 1 oder 0 speichern
         ':vorschlag' => $vorschlag,
-        ':name' => $name,  // Hier wird der Name hinzugefügt
+        ':betreff' => $betreff,
         ':datum_uhrzeit' => $datum_uhrzeit,
         ':status' => $status,
-        ':erstellt_von' => $name, // Ersteller ist auch der Name
+        ':erstellt_von' => $erstellt_von,
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Vorschlag wurde erfolgreich erstellt.']);

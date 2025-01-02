@@ -65,6 +65,21 @@ include 'include/db.php';
             </div>
             <div class="modal-body">
                 <form id="createSuggestionForm">
+                   <div class="form-group">
+                        <label for="bereich">Bereich (Personal, Ausruestung, Ausbildung, IT, Sonstiges)</label>
+                        <input type="text" name="bereich" id="bereich" class="form-control" placeholder="Bereich eingeben" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        <input type="checkbox" name="anonym" id="anonym" class="form-check-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="betreff">Betreff</label>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
                         <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Beschreiben Sie den Vorschlag" required></textarea>
@@ -82,72 +97,54 @@ include 'include/db.php';
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {
-    const formData = new FormData(document.getElementById('createSuggestionForm'));
+        const formData = new FormData(document.getElementById('createSuggestionForm'));
 
-    // Überprüfe, ob das Vorschlagsfeld ausgefüllt ist
-    if (!formData.get('vorschlag')) {
-        alert('Bitte den Vorschlag ausfüllen!');
-        return;
-    }
-
-    // Zusätzliche Daten hinzufügen
-    formData.append('status', 'Eingetroffen');
-    formData.append('erstellt_von', '<?php echo $_SESSION["username"]; ?>');  // Hier den Ersteller aus der Session holen
-
-    // AJAX-Anfrage senden
-    fetch('include/vorschlag_create.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Vorschlag erfolgreich erstellt!');
-            $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
-            location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag anzuzeigen
-        } else {
-            alert('Fehler: ' + data.message);
+        // Überprüfe, ob das Vorschlagsfeld ausgefüllt ist
+        if (!formData.get('vorschlag')) {
+            alert('Bitte den Vorschlag ausfüllen!');
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Fehler:', error);
-        alert('Ein unerwarteter Fehler ist aufgetreten.');
+
+        // Zusätzliche Daten hinzufügen
+        formData.append('status', 'Eingetroffen');
+        formData.append('erstellt_von', '<?php echo $_SESSION["username"]; ?>');  // Hier den Ersteller aus der Session holen
+
+        // AJAX-Anfrage senden
+        fetch('include/vorschlag_create.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Vorschlag erfolgreich erstellt!');
+                $('#modal-vorschlag-create').modal('hide'); // Schließt das Modal
+                location.reload();  // Optional: Seite neu laden, um den neuen Vorschlag anzuzeigen
+            } else {
+                alert('Fehler: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler:', error);
+            alert('Ein unerwarteter Fehler ist aufgetreten.');
+        });
     });
-});
 </script>
 
-      <div class="card-body">
-        <table class="table table-bordered table-hover">
-          <thead>
+<div class="card-body">
+    <table class="table table-bordered table-hover">
+        <thead>
             <tr>
-              <th>#</th>
-              <th>Ansprechpartner</th>
-              <th>Anfrage</th>
-              <th>Status</th>
-              <th>Erstellt von</th>
-              <th>Details einblenden</th>
+                <th>#</th>
+                <th>Ansprechpartner</th>
+                <th>Anfrage</th>
+                <th>Status</th>
+                <th>Erstellt von</th>
+                <th>Erstellt Am</th>
+                <th>Details einblenden</th>
             </tr>
-          </thead>
-          <tbody>
-          <?php
-
-          // SQL-Abfrage, um alle Vorschläge zu erhalten
-          $query = "SELECT id, name, vorschlag, status, erstellt_von, datum_uhrzeit FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
-          $stmt = $conn->prepare($query);
-          $stmt->execute();
-
-          // Sicherstellen, dass $vorschlaege korrekt gesetzt ist
-          $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-          // Überprüfen, ob $vorschlaege nicht leer ist, bevor die foreach-Schleife ausgeführt wird
-          if (!empty($vorschlaege)) {
-              foreach ($vorschlaege as $vorschlag) {
-                  // Deine Ausgabe hier
-              }
-          } else {
-              echo "Keine Verbesserungsvorschläge gefunden.";
-          }
-          ?>
+        </thead>
+        <tbody>
             <?php foreach ($vorschlaege as $vorschlag): ?>
                 <tr data-widget="expandable-table" data-id="<?= $vorschlag['id'] ?>" aria-expanded="false">
                     <td><?= htmlspecialchars($vorschlag['id']) ?></td>
@@ -176,58 +173,63 @@ include 'include/db.php';
                                 <strong>Datum & Uhrzeit:</strong>
                                 <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
+
+                            <div class="mb-3">
+                                <strong>Zustimmungen:</strong> <?= $vorschlag['zustimmungen'] ?>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Ablehnungen:</strong> <?= $vorschlag['ablehnungen'] ?>
+                            </div>
+
                             <div class="mb-3" id="buttons-<?= $vorschlag['id'] ?>">
-                            <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung_verbesserungen'] ?? false)): ?>
-                                <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status')">in Bearbeitung</button>
-                            <?php elseif ($vorschlag['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung_verbesserungen'] ?? false)): ?>
-                                <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
-                            <?php elseif ($vorschlag['status'] === 'Abgeschlossen'): ?>
-                                <!-- Kein Button für den Status 'Abgeschlossen' -->
-                                <span class="badge badge-success">Abgeschlossen</span>
-                            <?php endif; ?>
-                        </div>
+                                <?php if ($vorschlag['status'] === 'Eingetroffen' && ($_SESSION['permissions']['change_to_in_bearbeitung_verbesserungen'] ?? false)): ?>
+                                    <button class="btn btn-block btn-outline-warning" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'change_status')">in Bearbeitung</button>
+                                <?php elseif ($vorschlag['status'] === 'in Bearbeitung' && ($_SESSION['permissions']['change_to_in_planung_verbesserungen'] ?? false)): ?>
+                                    <button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(<?= $vorschlag['id'] ?>, 'move_to_eventplanung')">Abgeschlossen</button>
+                                <?php elseif ($vorschlag['status'] === 'Abgeschlossen'): ?>
+                                    <span class="badge badge-success">Abgeschlossen</span>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Buttons für Zustimmen / Ablehnen -->
+                            <div class="mb-3">
+                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen</button>
+                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen</button>
+                            </div>
                         </div>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-        </table>
+    </table>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-function changeStatus(id, action) {
-  console.log('ID:', id);  // Prüfe die ID in der Konsole
-  console.log('Action:', action);  // Prüfe die Aktion in der Konsole
-
-  fetch('include/update_vorschlag_status.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: `id=${id}&action=${action}`,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data); // Hier wird die Antwort vom Server in der Konsole angezeigt
-      if (data.success) {
-        console.log('Status geändert:', data.message); // Erfolgsnachricht in der Konsole
-        if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'In Bearbeitung'; // Status ändern
-          document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">Abgeschlossen</button>`; // Button zum Abschluss
-        } else if (action === 'move_to_eventplanung') {
-          document.getElementById(`status-${id}`).innerText = 'Abgeschlossen'; // Status ändern
-        }
-      } else {
-        alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
-      }
+// Funktion zum Zustimmen/Ablehnen des Vorschlags
+function rateSuggestion(vorschlagId, zustimmung) {
+    fetch('include/rate_vorschlag.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `id=${vorschlagId}&zustimmung=${zustimmung}`,
     })
-    .catch((error) => {
-      console.error('Fehler:', error); // Protokolliere den Fehler in der Konsole
-      alert('Ein Fehler ist aufgetreten: ' + error.message);
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Aktualisiere die Zähler für Zustimmungen und Ablehnungen
+            document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
+            document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
+        } else {
+            alert('Fehler: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein Fehler ist aufgetreten.');
     });
 }
 </script>

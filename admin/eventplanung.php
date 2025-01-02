@@ -35,9 +35,9 @@
     $query = "
     SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
     FROM eventplanung
-    WHERE datum_uhrzeit >= CURDATE()  -- Nur zukünftige Events
+    WHERE datum_uhrzeit >= CURDATE() - INTERVAL 1 DAY  -- Zeigt Events von gestern und aus der Zukunft
     ORDER BY datum_uhrzeit ASC";  // Sortierung nach Datum und Uhrzeit aufsteigend
-
+    
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);

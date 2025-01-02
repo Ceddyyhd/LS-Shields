@@ -287,7 +287,7 @@ $('#saveUserBtn').on('click', function() {
     const formData = new FormData(document.getElementById('createUserForm'));
 
     // Sende das Formular per AJAX an das PHP-Skript
-    fetch('create_user.php', {
+    fetch('include/create_user.php', {
         method: 'POST',
         body: formData
     })

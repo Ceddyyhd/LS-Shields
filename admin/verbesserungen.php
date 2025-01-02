@@ -112,120 +112,89 @@ include 'include/db.php';
 </div>
 
 
-
+<!-- Verbesserungsvorschlag bearbeiten Modal -->
+<div class="modal fade" id="modal-vorschlag-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editSuggestionForm">
+                    <div class="form-group">
+                        <label for="bereich">Bereich</label>
+                        <select class="custom-select" name="bereich" id="bereich">
+                            <option value="Personal">Personal</option>
+                            <option value="Ausrüstung">Ausrüstung</option>
+                            <option value="Ausbildung">Ausbildung</option>
+                            <option value="IT">IT</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
+                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="betreff">Betreff</label>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
+                    </div>
+                    <div class="form-group">
+                        <label for="vorschlag">Vorschlag</label>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="custom-select" name="status" id="status">
+                            <option value="Angefragt">Angefragt</option>
+                            <option value="in Bearbeitung">in Bearbeitung</option>
+                            <option value="Rückfragen">Rückfragen</option>
+                            <option value="Angenommen">Angenommen</option>
+                            <option value="Abgelehnt">Abgelehnt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notiz">Notiz</label>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveEditBtn">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
- function openEditModal(vorschlagId) {
-    // Hole die Daten des Vorschlags aus der Datenbank
-    fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
+ function openEditModal() {
+    // Hole die gespeicherten Daten aus dem versteckten Bereich
+    const hiddenData = document.getElementById('hidden-vorschlag-data');
+    
+    const vorschlagId = hiddenData.getAttribute('data-id');
+    const bereich = hiddenData.getAttribute('data-bereich');
+    const anonym = hiddenData.getAttribute('data-anonym') === "1"; // Falls "1", dann angekreuzt
+    const betreff = hiddenData.getAttribute('data-betreff');
+    const vorschlagText = hiddenData.getAttribute('data-vorschlag');
+    const status = hiddenData.getAttribute('data-status');
+    const notiz = hiddenData.getAttribute('data-notiz');
 
-                if (vorschlag) {
-                    // Dynamisches Modal erstellen
-                    let modalHTML = `
-                    <div class="modal fade" id="modal-vorschlag-bearbeiten" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form id="editSuggestionForm">
-                                        <div class="form-group">
-                                            <label for="bereich">Bereich</label>
-                                            <select class="custom-select" name="bereich" id="bereich">
-                                                <option value="Personal">Personal</option>
-                                                <option value="Ausrüstung">Ausrüstung</option>
-                                                <option value="Ausbildung">Ausbildung</option>
-                                                <option value="IT">IT</option>
-                                                <option value="Sonstiges">Sonstiges</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="form-check">
-                                                <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
-                                                <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="betreff">Betreff</label>
-                                            <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="vorschlag">Vorschlag</label>
-                                            <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="status">Status</label>
-                                            <select class="custom-select" name="status" id="status">
-                                                <option value="Angefragt">Angefragt</option>
-                                                <option value="in Bearbeitung">in Bearbeitung</option>
-                                                <option value="Rückfragen">Rückfragen</option>
-                                                <option value="Angenommen">Angenommen</option>
-                                                <option value="Abgelehnt">Abgelehnt</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="notiz">Notiz</label>
-                                            <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
-                                    <button type="button" class="btn btn-primary" id="saveEditBtn">Speichern</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
+    // Fülle die Felder im Modal
+    document.getElementById('bereich').value = bereich;
+    document.getElementById('anonym').checked = anonym;
+    document.getElementById('betreff').value = betreff;
+    document.getElementById('vorschlag').value = vorschlagText;
+    document.getElementById('status').value = status;
+    document.getElementById('notiz').value = notiz;
 
-                    // Modal ins DOM einfügen
-                    document.body.insertAdjacentHTML('beforeend', modalHTML);
-
-                    // Warten, bis das Modal im DOM ist, und dann die Werte setzen
-                    setTimeout(function () {
-                        document.getElementById('bereich').value = vorschlag.bereich;
-                        document.getElementById('betreff').value = vorschlag.betreff;
-                        document.getElementById('vorschlag').value = vorschlag.vorschlag;
-                        document.getElementById('status').value = vorschlag.status;
-                        document.getElementById('notiz').value = vorschlag.notiz || "";
-                        document.getElementById('anonym').checked = vorschlag.anonym === "1"; 
-
-                        // Debugging: Überprüfen der eingestellten Werte im Modal
-                        console.log("Modal-Daten nach dem Setzen:", {
-                            betreff: document.getElementById('betreff').value,
-                            vorschlag: document.getElementById('vorschlag').value,
-                            status: document.getElementById('status').value,
-                            notiz: document.getElementById('notiz').value,
-                            anonym: document.getElementById('anonym').checked,
-                            bereich: document.getElementById('bereich').value
-                        });
-
-                        // Modal öffnen
-                        $('#modal-vorschlag-bearbeiten').modal('show');
-
-                        // Event-Listener nach dem Laden des Modals hinzufügen
-                        $('#modal-vorschlag-bearbeiten').on('hidden.bs.modal', function () {
-                            $(this).remove(); // Modal nach dem Schließen entfernen
-                        });
-                    }, 100); // Leichter Delay, um sicherzustellen, dass das Modal im DOM ist, bevor wir die Daten setzen
-                } else {
-                    console.log("Fehler: Vorschlag-Daten sind leer oder ungültig");
-                }
-            } else {
-                alert("Fehler: " + data.message);
-            }
-        })
-        .catch(error => {
-            alert("Fehler beim Laden der Daten: " + error);
-        });
+    // Öffne das Modal
+    $('#modal-vorschlag-bearbeiten').modal('show');
 }
 
 

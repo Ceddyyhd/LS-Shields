@@ -252,21 +252,19 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Bereich -->
                     <div class="form-group">
                         <label for="bereich">Bereich</label>
-                        <?php if (isset($_SESSION['permissions']['edit_vorschlaege_bereich']) && $_SESSION['permissions']['edit_vorschlaege_bereich']): ?>
-                        <select class="custom-select" name="bereich" id="bereich">
+                        <select class="custom-select" name="bereich" id="bereich" disabled>
                             <option value="Personal" <?php echo ($vorschlag['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
                             <option value="Ausrüstung" <?php echo ($vorschlag['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
                             <option value="Ausbildung" <?php echo ($vorschlag['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
                             <option value="IT" <?php echo ($vorschlag['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
                             <option value="Sonstiges" <?php echo ($vorschlag['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
                         </select>
-                        <?php endif; ?>
                     </div>
 
                     <!-- Anonym Checkbox -->
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlag['anonym'] == '1') ? 'checked' : ''; ?>>
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlag['anonym'] == '1') ? 'checked' : ''; ?> disabled>
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
@@ -274,16 +272,17 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Betreff -->
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlag['betreff']); ?>">
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlag['betreff']); ?>" disabled >
                     </div>
 
                     <!-- Vorschlag -->
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"><?php echo htmlspecialchars($vorschlag['vorschlag']); ?></textarea>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled><?php echo htmlspecialchars($vorschlag['vorschlag']); ?></textarea>
                     </div>
 
                     <!-- Status -->
+                    <?php if (isset($_SESSION['permissions']['edit_vorschlaege_status']) && $_SESSION['permissions']['edit_vorschlaege_status']): ?>
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="custom-select" name="status" id="status">
@@ -294,12 +293,15 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="Abgelehnt" <?php echo ($vorschlag['status'] == 'Abgelehnt') ? 'selected' : ''; ?>>Abgelehnt</option>
                         </select>
                     </div>
+                    <?php endif; ?>
 
                     <!-- Notiz -->
+                    <?php if (isset($_SESSION['permissions']['edit_vorschlaege_notiz']) && $_SESSION['permissions']['edit_vorschlaege_notiz']): ?>
                     <div class="form-group">
                         <label for="notiz">Notiz</label>
                         <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['notiz']); ?></textarea>
                     </div>
+                    <?php endif; ?>
                     <input type="hidden" name="user_name" value="<?php echo htmlspecialchars($user_name); ?>">
                     </form>
             </div>

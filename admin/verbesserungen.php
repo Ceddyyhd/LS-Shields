@@ -19,6 +19,29 @@ $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Sicherstellen, dass eine ID übergeben wurde
+$vorschlag = null; // Setze $vorschlag standardmäßig auf null, falls keine ID übergeben wird
+if (isset($_GET['id']) && !empty($_GET['id'])) {
+    $vorschlagId = $_GET['id'];
+
+    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
+    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
+    $stmt->execute();
+    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Überprüfen, ob der Vorschlag existiert
+    if (!$vorschlag) {
+        // Fehlerbehandlung, falls der Vorschlag nicht gefunden wurde
+        echo "Vorschlag nicht gefunden!";
+        // Optionale Fehlermeldung, aber wir beenden das Skript nicht
+    }
+} else {
+    echo "Keine Vorschlags-ID angegeben!";
+    // Optionale Fehlermeldung, aber wir beenden das Skript nicht
+}
 ?>
 
   <!-- Content Wrapper. Contains page content -->

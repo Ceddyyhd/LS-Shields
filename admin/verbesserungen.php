@@ -316,11 +316,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                               Ablehnen 
                           </button>      
                           <!-- Button zum Öffnen des Modals -->
-                            <button class="btn btn-info btn-sm" 
-                                    data-toggle="modal" 
-                                    data-target="#modal-vorschlag-bearbeiten"
-                                Anfrage bearbeiten
-                            </button>              
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-vorschlag-bearbeiten">
+                            Launch Primary Modal
+                            </button>            
                       </div>
                         </div>
                     </td>

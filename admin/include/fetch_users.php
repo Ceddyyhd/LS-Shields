@@ -46,7 +46,9 @@ try {
             END AS next_vacation
         FROM users u
         LEFT JOIN roles r ON u.role_id = r.id
-        WHERE u.gekuendigt = 'no_kuendigung';  ");
+        WHERE u.gekuendigt = 'no_kuendigung'
+        AND u.bewerber = 'nein';  ");  // Hier wird geprüft, dass 'bewerber' auf 'nein' gesetzt ist
+
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

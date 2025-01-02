@@ -45,12 +45,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- /.content-header -->
 
     <!-- Main content -->
-   <?php
-// Datenbankverbindung einbinden
-include 'include/db.php';
-
-
-?>
+   
 
 
 <div class="row">

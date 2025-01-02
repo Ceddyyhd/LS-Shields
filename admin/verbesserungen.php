@@ -111,6 +111,54 @@ include 'include/db.php';
     </div>
 </div>
 
+<div class="modal fade" id="modal-vorschlag-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Betreff</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createSuggestionForm">
+                <div class="form-group">
+                  <label>Bereich</label>
+                  <select class="custom-select" name="bereich">
+                      <option value="Personal">Personal</option>
+                      <option value="Ausrüstung">Ausrüstung</option>
+                      <option value="Ausbildung">Ausbildung</option>
+                      <option value="IT">IT</option>
+                      <option value="Sonstiges">Sonstiges</option>
+                  </select disabled>
+              </div>
+
+              <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" value="true" disabled>
+                    <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+    <label for="betreff">Betreff</label>
+    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" required disabled>
+</div>
+
+                    <div class="form-group">
+                        <label for="vorschlag">Vorschlag</label>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Beschreiben Sie den Vorschlag" required disabled></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveRequestBtn">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {

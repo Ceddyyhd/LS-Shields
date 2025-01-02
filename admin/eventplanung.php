@@ -33,9 +33,10 @@
     <?php
     // SQL-Abfrage zum Abrufen aller Events nach ID aufsteigend
     $query = "
-        SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
-        FROM eventplanung
-        ORDER BY datum_uhrzeit ASC"; // Sortierung nach ID aufsteigend
+    SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
+    FROM eventplanung
+    WHERE datum_uhrzeit >= CURDATE()  -- Nur zukünftige Events
+    ORDER BY datum_uhrzeit ASC";  // Sortierung nach Datum und Uhrzeit aufsteigend
 
     $stmt = $conn->prepare($query);
     $stmt->execute();

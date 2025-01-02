@@ -34,10 +34,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </div>
   </div>
-</div>
 
 
-<div class="row">
+  <div class="row">
           <div class="col-12 col-sm-6">
             <div class="card card-primary card-tabs">
               <div class="card-header p-0 pt-1">
@@ -114,6 +113,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
           </div>
         </div>
+</div>
+
+
+
 
 
 <!-- JavaScript Section -->

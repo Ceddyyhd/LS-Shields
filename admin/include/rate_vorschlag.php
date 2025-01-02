@@ -4,8 +4,7 @@ include 'db.php'; // Datenbankverbindung
 session_start(); // Sitzung starten
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Holen der POST-Daten
-    $vorschlagId = (int) $_POST['id'];
+    $vorschlagId = (int) $_POST['id']; // Vorschlag ID
     $zustimmung = ($_POST['zustimmung'] === 'true') ? 1 : 0;  // Umwandeln von 'true'/'false' in 1/0
     $userId = $_SESSION['user_id'];  // Benutzer-ID aus der Session holen
 
@@ -40,7 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $updateStmt->execute([':id' => $vorschlagId]);
 
-    // Rückmeldung
-    echo json_encode(['success' => true, 'message' => 'Ihre Stimme wurde gezählt.']);
+    // Zähler abrufen
+    $stmt = $conn->prepare("SELECT zustimmungen, ablehnungen FROM verbesserungsvorschlaege WHERE id = :id");
+    $stmt->execute([':id' => $vorschlagId]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Rückgabe der neuen Werte für Zustimmungen und Ablehnungen
+    echo json_encode([
+        'success' => true,
+        'zustimmungen' => (int) $result['zustimmungen'],  // Stellen sicher, dass es eine Zahl ist
+        'ablehnungen' => (int) $result['ablehnungen']
+    ]);
 }
 ?>

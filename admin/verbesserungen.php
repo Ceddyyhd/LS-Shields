@@ -228,19 +228,14 @@ function rateSuggestion(vorschlagId, zustimmung) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Aktualisiere die Anzeige der Zustimmungen und Ablehnungen
-            document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
-            document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
-
-            // Optional: Buttons deaktivieren oder entfernen, um doppelte Abstimmungen zu verhindern
-            const zustimmenButton = document.querySelector(`#buttons-${vorschlagId} .btn-success`);
-            const ablehnenButton = document.querySelector(`#buttons-${vorschlagId} .btn-danger`);
-            if (zustimmenButton && ablehnenButton) {
-                zustimmenButton.disabled = true;
-                ablehnenButton.disabled = true;
+            // Überprüfe, ob die Rückgabewerte für Zustimmungen und Ablehnungen existieren
+            if (data.zustimmungen !== undefined && data.ablehnungen !== undefined) {
+                // Aktualisiere die Anzeige der Zustimmungen und Ablehnungen
+                document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
+                document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
             }
         } else {
-            alert('Fehler: ' + data.message);
+            alert('Fehler: ' + data.message); // Zeige Fehlermeldung an, wenn vorhanden
         }
     })
     .catch(error => {

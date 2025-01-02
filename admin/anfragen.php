@@ -202,6 +202,9 @@ function changeStatus(id, action) {
   const form = document.getElementById(`status-form-${id}`);
   const formData = new FormData(form);
 
+  // Füge die action manuell hinzu
+  formData.append('action', action);
+
   // Überprüfe, ob die ID korrekt übermittelt wird
   console.log("FormData:", formData);
 

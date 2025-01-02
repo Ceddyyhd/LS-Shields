@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+include 'db.php'; // Deine DB-Verbindung
 
 if (isset($_GET['id'])) {
     $vorschlagId = $_GET['id'];

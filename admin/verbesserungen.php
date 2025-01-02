@@ -112,9 +112,9 @@ include 'include/db.php';
 </div>
 
 
-<!-- Verbesserungsvorschlag bearbeiten Modal -->
-<?php 
+<?php
 include 'include/db.php'; // Datenbankverbindung
+
 // Sicherstellen, dass eine ID übergeben wurde
 $vorschlag = null; 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -129,16 +129,13 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     // Überprüfen, ob der Vorschlag existiert
     if (!$vorschlag) {
-        // Fehlerbehandlung, falls der Vorschlag nicht gefunden wurde
         echo "Vorschlag nicht gefunden!";
-        // Optionale Fehlermeldung, aber wir beenden das Skript nicht
+        exit; // Abbruch, wenn kein Vorschlag gefunden wurde
     }
-} else {
-    echo "Keine Vorschlags-ID angegeben!";
-    // Optionale Fehlermeldung, aber wir beenden das Skript nicht
 }
 ?>
 <?php if ($vorschlag): ?>
+<!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -377,12 +374,12 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                               Ablehnen 
                           </button>      
                           <!-- Button zum Öffnen des Modals -->
-                          <button class="btn btn-info btn-sm" 
-                                data-toggle="modal" 
-                                data-target="#modal-vorschlag-bearbeiten"
-                                data-id="<?= $vorschlag['id'] ?>"> 
-                            Anfrage bearbeiten
-                        </button>              
+                            <button class="btn btn-info btn-sm" 
+                                    data-toggle="modal" 
+                                    data-target="#modal-vorschlag-bearbeiten"
+                                    data-id="<?= $vorschlag['id'] ?>">
+                                Anfrage bearbeiten
+                            </button>              
                       </div>
                         </div>
                     </td>

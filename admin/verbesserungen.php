@@ -115,29 +115,6 @@ include 'include/db.php';
 </div>
 
 
-<?php
-include 'include/db.php'; // Datenbankverbindung
-
-// Sicherstellen, dass eine ID übergeben wurde
-$vorschlag = null; 
-if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $vorschlagId = $_GET['id'];
-
-    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
-    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
-    $stmt->execute();
-    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Überprüfen, ob der Vorschlag existiert
-    if (!$vorschlag) {
-        echo "Vorschlag nicht gefunden!";
-        exit; // Abbruch, wenn kein Vorschlag gefunden wurde
-    }
-}
-?>
-
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {

@@ -14,12 +14,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php'; // Datenbankverbindung
 session_start(); // Sitzung starten
 
-// SQL-Abfrage, um alle Vorschläge zu erhalten, einschließlich der Anzahl der Zustimmungen und Ablehnungen
+// Abruf aller Vorschläge aus der Datenbank
 $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Sicherstellen, dass eine ID übergeben wurde
 if (isset($_GET['id'])) {
     $vorschlagId = $_GET['id'];
 
@@ -30,11 +31,14 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    // Überprüfen, ob der Vorschlag existiert
     if (!$vorschlag) {
+        // Fehlerbehandlung: Falls der Vorschlag nicht gefunden wird
         echo "Vorschlag nicht gefunden!";
         exit;
     }
 } else {
+    // Fehlerbehandlung: Keine ID übergeben
     echo "Keine Vorschlags-ID angegeben!";
     exit;
 }

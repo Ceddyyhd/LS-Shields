@@ -203,15 +203,6 @@ include 'include/db.php';
                         console.log('Fehler: Bereich-Element nicht gefunden');
                     }
 
-                    // Anonym (Checkbox)
-                    const anonymElement = document.getElementById('anonym');
-                    if (anonymElement) {
-                        console.log('Anonym wird gesetzt:', vorschlag.anonym);
-                        anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist
-                    } else {
-                        console.log('Fehler: Anonym-Element nicht gefunden');
-                    }
-
                     // Betreff
                     const betreffElement = document.getElementById('betreff');
                     if (betreffElement) {

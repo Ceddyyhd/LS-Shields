@@ -2,43 +2,53 @@
 include 'db.php'; // Datenbankverbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Empfangene Daten
-    $id = $_POST['id'];
-    $bereich = $_POST['bereich'];
-    $betreff = $_POST['betreff'];
-    $vorschlag = $_POST['vorschlag'];
-    $status = $_POST['status'];
-    $notiz = $_POST['notiz'];
-    $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
-    $user = $_SESSION['username']; // Benutzername des angemeldeten Benutzers
+    try {
+        // Empfangene Daten
+        $id = $_POST['id'];
+        $bereich = $_POST['bereich'];
+        $betreff = $_POST['betreff'];
+        $vorschlag = $_POST['vorschlag'];
+        $status = $_POST['status'];
+        $notiz = $_POST['notiz'];
+        $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
+        $user = $_SESSION['username']; // Benutzername des angemeldeten Benutzers
 
-    // Abrufen der aktuellen Vorschlagsdaten für das Log
-    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $oldData = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Abrufen der aktuellen Vorschlagsdaten für das Log
+        $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $oldData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // SQL zum Aktualisieren des Vorschlags
-    $updateQuery = "UPDATE verbesserungsvorschlaege SET 
-                    bereich = :bereich, 
-                    betreff = :betreff, 
-                    vorschlag = :vorschlag, 
-                    status = :status, 
-                    notiz = :notiz, 
-                    anonym = :anonym 
-                    WHERE id = :id";
+        if (!$oldData) {
+            echo json_encode(['success' => false, 'message' => 'Vorschlag nicht gefunden']);
+            exit;
+        }
 
-    $updateStmt = $conn->prepare($updateQuery);
-    $updateStmt->bindParam(':bereich', $bereich);
-    $updateStmt->bindParam(':betreff', $betreff);
-    $updateStmt->bindParam(':vorschlag', $vorschlag);
-    $updateStmt->bindParam(':status', $status);
-    $updateStmt->bindParam(':notiz', $notiz);
-    $updateStmt->bindParam(':anonym', $anonym);
-    $updateStmt->bindParam(':id', $id);
+        // SQL zum Aktualisieren des Vorschlags
+        $updateQuery = "UPDATE verbesserungsvorschlaege SET 
+                        bereich = :bereich, 
+                        betreff = :betreff, 
+                        vorschlag = :vorschlag, 
+                        status = :status, 
+                        notiz = :notiz, 
+                        anonym = :anonym 
+                        WHERE id = :id";
 
-    if ($updateStmt->execute()) {
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bindParam(':bereich', $bereich);
+        $updateStmt->bindParam(':betreff', $betreff);
+        $updateStmt->bindParam(':vorschlag', $vorschlag);
+        $updateStmt->bindParam(':status', $status);
+        $updateStmt->bindParam(':notiz', $notiz);
+        $updateStmt->bindParam(':anonym', $anonym);
+        $updateStmt->bindParam(':id', $id);
+
+        if (!$updateStmt->execute()) {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Bearbeiten des Vorschlags']);
+            exit;
+        }
+
         // Log-Eintrag erstellen
         $logMessage = "Vorschlag ID $id geändert von $user.\n";
         $logMessage .= "Änderungen: \n";
@@ -58,11 +68,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $logStmt->bindParam(':user', $user);
         $logStmt->bindParam(':change_details', $logMessage);
 
-        $logStmt->execute(); // Log speichern
-
-        echo json_encode(['success' => true]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Bearbeiten des Vorschlags']);
+        if ($logStmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Loggen']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
 }
 ?>

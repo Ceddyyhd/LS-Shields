@@ -211,29 +211,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
 
 <script>
- function openEditModal() {
-    // Hole die gespeicherten Daten aus dem versteckten Bereich
-    const hiddenData = document.getElementById('hidden-vorschlag-data');
-    
-    const vorschlagId = hiddenData.getAttribute('data-id');
-    const bereich = hiddenData.getAttribute('data-bereich');
-    const anonym = hiddenData.getAttribute('data-anonym') === "1"; // Falls "1", dann angekreuzt
-    const betreff = hiddenData.getAttribute('data-betreff');
-    const vorschlagText = hiddenData.getAttribute('data-vorschlag');
-    const status = hiddenData.getAttribute('data-status');
-    const notiz = hiddenData.getAttribute('data-notiz');
-
-    // Fülle die Felder im Modal
-    document.getElementById('bereich').value = bereich;
-    document.getElementById('anonym').checked = anonym;
-    document.getElementById('betreff').value = betreff;
-    document.getElementById('vorschlag').value = vorschlagText;
-    document.getElementById('status').value = status;
-    document.getElementById('notiz').value = notiz;
-
-    // Öffne das Modal
-    $('#modal-vorschlag-bearbeiten').modal('show');
-}
 
 
 

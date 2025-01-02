@@ -202,8 +202,8 @@ include 'include/db.php';
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
-                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen</button>
-                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen</button>
+                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?></button>
+                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?></button>
                             </div>
                         </div>
                     </td>

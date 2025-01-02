@@ -197,13 +197,26 @@ include 'include/db.php';
                     document.getElementById('notiz').value = vorschlag.notiz || "";
                     document.getElementById('anonym').checked = vorschlag.anonym === "1"; 
 
+                    // Debugging: Überprüfen der eingestellten Werte im Modal
+                    console.log("Modal-Daten nach dem Setzen:", {
+                        betreff: document.getElementById('betreff').value,
+                        vorschlag: document.getElementById('vorschlag').value,
+                        status: document.getElementById('status').value,
+                        notiz: document.getElementById('notiz').value,
+                        anonym: document.getElementById('anonym').checked,
+                        bereich: document.getElementById('bereich').value
+                    });
+
                     // Modal öffnen
                     $('#modal-vorschlag-bearbeiten').modal('show');
 
-                    // Event-Listener zum Schließen des Modals hinzufügen
+                    // Event-Listener nach dem Laden des Modals hinzufügen
                     $('#modal-vorschlag-bearbeiten').on('hidden.bs.modal', function () {
                         $(this).remove(); // Modal nach dem Schließen entfernen
                     });
+
+                } else {
+                    console.log("Fehler: Vorschlag-Daten sind leer oder ungültig");
                 }
             } else {
                 alert("Fehler: " + data.message);
@@ -213,6 +226,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
 
 

@@ -57,6 +57,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Gekündigte Mitarbeiter Verwaltung</a>
                   </li>
                   <?php endif; ?>
+                  <?php if (isset($_SESSION['permissions']['view_bewerbung_mitarbeiter']) && $_SESSION['permissions']['view_bewerbung_mitarbeiter']): ?>
+                  <li class="nav-item">
+                    <a class="nav-link" id="mitarbeiter-bewerbung-tab" data-toggle="pill" href="#mitarbeiter-bewerbung" role="tab" aria-controls="mitarbeiter-bewerbung" aria-selected="false">Gekündigte Mitarbeiter Verwaltung</a>
+                  </li>
+                  <?php endif; ?>
                 </ul>
               </div>
               <div class="card-body">
@@ -106,6 +111,42 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
                   </div>
                   <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                  <div class="card">
+        <div class="card-body">
+          <table id="example2" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Mitarbeiter</th>
+                <th>Rang</th>
+                <th>Telefonnummer</th>
+                <th>Beitritt</th>
+                <th>Urlaub</th>
+                <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+              <th>Bearbeiten</th>
+           <?php endif; ?>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Daten werden dynamisch geladen -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Mitarbeiter</th>
+                <th>Rang</th>
+                <th>Telefonnummer</th>
+                <th>Beitritt</th>
+                <th>Urlaub</th>
+                <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+              <th>Bearbeiten</th>
+           <?php endif; ?>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="mitarbeiter-bewerbung" role="tabpanel" aria-labelledby="mitarbeiter-bewerbung">
                   <div class="card">
         <div class="card-body">
           <table id="example2" class="table table-bordered table-striped">

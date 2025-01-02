@@ -240,9 +240,16 @@ function changeStatus(id, action) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        // Weiterer Code zur Verarbeitung
+        // Aktualisiere den Status in der Tabelle
         if (action === 'change_status') {
           document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
+          
+          // Aktualisiere den Status in der Detailansicht
+          const statusInDetail = document.querySelector(`tr[data-id="${id}"] .expandable-body #status-${id}`);
+          if (statusInDetail) {
+            statusInDetail.innerText = 'in Bearbeitung';
+          }
+
           document.getElementById(`buttons-${id}`).innerHTML =
             `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
         } else if (action === 'move_to_eventplanung' && data.removed) {

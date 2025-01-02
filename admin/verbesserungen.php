@@ -136,6 +136,7 @@ include 'include/db.php';
 
 
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
+<?php if ($vorschlag): ?>
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -145,7 +146,6 @@ include 'include/db.php';
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            
             <div class="modal-body">
                 <form id="editSuggestionForm">
                     <!-- Bereich -->
@@ -206,6 +206,7 @@ include 'include/db.php';
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 
 

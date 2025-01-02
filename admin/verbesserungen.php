@@ -122,28 +122,7 @@ include 'include/db.php';
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <?php
-            // Sicherstellen, dass eine ID übergeben wurde
-            if (isset($_GET['id']) && !empty($_GET['id'])) {
-                $vorschlagId = $_GET['id'];
-
-                // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
-                $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
-                $stmt = $conn->prepare($query);
-                $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
-                $stmt->execute();
-                $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                // Überprüfen, ob der Vorschlag existiert
-                if (!$vorschlag) {
-                    echo "Vorschlag nicht gefunden!";
-                    exit;
-                }
-            } else {
-                echo "Keine Vorschlags-ID angegeben!";
-                exit;
-            }
-            ?>
+            
             <div class="modal-body">
                 <form id="editSuggestionForm">
                     <!-- Bereich -->

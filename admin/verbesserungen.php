@@ -376,7 +376,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                           <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
                               Ablehnen 
                           </button>      
-                          <<!-- Button zum Öffnen des Modals -->
+                          <!-- Button zum Öffnen des Modals -->
                             <button class="btn btn-info btn-sm" 
                                     data-toggle="modal" data-target="#modal-vorschlag-bearbeiten" 
                                     data-id="<?= $vorschlag['id'] ?>">

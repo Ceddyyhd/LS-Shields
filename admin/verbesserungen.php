@@ -148,7 +148,7 @@ include 'include/db.php';
                 <th>Bereich</th>
                 <th>Vorschlag</th>
                 <th>Betreff</th>
-                <th>datum_uhrzeit</th>
+                <th>Datum & Uhrzeit</th>
                 <th>Status</th>
                 <th>Details einblenden</th>
             </tr>

@@ -19,16 +19,15 @@ $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
 try {
     // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, name, datum_uhrzeit, status, erstellt_von, betreff)
-            VALUES (:vorschlag, :name, :datum_uhrzeit, :status, :erstellt_von, :betreff)";
+    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, datum_uhrzeit, status, erstellt_von, betreff)
+            VALUES (:vorschlag, :datum_uhrzeit, :status, :erstellt_von, :betreff)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([
         ':vorschlag' => $vorschlag,
-        ':name' => $erstellt_von,  // Hier wird der Name hinzugefügt, entweder der Benutzername oder 'Anonym'
         ':datum_uhrzeit' => $datum_uhrzeit,
         ':status' => $status,
-        ':erstellt_von' => $erstellt_von, // Ersteller ist auch der Name
+        ':erstellt_von' => $erstellt_von, // Ersteller ist auch der Name (oder Anonym)
         ':betreff' => $betreff // Der Betreff des Vorschlags
     ]);
 

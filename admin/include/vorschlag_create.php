@@ -8,37 +8,28 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
-// Benutzernamen aus der Session holen
-$erstellt_von = $_SESSION['username'];
+// Benutzernamen aus der Session holen, wenn nicht anonym
+$erstellt_von = (isset($_POST['fuel_checked']) && $_POST['fuel_checked'] === 'true') ? 'Anonym' : $_SESSION['username'];
 
 // Formulardaten auslesen
-$bereich = $_POST['bereich'] ?? '';  // Bereich
-$anonym = isset($_POST['anonym']) ? 1 : 0; // Checkbox für Anonymität
-$betreff = $_POST['betreff'] ?? '';  // Betreff
 $vorschlag = $_POST['vorschlag'] ?? ''; // Vorschlag
+$betreff = $_POST['betreff'] ?? ''; // Betreff
 $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
-// Überprüfen, ob alle erforderlichen Felder vorhanden sind
-if (empty($bereich) || empty($betreff) || empty($vorschlag)) {
-    echo json_encode(['success' => false, 'message' => 'Alle Felder müssen ausgefüllt werden!']);
-    exit;
-}
-
 try {
     // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (bereich, anonym, vorschlag, betreff, datum_uhrzeit, status, erstellt_von)
-            VALUES (:bereich, :anonym, :vorschlag, :betreff, :datum_uhrzeit, :status, :erstellt_von)";
+    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, name, datum_uhrzeit, status, erstellt_von, betreff)
+            VALUES (:vorschlag, :name, :datum_uhrzeit, :status, :erstellt_von, :betreff)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([
-        ':bereich' => $bereich,
-        ':anonym' => $anonym,  // Anonymität als 1 oder 0 speichern
         ':vorschlag' => $vorschlag,
-        ':betreff' => $betreff,
+        ':name' => $erstellt_von,  // Hier wird der Name hinzugefügt, entweder der Benutzername oder 'Anonym'
         ':datum_uhrzeit' => $datum_uhrzeit,
         ':status' => $status,
-        ':erstellt_von' => $erstellt_von,
+        ':erstellt_von' => $erstellt_von, // Ersteller ist auch der Name
+        ':betreff' => $betreff // Der Betreff des Vorschlags
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Vorschlag wurde erfolgreich erstellt.']);

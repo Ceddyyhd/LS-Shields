@@ -231,7 +231,7 @@ $vorschlaege1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<?php if ($vorschlaege1): ?>
+<?php if ($vorschlaege): ?>
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
@@ -248,18 +248,18 @@ $vorschlaege1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="form-group">
                         <label for="bereich">Bereich</label>
                         <select class="custom-select" name="bereich" id="bereich">
-                            <option value="Personal" <?php echo ($vorschlaege1['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
-                            <option value="Ausrüstung" <?php echo ($vorschlaege1['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
-                            <option value="Ausbildung" <?php echo ($vorschlaege1['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
-                            <option value="IT" <?php echo ($vorschlaege1['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
-                            <option value="Sonstiges" <?php echo ($vorschlaege1['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
+                            <option value="Personal" <?php echo ($vorschlaege['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
+                            <option value="Ausrüstung" <?php echo ($vorschlaege['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
+                            <option value="Ausbildung" <?php echo ($vorschlaege['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
+                            <option value="IT" <?php echo ($vorschlaege['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
+                            <option value="Sonstiges" <?php echo ($vorschlaege['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
                         </select>
                     </div>
 
                     <!-- Anonym Checkbox -->
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlaege1['anonym'] == '1') ? 'checked' : ''; ?>>
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlaege['anonym'] == '1') ? 'checked' : ''; ?>>
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
@@ -267,7 +267,7 @@ $vorschlaege1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Betreff -->
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlaege1['betreff']); ?>">
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlaege['betreff']); ?>">
                     </div>
 
                     <!-- Vorschlag -->

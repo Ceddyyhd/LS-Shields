@@ -14,31 +14,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php'; // Datenbankverbindung
 session_start(); // Sitzung starten
 
-// Abruf aller Vorschläge aus der Datenbank
+// SQL-Abfrage, um alle Vorschläge zu erhalten, einschließlich der Anzahl der Zustimmungen und Ablehnungen
 $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Sicherstellen, dass eine ID übergeben wurde (z.B. per GET)
-if (isset($_GET['id'])) {
-    $vorschlagId = $_GET['id'];
-
-    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
-    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
-    $stmt->execute();
-    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$vorschlag) {
-        echo "Vorschlag nicht gefunden!";
-        exit;
-    }
-} else {
-    echo "Keine Vorschlags-ID angegeben!";
-    exit;
-}
 ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -133,8 +113,8 @@ include 'include/db.php';
 
 
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
-<div class="modal fade" id="modal-vorschlag-bearbeiten" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="modal-vorschlag-bearbeiten">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
@@ -205,6 +185,37 @@ include 'include/db.php';
 
 
 <script>
+ function openEditModal() {
+    // Hole die gespeicherten Daten aus dem versteckten Bereich
+    const hiddenData = document.getElementById('hidden-vorschlag-data');
+    
+    const vorschlagId = hiddenData.getAttribute('data-id');
+    const bereich = hiddenData.getAttribute('data-bereich');
+    const anonym = hiddenData.getAttribute('data-anonym') === "1"; // Falls "1", dann angekreuzt
+    const betreff = hiddenData.getAttribute('data-betreff');
+    const vorschlagText = hiddenData.getAttribute('data-vorschlag');
+    const status = hiddenData.getAttribute('data-status');
+    const notiz = hiddenData.getAttribute('data-notiz');
+
+    // Fülle die Felder im Modal
+    document.getElementById('bereich').value = bereich;
+    document.getElementById('anonym').checked = anonym;
+    document.getElementById('betreff').value = betreff;
+    document.getElementById('vorschlag').value = vorschlagText;
+    document.getElementById('status').value = status;
+    document.getElementById('notiz').value = notiz;
+
+    // Öffne das Modal
+    $('#modal-vorschlag-bearbeiten').modal('show');
+}
+
+
+
+
+
+
+
+
   document.getElementById('saveEditBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('editSuggestionForm'));
 

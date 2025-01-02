@@ -14,21 +14,23 @@ $erstellt_von = (isset($_POST['fuel_checked']) && $_POST['fuel_checked'] === 'tr
 // Formulardaten auslesen
 $vorschlag = $_POST['vorschlag'] ?? ''; // Vorschlag
 $betreff = $_POST['betreff'] ?? ''; // Betreff
+$bereich = $_POST['bereich'] ?? ''; // Bereich
 $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
 try {
     // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
-    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, datum_uhrzeit, status, erstellt_von, betreff)
-            VALUES (:vorschlag, :datum_uhrzeit, :status, :erstellt_von, :betreff)";
+    $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, betreff, bereich, datum_uhrzeit, status, erstellt_von)
+            VALUES (:vorschlag, :betreff, :bereich, :datum_uhrzeit, :status, :erstellt_von)";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute([
         ':vorschlag' => $vorschlag,
+        ':betreff' => $betreff,
+        ':bereich' => $bereich, // Der Bereich wird hier hinzugefügt
         ':datum_uhrzeit' => $datum_uhrzeit,
         ':status' => $status,
         ':erstellt_von' => $erstellt_von, // Ersteller ist auch der Name (oder Anonym)
-        ':betreff' => $betreff // Der Betreff des Vorschlags
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Vorschlag wurde erfolgreich erstellt.']);

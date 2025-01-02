@@ -2,6 +2,7 @@
 session_start();
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
+$user_id = $_SESSION['user_id'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 
 
 // Benutzerinformationen abrufen
@@ -55,7 +56,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?php echo htmlspecialchars($user_id); ?></a>
+                <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
             </div>
         </div>
 

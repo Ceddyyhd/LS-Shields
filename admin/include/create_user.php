@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':nummer' => $nummer,
             ':kontonummer' => $kontonummer,
             ':password' => password_hash($password, PASSWORD_DEFAULT), // Das Passwort wird gehasht
-            ':role_id' => 2, // Standardmäßig Role-ID für "Bewerber"
+            ':role_id' => 11, // Standardmäßig Role-ID für "Bewerber"
             ':profile_image' => $profile_image,
             ':gekuendigt' => 'no_kuendigung',
             ':admin_bereich' => $admin_bereich,

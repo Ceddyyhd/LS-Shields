@@ -86,8 +86,16 @@ include 'include/db.php';
                       </div>
                     
                     <div class="form-group">
-                        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label><br>
+                        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         <input type="checkbox" name="anonym" id="anonym" class="form-check-input">
+                    </div>
+
+                    <div class="form-group">
+                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
+                        <div class="form-check">
+                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked" 
+                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        </div>
                     </div>
 
                     <div class="form-group">

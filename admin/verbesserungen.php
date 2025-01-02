@@ -178,7 +178,6 @@ include 'include/db.php';
 </div>
 <script>
   function openEditModal(vorschlagId) {
-    // Hole die Daten des Vorschlags aus der Datenbank
     fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
@@ -187,9 +186,10 @@ include 'include/db.php';
                 console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
                 
                 // Füllen der Felder im Modal
+                document.getElementById('bereich').value = vorschlag.bereich;
                 document.getElementById('betreff').value = vorschlag.betreff;
                 document.getElementById('vorschlag').value = vorschlag.vorschlag;
-                document.querySelector(`select[name="status"]`).value = vorschlag.status;
+                document.getElementById('status').value = vorschlag.status;
                 document.getElementById('notiz').value = vorschlag.notiz;
 
                 // Öffne das Modal

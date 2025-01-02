@@ -75,15 +75,15 @@ include 'include/db.php';
             <div class="modal-body">
                 <form id="createSuggestionForm">
                 <div class="form-group">
-                        <label>Bereich</label>
-                        <select class="custom-select">
-                        <option>Personal</option>
-                          <option>Ausrüstung</option>
-                          <option>Ausbildung</option>
-                          <option>IT</option>
-                          <option>Sonstiges</option>
-                        </select>
-                      </div>
+                  <label>Bereich</label>
+                  <select class="custom-select" name="bereich">
+                      <option value="Personal">Personal</option>
+                      <option value="Ausrüstung">Ausrüstung</option>
+                      <option value="Ausbildung">Ausbildung</option>
+                      <option value="IT">IT</option>
+                      <option value="Sonstiges">Sonstiges</option>
+                  </select>
+              </div>
 
                     <div class="form-group">
                         <div class="form-check">

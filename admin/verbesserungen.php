@@ -177,20 +177,26 @@ include 'include/db.php';
     </div>
 </div>
 <script>
-  function openEditModal(vorschlagId) {
+ function openEditModal(vorschlagId) {
     fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
-                
-                // Füllen der Felder im Modal
-                document.getElementById('bereich').value = vorschlag.bereich;
-                document.getElementById('betreff').value = vorschlag.betreff;
-                document.getElementById('vorschlag').value = vorschlag.vorschlag;
-                document.getElementById('status').value = vorschlag.status;
-                document.getElementById('notiz').value = vorschlag.notiz;
+                console.log('Vorschlag-Daten:', vorschlag);  // Hier überprüfst du die Daten
+
+                // Überprüfe die Daten, bevor du sie in die Felder einfügst
+                console.log('Betreff:', vorschlag.betreff);
+                console.log('Vorschlag:', vorschlag.vorschlag);
+                console.log('Status:', vorschlag.status);
+                console.log('Notiz:', vorschlag.notiz);
+
+                // Fülle die Felder im Modal
+                document.getElementById('bereich').value = vorschlag.bereich || '';
+                document.getElementById('betreff').value = vorschlag.betreff || '';
+                document.getElementById('vorschlag').value = vorschlag.vorschlag || '';
+                document.getElementById('status').value = vorschlag.status || '';
+                document.getElementById('notiz').value = vorschlag.notiz || '';
 
                 // Öffne das Modal
                 $('#modal-vorschlag-bearbeiten').modal('show');

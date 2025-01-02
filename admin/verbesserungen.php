@@ -112,76 +112,7 @@ include 'include/db.php';
 </div>
 
 
-<!-- Verbesserungsvorschlag bearbeiten Modal -->
-<div class="modal fade" id="modal-vorschlag-bearbeiten">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Vorschlag bearbeiten</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editSuggestionForm">
-                    <!-- Bereich (disabled) -->
-                    <div class="form-group">
-                        <label for="bereich">Bereich</label>
-                        <select class="custom-select" name="bereich" id="bereich">
-                            <option value="Personal">Personal</option>
-                            <option value="Ausrüstung">Ausrüstung</option>
-                            <option value="Ausbildung">Ausbildung</option>
-                            <option value="IT">IT</option>
-                            <option value="Sonstiges">Sonstiges</option>
-                        </select>
-                    </div>
 
-                    <!-- Anonym Checkbox (readonly funktioniert hier nicht, da Checkbox eine andere Art von Interaktion hat) -->
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
-                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-                        </div>
-                    </div>
-
-                    <!-- Betreff -->
-                    <div class="form-group">
-                        <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
-                    </div>
-
-                    <!-- Vorschlag -->
-                    <div class="form-group">
-                        <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
-                    </div>
-
-                    <!-- Status -->
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select class="custom-select" name="status" id="status">
-                            <option value="Angefragt">Angefragt</option>
-                            <option value="in Bearbeitung">in Bearbeitung</option>
-                            <option value="Rückfragen">Rückfragen</option>
-                            <option value="Angenommen">Angenommen</option>
-                            <option value="Abgelehnt">Abgelehnt</option>
-                        </select>
-                    </div>
-
-                    <!-- Notiz -->
-                    <div class="form-group">
-                        <label for="notiz">Notiz</label>
-                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveEditBtn">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
  function openEditModal(vorschlagId) {
@@ -194,56 +125,85 @@ include 'include/db.php';
                 console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
 
                 if (vorschlag) {
-                    // Bereich
-                    const bereichElement = document.getElementById('bereich');
-                    if (bereichElement) {
-                        bereichElement.value = vorschlag.bereich;
-                    }
+                    // Dynamisches Modal erstellen
+                    let modalHTML = `
+                    <div class="modal fade" id="modal-vorschlag-bearbeiten" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="editSuggestionForm">
+                                        <div class="form-group">
+                                            <label for="bereich">Bereich</label>
+                                            <select class="custom-select" name="bereich" id="bereich">
+                                                <option value="Personal">Personal</option>
+                                                <option value="Ausrüstung">Ausrüstung</option>
+                                                <option value="Ausbildung">Ausbildung</option>
+                                                <option value="IT">IT</option>
+                                                <option value="Sonstiges">Sonstiges</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-check">
+                                                <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
+                                                <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="betreff">Betreff</label>
+                                            <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="vorschlag">Vorschlag</label>
+                                            <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="custom-select" name="status" id="status">
+                                                <option value="Angefragt">Angefragt</option>
+                                                <option value="in Bearbeitung">in Bearbeitung</option>
+                                                <option value="Rückfragen">Rückfragen</option>
+                                                <option value="Angenommen">Angenommen</option>
+                                                <option value="Abgelehnt">Abgelehnt</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="notiz">Notiz</label>
+                                            <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                                    <button type="button" class="btn btn-primary" id="saveEditBtn">Speichern</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
 
-                    // Anonym (Checkbox)
-                    const anonymElement = document.getElementById('anonym');
-                    if (anonymElement) {
-                        anonymElement.checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist
-                    }
+                    // Modal ins DOM einfügen
+                    document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-                    // Betreff
-                    const betreffElement = document.getElementById('betreff');
-                    if (betreffElement) {
-                        betreffElement.value = vorschlag.betreff;
-                    }
+                    // Werte in die Formularelemente einfügen
+                    document.getElementById('bereich').value = vorschlag.bereich;
+                    document.getElementById('betreff').value = vorschlag.betreff;
+                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
+                    document.getElementById('status').value = vorschlag.status;
+                    document.getElementById('notiz').value = vorschlag.notiz || "";
+                    document.getElementById('anonym').checked = vorschlag.anonym === "1"; 
 
-                    // Vorschlag
-                    const vorschlagElement = document.getElementById('vorschlag');
-                    if (vorschlagElement) {
-                        vorschlagElement.value = vorschlag.vorschlag;
-                    }
-
-                    // Status
-                    const statusElement = document.getElementById('status');
-                    if (statusElement) {
-                        statusElement.value = vorschlag.status;
-                    }
-
-                    // Notiz
-                    const notizElement = document.getElementById('notiz');
-                    if (notizElement) {
-                        notizElement.value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
-                    }
-
-                    // Debugging: Überprüfen der eingestellten Werte im Modal
-                    console.log("Modal-Daten nach dem Setzen:", {
-                        betreff: betreffElement ? betreffElement.value : undefined,
-                        vorschlag: vorschlagElement ? vorschlagElement.value : undefined,
-                        status: statusElement ? statusElement.value : undefined,
-                        notiz: notizElement ? notizElement.value : undefined,
-                        anonym: anonymElement ? anonymElement.checked : undefined,
-                        bereich: bereichElement ? bereichElement.value : undefined
-                    });
-
-                    // Öffne das Modal NUR nachdem alle Daten gesetzt wurden
+                    // Modal öffnen
                     $('#modal-vorschlag-bearbeiten').modal('show');
-                } else {
-                    console.log("Fehler: Vorschlag-Daten sind leer oder ungültig");
+
+                    // Event-Listener zum Schließen des Modals hinzufügen
+                    $('#modal-vorschlag-bearbeiten').on('hidden.bs.modal', function () {
+                        $(this).remove(); // Modal nach dem Schließen entfernen
+                    });
                 }
             } else {
                 alert("Fehler: " + data.message);
@@ -253,6 +213,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
 
 

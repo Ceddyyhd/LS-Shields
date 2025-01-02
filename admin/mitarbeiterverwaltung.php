@@ -98,7 +98,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                   <div class="card">
         <div class="card-body">
-          <table id="example1" class="table table-bordered table-striped">
+          <table id="example2" class="table table-bordered table-striped">
             <thead>
               <tr>
                 <th>Mitarbeiter</th>
@@ -143,7 +143,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
         }
 
-        let tableBody = $('#example1 tbody');
+        let tableBody = $('#example2 tbody');
         tableBody.empty();
 
         data.forEach(user => {

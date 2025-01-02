@@ -10,6 +10,10 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Debugging: Überprüfe den Inhalt des $vorschlag Arrays
+    // Du kannst diese Zeile entfernen, wenn die Ausgabe funktioniert
+    var_dump($vorschlag); 
+
     if ($vorschlag) {
         // Erfolgreiche Antwort mit den Vorschlag-Daten
         echo json_encode([

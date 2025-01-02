@@ -126,7 +126,7 @@ include 'include/db.php';
                 <form id="editSuggestionForm">
                     <div class="form-group">
                         <label>Bereich</label>
-                        <select class="custom-select" name="bereich" id="bereich" disabled>
+                        <select class="custom-select" name="bereich" id="bereich" >
                             <option value="Personal">Personal</option>
                             <option value="Ausrüstung">Ausrüstung</option>
                             <option value="Ausbildung">Ausbildung</option>
@@ -137,19 +137,19 @@ include 'include/db.php';
 
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" >
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" >
                     </div>
 
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" ></textarea>
                     </div>
 
                     <div class="form-group">

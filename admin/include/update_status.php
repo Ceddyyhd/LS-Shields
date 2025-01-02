@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Log-Eintrag für diese Aktion erstellen
         $action_log = "Status auf 'in Bearbeitung' gesetzt";
-        $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
-                                   VALUES (:user_id, :action, :id)");
+        $logStmt = $conn->prepare("INSERT INTO anfragen_logs (username, action, anfrage_id) 
+                                   VALUES (:username, :action, :id)");
         $logStmt->execute([
-            ':user_id' => $user_id,  // Direkt die user_id aus der Session verwenden
+            ':username' => $erstellt_von,  // Jetzt wird der Benutzername verwendet
             ':action' => $action_log,
             ':id' => $id
         ]);
@@ -79,10 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Log-Eintrag für das Verschieben der Anfrage
             $action_log = "Anfrage in die Eventplanung verschoben";
-            $logStmt = $conn->prepare("INSERT INTO anfragen_logs (user_id, action, anfrage_id) 
-                                       VALUES (:user_id, :action, :id)");
+            $logStmt = $conn->prepare("INSERT INTO anfragen_logs (username, action, anfrage_id) 
+                                       VALUES (:username, :action, :id)");
             $logStmt->execute([
-                ':user_id' => $user_id,  // Direkt die user_id aus der Session verwenden
+                ':username' => $erstellt_von,  // Jetzt wird der Benutzername verwendet
                 ':action' => $action_log,
                 ':id' => $id
             ]);

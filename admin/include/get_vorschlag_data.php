@@ -1,23 +1,31 @@
 <?php
-include 'db.php'; // Datenbankverbindung
+include 'db.php';
 
-// Überprüfen, ob die Vorschlag-ID übergeben wurde
-if (!isset($_GET['id'])) {
-    echo json_encode(['success' => false, 'message' => 'Keine Vorschlag-ID angegeben.']);
-    exit;
-}
+if (isset($_GET['id'])) {
+    $vorschlagId = $_GET['id'];
 
-$vorschlag_id = (int)$_GET['id'];
+    // SQL-Abfrage, um den Vorschlag zu laden
+    $stmt = $conn->prepare("SELECT * FROM verbesserungsvorschlaege WHERE id = :id");
+    $stmt->bindParam(':id', $vorschlagId);
+    $stmt->execute();
+    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Vorschlagsdaten aus der Datenbank holen
-$stmt = $conn->prepare("SELECT vorschlag, betreff, status, notiz, erstellt_von FROM verbesserungsvorschlaege WHERE id = :id");
-$stmt->bindParam(':id', $vorschlag_id, PDO::PARAM_INT);
-$stmt->execute();
-$vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if ($vorschlag) {
-    echo json_encode(['success' => true, 'vorschlag' => $vorschlag]);
+    if ($vorschlag) {
+        // Erfolgreiche Antwort mit den Vorschlag-Daten
+        echo json_encode([
+            'success' => true,
+            'vorschlag' => $vorschlag
+        ]);
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Vorschlag nicht gefunden'
+        ]);
+    }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Vorschlag nicht gefunden.']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Ungültige Anfrage'
+    ]);
 }
 ?>

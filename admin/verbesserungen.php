@@ -199,19 +199,19 @@ include 'include/db.php';
         .catch(error => {
             alert("Fehler beim Laden der Daten: " + error);
         });
-}
+  }
 
-document.getElementById('saveEditBtn').addEventListener('click', function() {
+  document.getElementById('saveEditBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('editSuggestionForm'));
 
     // Überprüfe, ob alle Felder ausgefüllt sind
-    if (!formData.get('status') || !formData.get('notiz')) {
+    if (!formData.get('status') || !formData.get('notiz') || !formData.get('betreff') || !formData.get('vorschlag')) {
         alert('Bitte alle Felder ausfüllen!');
         return;
     }
 
     // Sende die AJAX-Anfrage zum Speichern der Änderungen
-    fetch('update_vorschlag.php', {
+    fetch('include/update_vorschlag.php', {
         method: 'POST',
         body: formData,
     })
@@ -229,9 +229,9 @@ document.getElementById('saveEditBtn').addEventListener('click', function() {
         console.error('Fehler:', error);
         alert('Ein unerwarteter Fehler ist aufgetreten.');
     });
-});
-
+  });
 </script>
+
 
 <!-- JavaScript zur Verarbeitung des Formulars -->
 <script>

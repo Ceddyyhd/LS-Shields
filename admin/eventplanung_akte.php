@@ -911,6 +911,7 @@ $(document).ready(function() {
             data: formData,  // Alle Formulardaten senden
             dataType: 'json',
             success: function(response) {
+                location.reload();
                 if (response.status == 'success') {
                 } else {
                 }

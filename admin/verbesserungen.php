@@ -195,10 +195,22 @@ include 'include/db.php';
 
                 // Sicherstellen, dass alle Felder korrekt gefüllt werden
                 if (vorschlag) {
+                    // Bereich
                     document.getElementById('bereich').value = vorschlag.bereich;
+
+                    // Anonym (Checkbox)
+                    document.getElementById('anonym').checked = vorschlag.anonym === '1'; // Annahme: anonym ist als '1' in der DB gespeichert
+
+                    // Betreff
                     document.getElementById('betreff').value = vorschlag.betreff;
+
+                    // Vorschlag
                     document.getElementById('vorschlag').value = vorschlag.vorschlag;
+
+                    // Status
                     document.getElementById('status').value = vorschlag.status;
+
+                    // Notiz
                     document.getElementById('notiz').value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
 
                     // Überprüfen, ob das Modal mit den richtigen Daten gefüllt wird

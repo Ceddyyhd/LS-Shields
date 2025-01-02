@@ -151,15 +151,15 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tbody>
                           <?php
                           // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
-                          foreach ($anfrage_logs as $anfrage_log) {
+                          foreach ($ausbildung_logs as $ausbildung_log) {
                               echo "<tr>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['user_id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['editor_name']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['ausbildung']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['action']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['timestamp']) . "</td>";
-                              echo "<td>" . htmlspecialchars($anfrage_log['rating']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['user_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['editor_name']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['ausbildung']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausbildung_log['rating']) . "</td>";
                               echo "</tr>";
                           }
                           ?>

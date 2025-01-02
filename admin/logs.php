@@ -45,7 +45,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </style>
 <?php
 // Datenbankverbindung einbinden
-include 'db.php';
+include 'include/db.php';
 
 // Logs aus der Datenbank abfragen
 $stmt = $conn->prepare("SELECT * FROM anfragen_logs ORDER BY timestamp DESC");

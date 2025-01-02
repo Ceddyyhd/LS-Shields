@@ -202,8 +202,10 @@ include 'include/db.php';
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
-                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?></button>
-                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?></button>
+                                <strong>Zustimmungen:</strong> <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['zustimmungen'] ?></span>
+                            </div>
+                            <div class="mb-3">
+                                <strong>Ablehnungen:</strong> <span id="ablehnungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['ablehnungen'] ?></span>
                             </div>
                         </div>
                     </td>
@@ -228,15 +230,16 @@ function rateSuggestion(vorschlagId, zustimmung) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Überprüfe, ob das Element existiert, bevor du den Text änderst
-            const zustimmungenElement = document.getElementById(`zustimmungen-${vorschlagId}`);
-            if (zustimmungenElement) {
-                zustimmungenElement.innerText = data.zustimmungen;
-            }
-            
-            const ablehnungenElement = document.getElementById(`ablehnungen-${vorschlagId}`);
-            if (ablehnungenElement) {
-                ablehnungenElement.innerText = data.ablehnungen;
+            // Aktualisiere die Anzeige der Zustimmungen und Ablehnungen
+            document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
+            document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
+
+            // Optional: Buttons deaktivieren oder entfernen, um doppelte Abstimmungen zu verhindern
+            const zustimmenButton = document.querySelector(`#buttons-${vorschlagId} .btn-success`);
+            const ablehnenButton = document.querySelector(`#buttons-${vorschlagId} .btn-danger`);
+            if (zustimmenButton && ablehnenButton) {
+                zustimmenButton.disabled = true;
+                ablehnenButton.disabled = true;
             }
         } else {
             alert('Fehler: ' + data.message);

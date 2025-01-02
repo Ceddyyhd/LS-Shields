@@ -199,7 +199,7 @@ include 'include/db.php';
                     document.getElementById('bereich').value = vorschlag.bereich;
 
                     // Anonym (Checkbox)
-                    document.getElementById('anonym').checked = vorschlag.anonym === '1'; // Annahme: anonym ist als '1' in der DB gespeichert
+                    document.getElementById('anonym').checked = vorschlag.anonym === "1"; // Überprüft, ob anonym gesetzt ist (als String)
 
                     // Betreff
                     document.getElementById('betreff').value = vorschlag.betreff;
@@ -218,7 +218,9 @@ include 'include/db.php';
                         betreff: document.getElementById('betreff').value,
                         vorschlag: document.getElementById('vorschlag').value,
                         status: document.getElementById('status').value,
-                        notiz: document.getElementById('notiz').value
+                        notiz: document.getElementById('notiz').value,
+                        anonym: document.getElementById('anonym').checked,
+                        bereich: document.getElementById('bereich').value
                     });
 
                     // Öffne das Modal

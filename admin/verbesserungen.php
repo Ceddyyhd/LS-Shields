@@ -14,11 +14,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php'; // Datenbankverbindung
 session_start(); // Sitzung starten
 
-// SQL-Abfrage, um alle Vorschläge zu erhalten, einschließlich der Anzahl der Zustimmungen und Ablehnungen
+// Abruf aller Vorschläge aus der Datenbank
 $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Sicherstellen, dass eine ID übergeben wurde (z.B. per GET)
+if (isset($_GET['id'])) {
+    $vorschlagId = $_GET['id'];
+
+    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
+    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
+    $stmt->execute();
+    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$vorschlag) {
+        echo "Vorschlag nicht gefunden!";
+        exit;
+    }
+} else {
+    echo "Keine Vorschlags-ID angegeben!";
+    exit;
+}
 ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -113,8 +133,8 @@ include 'include/db.php';
 
 
 <!-- Verbesserungsvorschlag bearbeiten Modal -->
-<div class="modal fade" id="modal-vorschlag-bearbeiten">
-    <div class="modal-dialog">
+<div class="modal fade" id="modal-vorschlag-bearbeiten" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Vorschlag bearbeiten</h5>
@@ -124,43 +144,54 @@ include 'include/db.php';
             </div>
             <div class="modal-body">
                 <form id="editSuggestionForm">
+                    <!-- Bereich -->
                     <div class="form-group">
                         <label for="bereich">Bereich</label>
                         <select class="custom-select" name="bereich" id="bereich">
-                            <option value="Personal">Personal</option>
-                            <option value="Ausrüstung">Ausrüstung</option>
-                            <option value="Ausbildung">Ausbildung</option>
-                            <option value="IT">IT</option>
-                            <option value="Sonstiges">Sonstiges</option>
+                            <option value="Personal" <?php echo ($vorschlag['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
+                            <option value="Ausrüstung" <?php echo ($vorschlag['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
+                            <option value="Ausbildung" <?php echo ($vorschlag['bereich'] == 'Ausbildung') ? 'selected' : ''; ?>>Ausbildung</option>
+                            <option value="IT" <?php echo ($vorschlag['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
+                            <option value="Sonstiges" <?php echo ($vorschlag['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
                         </select>
                     </div>
+
+                    <!-- Anonym Checkbox -->
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked">
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" <?php echo ($vorschlag['anonym'] == '1') ? 'checked' : ''; ?>>
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
+
+                    <!-- Betreff -->
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben">
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" value="<?php echo htmlspecialchars($vorschlag['betreff']); ?>">
                     </div>
+
+                    <!-- Vorschlag -->
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"></textarea>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben"><?php echo htmlspecialchars($vorschlag['vorschlag']); ?></textarea>
                     </div>
+
+                    <!-- Status -->
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select class="custom-select" name="status" id="status">
-                            <option value="Angefragt">Angefragt</option>
-                            <option value="in Bearbeitung">in Bearbeitung</option>
-                            <option value="Rückfragen">Rückfragen</option>
-                            <option value="Angenommen">Angenommen</option>
-                            <option value="Abgelehnt">Abgelehnt</option>
+                            <option value="Angefragt" <?php echo ($vorschlag['status'] == 'Angefragt') ? 'selected' : ''; ?>>Angefragt</option>
+                            <option value="in Bearbeitung" <?php echo ($vorschlag['status'] == 'in Bearbeitung') ? 'selected' : ''; ?>>in Bearbeitung</option>
+                            <option value="Rückfragen" <?php echo ($vorschlag['status'] == 'Rückfragen') ? 'selected' : ''; ?>>Rückfragen</option>
+                            <option value="Angenommen" <?php echo ($vorschlag['status'] == 'Angenommen') ? 'selected' : ''; ?>>Angenommen</option>
+                            <option value="Abgelehnt" <?php echo ($vorschlag['status'] == 'Abgelehnt') ? 'selected' : ''; ?>>Abgelehnt</option>
                         </select>
                     </div>
+
+                    <!-- Notiz -->
                     <div class="form-group">
                         <label for="notiz">Notiz</label>
-                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"><?php echo htmlspecialchars($vorschlag['notiz']); ?></textarea>
                     </div>
                 </form>
             </div>
@@ -171,6 +202,7 @@ include 'include/db.php';
         </div>
     </div>
 </div>
+
 
 <script>
  function openEditModal() {

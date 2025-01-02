@@ -19,29 +19,6 @@ $query = "SELECT * FROM verbesserungsvorschlaege ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Sicherstellen, dass eine ID übergeben wurde
-if (isset($_GET['id'])) {
-    $vorschlagId = $_GET['id'];
-
-    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
-    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
-    $stmt->execute();
-    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    // Überprüfen, ob der Vorschlag existiert
-    if (!$vorschlag) {
-        // Fehlerbehandlung: Falls der Vorschlag nicht gefunden wird
-        echo "Vorschlag nicht gefunden!";
-        exit;
-    }
-} else {
-    // Fehlerbehandlung: Keine ID übergeben
-    echo "Keine Vorschlags-ID angegeben!";
-    exit;
-}
 ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -95,6 +72,28 @@ include 'include/db.php';
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+           <?php // Sicherstellen, dass eine ID übergeben wurde
+if (isset($_GET['id'])) {
+    $vorschlagId = $_GET['id'];
+
+    // SQL-Abfrage, um nur den spezifischen Vorschlag zu holen
+    $query = "SELECT * FROM verbesserungsvorschlaege WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $vorschlagId, PDO::PARAM_INT); // Bindet die ID sicher
+    $stmt->execute();
+    $vorschlag = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Überprüfen, ob der Vorschlag existiert
+    if (!$vorschlag) {
+        // Fehlerbehandlung: Falls der Vorschlag nicht gefunden wird
+        echo "Vorschlag nicht gefunden!";
+        exit;
+    }
+} else {
+    // Fehlerbehandlung: Keine ID übergeben
+    echo "Keine Vorschlags-ID angegeben!";
+    exit;
+}?>
             <div class="modal-body">
                 <form id="createSuggestionForm">
                 <div class="form-group">

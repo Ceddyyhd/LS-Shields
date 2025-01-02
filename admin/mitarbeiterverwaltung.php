@@ -59,7 +59,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <?php endif; ?>
                   <?php if (isset($_SESSION['permissions']['view_bewerbung_mitarbeiter']) && $_SESSION['permissions']['view_bewerbung_mitarbeiter']): ?>
                   <li class="nav-item">
-                    <a class="nav-link" id="mitarbeiter-bewerbung-tab" data-toggle="pill" href="#mitarbeiter-bewerbung" role="tab" aria-controls="mitarbeiter-bewerbung" aria-selected="false">Gekündigte Mitarbeiter Verwaltung</a>
+                    <a class="nav-link" id="mitarbeiter-bewerbung-tab" data-toggle="pill" href="#mitarbeiter-bewerbung" role="tab" aria-controls="mitarbeiter-bewerbung" aria-selected="false">Mitarbeiter Bewerbung</a>
                   </li>
                   <?php endif; ?>
                 </ul>
@@ -149,7 +149,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="tab-pane fade" id="mitarbeiter-bewerbung" role="tabpanel" aria-labelledby="mitarbeiter-bewerbung">
                   <div class="card">
         <div class="card-body">
-          <table id="example2" class="table table-bordered table-striped">
+          <table id="example3" class="table table-bordered table-striped">
             <thead>
               <tr>
                 <th>Mitarbeiter</th>
@@ -181,6 +181,50 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </div>
+
+
+    <script>
+  $(document).ready(function () {
+    $.ajax({
+      url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users_bewerbung.php', // URL zu deiner neuen fetch_users_gekündigt.php
+      type: 'POST',
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);  // Überprüfe die Antwortstruktur
+
+        if (!Array.isArray(data)) {
+          console.error('Die Antwort ist kein Array:', data);
+          alert('Fehler: Antwort ist kein Array.');
+          return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
+        }
+
+        let tableBody = $('#example3 tbody');
+        tableBody.empty();
+
+        data.forEach(user => {
+          tableBody.append(`
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.role_name}</td>
+              <td>${user.nummer ? user.nummer : 'N/A'}</td>
+              <td>${new Date(user.created_at).toLocaleDateString()}</td>
+              <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
+              <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+                      <td>
+                        <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                    </td>
+                  <?php endif; ?>
+            </tr>
+          `);
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', xhr.responseText);
+        alert('Fehler beim Abrufen der Daten.');
+      }
+    });
+  });
+</script>
 
     <!-- Dein JavaScript -->
     <script>

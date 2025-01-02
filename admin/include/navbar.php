@@ -3,6 +3,7 @@ session_start();
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 
+include 'include/header.php';
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 

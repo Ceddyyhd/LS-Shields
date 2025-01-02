@@ -137,25 +137,29 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <div class="card">
                     <div class="card-body">
                       <table id="example1" class="table table-bordered table-striped">
-                        <thead>
+                      <thead>
                           <tr>
                             <th>id</th>
+                            <th>user_id</th>
+                            <th>editor_name</th>
+                            <th>ausbildung</th>
                             <th>action</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
+                            <th>rating</th>
                           </tr>
                         </thead>
                         <tbody>
                           <?php
                           // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
-                          foreach ($ausbildung_logs as $ausbildung_log) {
+                          foreach ($anfrage_logs as $anfrage_log) {
                               echo "<tr>";
-                              echo "<td>" . htmlspecialchars($ausbildung_log['id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausbildung_log['action']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausbildung_log['timestamp']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausbildung_log['anfrage_id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausbildung_log['username']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['user_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['editor_name']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['ausbildung']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($anfrage_log['rating']) . "</td>";
                               echo "</tr>";
                           }
                           ?>
@@ -163,10 +167,12 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tfoot>
                           <tr>
                             <th>id</th>
+                            <th>user_id</th>
+                            <th>editor_name</th>
+                            <th>ausbildung</th>
                             <th>action</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
+                            <th>rating</th>
                           </tr>
                         </tfoot>
                       </table>
@@ -182,10 +188,11 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                           <tr>
                             <th>id</th>
+                            <th>user_id</th>
+                            <th>editor_name</th>
+                            <th>key_name</th>
                             <th>action</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -194,21 +201,23 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           foreach ($ausruestung_logs as $ausruestung_log) {
                               echo "<tr>";
                               echo "<td>" . htmlspecialchars($ausruestung_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['user_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['editor_name']) . "</td>";
+                              echo "<td>" . htmlspecialchars($ausruestung_log['key_name']) . "</td>";
                               echo "<td>" . htmlspecialchars($ausruestung_log['action']) . "</td>";
                               echo "<td>" . htmlspecialchars($ausruestung_log['timestamp']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausruestung_log['anfrage_id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($ausruestung_log['username']) . "</td>";
                               echo "</tr>";
                           }
                           ?>
                         </tbody>
                         <tfoot>
                           <tr>
-                            <th>id</th>
+                          <th>id</th>
+                            <th>user_id</th>
+                            <th>editor_name</th>
+                            <th>key_name</th>
                             <th>action</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
                           </tr>
                         </tfoot>
                       </table>
@@ -224,10 +233,11 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <thead>
                           <tr>
                             <th>id</th>
+                            <th>created_by</th>
+                            <th>created_by_name</th>
                             <th>action</th>
+                            <th>target_user</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -236,10 +246,11 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           foreach ($kunden_logs as $kunden_log) {
                               echo "<tr>";
                               echo "<td>" . htmlspecialchars($kunden_log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['created_by']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['created_by_name']) . "</td>";
                               echo "<td>" . htmlspecialchars($kunden_log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($kunden_log['target_user']) . "</td>";
                               echo "<td>" . htmlspecialchars($kunden_log['timestamp']) . "</td>";
-                              echo "<td>" . htmlspecialchars($kunden_log['anfrage_id']) . "</td>";
-                              echo "<td>" . htmlspecialchars($kunden_log['username']) . "</td>";
                               echo "</tr>";
                           }
                           ?>
@@ -247,10 +258,11 @@ $kunden_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tfoot>
                           <tr>
                             <th>id</th>
+                            <th>created_by</th>
+                            <th>created_by_name</th>
                             <th>action</th>
+                            <th>target_user</th>
                             <th>timestamp</th>
-                            <th>anfrage_id</th>
-                            <th>username</th>
                           </tr>
                         </tfoot>
                       </table>

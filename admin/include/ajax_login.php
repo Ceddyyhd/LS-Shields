@@ -26,6 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
+            // Prüfen, ob der Benutzer im Admin-Bereich ist
+            if ($user['admin_bereich'] != 1) {
+                echo json_encode(['success' => false, 'message' => 'Zugang verweigert. Sie haben keinen Administrator-Zugang.']);
+                exit;
+            }
+
             // Session-Daten setzen
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['name'];

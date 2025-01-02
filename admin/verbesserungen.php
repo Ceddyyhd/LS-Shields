@@ -112,7 +112,6 @@ include 'include/db.php';
 </div>
 
 
-<!-- Verbesserungsvorschlag bearbeiten Modal -->
 <div class="modal fade" id="modal-vorschlag-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -123,51 +122,51 @@ include 'include/db.php';
                 </button>
             </div>
             <div class="modal-body">
-    <form id="editSuggestionForm">
-        <div class="form-group">
-            <label>Bereich</label>
-            <select class="custom-select" name="bereich" id="bereich" disabled>
-                <option value="Personal">Personal</option>
-                <option value="Ausrüstung">Ausrüstung</option>
-                <option value="Ausbildung">Ausbildung</option>
-                <option value="IT">IT</option>
-                <option value="Sonstiges">Sonstiges</option>
-            </select>
-        </div>
+                <form id="editSuggestionForm">
+                    <div class="form-group">
+                        <label>Bereich</label>
+                        <select class="custom-select" name="bereich" id="bereich" disabled>
+                            <option value="Personal">Personal</option>
+                            <option value="Ausrüstung">Ausrüstung</option>
+                            <option value="Ausbildung">Ausbildung</option>
+                            <option value="IT">IT</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
 
-        <div class="form-group">
-            <div class="form-check">
-                <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
-                <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-            </div>
-        </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
+                            <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
+                        </div>
+                    </div>
 
-        <div class="form-group">
-          <label for="betreff">Betreff</label>
-          <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
-      </div>
+                    <div class="form-group">
+                        <label for="betreff">Betreff</label>
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
+                    </div>
 
-        <div class="form-group">
-            <label for="vorschlag">Vorschlag</label>
-            <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
-        </div>
+                    <div class="form-group">
+                        <label for="vorschlag">Vorschlag</label>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
+                    </div>
 
-        <<div class="form-group">
-    <label>Status</label>
-    <select class="custom-select" name="status" id="status">
-        <option value="Angefragt">Angefragt</option>
-        <option value="in Bearbeitung">in Bearbeitung</option>
-        <option value="Rückfragen">Rückfragen</option>
-        <option value="Angenommen">Angenommen</option>
-        <option value="Abgelehnt">Abgelehnt</option>
-    </select>
-</div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="custom-select" name="status" id="status">
+                            <option value="Angefragt">Angefragt</option>
+                            <option value="in Bearbeitung">in Bearbeitung</option>
+                            <option value="Rückfragen">Rückfragen</option>
+                            <option value="Angenommen">Angenommen</option>
+                            <option value="Abgelehnt">Abgelehnt</option>
+                        </select>
+                    </div>
 
-<div class="form-group">
-    <label for="notiz">Notiz</label>
-    <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-</div>
-    </form>
+                    <div class="form-group">
+                        <label for="notiz">Notiz</label>
+                        <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
@@ -185,12 +184,12 @@ include 'include/db.php';
             if (data.success) {
                 const vorschlag = data.vorschlag;
                 console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
-                
+
                 // Füllen der Felder im Modal
-                document.getElementById('betreff').value = vorschlag.betreff || ''; // Wenn leer, setze leer
-                document.getElementById('vorschlag').value = vorschlag.vorschlag || ''; // Wenn leer, setze leer
-                document.querySelector(`select[name="status"]`).value = vorschlag.status || 'Angefragt'; // Setze 'Angefragt', falls leer
-                document.getElementById('notiz').value = vorschlag.notiz || ''; // Wenn leer, setze leer
+                document.getElementById('betreff').value = vorschlag.betreff || ''; // Wenn leer, setze auf leer
+                document.getElementById('vorschlag').value = vorschlag.vorschlag || ''; // Wenn leer, setze auf leer
+                document.querySelector(`select[name="status"]`).value = vorschlag.status || 'Angefragt'; // Wenn leer, setze auf 'Angefragt'
+                document.getElementById('notiz').value = vorschlag.notiz || ''; // Wenn leer, setze auf leer
 
                 // Öffne das Modal
                 $('#modal-vorschlag-bearbeiten').modal('show');
@@ -202,6 +201,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
   document.getElementById('saveEditBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('editSuggestionForm'));

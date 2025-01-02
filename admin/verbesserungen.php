@@ -373,10 +373,12 @@ include 'include/db.php';
                           <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
                               Ablehnen 
                           </button>      
-                          <button class="btn btn-info btn-sm" 
-                                onclick="window.location.href='verbesserungen.php?id=<?= $vorschlag['id'] ?>'">
-                            Anfrage bearbeiten
-                        </button>                   
+                          <<!-- Button zum Öffnen des Modals -->
+                            <button class="btn btn-info btn-sm" 
+                                    data-toggle="modal" data-target="#modal-vorschlag-bearbeiten" 
+                                    data-id="<?= $vorschlag['id'] ?>">
+                                Anfrage bearbeiten
+                            </button>                
                       </div>
                         </div>
                     </td>

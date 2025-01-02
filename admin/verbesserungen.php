@@ -202,9 +202,13 @@ include 'include/db.php';
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
-                                <button class="btn btn-success" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?></button>
-                                <button class="btn btn-danger" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?></button>
-                            </div>
+                            <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
+                            Zustimmen <?= htmlspecialchars($vorschlag['zustimmungen']) ?>
+                        </button>
+                        <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
+                            Ablehnen <?= htmlspecialchars($vorschlag['ablehnungen']) ?>
+                        </button>                            
+                      </div>
                         </div>
                     </td>
                 </tr>
@@ -228,14 +232,15 @@ function rateSuggestion(vorschlagId, zustimmung) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Überprüfe, ob die Rückgabewerte für Zustimmungen und Ablehnungen existieren
-            if (data.zustimmungen !== undefined && data.ablehnungen !== undefined) {
-                // Aktualisiere die Anzeige der Zustimmungen und Ablehnungen
-                document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
-                document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
-            }
+            // Dynamisch die Anzeige der Zustimmungen und Ablehnungen aktualisieren
+            document.getElementById(`zustimmungen-${vorschlagId}`).innerText = data.zustimmungen;
+            document.getElementById(`ablehnungen-${vorschlagId}`).innerText = data.ablehnungen;
+            
+            // Buttons deaktivieren, wenn der Benutzer abgestimmt hat
+            document.getElementById(`btn-accept-${vorschlagId}`).disabled = true;
+            document.getElementById(`btn-reject-${vorschlagId}`).disabled = true;
         } else {
-            alert('Fehler: ' + data.message); // Zeige Fehlermeldung an, wenn vorhanden
+            alert('Fehler: ' + data.message); // Zeige Fehlermeldung an
         }
     })
     .catch(error => {

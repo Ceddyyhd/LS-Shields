@@ -325,7 +325,7 @@ margin: 0;
         dataType: 'json',
         success: function(response) {
             console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
-
+            location.reload();
             if (Array.isArray(response) && response.length > 0) {
                 // Leere das <dl>-Tag
                 $('#teams-page-container').empty(); // Entfernt alle vorherigen Teams
@@ -439,7 +439,7 @@ margin: 0;
                 dataType: 'json',
                 success: function(response) {
                     console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
-
+                    location.reload();
                     if (Array.isArray(response) && response.length > 0) {
                         // Leere das Modal
                         $('#teams-container').empty(); // Entfernt alle vorherigen Teams
@@ -598,7 +598,7 @@ margin: 0;
             },
             success: function(response) {
                 console.log('Erfolgreich gespeichert:', response);
-                window.location.reload();  // Seite neu laden
+                location.reload();
             },
             error: function(xhr, status, error) {
                 console.log('Fehler bei der Anfrage:', error);
@@ -672,6 +672,7 @@ margin: 0;
                     },
                     success: function(response) {
                         console.log(response);  // Antwort des Servers in der Konsole
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         console.log('Fehler:', error);  // Fehlerdetails in der Konsole
@@ -769,6 +770,7 @@ margin: 0;
                 },
                 success: function(response) {
                     console.log('Antwort vom Server:', response);
+                    location.reload();
                 },
                 error: function(xhr, status, error) {
                     console.log('AJAX-Fehler: ', error);

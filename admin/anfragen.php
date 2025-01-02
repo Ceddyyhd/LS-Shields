@@ -158,7 +158,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td>Details einblenden</td>
             </tr>
             <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">
-    <td colspan="5">
+    <td colspan="6">
         <div class="p-3">
             <div class="mb-3">
                 <strong>Datum & Uhrzeit:</strong>

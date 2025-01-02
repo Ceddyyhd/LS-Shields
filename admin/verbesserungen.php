@@ -143,9 +143,9 @@ include 'include/db.php';
         </div>
 
         <div class="form-group">
-            <label for="betreff">Betreff</label>
-            <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
-        </div>
+          <label for="betreff">Betreff</label>
+          <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
+      </div>
 
         <div class="form-group">
             <label for="vorschlag">Vorschlag</label>
@@ -183,23 +183,29 @@ include 'include/db.php';
         .then(data => {
             if (data.success) {
                 const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag);  // Hier überprüfst du die Daten
+                console.log('Vorschlag-Daten:', vorschlag);  // Bestätige die Daten
 
-                // Überprüfe die Daten, bevor du sie in die Felder einfügst
+                // Debugging: Füllen der Felder im Modal
                 console.log('Betreff:', vorschlag.betreff);
                 console.log('Vorschlag:', vorschlag.vorschlag);
                 console.log('Status:', vorschlag.status);
                 console.log('Notiz:', vorschlag.notiz);
 
-                // Fülle die Felder im Modal
-                document.getElementById('bereich').value = vorschlag.bereich || '';
+                // Sicherstellen, dass das Modal geöffnet wird
+                $('#modal-vorschlag-bearbeiten').modal('show');  // Öffne das Modal
+
+                // Füllen der Felder im Modal
                 document.getElementById('betreff').value = vorschlag.betreff || '';
                 document.getElementById('vorschlag').value = vorschlag.vorschlag || '';
                 document.getElementById('status').value = vorschlag.status || '';
                 document.getElementById('notiz').value = vorschlag.notiz || '';
 
-                // Öffne das Modal
-                $('#modal-vorschlag-bearbeiten').modal('show');
+                console.log('Modal-Daten nach dem Setzen:', {
+                    betreff: document.getElementById('betreff').value,
+                    vorschlag: document.getElementById('vorschlag').value,
+                    status: document.getElementById('status').value,
+                    notiz: document.getElementById('notiz').value,
+                });
             } else {
                 alert("Fehler: " + data.message);
             }

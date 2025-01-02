@@ -267,7 +267,10 @@ include 'include/db.php';
                           </button>
                           <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
                               Ablehnen 
-                          </button>                          
+                          </button>      
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-vorschlag-bearbeiten">
+                            Anfrage bearbeiten
+                        </button>                     
                       </div>
                         </div>
                     </td>

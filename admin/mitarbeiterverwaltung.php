@@ -36,8 +36,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
   <!-- /.content-header -->
 
-  <!-- Main content -->
-  <div class="card">
+  <div class="row">
+          <div class="col-12 col-sm-6">
+            <div class="card card-primary card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Mitarbeiter Verwaltung</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Gekündigte Mitarbeiter Verwaltung</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                  <div class="card">
   <?php if (isset($_SESSION['permissions']['user_create']) && $_SESSION['permissions']['user_create']): ?>
     <div class="card-header">
         <h3 class="card-title">
@@ -79,6 +94,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </table>
     </div>
   </div>
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                  <div class="card">
+        <div class="card-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Mitarbeiter</th>
+                <th>Rang</th>
+                <th>Telefonnummer</th>
+                <th>Beitritt</th>
+                <th>Urlaub</th>
+                <th>Bearbeiten</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Daten werden dynamisch geladen -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Mitarbeiter</th>
+                <th>Rang</th>
+                <th>Telefonnummer</th>
+                <th>Beitritt</th>
+                <th>Urlaub</th>
+                <th>Bearbeiten</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dein JavaScript -->
+    <script>
+  $(document).ready(function () {
+    $.ajax({
+      url: 'https://ls-shields.ceddyyhd2.eu/admin/include/fetch_users_gekuendigt.php', // URL zu deiner neuen fetch_users_gekündigt.php
+      type: 'POST',
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);  // Überprüfe die Antwortstruktur
+
+        if (!Array.isArray(data)) {
+          console.error('Die Antwort ist kein Array:', data);
+          alert('Fehler: Antwort ist kein Array.');
+          return; // Verhindert das Fortfahren, wenn die Antwort nicht korrekt ist
+        }
+
+        let tableBody = $('#example1 tbody');
+        tableBody.empty();
+
+        data.forEach(user => {
+          tableBody.append(`
+            <tr>
+              <td>${user.name}</td>
+              <td>${user.role_name}</td>
+              <td>${user.nummer ? user.nummer : 'N/A'}</td>
+              <td>${new Date(user.created_at).toLocaleDateString()}</td>
+              <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
+              <td>
+                <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+              </td>
+            </tr>
+          `);
+        });
+      },
+      error: function (xhr, status, error) {
+        console.error('AJAX-Fehler:', xhr.responseText);
+        alert('Fehler beim Abrufen der Daten.');
+      }
+    });
+  });
+</script>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
+        </div>
+
+  <!-- Main content -->
+  
 </div>
 
 

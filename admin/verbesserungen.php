@@ -308,6 +308,34 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script>
+    $('#saveEditBtn').on('click', function() {
+    const formData = new FormData(document.getElementById('editSuggestionForm'));
+    const suggestionId = $('#editSuggestionForm').data('id'); // Die ID des Vorschlags
+
+    // Zusätzliche Daten hinzufügen
+    formData.append('id', suggestionId);
+
+    // AJAX-Anfrage zum Speichern der Änderungen
+    fetch('include/vorschlag_edit.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Vorschlag erfolgreich bearbeitet!');
+            $('#modal-vorschlag-bearbeiten').modal('hide'); // Modal schließen
+            location.reload();  // Optional: Seite neu laden
+        } else {
+            alert('Fehler: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fehler:', error);
+        alert('Ein unerwarteter Fehler ist aufgetreten.');
+    });
+});
+
     $('#modal-vorschlag-bearbeiten').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button, der das Modal geöffnet hat
     var id = button.data('id');

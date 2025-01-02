@@ -140,6 +140,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Anfrage</th>
                 <th>Status</th>
                 <th>Erstellt von</th>
+                <th>Erstellt Am</th>
                 <th>Details einblenden</th>
             </tr>
         </thead>
@@ -153,6 +154,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </td>
                 <td id="status-<?= $anfrage['id'] ?>"><?= htmlspecialchars($anfrage['status']) ?></td>
                 <td><?= htmlspecialchars($anfrage['erstellt_von']) ?></td>
+                <td><?= htmlspecialchars($anfrage['datum_uhrzeit']) ?></td>
                 <td>Details einblenden</td>
             </tr>
             <tr class="expandable-body" data-id="<?= $anfrage['id'] ?>">

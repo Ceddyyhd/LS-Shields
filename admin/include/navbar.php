@@ -123,7 +123,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="verbesserungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'verbesserungen.php' ? 'active' : '' ?>">
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUIcmlja3JvbGw%3D" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUIcmlja3JvbGw%3D' ? 'active' : '' ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Verbesserungsvorschlag</p>
                             </a>

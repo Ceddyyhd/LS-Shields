@@ -189,32 +189,33 @@ include 'include/db.php';
                     // Modal ins DOM einfügen
                     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-                    // Werte in die Formularelemente einfügen
-                    document.getElementById('bereich').value = vorschlag.bereich;
-                    document.getElementById('betreff').value = vorschlag.betreff;
-                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
-                    document.getElementById('status').value = vorschlag.status;
-                    document.getElementById('notiz').value = vorschlag.notiz || "";
-                    document.getElementById('anonym').checked = vorschlag.anonym === "1"; 
+                    // Warten, bis das Modal im DOM ist, und dann die Werte setzen
+                    setTimeout(function () {
+                        document.getElementById('bereich').value = vorschlag.bereich;
+                        document.getElementById('betreff').value = vorschlag.betreff;
+                        document.getElementById('vorschlag').value = vorschlag.vorschlag;
+                        document.getElementById('status').value = vorschlag.status;
+                        document.getElementById('notiz').value = vorschlag.notiz || "";
+                        document.getElementById('anonym').checked = vorschlag.anonym === "1"; 
 
-                    // Debugging: Überprüfen der eingestellten Werte im Modal
-                    console.log("Modal-Daten nach dem Setzen:", {
-                        betreff: document.getElementById('betreff').value,
-                        vorschlag: document.getElementById('vorschlag').value,
-                        status: document.getElementById('status').value,
-                        notiz: document.getElementById('notiz').value,
-                        anonym: document.getElementById('anonym').checked,
-                        bereich: document.getElementById('bereich').value
-                    });
+                        // Debugging: Überprüfen der eingestellten Werte im Modal
+                        console.log("Modal-Daten nach dem Setzen:", {
+                            betreff: document.getElementById('betreff').value,
+                            vorschlag: document.getElementById('vorschlag').value,
+                            status: document.getElementById('status').value,
+                            notiz: document.getElementById('notiz').value,
+                            anonym: document.getElementById('anonym').checked,
+                            bereich: document.getElementById('bereich').value
+                        });
 
-                    // Modal öffnen
-                    $('#modal-vorschlag-bearbeiten').modal('show');
+                        // Modal öffnen
+                        $('#modal-vorschlag-bearbeiten').modal('show');
 
-                    // Event-Listener nach dem Laden des Modals hinzufügen
-                    $('#modal-vorschlag-bearbeiten').on('hidden.bs.modal', function () {
-                        $(this).remove(); // Modal nach dem Schließen entfernen
-                    });
-
+                        // Event-Listener nach dem Laden des Modals hinzufügen
+                        $('#modal-vorschlag-bearbeiten').on('hidden.bs.modal', function () {
+                            $(this).remove(); // Modal nach dem Schließen entfernen
+                        });
+                    }, 100); // Leichter Delay, um sicherzustellen, dass das Modal im DOM ist, bevor wir die Daten setzen
                 } else {
                     console.log("Fehler: Vorschlag-Daten sind leer oder ungültig");
                 }
@@ -226,6 +227,7 @@ include 'include/db.php';
             alert("Fehler beim Laden der Daten: " + error);
         });
 }
+
 
 
 

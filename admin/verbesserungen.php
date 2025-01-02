@@ -127,7 +127,7 @@ include 'include/db.php';
                     <!-- Bereich (disabled) -->
                     <div class="form-group">
     <label>Bereich</label>
-    <select class="custom-select" name="bereich" id="bereich" readonly>
+    <select class="custom-select" name="bereich" id="bereich" disabled>
         <option value="Personal">Personal</option>
         <option value="Ausrüstung">Ausrüstung</option>
         <option value="Ausbildung">Ausbildung</option>
@@ -139,7 +139,7 @@ include 'include/db.php';
 <!-- Anonym Checkbox (readonly funktioniert hier nicht, da Checkbox eine andere Art von Interaktion hat) -->
 <div class="form-group">
     <div class="form-check">
-        <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" readonly>
+        <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
         <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
     </div>
 </div>
@@ -147,13 +147,13 @@ include 'include/db.php';
 <!-- Betreff -->
 <div class="form-group">
     <label for="betreff">Betreff</label>
-    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" readonly>
+    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
 </div>
 
 <!-- Vorschlag -->
 <div class="form-group">
     <label for="vorschlag">Vorschlag</label>
-    <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" readonly></textarea>
+    <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
 </div>
 
 <!-- Status (hier bleibt es als select und editierbar) -->

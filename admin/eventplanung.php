@@ -35,8 +35,7 @@
     $query = "
         SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
         FROM eventplanung
-        ORDER BY 
-            datum_uhrzeit DESC NULLS LAST";
+        ORDER BY datum_uhrzeit ASC"; // Sortierung nach ID aufsteigend
 
     $stmt = $conn->prepare($query);
     $stmt->execute();

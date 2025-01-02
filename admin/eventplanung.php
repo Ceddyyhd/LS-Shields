@@ -61,7 +61,7 @@
     // Zähler für die Reihenfolge der ID (wird hier von der kleinsten ID bis zur größten gezählt)
     $eventQuery = "
         SELECT * 
-        FROM events 
+        FROM eventplanung 
         ORDER BY 
             datum_uhrzeit DESC NULLS LAST";  // Sortiere nach datum_uhrzeit, Null-Werte am Ende
 

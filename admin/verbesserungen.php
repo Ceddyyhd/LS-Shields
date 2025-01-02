@@ -92,10 +92,10 @@ include 'include/db.php';
                 </div>
             </div>
 
-                    <div class="form-group">
-                        <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" required>
-                    </div>
+            <div class="form-group">
+    <label for="betreff">Betreff</label>
+    <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" required>
+</div>
 
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>

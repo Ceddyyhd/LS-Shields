@@ -18,6 +18,12 @@ $bereich = $_POST['bereich'] ?? ''; // Bereich
 $status = 'Eingetroffen'; // Standardstatus
 $datum_uhrzeit = date('Y-m-d H:i:s'); // Aktuelles Datum und Uhrzeit
 
+// Sicherstellen, dass der Betreff ausgefüllt wurde
+if (empty($betreff)) {
+    echo json_encode(['success' => false, 'message' => 'Betreff muss ausgefüllt werden.']);
+    exit;
+}
+
 try {
     // SQL zum Einfügen des Verbesserungsvorschlags in die Datenbank
     $sql = "INSERT INTO verbesserungsvorschlaege (vorschlag, betreff, bereich, datum_uhrzeit, status, erstellt_von)

@@ -325,7 +325,7 @@ margin: 0;
         dataType: 'json',
         success: function(response) {
             console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
-            location.reload();
+
             if (Array.isArray(response) && response.length > 0) {
                 // Leere das <dl>-Tag
                 $('#teams-page-container').empty(); // Entfernt alle vorherigen Teams

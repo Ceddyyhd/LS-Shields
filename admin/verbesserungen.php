@@ -152,21 +152,21 @@ include 'include/db.php';
             <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
         </div>
 
-        <div class="form-group">
-            <label>Status</label>
-            <select class="custom-select" name="status" id="status">
-                <option value="Angefragt">Angefragt</option>
-                <option value="in Bearbeitung">in Bearbeitung</option>
-                <option value="Rückfragen">Rückfragen</option>
-                <option value="Angenommen">Angenommen</option>
-                <option value="Abgelehnt">Abgelehnt</option>
-            </select>
-        </div>
+        <<div class="form-group">
+    <label>Status</label>
+    <select class="custom-select" name="status" id="status">
+        <option value="Angefragt">Angefragt</option>
+        <option value="in Bearbeitung">in Bearbeitung</option>
+        <option value="Rückfragen">Rückfragen</option>
+        <option value="Angenommen">Angenommen</option>
+        <option value="Abgelehnt">Abgelehnt</option>
+    </select>
+</div>
 
-        <div class="form-group">
-            <label for="notiz">Notiz</label>
-            <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
-        </div>
+<div class="form-group">
+    <label for="notiz">Notiz</label>
+    <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
+</div>
     </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -178,34 +178,22 @@ include 'include/db.php';
 </div>
 <script>
  function openEditModal(vorschlagId) {
+    // Hole die Daten des Vorschlags aus der Datenbank
     fetch(`include/get_vorschlag_data.php?id=${vorschlagId}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const vorschlag = data.vorschlag;
-                console.log('Vorschlag-Daten:', vorschlag);  // Bestätige die Daten
-
-                // Debugging: Füllen der Felder im Modal
-                console.log('Betreff:', vorschlag.betreff);
-                console.log('Vorschlag:', vorschlag.vorschlag);
-                console.log('Status:', vorschlag.status);
-                console.log('Notiz:', vorschlag.notiz);
-
-                // Sicherstellen, dass das Modal geöffnet wird
-                $('#modal-vorschlag-bearbeiten').modal('show');  // Öffne das Modal
-
+                console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
+                
                 // Füllen der Felder im Modal
-                document.getElementById('betreff').value = vorschlag.betreff || '';
-                document.getElementById('vorschlag').value = vorschlag.vorschlag || '';
-                document.getElementById('status').value = vorschlag.status || '';
-                document.getElementById('notiz').value = vorschlag.notiz || '';
+                document.getElementById('betreff').value = vorschlag.betreff || ''; // Wenn leer, setze leer
+                document.getElementById('vorschlag').value = vorschlag.vorschlag || ''; // Wenn leer, setze leer
+                document.querySelector(`select[name="status"]`).value = vorschlag.status || 'Angefragt'; // Setze 'Angefragt', falls leer
+                document.getElementById('notiz').value = vorschlag.notiz || ''; // Wenn leer, setze leer
 
-                console.log('Modal-Daten nach dem Setzen:', {
-                    betreff: document.getElementById('betreff').value,
-                    vorschlag: document.getElementById('vorschlag').value,
-                    status: document.getElementById('status').value,
-                    notiz: document.getElementById('notiz').value,
-                });
+                // Öffne das Modal
+                $('#modal-vorschlag-bearbeiten').modal('show');
             } else {
                 alert("Fehler: " + data.message);
             }

@@ -374,7 +374,7 @@ include 'include/db.php';
                               Ablehnen 
                           </button>      
                           <button class="btn btn-info btn-sm" 
-                                onclick="openEditModal(<?= $vorschlag['id'] ?>)">
+                                onclick="window.location.href='verbesserungen.php?id=<?= $vorschlag['id'] ?>'">
                             Anfrage bearbeiten
                         </button>                   
                       </div>

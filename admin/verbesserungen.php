@@ -210,6 +210,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                               Ablehnen 
                           </button>      
                           <!-- Button zum Öffnen des Modals -->
+                          <?php if (isset($_SESSION['permissions']['edit_vorschlaege']) && $_SESSION['permissions']['edit_vorschlaege']): ?>
                           <button type="button" class="btn btn-primary" 
                             data-toggle="modal" 
                             data-target="#modal-vorschlag-bearbeiten"
@@ -222,7 +223,8 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             data-anonym="<?= $vorschlag['anonym'] ?>"
                         >
                             Bearbeiten
-                        </button>            
+                        </button>       
+                        <?php endif; ?>
                       </div>
                         </div>
                     </td>
@@ -250,6 +252,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Bereich -->
                     <div class="form-group">
                         <label for="bereich">Bereich</label>
+                        <?php if (isset($_SESSION['permissions']['edit_vorschlaege_bereich']) && $_SESSION['permissions']['edit_vorschlaege_bereich']): ?>
                         <select class="custom-select" name="bereich" id="bereich">
                             <option value="Personal" <?php echo ($vorschlag['bereich'] == 'Personal') ? 'selected' : ''; ?>>Personal</option>
                             <option value="Ausrüstung" <?php echo ($vorschlag['bereich'] == 'Ausrüstung') ? 'selected' : ''; ?>>Ausrüstung</option>
@@ -257,6 +260,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <option value="IT" <?php echo ($vorschlag['bereich'] == 'IT') ? 'selected' : ''; ?>>IT</option>
                             <option value="Sonstiges" <?php echo ($vorschlag['bereich'] == 'Sonstiges') ? 'selected' : ''; ?>>Sonstiges</option>
                         </select>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Anonym Checkbox -->

@@ -84,11 +84,6 @@ include 'include/db.php';
                           <option>Sonstiges</option>
                         </select>
                       </div>
-                    
-                    <div class="form-group">
-                        <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
-                        <input type="checkbox" name="anonym" id="anonym" class="form-check-input">
-                    </div>
 
                     <div class="form-group">
                         <div class="form-check">

@@ -210,45 +210,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
 
 
-<script>
 
-
-
-
-
-
-
-
-  document.getElementById('saveEditBtn').addEventListener('click', function() {
-    const formData = new FormData(document.getElementById('editSuggestionForm'));
-
-    // Überprüfe, ob alle Felder ausgefüllt sind
-    if (!formData.get('status') || !formData.get('notiz') || !formData.get('betreff') || !formData.get('vorschlag')) {
-        alert('Bitte alle Felder ausfüllen!');
-        return;
-    }
-
-    // Sende die AJAX-Anfrage zum Speichern der Änderungen
-    fetch('include/update_vorschlag.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Vorschlag erfolgreich bearbeitet!');
-            $('#modal-vorschlag-bearbeiten').modal('hide'); // Modal schließen
-            location.reload(); // Optional: Seite neu laden, um die Änderungen zu sehen
-        } else {
-            alert('Fehler: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Fehler:', error);
-        alert('Ein unerwarteter Fehler ist aufgetreten.');
-    });
-  });
-</script>
 
 
 <!-- JavaScript zur Verarbeitung des Formulars -->

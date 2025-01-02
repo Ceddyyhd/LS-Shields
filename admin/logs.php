@@ -60,7 +60,7 @@ $ausbildung_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Logs aus der Datenbank abfragen
 $stmt = $conn->prepare("SELECT * FROM ausruestung_log ORDER BY timestamp DESC");
 $stmt->execute();
-$ausruestung_log = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$ausruestung_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Logs aus der Datenbank abfragen
 $stmt = $conn->prepare("SELECT * FROM kunden_logs ORDER BY timestamp DESC");

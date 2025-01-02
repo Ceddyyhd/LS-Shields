@@ -34,8 +34,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </div>
   </div>
+  <style>
+  @media (min-width: 576px) {
+    .col-sm-6 {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+</style>
+<?php
+// Datenbankverbindung einbinden
+include 'db.php';
 
-
+// Logs aus der Datenbank abfragen
+$stmt = $conn->prepare("SELECT * FROM anfragen_logs ORDER BY timestamp DESC");
+$stmt->execute();
+$logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
   <div class="row">
           <div class="col-12 col-sm-6">
             <div class="card card-primary card-tabs">
@@ -58,8 +74,49 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <div class="card-body">
                 <div class="tab-content" id="custom-tabs-one-tabContent">
                   <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur.
+
+
+                  <div class="card">
+                    <div class="card-body">
+                      <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php
+                          // Schleife durch die Logs und Ausgabe der Daten in der Tabelle
+                          foreach ($logs as $log) {
+                              echo "<tr>";
+                              echo "<td>" . htmlspecialchars($log['id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($log['action']) . "</td>";
+                              echo "<td>" . htmlspecialchars($log['timestamp']) . "</td>";
+                              echo "<td>" . htmlspecialchars($log['anfrage_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($log['username']) . "</td>";
+                              echo "</tr>";
+                          }
+                          ?>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th>id</th>
+                            <th>action</th>
+                            <th>timestamp</th>
+                            <th>anfrage_id</th>
+                            <th>username</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
+
+
+                </div>
                   <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
                      Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam.
                   </div>

@@ -114,7 +114,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Telefonnummer</th>
                 <th>Beitritt</th>
                 <th>Urlaub</th>
-                <th>Bearbeiten</th>
+                <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+              <th>Bearbeiten</th>
+           <?php endif; ?>
               </tr>
             </thead>
             <tbody>
@@ -127,7 +129,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <th>Telefonnummer</th>
                 <th>Beitritt</th>
                 <th>Urlaub</th>
-                <th>Bearbeiten</th>
+                <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+              <th>Bearbeiten</th>
+           <?php endif; ?>
               </tr>
             </tfoot>
           </table>
@@ -162,9 +166,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <td>${user.nummer ? user.nummer : 'N/A'}</td>
               <td>${new Date(user.created_at).toLocaleDateString()}</td>
               <td>${user.next_vacation ? user.next_vacation : 'Kein Urlaub geplant'}</td>
-              <td>
-                <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
-              </td>
+              <?php if (isset($_SESSION['permissions']['edit_employee']) && $_SESSION['permissions']['edit_employee']): ?>
+                      <td>
+                        <a href="/admin/profile.php?id=${user.id}" class="btn btn-block btn-outline-secondary">Bearbeiten</a>
+                    </td>
+                  <?php endif; ?>
             </tr>
           `);
         });

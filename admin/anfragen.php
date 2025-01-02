@@ -197,31 +197,20 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 function changeStatus(id, action) {
-  // Finde das zugehörige Formular für die Anfrage-ID
   const form = document.getElementById(`status-form-${id}`);
   const formData = new FormData(form);
-  
-  // Überprüfe, ob alle Felder ausgefüllt sind
-  if (!formData.get('erstellt_von')) {
-    alert('Benutzername nicht verfügbar.');
-    return;
-  }
+
+  // Überprüfe, ob die ID korrekt übermittelt wird
+  console.log("FormData:", formData);
 
   fetch('include/update_status.php', {
     method: 'POST',
-    body: formData, // Sende die Formulardaten, einschließlich 'erstellt_von'
+    body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        if (action === 'change_status') {
-          document.getElementById(`status-${id}`).innerText = 'in Bearbeitung';
-          document.getElementById(`buttons-${id}`).innerHTML =
-            `<button class="btn btn-block btn-outline-info btn-lg" onclick="changeStatus(${id}, 'move_to_eventplanung')">in Planung</button>`;
-        } else if (action === 'move_to_eventplanung' && data.removed) {
-          document.querySelector(`tr[data-widget="expandable-table"][data-id="${id}"]`).remove();
-          document.querySelector(`tr.expandable-body[data-id="${id}"]`).remove();
-        }
+        // Weiterer Code zur Verarbeitung
       } else {
         alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
       }

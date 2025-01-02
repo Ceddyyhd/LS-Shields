@@ -124,9 +124,10 @@ include 'include/db.php';
             </div>
             <div class="modal-body">
                 <form id="editSuggestionForm">
+                    <!-- Bereich (disabled) -->
                     <div class="form-group">
                         <label>Bereich</label>
-                        <select class="custom-select" name="bereich" id="bereich" >
+                        <select class="custom-select" name="bereich" id="bereich" disabled>
                             <option value="Personal">Personal</option>
                             <option value="Ausrüstung">Ausrüstung</option>
                             <option value="Ausbildung">Ausbildung</option>
@@ -135,23 +136,27 @@ include 'include/db.php';
                         </select>
                     </div>
 
+                    <!-- Anonym Checkbox -->
                     <div class="form-group">
                         <div class="form-check">
-                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" >
+                            <input type="checkbox" id="anonym" class="form-check-input" name="fuel_checked" disabled>
                             <label for="anonym">Anonym (Aktiviert = kein Name mitsenden)</label>
                         </div>
                     </div>
 
+                    <!-- Betreff -->
                     <div class="form-group">
                         <label for="betreff">Betreff</label>
-                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" >
+                        <input type="text" name="betreff" id="betreff" class="form-control" placeholder="Betreff eingeben" disabled>
                     </div>
 
+                    <!-- Vorschlag -->
                     <div class="form-group">
                         <label for="vorschlag">Vorschlag</label>
-                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" ></textarea>
+                        <textarea name="vorschlag" id="vorschlag" class="form-control" rows="4" placeholder="Vorschlag beschreiben" disabled></textarea>
                     </div>
 
+                    <!-- Status -->
                     <div class="form-group">
                         <label>Status</label>
                         <select class="custom-select" name="status" id="status">
@@ -163,6 +168,7 @@ include 'include/db.php';
                         </select>
                     </div>
 
+                    <!-- Notiz -->
                     <div class="form-group">
                         <label for="notiz">Notiz</label>
                         <textarea name="notiz" id="notiz" class="form-control" rows="4" placeholder="Notizen hinzufügen"></textarea>
@@ -187,20 +193,25 @@ include 'include/db.php';
                 const vorschlag = data.vorschlag;
                 console.log('Vorschlag-Daten:', vorschlag); // Überprüfen, ob die Daten korrekt geladen wurden
 
-                // Überprüfen, ob die Felder im Modal korrekt gesetzt werden
-                console.log('Betreff:', vorschlag.betreff);
-                console.log('Vorschlag:', vorschlag.vorschlag);
-                console.log('Status:', vorschlag.status);
-                console.log('Notiz:', vorschlag.notiz);
+                // Sicherstellen, dass alle Felder korrekt gefüllt werden
+                if (vorschlag) {
+                    document.getElementById('bereich').value = vorschlag.bereich;
+                    document.getElementById('betreff').value = vorschlag.betreff;
+                    document.getElementById('vorschlag').value = vorschlag.vorschlag;
+                    document.getElementById('status').value = vorschlag.status;
+                    document.getElementById('notiz').value = vorschlag.notiz || ""; // Default leer, wenn keine Notiz vorhanden
 
-                // Füllen der Felder im Modal
-                document.getElementById('betreff').value = vorschlag.betreff || ''; // Wenn leer, setze auf leer
-                document.getElementById('vorschlag').value = vorschlag.vorschlag || ''; // Wenn leer, setze auf leer
-                document.querySelector(`select[name="status"]`).value = vorschlag.status || 'Angefragt'; // Wenn leer, setze auf 'Angefragt'
-                document.getElementById('notiz').value = vorschlag.notiz || ''; // Wenn leer, setze auf leer
+                    // Überprüfen, ob das Modal mit den richtigen Daten gefüllt wird
+                    console.log("Modal-Daten nach dem Setzen:", {
+                        betreff: document.getElementById('betreff').value,
+                        vorschlag: document.getElementById('vorschlag').value,
+                        status: document.getElementById('status').value,
+                        notiz: document.getElementById('notiz').value
+                    });
 
-                // Öffne das Modal
-                $('#modal-vorschlag-bearbeiten').modal('show');
+                    // Öffne das Modal
+                    $('#modal-vorschlag-bearbeiten').modal('show');
+                }
             } else {
                 alert("Fehler: " + data.message);
             }

@@ -49,6 +49,7 @@
                     <th>Standort</th>
                     <th>Nächste Inspektion</th>
                     <th>Button</th>
+                    <th>Tanken</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,6 +88,7 @@
                     echo '<td>' . $vehicle['location'] . '</td>';
                     echo '<td><span class="badge ' . $badge_class . '">' . date('d.m.Y', $inspection_date) . '</span></td>';
                     echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
+                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
                     echo '</tr>';
                 }
                 ?>

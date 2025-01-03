@@ -637,57 +637,7 @@ margin: 0;
                     <?= $event['summernote_content'] ?>
                 </div>
 
-                  <div class="active tab-pane" id="plan-bearbeiten">
-                  <form action="speichern_eventplanung_summernote.php" method="POST">
-        <div class="form-group">
-            <label for="summernote">Anfrage:</label>
-            <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($event['summernote_content']) ?></textarea>
-        </div>
-        
-        <input type="hidden" name="id" value="<?= $event['id'] ?>">
-        
-        <button type="button" id="submitForm" class="btn btn-danger">Speichern</button> <!-- Submit-Button -->
-    </form>
-
-    <script>
-        $(document).ready(function() {
-            // Summernote initialisieren
-            $('#summernote').summernote({
-                height: 300,   // Höhe von Summernote anpassen
-                focus: true     // Fokus auf das Summernote-Feld setzen
-            });
-
-            // Submit-Button-Funktionalität
-            $('#submitForm').on('click', function() {
-                var summernoteContent = $('#summernote').val();  // Den Inhalt von Summernote holen
-                console.log(summernoteContent);  // Ausgabe des Inhalts in der Konsole
-
-                // AJAX-Anfrage zum Speichern der Daten
-                $.ajax({
-                    url: 'include/speichern_eventplanung_summernote.php',  // Das PHP-Skript zum Speichern
-                    type: 'POST',
-                    data: {
-                        summernoteContent: summernoteContent,
-                        id: <?= $event['id'] ?>  // ID des Events übergeben
-                    },
-                    success: function(response) {
-                        console.log(response);  // Antwort des Servers in der Konsole
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Fehler:', error);  // Fehlerdetails in der Konsole
-                    }
-                });
-            });
-        });
-    </script>
-
-
-
-
-
-
-                  </div>
+                  
                   
 
                   <div class="tab-pane" id="anmeldung">

@@ -69,7 +69,7 @@
     ?>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Werte in das Formular setzen
             $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
             $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
@@ -323,7 +323,7 @@
                                                 });
                                             </script>
                                         </div>
-                                        <!-- Weiterer Inhalt ... -->
+                                        <!-- Weitere Inhalte folgen... -->
                                     </div>
                                 </div><!-- /.card-body -->
                             </div><!-- /.card -->

@@ -43,14 +43,13 @@ $stmt = $conn->prepare("SELECT * FROM roles");
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Bereichsdaten abrufen
 $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
 // Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtPerm = $conn->prepare("
-    SELECT p.*, pa.id AS bereich_id, pa.display_name AS bereich_display_name
+    SELECT p.*, pa.display_name AS bereich_display_name
     FROM permissions p
     LEFT JOIN permissions_areas pa ON p.bereich = pa.id
 ");

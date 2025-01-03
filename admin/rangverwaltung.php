@@ -65,44 +65,44 @@ echo '</script>';
 
 
 <script>
-$(document).ready(function () {
-    // Berechtigungen und Bereichsdaten dynamisch laden
-    const permissions = <?= json_encode($permissions) ?>;
-    const areas = <?= json_encode($areas) ?>;
+    $(document).ready(function () {
+        // Berechtigungen und Bereichsdaten dynamisch laden
+        const permissions = <?= json_encode($permissions) ?>;
+        const areas = <?= json_encode($areas) ?>;
 
-    const permissionsContainer = $('#permissionsContainer');
-    
-    // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
-    const areaMap = {};
-    areas.forEach(area => {
-        areaMap[area.id] = area.display_name;
-    });
-
-    permissions.forEach(permission => {
-        // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
-        const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
+        const permissionsContainer = $('#permissionsContainer');
         
-        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        if (!sectionDiv.length) {
-            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-            permissionsContainer.append(
-                `<div class="permissions-section section-${permission.bereich}">
-                    <h5>${sectionLabel}</h5>
-                </div>`
-            );
-            sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        }
+        // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
+        const areaMap = {};
+        areas.forEach(area => {
+            areaMap[area.id] = area.display_name;
+        });
 
-        // Checkbox für die Berechtigung hinzufügen
-        sectionDiv.append(`
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-            </div>
-        `);
+        permissions.forEach(permission => {
+            // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
+            const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
+            
+            let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+            if (!sectionDiv.length) {
+                // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+                permissionsContainer.append(
+                    `<div class="permissions-section section-${permission.bereich}">
+                        <h5>${sectionLabel}</h5>
+                    </div>`
+                );
+                sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+            }
+
+            // Checkbox für die Berechtigung hinzufügen
+            sectionDiv.append(`
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                    <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                </div>
+            `);
+        });
     });
-});
-</script>
+    </script>
 
 <div class="row">
   <div class="col-12">

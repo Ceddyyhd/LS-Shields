@@ -92,8 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Binde die berechnete Arbeitszeit, wenn sie vorhanden ist
-                if ($arbeitszeit !== null) {
-                    $stmt->bindValue(':arbeitszeit', $arbeitszeit, PDO::PARAM_STR);
+                if ($gestartetUm !== null && $gegangenUm !== null) {
+                    $startTime = new DateTime($gestartetUm);
+                    $endTime = new DateTime($gegangenUm);
+                    $interval = $startTime->diff($endTime);
+                    
+                    // Die Differenz in Stunden und Minuten berechnen
+                    $arbeitszeit = $interval->days * 24 + $interval->h + $interval->i / 60;
                 } else {
                     $stmt->bindValue(':arbeitszeit', null, PDO::PARAM_NULL);
                 }

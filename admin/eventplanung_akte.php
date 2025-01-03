@@ -781,10 +781,10 @@ error: function(xhr, status, error) {
 
                                                     foreach ($employees as $employee) {
                                                 ?>
-                                                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
+                                                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['id']); ?>)</h4>
                                                 <?php if ($isOwnEmployee || $canRemoveAll): ?>
-        <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>
-    <?php endif; ?>
+                                                    <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>
+                                                <?php endif; ?>
 
                                                     <div class="form-group">
                                                     <div class="bootstrap-timepicker">

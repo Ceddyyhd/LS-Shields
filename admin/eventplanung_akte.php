@@ -649,30 +649,51 @@ error: function(xhr, status, error) {
 
                                             <script>
                                                 $(document).ready(function () {
-                                                    $('#summernote').summernote({
-                                                        height: 300,
-                                                        focus: true
-                                                    });
+    $('#summernote').summernote({
+        height: 300,
+        focus: true,
+        callbacks: {
+            onImageUpload: function(files) {
+                var formData = new FormData();
+                formData.append("file", files[0]);
 
-                                                    $('#submitForm').on('click', function () {
-                                                        var summernoteContent = $('#summernote').val();
+                $.ajax({
+                    url: 'upload_image.php', // Hier muss der PHP-Endpunkt zum Speichern des Bildes angegeben werden
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Das Bild in Summernote einfügen
+                        $('#summernote').summernote('insertImage', response.filePath);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Fehler beim Hochladen des Bildes:', error);
+                    }
+                });
+            }
+        }
+    });
 
-                                                        $.ajax({
-                                                            url: 'include/speichern_eventplanung_summernote.php',
-                                                            type: 'POST',
-                                                            data: {
-                                                                summernoteContent: summernoteContent,
-                                                                id: <?= $event['id'] ?>
-                                                            },
-                                                            success: function (response) {
-                                                                location.reload();
-                                                            },
-                                                            error: function (xhr, status, error) {
-                                                                console.log('Fehler:', error);
-                                                            }
-                                                        });
-                                                    });
-                                                });
+    $('#submitForm').on('click', function () {
+        var summernoteContent = $('#summernote').val();
+
+        $.ajax({
+            url: 'include/speichern_eventplanung_summernote.php',
+            type: 'POST',
+            data: {
+                summernoteContent: summernoteContent,
+                id: <?= $event['id'] ?>
+            },
+            success: function (response) {
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log('Fehler:', error);
+            }
+        });
+    });
+});
                                             </script>
                                         </div>
 

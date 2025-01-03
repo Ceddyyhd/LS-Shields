@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $key_name = $_POST['key_name'] ?? null;
 $description = $_POST['description'] ?? null;
 $prioritaet = $_POST['prioritaet'] ?? null;
-$created_by = $_SESSION['username'] ?? 'Unbekannt';  // Beispiel: Benutzernamen aus der Session holen
+$created_by = $_POST['created_by'] ?? $_SESSION['username'];  // Benutzernamen aus der Session holen oder den angegebenen Namen aus dem Formular
 
 if (!$key_name || !$description || !$prioritaet) {
     echo json_encode(['success' => false, 'error' => 'Fehlende Eingabewerte']);
@@ -30,7 +30,7 @@ try {
     $logStmt->execute([
         ':ankuendigung_id' => $ankuendigung_id,
         ':action' => 'Erstellt',
-        ':changed_by' => $created_by
+        ':changed_by' => $_SESSION['username']  // Der Benutzer, der die Ankündigung erstellt hat, wird hier festgehalten
     ]);
     
     echo json_encode(['success' => true, 'message' => 'Ankündigung erfolgreich erstellt']);

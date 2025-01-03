@@ -2,21 +2,21 @@
 include 'db.php';
 header('Content-Type: application/json');
 
+// Eingabewerte
 $key_name = $_POST['key_name'] ?? null;
-$display_name = $_POST['display_name'] ?? null;
 $description = $_POST['description'] ?? null;
 $prioritaet = $_POST['prioritaet'] ?? null;
 
-if (!$key_name || !$display_name || !$prioritaet) {
+if (!$key_name || !$description || !$prioritaet) {
     echo json_encode(['success' => false, 'error' => 'Fehlende Eingabewerte']);
     exit;
 }
 
 try {
-    $stmt = $conn->prepare("INSERT INTO ankuendigung (key_name, display_name, description, prioritaet) VALUES (:key_name, :display_name, :description, :prioritaet)");
+    $stmt = $conn->prepare("INSERT INTO ankuendigung (key_name, display_name, description, prioritaet) VALUES (:key_name, :key_name, :description, :prioritaet)");
     $stmt->execute([
         ':key_name' => $key_name,
-        ':display_name' => $display_name,
+        ':display_name' => $key_name, // display_name ist in diesem Fall gleich key_name
         ':description' => $description,
         ':prioritaet' => $prioritaet
     ]);

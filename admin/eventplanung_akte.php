@@ -780,8 +780,11 @@ error: function(xhr, status, error) {
                                                     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                     foreach ($employees as $employee) {
+                                                        $isOwnEmployee = $employee['id'] == $_SESSION['user_id'];  // ID des aktuellen Benutzers
+                                                        $canRemoveAll = in_array('eventplanung_abmeldung_alle', $userPermission);  // Überprüfen, ob der Benutzer die Berechtigung hat
+                                                    
                                                 ?>
-                                                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['id']); ?>)</h4>
+                                                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
                                                 <?php if ($isOwnEmployee || $canRemoveAll): ?>
                                                     <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>
                                                 <?php endif; ?>

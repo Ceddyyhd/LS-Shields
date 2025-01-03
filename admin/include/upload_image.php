@@ -4,7 +4,7 @@
 // Überprüfen, ob die Datei hochgeladen wurde
 if ($_FILES['file']['error'] == UPLOAD_ERR_OK) {
     // Zielverzeichnis zum Speichern des Bildes
-    $uploadDir = '../uploads/images/';
+    $uploadDir = '../uploads/summernote/';
     // Ziel-Dateiname
     $fileName = basename($_FILES['file']['name']);
     $targetFile = $uploadDir . $fileName;

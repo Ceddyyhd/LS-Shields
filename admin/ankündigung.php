@@ -221,6 +221,30 @@ $(document).ready(function() {
         });
     });
 
+    // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
+$('#saveEditAnkuendigung').click(function() {
+    const formData = new FormData(document.getElementById('editAnkuendigungForm'));
+
+    $.ajax({
+        url: 'include/update_ankuendigung.php',  // PHP-Datei zum Bearbeiten der Ankündigung
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                alert('Ankündigung erfolgreich bearbeitet.');
+                $('#modal-ankuendigung-bearbeiten').modal('hide');  // Modal schließen
+                location.reload();  // Seite neu laden, um die Änderungen anzuzeigen
+            } else {
+                alert('Fehler beim Bearbeiten der Ankündigung: ' + response.error);
+            }
+        },
+        error: function() {
+            alert('Fehler beim Bearbeiten der Ankündigung.');
+        }
+    });
+});
     // Löschen einer Ankündigung
     window.deleteAnkuendigung = function(id) {
         if (confirm('Möchten Sie diese Ankündigung wirklich löschen?')) {

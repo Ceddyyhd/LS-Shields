@@ -78,7 +78,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <div class="form-group">
                         <label for="key_name">Titel</label>
-                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="<?php echo htmlspecialchars($user_name); ?>">
+                        <input type="text" class="form-control" id="key_name" name="key_name" value="<?php echo htmlspecialchars($user_name); ?>">
                     </div>
                 </form>
             </div>

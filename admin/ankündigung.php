@@ -53,7 +53,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Ankündigung Erstellen</h4>
+                <h4 class="modal-title"><?php echo htmlspecialchars($user_name); ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -77,8 +77,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="description">Erstellt von </label>
-                        <textarea class="form-control" id="description" name="description" value="<?php echo htmlspecialchars($user_name); ?>"></textarea>
+                        <label for="key_name">Titel</label>
+                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="<?php echo htmlspecialchars($user_name); ?>">
                     </div>
                 </form>
             </div>

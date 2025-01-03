@@ -115,154 +115,508 @@
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-3">
-                            <!-- Profile Image -->
-                            <div class="card card-primary card-outline">
-                                <div class="card-body box-profile">
-                                    <div class="text-center">
-                                    </div>
-                                    <p class="text-muted text-center">Event</p>
-                                    <h3 class="profile-username text-center"><?= htmlspecialchars($event['event']); ?></h3>
-                                    <p class="text-muted text-center">Anmerkung</p>
-                                    <h3 class="profile-username text-center"><?= htmlspecialchars($event['anmerkung']); ?></h3>
-                                    <p class="text-muted text-center">Ansprechpartner</p>
-                                    <h3 class="profile-username text-center"><?= htmlspecialchars($event['vorname_nachname']); ?></h3>
+                    <div class="col-md-3">
 
-                                    <ul class="list-group list-group-unbordered mb-3">
-                                        <li class="list-group-item">
-                                            <b>Tel. Nr.:</b> <a class="float-right"><?= htmlspecialchars($event['telefonnummer']); ?></a>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <b>Datum & </br>Uhrzeit:</b> <a class="float-right"><?= htmlspecialchars($event['datum_uhrzeit_event']); ?></a>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <b>Ort:</b> <a class="float-right"><?= htmlspecialchars($event['ort']); ?></a>
-                                        </li>
-                                        <li class="list-group-item">
-                                            <b>Eventlead:</b>
-                                            <a class="float-right" data-toggle="tooltip" title="Telefonnummer: <?= htmlspecialchars($event['event_lead_phone']); ?>"><?= htmlspecialchars($event['event_lead_name']); ?></a>
-                                        </li>
-                                    </ul>
+<!-- Profile Image -->
+<div class="card card-primary card-outline">
+  <div class="card-body box-profile">
+    <div class="text-center">
+    </div>
+    <p class="text-muted text-center">Event</p>
+    <h3 class="profile-username text-center"><?= htmlspecialchars($event['event']); ?></h3>
+    <p class="text-muted text-center">Anmerkung</p>
+    <h3 class="profile-username text-center"><?= htmlspecialchars($event['anmerkung']); ?></h3>
+    <p class="text-muted text-center">Ansprechpartner</p>
+    <h3 class="profile-username text-center"><?= htmlspecialchars($event['vorname_nachname']); ?></h3>
 
-                                    <script>
-                                        $(document).ready(function () {
-                                            // Initialisiere alle Tooltips auf der Seite
-                                            $('[data-toggle="tooltip"]').tooltip();
-                                        });
-                                    </script>
+    <ul class="list-group list-group-unbordered mb-3">
+        <li class="list-group-item">
+            <b>Tel. Nr.:</b> <a class="float-right"><?= htmlspecialchars($event['telefonnummer']); ?></a>
+        </li>
+        <li class="list-group-item">
+            <b>Datum & </br>Uhrzeit:</b> <a class="float-right"><?= htmlspecialchars($event['datum_uhrzeit_event']); ?></a>
+        </li>
+        <li class="list-group-item">
+            <b>Ort:</b> <a class="float-right"><?= htmlspecialchars($event['ort']); ?></a>
+        </li>
+        <li class="list-group-item">
+            <b>Eventlead:</b> 
+            <a class="float-right" 
+            data-toggle="tooltip" 
+            title="Telefonnummer: <?= htmlspecialchars($event['event_lead_phone']); ?>"><?= htmlspecialchars($event['event_lead_name']); ?></a>
+        </li>
+        <script>
+            $(document).ready(function () {
+// Initialisiere alle Tooltips auf der Seite
+$('[data-toggle="tooltip"]').tooltip();
+});
+        </script>
+    </ul>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
+      Bearbeiten
+    </button>
 
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
-                                        Bearbeiten
-                                    </button>
+    <div class="modal fade" id="ansprechpartner-bearbeiten">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title">Ansprechpartner bearbeiten</h4>
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+<div class="modal-body">
 
-                                    <!-- Modal für Ansprechpartner bearbeiten -->
-                                    <div class="modal fade" id="ansprechpartner-bearbeiten">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Ansprechpartner bearbeiten</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form id="edit-form">
-                                                        <input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>">
-                                                        <div class="form-group">
-                                                            <label>Ansprechpartner Name</label>
-                                                            <input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname">
-                                                        </div>
+<form id="edit-form">
+<input type="hidden" name="event_id" id="event_id" value="<?= $_GET['id']; ?>"> <!-- Verwendung von $_GET['id'] -->
+<div class="form-group">
+<label>Ansprechpartner Name</label>
+<input type="text" class="form-control" name="vorname_nachname" id="vorname_nachname">
+</div>
 
-                                                        <div class="form-group">
-                                                            <label>Ansprechpartner Tel. Nr.:</label>
-                                                            <input type="text" class="form-control" name="telefonnummer" id="telefonnummer">
-                                                        </div>
+<div class="form-group">
+<label>Ansprechpartner Tel. Nr.:</label>
+<input type="text" class="form-control" name="telefonnummer" id="telefonnummer">
+</div>
 
-                                                        <label>Datum & Uhrzeit:</label>
-                                                        <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                                                            <input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker"/>
-                                                            <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-                                                                <div class="input-group-text"><i class="fa fa-calendar"></i> </div>
-                                                            </div>
-                                                        </div>
+<label>Datum & Uhrzeit:</label>
+<div class="input-group date" id="datetimepicker" data-target-input="nearest">
+<input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker"/>
+<div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
+<div class="input-group-text"><i class="fa fa-calendar"></i> </div> <!-- Uhr-Icon hier hinzufügen -->
+</div>
+</div>
 
-                                                        <div class="form-group">
-                                                            <label>Ort</label>
-                                                            <input type="text" class="form-control" name="ort" id="ort">
-                                                        </div>
+<div class="form-group">
+<label>Ort</label>
+<input type="text" class="form-control" name="ort" id="ort">
+</div>
 
-                                                        <div class="form-group">
-                                                            <label>Event Lead</label>
-                                                            <select class="form-control" name="event_lead" id="event_lead">
-                                                                <?php
-                                                                foreach ($users as $user) {
-                                                                    $selected = ($user['id'] == $event['event_lead']) ? 'selected' : '';
-                                                                    echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Event</label>
-                                                            <input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>">
-                                                        </div>
+<div class="form-group">
+<label>Event Lead</label>
+<select class="form-control" name="event_lead" id="event_lead">
+<?php
+// Alle Benutzer im Dropdown anzeigen
+foreach ($users as $user) {
+$selected = ($user['id'] == $event['event_lead']) ? 'selected' : '';
+echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
+}
+?>
+</select>
+</div>
+<div class="form-group">
+<label>Event</label>
+<input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>">
+</div>
 
-                                                        <div class="form-group">
-                                                            <label>Anmerkung</label>
-                                                            <textarea class="form-control" name="anmerkung" id="anmerkung" rows="3"><?= htmlspecialchars($event['anmerkung']); ?></textarea>
-                                                        </div>
+<div class="form-group">
+<label>Anmerkung</label>
+<textarea class="form-control" name="anmerkung" id="anmerkung" rows="3"><?= htmlspecialchars($event['anmerkung']); ?></textarea>
+</div>
 
-                                                        <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                            <button type="submit_update" class="btn btn-primary">Save changes</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+<div class="modal-footer justify-content-between">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<button type="submit_update" class="btn btn-primary">Save changes</button>
+</div>
+</form>
 
-                                    <script>
-                                        $(document).ready(function () {
-                                            $('#datetimepicker').datetimepicker({
-                                                format: 'YYYY-MM-DD HH:mm', 
-                                                icons: {
-                                                    time: 'fa fa-clock',
-                                                    date: 'fa fa-calendar',
-                                                    up: 'fa fa-arrow-up',
-                                                    down: 'fa fa-arrow-down',
-                                                    previous: 'fa fa-chevron-left',
-                                                    next: 'fa fa-chevron-right'
-                                                }
-                                            });
+</div>
+</div>
+</div>
+</div>
+<script>
+$(document).ready(function () {
+$('#datetimepicker').datetimepicker({
+format: 'YYYY-MM-DD HH:mm', // Format für MySQL
+icons: { // Hier kannst du die Icons für den Kalender und die Uhr setzen
+time: 'fa fa-clock',
+date: 'fa fa-calendar',
+up: 'fa fa-arrow-up',
+down: 'fa fa-arrow-down',
+previous: 'fa fa-chevron-left',
+next: 'fa fa-chevron-right'
+}
+});
 
-                                            var urlParams = new URLSearchParams(window.location.search);
-                                            var event_id = urlParams.get('id'); 
+// Event ID aus der URL extrahieren
+var urlParams = new URLSearchParams(window.location.search);
+var event_id = urlParams.get('id'); // Event ID aus URL holen
 
-                                            $('#edit-form').on('submit', function(e) {
-                                                e.preventDefault(); 
+// Formular per AJAX senden
+$('#edit-form').on('submit', function(e) {
+e.preventDefault(); // Verhindert das normale Absenden des Formulars
 
-                                                var formData = $(this).serialize(); 
-                                                formData += '&event_id=' + event_id; 
+var formData = $(this).serialize(); // Alle Formulardaten serialisieren
+formData += '&event_id=' + event_id; // Event ID zur Formulardaten hinzufügen
 
-                                                $.ajax({
-                                                    url: 'include/update_event.php',
-                                                    method: 'POST',
-                                                    data: formData,
-                                                    success: function(response) {
-                                                        var responseData = JSON.parse(response);
-                                                        $('#ansprechpartner-bearbeiten').modal('hide'); 
-                                                        window.location.reload();  
-                                                    },
-                                                    error: function() {}
-                                                });
-                                            });
-                                        });
-                                    </script>
+$.ajax({
+url: 'include/update_event.php', // PHP-Skript zum Verarbeiten des Updates
+method: 'POST',
+data: formData,
+success: function(response) {
+    var responseData = JSON.parse(response);
+    $('#ansprechpartner-bearbeiten').modal('hide'); // Modal schließen
+    window.location.reload();  // Seite neu laden
+},
+error: function() {
+}
+});
+});
+});
 
-                                </div>
-                            </div>
-                        </div>
+
+</script>
+
+
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!-- About Me Box -->
+<div class="card card-primary">
+  <div class="card-header">
+    <h3 class="card-title">Informationen</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+  <strong><i class="fas fa-book mr-1"></i> Teams</strong>
+
+
+<style>
+/* Flexbox für das Layout der Teams */
+.row {
+display: flex;
+flex-wrap: wrap; /* Damit bei Bedarf Zeilenumbruch möglich ist */
+justify-content: flex-start; /* Ausrichtung nach links */
+}
+
+.row dt {
+flex: 0 0 30%; /* Den Teamnamen mit einer festen Breite */
+white-space: nowrap; /* Verhindert das Umbruchverhalten */
+}
+
+.row dd {
+flex: 1 0 60%; /* Den Mitarbeitern genügend Platz geben */
+}
+
+.row li {
+list-style-type: none; /* Entfernt das Standard-Aufzählungszeichen */
+}
+
+.row dt, .row dd {
+margin: 0; /* Verhindert unnötige Abstände */
+}
+
+.row p {
+margin: 0;
+}
+</style>                <script>
+$(document).ready(function() {
+var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+
+// AJAX-Anfrage, um die Team-Daten direkt beim Laden der Seite zu laden
+$.ajax({
+url: 'include/team_get.php', 
+method: 'GET',
+data: { event_id: eventId },
+dataType: 'json',
+success: function(response) {
+console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+
+if (Array.isArray(response) && response.length > 0) {
+    // Leere das <dl>-Tag
+    $('#teams-page-container').empty(); // Entfernt alle vorherigen Teams
+
+    // Füge die Team-Daten in das <dl> ein
+    response.forEach(function(team, index) {
+        const teamName = team.team_name;
+        const teamArea = team.area_name;
+
+        // Erstelle die Liste der Mitarbeiter mit speziellen Formatierungen für den Teamlead
+        const teamEmployees = team.employee_names.map(employee => {
+            if (employee.is_team_lead == 1) {
+                // Wenn es der Teamlead ist, wende das Styling an
+                return `<li><p><font style="background-color: rgb(148, 189, 123);" color="#000000">${employee.name}</font></p></li>`;
+            } else {
+                // Für normale Mitarbeiter
+                return `<li>${employee.name}</li>`;
+            }
+        }).join(''); // Liste der Mitarbeiter
+
+        // Dynamisch in das <dl> einfügen
+        const teamHtml = `
+            <dt class="col-sm-4">${teamName} (${teamArea})</dt>
+            <dd class="col-sm-8"> 
+                <ul>
+                    ${teamEmployees}
+                </ul>
+            </dd>
+        `;
+        $('#teams-page-container').append(teamHtml);
+    });
+} else {
+    console.log("Keine Teams gefunden.");
+}
+},
+error: function(xhr, status, error) {
+console.log('Fehler bei der Anfrage:', error);
+console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+}
+});
+});
+</script>
+
+<div class="card-body">
+<dl class="row" id="teams-page-container">
+<!-- Dynamisch generierte Inhalte erscheinen hier -->
+</dl>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teams-bearbeiten">
+Teams Bearbeiten
+    </button>
+
+<!-- Modal für Team-Erstellung -->
+<div class="modal fade" id="teams-bearbeiten">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+    <h4 class="modal-title" id="modalTitle">Team bearbeiten</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div id="teams-container">
+        <!-- Standard-Teamformular -->
+        <div class="team-form" id="team-form-1">
+            <div class="form-group">
+                <label for="team_name">Team Name 1</label>
+                <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name">
+            </div>
+            <div class="form-group">
+                <label for="bereich">Bereich</label>
+                <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
+            </div>
+            <div class="form-group" id="mitarbeiter-container">
+                <label for="mitarbeiter">Mitarbeiter</label>
+                <!-- Festes Mitarbeiterfeld für Team Lead -->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_1_0" placeholder="Mitarbeiter (Team Lead)" required>
+                </div>
+                <!-- Dynamisches Mitarbeiterfeld -->
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control mitarbeiter" name="mitarbeiter_1_1" placeholder="Mitarbeiter">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Button zum Erstellen eines neuen Teamformulars -->
+    <button type="button" class="btn btn-primary" id="createTeam">Neues Team erstellen</button>
+</div>
+
+<div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+    <button type="button" class="btn btn-primary" id="saveTeam">Speichern</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Füge das Skript am Ende der Seite ein -->
+<script>
+$(document).ready(function() {
+let teamCount = 1; // Starten mit Team 1
+$('#teams-bearbeiten').on('show.bs.modal', function (e) {
+var eventId = <?php echo $_GET['id']; ?>; // Event ID aus der URL
+
+// AJAX-Anfrage, um die Team-Daten zu laden
+$.ajax({
+    url: 'include/team_get.php', 
+    method: 'GET',
+    data: { event_id: eventId },
+    dataType: 'json',
+    success: function(response) {
+        console.log("Serverantwort (raw):", response); // Gibt die rohen Daten aus
+
+        if (Array.isArray(response) && response.length > 0) {
+            // Leere das Modal
+            $('#teams-container').empty(); // Entfernt alle vorherigen Teams
+
+            // Füge die Team-Daten in das Modal ein
+            response.forEach(function(team, index) {
+                const teamIndex = index + 1;  // Um die Team-ID korrekt zu benennen (Team Name 1, 2, 3, etc.)
+                $('#teams-container').append(generateTeamForm(team, teamIndex));
+            });
+        } else {
+            console.log("Keine Teams gefunden.");
+        }
+    },
+    error: function(xhr, status, error) {
+        console.log('Fehler bei der Anfrage:', error);
+        console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständige Antwort des Servers aus
+    }
+});
+});
+
+// Funktion zum Generieren des HTML für Teamformular
+function generateTeamForm(team, index) {
+let employeeFields = ''; // Variable für die Mitarbeiterfelder
+
+// Durch alle Mitarbeiter des Teams iterieren
+team.employee_names.forEach(function(employee, empIndex) {
+    employeeFields += `
+        <div class="input-group mb-3">
+            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_${empIndex}[][name]" placeholder="Mitarbeiter" value="${employee.name}" ${empIndex === 0 ? 'required' : ''}>
+            <!-- Versteckte Eingabefelder für Mitarbeiter ID -->
+            <input type="hidden" name="employee_ids[]" value="${employee.id}">
+        </div>
+    `;
+});
+
+// Füge ein leeres Mitarbeiterfeld hinzu, um einen neuen Mitarbeiter hinzuzufügen
+employeeFields += `
+    <div class="input-group mb-3">
+        <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${index}_new" placeholder="Mitarbeiter hinzufügen">
+    </div>
+`;
+
+return `
+    <div class="team-form" id="team-form-${index}">
+        <hr>
+        <!-- Verstecktes Feld für Team ID -->
+        <input type="hidden" name="team_id[]" value="${team.team_id}">
+        <div class="form-group">
+            <label for="team_name">Team Name ${index}</label>
+            <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name" value="${team.team_name}">
+        </div>
+        <div class="form-group">
+            <label for="bereich">Bereich</label>
+            <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich" value="${team.area_name}">
+        </div>
+        <div class="form-group" id="mitarbeiter-container">
+            <label for="mitarbeiter">Mitarbeiter</label>
+            ${employeeFields}
+        </div>
+    </div>
+`;
+}
+
+// Dynamisches Hinzufügen von Mitarbeiterfeldern
+$(document).on('input', '.mitarbeiter', function() {
+const parentTeamForm = $(this).closest('.team-form'); // Finde das Teamformular, in dem das Input-Feld ist
+const lastEmployeeField = parentTeamForm.find('.input-group.mb-3').last(); // Das letzte Mitarbeiterfeld im aktuellen Team
+
+// Wenn das letzte Mitarbeiterfeld ausgefüllt wird, füge ein neues hinzu
+if (lastEmployeeField.find('input').val() !== '') {
+    const teamId = parentTeamForm.attr('id'); // Das Team-Id (z.B. team-form-1)
+    const newEmployeeField = `
+        <div class="input-group mb-3">
+            <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamId}[][name]" placeholder="Mitarbeiter">
+        </div>
+    `;
+    parentTeamForm.find('#mitarbeiter-container').append(newEmployeeField); // Neues Mitarbeiterfeld im aktuellen Team hinzufügen
+}
+});
+
+// Neues Team erstellen und das leere Formular unterhalb des aktuellen Formulars hinzufügen
+$('#createTeam').click(function() {
+teamCount++;
+
+const newTeamForm = `
+    <div class="team-form" id="team-form-${teamCount}">
+        <hr>
+        <div class="form-group">
+            <label for="team_name">Team Name ${teamCount}</label>
+            <input type="text" class="form-control team_name" name="team_name[]" placeholder="Team Name">
+        </div>
+        <div class="form-group">
+            <label for="bereich">Bereich</label>
+            <input type="text" class="form-control bereich" name="bereich[]" placeholder="Bereich">
+        </div>
+        <div class="form-group" id="mitarbeiter-container">
+            <label for="mitarbeiter">Mitarbeiter</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter (Team Lead)" required>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control mitarbeiter" name="mitarbeiter_${teamCount}[][name]" placeholder="Mitarbeiter">
+            </div>
+        </div>
+    </div>
+`;
+
+$('#teams-container').append(newTeamForm);
+});
+
+// Speichern der Teamdaten
+$(document).ready(function() {
+$('#saveTeam').click(function() {
+const teamData = [];
+$('.team-form').each(function(index) {
+const teamName = $(this).find('input[name^="team_name"]').val();
+const teamArea = $(this).find('input[name^="bereich"]').val();
+const employees = [];
+$(this).find('input[name^="mitarbeiter_"]').each(function(empIndex) {
+    const employeeName = $(this).val().trim(); // Leerzeichen entfernen
+    const isTeamLead = empIndex === 0 ? "1" : "0"; // Der erste Mitarbeiter ist Team Lead
+    if (employeeName !== '') {
+        employees.push({
+            name: employeeName,
+            is_team_lead: isTeamLead
+        });
+    }
+});
+
+if (employees.length > 0) {
+    const team = {
+        team_name: teamName,
+        area_name: teamArea,
+        employee_names: employees
+    };
+    teamData.push(team);
+}
+});
+
+// Holen der Event-ID aus der URL
+var eventId = <?php echo isset($_GET['id']) ? $_GET['id'] : 'null'; ?>;
+if (eventId === null) {
+return;
+}
+
+console.log("Event ID:", eventId);  // Die ID aus der URL ausgeben
+console.log("TeamData vor dem Senden:", teamData);  // Gibt die zu sendenden Daten aus
+
+// AJAX-Anfrage
+$.ajax({
+url: 'include/team_assignments.php', 
+method: 'POST',
+data: {
+    teams: teamData,
+    event_id: eventId  // Event-ID hinzufügen
+},
+success: function(response) {
+    console.log('Erfolgreich gespeichert:', response);
+    location.reload();
+},
+error: function(xhr, status, error) {
+    console.log('Fehler bei der Anfrage:', error);
+}
+});
+});
+});
+
+});
+</script>
+
+  
+
+
+  </div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+</div>
 
                         <div class="col-md-9">
                             <div class="card">

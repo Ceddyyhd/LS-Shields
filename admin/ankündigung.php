@@ -166,19 +166,19 @@ $(document).ready(function() {
             const tableBody = $('#example1 tbody');
             tableBody.empty();
             data.forEach(function(ankuendigung) {
-                tableBody.append(`
-                    <tr>
-                        <td>${ankuendigung.id}</td>
-                        <td>${ankuendigung.key_name}</td>
-                        <td>${ankuendigung.description}</td>
-                        <td>${ankuendigung.prioritaet}</td>
-                        <td>
-                            <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
-                            <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
-                        </td>
-                    </tr>
-                `);
-            });
+              tableBody.append(`
+                  <tr>
+                      <td>${ankuendigung.id}</td>
+                      <td>${ankuendigung.key_name}</td>
+                      <td>${ankuendigung.description}</td>
+                      <td>${ankuendigung.prioritaet}</td>
+                      <td>
+                          <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
+                          <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
+                      </td>
+                  </tr>
+              `);
+          });
         } else {
             alert('Keine Ankündigungen gefunden.');
         }
@@ -192,7 +192,7 @@ $(document).ready(function() {
     // Wenn der Bearbeiten-Button geklickt wird
     $(document).on('click', '.btn-outline-secondary', function() {
     const id = $(this).data('id'); // Hole die ID der zu bearbeitenden Ankündigung
-    
+
     // AJAX-Anfrage, um die Daten der Ankündigung abzurufen
     $.ajax({
         url: 'include/fetch_ankuendigung.php',

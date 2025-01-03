@@ -53,7 +53,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?php echo htmlspecialchars($user_name); ?></h4>
+                <h4 class="modal-title"><?php echo htmlspecialchars($user_name); ?></h4>  <!-- Benutzername einfügen -->
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -76,10 +76,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <option value="High">High</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="key_name">Titel</label>
-                        <input type="text" class="form-control" id="key_name" name="key_name" value="<?php echo htmlspecialchars($user_name); ?>">
-                    </div>
+                    <!-- Keine Notwendigkeit für 'created_by' im Modal, es wird automatisch gesetzt -->
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -118,6 +115,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <option value="Mid">Mid</option>
                             <option value="High">High</option>
                         </select>
+                    </div>
+                    <!-- Der Name des Bearbeiters wird hier gesetzt -->
+                    <div class="form-group">
+                        <label for="edit_key_name">Bearbeitet von</label>
+                        <input type="text" class="form-control" id="edit_key_name" name="key_name" value="name aus db">
                     </div>
                 </form>
             </div>

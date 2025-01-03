@@ -779,6 +779,8 @@ error: function(xhr, status, error) {
                                                     $stmt->execute();
                                                     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                                                    $userPermission = $_SESSION['user_permission'];  // oder eine andere Methode, um die Berechtigungen zu holen
+
                                                     foreach ($employees as $employee) {
                                                         $isOwnEmployee = $employee['id'] == $_SESSION['user_id'];  // ID des aktuellen Benutzers
                                                     

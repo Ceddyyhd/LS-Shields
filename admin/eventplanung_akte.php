@@ -930,8 +930,33 @@ error: function(xhr, status, error) {
     <script>
         $(function () {
             $('#summernote').summernote({
-                height: 500,
+    height: 300, // Höhe des Editors
+    callbacks: {
+        onImageUpload: function(files) {
+            // Erstelle FormData-Objekt für den Upload
+            var data = new FormData();
+            data.append("file", files[0]);
+
+            // Sende das Bild über AJAX an den Server
+            $.ajax({
+                url: 'upload.php', // Pfad zu deinem PHP-Upload-Skript
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var res = JSON.parse(response);
+                    if (res.url) {
+                        // Füge das Bild in den Editor ein
+                        $('#summernote').summernote('insertImage', res.url);
+                    } else {
+                        alert('Fehler beim Hochladen des Bildes: ' + res.error);
+                    }
+                }
             });
+        }
+    }
+});
             $('#reservationdate').datetimepicker({
                 format: 'L'
             });

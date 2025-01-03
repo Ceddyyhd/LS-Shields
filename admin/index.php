@@ -40,10 +40,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
     <script>
-      $(document).ready(function() {
+     $(document).ready(function() {
     // Ankündigungen abrufen
     $.ajax({
-        url: 'include/fetch_ankuendigung.php',
+        url: 'include/index_fetch_ankuendigung.php',  // Neue Datei für das Abrufen der Ankündigungen
         type: 'GET',
         dataType: 'json',
         success: function(data) {

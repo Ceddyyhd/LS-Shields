@@ -782,6 +782,7 @@ error: function(xhr, status, error) {
                                                     foreach ($employees as $employee) {
                                                 ?>
                                                 <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
+                                                <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>
                                                 <div class="form-group">
                                                     <div class="bootstrap-timepicker">
                                                         <label>Maximal da bis:</label>
@@ -831,7 +832,37 @@ error: function(xhr, status, error) {
                                                 </div>
                                             </form>
                                         </div>
-
+                                        <script>
+                                            $(document).ready(function() {
+    // Abmelden-Button klicken
+    $('.btn-warning').on('click', function() {
+        var eventId = $(this).data('event-id');
+        var employeeId = $(this).data('employee-id');
+        
+        // Bestätigung, ob der Benutzer sich wirklich abmelden möchte
+        if (confirm('Möchten Sie sich wirklich abmelden?')) {
+            // AJAX-Anfrage zum Abmelden
+            $.ajax({
+                url: 'include/abmelden.php',  // PHP-Skript zum Löschen des Eintrags
+                method: 'POST',
+                data: {
+                    event_id: eventId,
+                    employee_id: employeeId
+                },
+                success: function(response) {
+                    // Falls erfolgreich, den Eintrag aus der Anzeige entfernen oder neu laden
+                    if (response.success) {
+                        alert('Abmeldung erfolgreich.');
+                        location.reload();  // Seite neu laden, um die Änderungen anzuzeigen
+                    } else {
+                        alert('Fehler beim Abmelden: ' + response.error);
+                    }
+                }
+            });
+        }
+    });
+});
+                                        </script>
                                         <script>
                                             $(document).ready(function() {
                                                 <?php foreach ($employees as $employee) { ?>

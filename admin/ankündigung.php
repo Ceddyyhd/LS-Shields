@@ -123,8 +123,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <!-- Der Name des Bearbeiters wird hier gesetzt -->
                     <div class="form-group">
-                      <label for="edit_key_name">Bearbeitet von</label>
-                      <input type="text" class="form-control" id="edit_key_name" name="key_name" value="">
+                      <label for="edit_created_by">Bearbeitet von</label>
+                      <input type="text" class="form-control" id="edit_created_by" name="created_by" value="">
                   </div>
                 </form>
             </div>

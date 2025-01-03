@@ -36,7 +36,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
 
     
-    <div class="card-body">
+    <div class="card-body-ankuendigung">
       <!-- Ankündigungen werden hier dynamisch eingefügt -->
   </div>
 
@@ -57,7 +57,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 });
 
                 // Ankündigungen in das Callout einfügen
-                const cardBody = $('.card-body');  // Der Bereich, in dem die Ankündigungen angezeigt werden
+                const cardBody = $('.card-body-ankuendigung');  // Der Bereich, in dem die Ankündigungen angezeigt werden
                 cardBody.empty();  // Alte Ankündigungen leeren
 
                 sortedData.forEach(function(ankuendigung) {

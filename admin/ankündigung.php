@@ -76,6 +76,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <option value="High">High</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="description">Erstellt von </label>
+                        <textarea class="form-control" id="description" name="description" value="<?php echo htmlspecialchars($user_name); ?>"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">

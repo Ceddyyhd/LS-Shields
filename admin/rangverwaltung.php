@@ -337,12 +337,18 @@ echo '</script>';
                 $('#modal-default #roleLevel').val(role.level);
                 $('#modal-default #roleValue').val(role.value); // Wert eintragen
 
+                // Bereichsdaten für den Bereichsnamen
+                const areaMap = {};
+                response.areas.forEach(area => {
+                    areaMap[area.id] = area.display_name;
+                });
+
                 // Checkboxen für Permissions dynamisch erstellen
                 const permissionsContainer = $('#modal-default #permissionsContainer');
                 permissionsContainer.empty();
 
                 response.all_permissions.forEach(permission => {
-                    const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Bereich bestimmen
+                    const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; // Bereich dynamisch bestimmen
 
                     // Überprüfen, ob der Abschnitt schon existiert
                     let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);

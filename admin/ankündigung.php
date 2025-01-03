@@ -186,11 +186,11 @@ $(document).ready(function() {
     error: function() {
         alert('Fehler beim Abrufen der Ankündigungen.');
     }
-    });
+});
 
     // Wenn der Bearbeiten-Button geklickt wird
     // Wenn der Bearbeiten-Button geklickt wird
-$(document).on('click', '.btn-outline-secondary', function() {
+    $(document).on('click', '.btn-outline-secondary', function() {
     const id = $(this).data('id'); // Hole die ID der zu bearbeitenden Ankündigung
     
     // AJAX-Anfrage, um die Daten der Ankündigung abzurufen
@@ -208,8 +208,8 @@ $(document).on('click', '.btn-outline-secondary', function() {
                 $('#edit_key_name').val(ankuendigung.key_name); // Key Name
                 $('#edit_description').val(ankuendigung.description); // Beschreibung
                 $('#edit_prioritaet').val(ankuendigung.prioritaet); // Priorität
-                $('#edit_created_by').val(ankuendigung.created_by); // Setze den Ersteller im Modal (Bearbeitet von)
-                
+                $('#edit_created_by').val(ankuendigung.created_by); // Ersteller des Eintrags
+
                 // Zeige das Bearbeitungsmodal an
                 $('#modal-ankuendigung-bearbeiten').modal('show');
             } else {

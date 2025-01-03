@@ -786,7 +786,7 @@ error: function(xhr, status, error) {
                                                     
                                                 ?>
                                                 <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
-                                                <?php if ($isOwnEmployee || $canRemoveAll): ?>
+                                                <?php if ($isOwnEmployee || !($_SESSION['permissions']['eventplanung_abmeldung_alle'])): ?>
                                                     <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>
                                                 <?php endif; ?>
 

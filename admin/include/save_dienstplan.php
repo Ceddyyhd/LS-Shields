@@ -36,8 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $startTime = new DateTime($gestartetUm);
                     $endTime = new DateTime($gegangenUm);
                     $interval = $startTime->diff($endTime);
-                    // Die Arbeitszeit in Stunden (Dezimalformat) berechnen
-                    $arbeitszeit = $interval->h + $interval->i / 60;
+                    
+                    // Die Differenz in Stunden und Minuten berechnen
+                    $arbeitszeit = $interval->days * 24 + $interval->h + $interval->i / 60;
                 }
 
                 // SQL-Abfrage zum Aktualisieren oder Einfügen der Daten
@@ -57,9 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um, arbeitszeit = :arbeitszeit
                         WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
-                    // Parameter binden
-                    $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                    $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
                 } else {
                     // Datensatz existiert nicht, also ein INSERT ausführen
                     $stmt = $conn->prepare("
@@ -92,13 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Binde die berechnete Arbeitszeit, wenn sie vorhanden ist
-                if ($gestartetUm !== null && $gegangenUm !== null) {
-                    $startTime = new DateTime($gestartetUm);
-                    $endTime = new DateTime($gegangenUm);
-                    $interval = $startTime->diff($endTime);
-                    
-                    // Die Differenz in Stunden und Minuten berechnen
-                    $arbeitszeit = $interval->days * 24 + $interval->h + $interval->i / 60;
+                if ($arbeitszeit !== null) {
+                    $stmt->bindValue(':arbeitszeit', $arbeitszeit, PDO::PARAM_STR);
                 } else {
                     $stmt->bindValue(':arbeitszeit', null, PDO::PARAM_NULL);
                 }

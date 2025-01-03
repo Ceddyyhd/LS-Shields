@@ -658,7 +658,7 @@ error: function(xhr, status, error) {
                 formData.append("file", files[0]);
 
                 $.ajax({
-                    url: 'upload_image.php', // Hier muss der PHP-Endpunkt zum Speichern des Bildes angegeben werden
+                    url: 'include/upload_image.php', // Hier muss der PHP-Endpunkt zum Speichern des Bildes angegeben werden
                     type: 'POST',
                     data: formData,
                     contentType: false,

@@ -158,86 +158,65 @@ scratch. This page gets rid of all links and provides the needed markup only.
 $(document).ready(function() {
     // Ankündigungen abrufen
     $.ajax({
-    url: 'include/fetch_ankuendigung.php',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-        if (data && data.length > 0) {
-            const tableBody = $('#example1 tbody');
-            tableBody.empty();
-            data.forEach(function(ankuendigung) {
-              tableBody.append(`
-                  <tr>
-                      <td>${ankuendigung.id}</td>
-                      <td>${ankuendigung.key_name}</td>
-                      <td>${ankuendigung.description}</td>
-                      <td>${ankuendigung.prioritaet}</td>
-                      <td>
-                          <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
-                          <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
-                      </td>
-                  </tr>
-              `);
-          });
-        } else {
-            alert('Keine Ankündigungen gefunden.');
-        }
-    },
-    error: function() {
-        alert('Fehler beim Abrufen der Ankündigungen.');
-    }
-});
-
-    // Wenn der Bearbeiten-Button geklickt wird
-    // Wenn der Bearbeiten-Button geklickt wird
-    $(document).on('click', '.btn-outline-secondary', function() {
-    const id = $(this).data('id'); // Hole die ID der zu bearbeitenden Ankündigung
-
-    // AJAX-Anfrage, um die Daten der Ankündigung abzurufen
-    $.ajax({
         url: 'include/fetch_ankuendigung.php',
         type: 'GET',
-        data: { id: id },
         dataType: 'json',
         success: function(data) {
             if (data && data.length > 0) {
-                const ankuendigung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-
-                // Setze die Modal-Felder mit den Daten der Ankündigung
-                $('#edit_id').val(ankuendigung.id); // ID in hidden input
-                $('#edit_key_name').val(ankuendigung.key_name); // Key Name
-                $('#edit_description').val(ankuendigung.description); // Beschreibung
-                $('#edit_prioritaet').val(ankuendigung.prioritaet); // Priorität
-                $('#edit_created_by').val(ankuendigung.created_by); // Ersteller des Eintrags
-
-                // Zeige das Bearbeitungsmodal an
-                $('#modal-ankuendigung-bearbeiten').modal('show');
+                const tableBody = $('#example1 tbody');
+                tableBody.empty();  // Tabelle leeren, bevor neue Einträge hinzugefügt werden
+                data.forEach(function(ankuendigung) {
+                    tableBody.append(`
+                        <tr>
+                            <td>${ankuendigung.id}</td>
+                            <td>${ankuendigung.key_name}</td>
+                            <td>${ankuendigung.description}</td>
+                            <td>${ankuendigung.prioritaet}</td>
+                            <td>
+                                <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
+                                <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
+                            </td>
+                        </tr>
+                    `);
+                });
             } else {
-                alert('Daten konnten nicht geladen werden.');
+                alert('Keine Ankündigungen gefunden.');
             }
         },
         error: function() {
-            alert('Fehler beim Abrufen der Ankündigung.');
+            alert('Fehler beim Abrufen der Ankündigungen.');
         }
     });
-});
 
-    // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
-    $('#saveEditAnkuendigung').click(function() {
-        const formData = new FormData(document.getElementById('editAnkuendigungForm'));
-
+    // Wenn der Bearbeiten-Button geklickt wird
+    $(document).on('click', '.btn-outline-secondary', function() {
+        const id = $(this).data('id'); // Hole die ID der zu bearbeitenden Ankündigung
+        
+        // AJAX-Anfrage, um die Daten der Ankündigung abzurufen
         $.ajax({
-            url: 'include/update_ankuendigung.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert(response.message);
-                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+            url: 'include/fetch_ankuendigung.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    const ankuendigung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+
+                    // Setze die Modal-Felder mit den Daten der Ankündigung
+                    $('#edit_id').val(ankuendigung.id); // ID in hidden input
+                    $('#edit_key_name').val(ankuendigung.key_name); // Key Name
+                    $('#edit_description').val(ankuendigung.description); // Beschreibung
+                    $('#edit_prioritaet').val(ankuendigung.prioritaet); // Priorität
+                    $('#edit_created_by').val(ankuendigung.created_by); // Ersteller des Eintrags
+
+                    // Zeige das Bearbeitungsmodal an
+                    $('#modal-ankuendigung-bearbeiten').modal('show');
+                } else {
+                    alert('Daten konnten nicht geladen werden.');
+                }
             },
             error: function() {
-                alert('Fehler beim Bearbeiten der Ankündigung.');
+                alert('Fehler beim Abrufen der Ankündigung.');
             }
         });
     });

@@ -43,49 +43,65 @@ $stmt = $conn->prepare("SELECT * FROM roles");
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen und zugehörige Bereichsdaten aus der Datenbank abrufen
+// Bereichsdaten abrufen
+$stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
+$stmtArea->execute();
+$areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
+
+// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtPerm = $conn->prepare("
-    SELECT p.*, pa.id AS bereich, pa.name AS bereich_name, pa.display_name AS bereich_display_name
+    SELECT p.*, pa.id AS bereich_id, pa.display_name AS bereich_display_name
     FROM permissions p
     LEFT JOIN permissions_areas pa ON p.bereich = pa.id
 ");
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
+
+// Die Daten an JavaScript übergeben
+echo '<script>';
+echo 'const permissions = ' . json_encode($permissions) . ';';
+echo 'const areas = ' . json_encode($areas) . ';';
+echo '</script>';
 ?>
 
 
 <script>
 $(document).ready(function () {
-    // Berechtigungen dynamisch laden
+    // Berechtigungen und Bereichsdaten dynamisch laden
     const permissions = <?= json_encode($permissions) ?>;
-    
-    if (Array.isArray(permissions) && permissions.length > 0) {
-        const permissionsContainer = $('#permissionsContainer');
-        
-        permissions.forEach(permission => {
-            const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Fix Bereich Abgleich als String
-            let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-            if (!sectionDiv.length) {
-                // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-                permissionsContainer.append(
-                    `<div class="permissions-section section-${permission.bereich}">
-                        <h5>${sectionLabel}</h5>
-                    </div>`
-                );
-                sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-            }
+    const areas = <?= json_encode($areas) ?>;
 
-            // Checkbox für die Berechtigung hinzufügen
-            sectionDiv.append(`
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                    <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                </div>
-            `);
-        });
-    } else {
-        console.error("Die Berechtigungen sind nicht korrekt geladen.");
-    }
+    const permissionsContainer = $('#permissionsContainer');
+    
+    // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
+    const areaMap = {};
+    areas.forEach(area => {
+        areaMap[area.id] = area.display_name;
+    });
+
+    permissions.forEach(permission => {
+        // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
+        const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
+        
+        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+        if (!sectionDiv.length) {
+            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+            permissionsContainer.append(
+                `<div class="permissions-section section-${permission.bereich}">
+                    <h5>${sectionLabel}</h5>
+                </div>`
+            );
+            sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+        }
+
+        // Checkbox für die Berechtigung hinzufügen
+        sectionDiv.append(`
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+            </div>
+        `);
+    });
 });
 </script>
 

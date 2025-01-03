@@ -939,7 +939,7 @@ error: function(xhr, status, error) {
 
             // Sende das Bild über AJAX an den Server
             $.ajax({
-                url: 'upload.php', // Pfad zu deinem PHP-Upload-Skript
+                url: 'include/upload_image.php', // Pfad zu deinem PHP-Upload-Skript
                 type: 'POST',
                 data: data,
                 contentType: false,

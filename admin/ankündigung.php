@@ -48,7 +48,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
 <?php endif; ?>
 
-<!-- Modal zum Erstellen einer neuen Ankündigung -->
+<!-- Modal zum Erstellen einer Ankündigung -->
 <div class="modal fade" id="modal-ankuendigung-create">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -79,8 +79,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveAnkuendigung">Speichern</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveCreateAnkuendigung">Speichern</button>
             </div>
         </div>
     </div>

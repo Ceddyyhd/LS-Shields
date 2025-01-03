@@ -56,39 +56,36 @@ $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 $(document).ready(function () {
-    // Berechtigungen und Bereichsdaten dynamisch laden
+    // Berechtigungen dynamisch laden
     const permissions = <?= json_encode($permissions) ?>;
-    const areas = <?= json_encode($areas) ?>; // Bereichsdaten aus der DB
+    
+    if (Array.isArray(permissions) && permissions.length > 0) {
+        const permissionsContainer = $('#permissionsContainer');
+        
+        permissions.forEach(permission => {
+            const sectionLabel = permission.bereich === "1" ? 'Mitarbeiter Bereich' : 'Leitungs Bereich'; // Fix Bereich Abgleich als String
+            let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+            if (!sectionDiv.length) {
+                // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+                permissionsContainer.append(
+                    `<div class="permissions-section section-${permission.bereich}">
+                        <h5>${sectionLabel}</h5>
+                    </div>`
+                );
+                sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+            }
 
-    const permissionsContainer = $('#permissionsContainer');
-
-    // Bereichsdaten vorbereiten
-    const areaMap = {};
-    areas.forEach(area => {
-        areaMap[area.id] = area.display_name;
-    });
-
-    permissions.forEach(permission => {
-        const sectionLabel = areaMap[permission.bereich_id] || 'Unbekannter Bereich'; // Bereich aus areaMap holen
-        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich_id}`);
-        if (!sectionDiv.length) {
-            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-            permissionsContainer.append(
-                `<div class="permissions-section section-${permission.bereich_id}">
-                    <h5>${sectionLabel}</h5>
-                </div>`
-            );
-            sectionDiv = permissionsContainer.find(`.section-${permission.bereich_id}`);
-        }
-
-        // Checkbox für die Berechtigung hinzufügen
-        sectionDiv.append(`
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-            </div>
-        `);
-    });
+            // Checkbox für die Berechtigung hinzufügen
+            sectionDiv.append(`
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                    <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                </div>
+            `);
+        });
+    } else {
+        console.error("Die Berechtigungen sind nicht korrekt geladen.");
+    }
 });
 </script>
 

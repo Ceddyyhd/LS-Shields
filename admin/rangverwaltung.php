@@ -45,9 +45,9 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Berechtigungen und zugehörige Bereichsdaten aus der Datenbank abrufen
 $stmtPerm = $conn->prepare("
-    SELECT p.*, pa.id AS bereich_id, pa.name AS bereich_name, pa.display_name AS bereich_display_name
+    SELECT p.*, pa.id AS bereich, pa.name AS bereich_name, pa.display_name AS bereich_display_name
     FROM permissions p
-    LEFT JOIN permissions_areas pa ON p.bereich_id = pa.id
+    LEFT JOIN permissions_areas pa ON p.bereich = pa.id
 ");
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);

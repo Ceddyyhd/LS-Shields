@@ -34,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
 
     
-    <<div class="card-body">
+    <div class="card-body">
       <!-- Ankündigungen werden hier dynamisch eingefügt -->
   </div>
 

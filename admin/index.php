@@ -88,11 +88,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     `);
                 });
             } else {
-                alert('Keine Ankündigungen gefunden.');
             }
         },
         error: function() {
-            alert('Fehler beim Abrufen der Ankündigungen.');
         }
     });
 });

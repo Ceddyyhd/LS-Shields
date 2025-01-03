@@ -180,11 +180,9 @@ $(document).ready(function() {
                     `);
                 });
             } else {
-                alert('Keine Ankündigungen gefunden.');
             }
         },
         error: function() {
-            alert('Fehler beim Abrufen der Ankündigungen.');
         }
     });
 
@@ -212,11 +210,9 @@ $(document).ready(function() {
                     // Zeige das Bearbeitungsmodal an
                     $('#modal-ankuendigung-bearbeiten').modal('show');
                 } else {
-                    alert('Daten konnten nicht geladen werden.');
                 }
             },
             error: function() {
-                alert('Fehler beim Abrufen der Ankündigung.');
             }
         });
     });
@@ -233,15 +229,12 @@ $('#saveEditAnkuendigung').click(function() {
         contentType: false,
         success: function(response) {
             if (response.success) {
-                alert('Ankündigung erfolgreich bearbeitet.');
                 $('#modal-ankuendigung-bearbeiten').modal('hide');  // Modal schließen
                 location.reload();  // Seite neu laden, um die Änderungen anzuzeigen
             } else {
-                alert('Fehler beim Bearbeiten der Ankündigung: ' + response.error);
             }
         },
         error: function() {
-            alert('Fehler beim Bearbeiten der Ankündigung.');
         }
     });
 });
@@ -273,15 +266,12 @@ $('#saveEditAnkuendigung').click(function() {
             data: formData,
             success: function(response) {
                 if (response.success) {
-                    alert('Ankündigung erfolgreich erstellt.');
                     $('#modal-ankuendigung-create').modal('hide'); // Modal schließen
                     location.reload(); // Seite neu laden, um die neue Ankündigung anzuzeigen
                 } else {
-                    alert('Fehler beim Erstellen der Ankündigung: ' + response.error);
                 }
             },
             error: function() {
-                alert('Fehler beim Erstellen der Ankündigung.');
             }
         });
     });

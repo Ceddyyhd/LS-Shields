@@ -69,7 +69,7 @@
     ?>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Werte in das Formular setzen
             $('#vorname_nachname').val(<?= json_encode($event['vorname_nachname']); ?>);
             $('#telefonnummer').val(<?= json_encode($event['telefonnummer']); ?>);
@@ -180,7 +180,7 @@
 
                                                         <label>Datum & Uhrzeit:</label>
                                                         <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                                                            <input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker" />
+                                                            <input type="text" class="form-control datetimepicker-input" name="datum_uhrzeit_event" id="datum_uhrzeit_event" data-target="#datetimepicker"/>
                                                             <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
                                                                 <div class="input-group-text"><i class="fa fa-calendar"></i> </div>
                                                             </div>
@@ -225,7 +225,7 @@
                                     <script>
                                         $(document).ready(function () {
                                             $('#datetimepicker').datetimepicker({
-                                                format: 'YYYY-MM-DD HH:mm',
+                                                format: 'YYYY-MM-DD HH:mm', 
                                                 icons: {
                                                     time: 'fa fa-clock',
                                                     date: 'fa fa-calendar',
@@ -236,27 +236,25 @@
                                                 }
                                             });
 
-                                            // Event ID aus der URL extrahieren
                                             var urlParams = new URLSearchParams(window.location.search);
-                                            var event_id = urlParams.get('id');
+                                            var event_id = urlParams.get('id'); 
 
-                                            // Formular per AJAX senden
-                                            $('#edit-form').on('submit', function (e) {
-                                                e.preventDefault();
+                                            $('#edit-form').on('submit', function(e) {
+                                                e.preventDefault(); 
 
-                                                var formData = $(this).serialize();
-                                                formData += '&event_id=' + event_id;
+                                                var formData = $(this).serialize(); 
+                                                formData += '&event_id=' + event_id; 
 
                                                 $.ajax({
                                                     url: 'include/update_event.php',
                                                     method: 'POST',
                                                     data: formData,
-                                                    success: function (response) {
+                                                    success: function(response) {
                                                         var responseData = JSON.parse(response);
-                                                        $('#ansprechpartner-bearbeiten').modal('hide');
-                                                        window.location.reload();
+                                                        $('#ansprechpartner-bearbeiten').modal('hide'); 
+                                                        window.location.reload();  
                                                     },
-                                                    error: function () {}
+                                                    error: function() {}
                                                 });
                                             });
                                         });
@@ -323,7 +321,220 @@
                                                 });
                                             </script>
                                         </div>
-                                        <!-- Weitere Inhalte folgen... -->
+
+                                        <div class="tab-pane" id="anmeldung">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="form-group">
+                                                            <label>Eintragen wer kann</label>
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="employee_list[]">
+                                                                    <?php
+                                                                    include('include/db.php');
+                                                                    $eventId = $_GET['id'];
+
+                                                                    try {
+                                                                        $stmt = $conn->prepare("
+                                                                            SELECT u.id, u.name
+                                                                            FROM users u
+                                                                            WHERE u.gekuendigt = 'no_kuendigung'
+                                                                            AND NOT EXISTS (
+                                                                                SELECT 1 FROM event_mitarbeiter_anmeldung em
+                                                                                WHERE em.employee_id = u.id AND em.event_id = :event_id
+                                                                            )
+                                                                        ");
+                                                                        $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+                                                                        $stmt->execute();
+                                                                        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                                        foreach ($employees as $employee) {
+                                                                            echo '<option value="' . $employee['id'] . '">' . htmlspecialchars($employee['name']) . '</option>';
+                                                                        }
+                                                                    } catch (PDOException $e) {
+                                                                        echo 'Fehler: ' . $e->getMessage();
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="InputNotiz">Notiz</label>
+                                                                <input type="text" class="form-control" id="InputNotiz" name="InputNotiz" placeholder="Notiz">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" id="submitFormAnmeldung" class="btn btn-danger">Anmelden</button>
+                                        </div>
+
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('#submitFormAnmeldung').on('click', function() {
+                                                    var selectedEmployees = $('select[name="employee_list[]"]').val();
+                                                    var notiz = $('#InputNotiz').val();
+
+                                                    console.log('Ausgewählte Mitarbeiter:', selectedEmployees);
+                                                    console.log('Notiz:', notiz);
+
+                                                    if (selectedEmployees && selectedEmployees.length > 0) {
+                                                        if (typeof selectedEmployees === 'string') {
+                                                            selectedEmployees = [selectedEmployees];
+                                                        }
+
+                                                        $.ajax({
+                                                            url: 'include/anmeldung_speichern.php',
+                                                            type: 'POST',
+                                                            data: {
+                                                                event_id: <?= $_GET['id'] ?>,
+                                                                employees: selectedEmployees,
+                                                                InputNotiz: notiz
+                                                            },
+                                                            success: function(response) {
+                                                                console.log('Antwort vom Server:', response);
+                                                                location.reload();
+                                                            },
+                                                            error: function(xhr, status, error) {
+                                                                console.log('AJAX-Fehler: ', error);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        </script>
+
+                                        <div class="tab-pane" id="dienstplan">
+                                            <form class="form-horizontal" method="POST" id="dienstplanForm">
+                                                <?php
+                                                include('include/db.php');
+                                                $eventId = $_GET['id'];
+
+                                                try {
+                                                    $stmt = $conn->prepare("
+                                                        SELECT 
+                                                            u.id, 
+                                                            u.name, 
+                                                            d.max_time, 
+                                                            d.gestartet_um, 
+                                                            d.gegangen_um, 
+                                                            d.arbeitszeit, 
+                                                            d.notizen,
+                                                            em.notizen  
+                                                        FROM users u
+                                                        JOIN event_mitarbeiter_anmeldung em ON em.employee_id = u.id
+                                                        LEFT JOIN dienstplan d ON d.employee_id = u.id AND d.event_id = :event_id
+                                                        WHERE em.event_id = :event_id
+                                                    ");
+                                                    $stmt->bindParam(':event_id', $eventId, PDO::PARAM_INT);
+                                                    $stmt->execute();
+                                                    $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                                    foreach ($employees as $employee) {
+                                                ?>
+                                                <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
+                                                <div class="form-group">
+                                                    <div class="bootstrap-timepicker">
+                                                        <label>Maximal da bis:</label>
+                                                        <div class="input-group date" id="timepicker<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                                            <input type="text" class="form-control datetimepicker-input" data-target="#timepicker<?php echo $employee['id']; ?>" name="max_time_<?php echo $employee['id']; ?>"
+                                                            value="<?php echo htmlspecialchars($employee['max_time']); ?>"/>
+                                                            <div class="input-group-append" data-target="#timepicker<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <label>Gestartet Um:</label>
+                                                    <div class="input-group date" id="gestartetUm<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#gestartetUm<?php echo $employee['id']; ?>" name="gestartet_um_<?php echo $employee['id']; ?>"
+                                                        value="<?php echo isset($employee['gestartet_um']) ? $employee['gestartet_um'] : ''; ?>"/>
+                                                        <div class="input-group-append" data-target="#gestartetUm<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <label>Gegangen Um:</label>
+                                                    <div class="input-group date" id="gegangenUm<?php echo $employee['id']; ?>" data-target-input="nearest">
+                                                        <input type="text" class="form-control datetimepicker-input" data-target="#gegangenUm<?php echo $employee['id']; ?>" name="gegangen_um_<?php echo $employee['id']; ?>"
+                                                        value="<?php echo isset($employee['gegangen_um']) ? $employee['gegangen_um'] : ''; ?>"/>
+                                                        <div class="input-group-append" data-target="#gegangenUm<?php echo $employee['id']; ?>" data-toggle="datetimepicker">
+                                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <label>Std. Gearbeitet:</label>
+                                                    <p>
+                                                        <?php echo ($employee['arbeitszeit'] !== null) ? number_format($employee['arbeitszeit'], 2) . ' Stunden' : 'Noch nicht berechnet'; ?>
+                                                    </p>
+                                                </div>
+                                                <?php
+                                                    }
+                                                } catch (PDOException $e) {
+                                                    echo 'Fehler: ' . $e->getMessage();
+                                                }
+                                                ?>
+
+                                                <div class="form-group row">
+                                                    <div class="offset-sm-2 col-sm-10">
+                                                        <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <script>
+                                            $(document).ready(function() {
+                                                <?php foreach ($employees as $employee) { ?>
+                                                    $('#timepicker<?php echo $employee['id']; ?>').datetimepicker({
+                                                        format: 'HH:mm',
+                                                        useCurrent: false
+                                                    });
+
+                                                    $('#gestartetUm<?php echo $employee['id']; ?>').datetimepicker({
+                                                        format: 'YYYY-MM-DD HH:mm',
+                                                        icons: {
+                                                            time: 'fa fa-clock',
+                                                            date: 'fa fa-calendar',
+                                                            up: 'fa fa-arrow-up',
+                                                            down: 'fa fa-arrow-down',
+                                                            previous: 'fa fa-chevron-left',
+                                                            next: 'fa fa-chevron-right'
+                                                        }
+                                                    });
+
+                                                    $('#gegangenUm<?php echo $employee['id']; ?>').datetimepicker({
+                                                        format: 'YYYY-MM-DD HH:mm',
+                                                        icons: {
+                                                            time: 'fa fa-clock',
+                                                            date: 'fa fa-calendar',
+                                                            up: 'fa fa-arrow-up',
+                                                            down: 'fa fa-arrow-down',
+                                                            previous: 'fa fa-chevron-left',
+                                                            next: 'fa fa-chevron-right'
+                                                        }
+                                                    });
+                                                <?php } ?>
+
+                                                $('#submitFormDienstplanung').on('click', function() {
+                                                    var formData = $('#dienstplanForm').serialize();
+
+                                                    $.ajax({
+                                                        url: 'include/save_dienstplan.php?id=<?php echo $_GET['id']; ?>',
+                                                        type: 'POST',
+                                                        data: formData,
+                                                        dataType: 'json',
+                                                        success: function(response) {
+                                                            location.reload();
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            console.log("Status: " + status);
+                                                            console.log("Fehler: " + error);
+                                                            console.log("Antwort: " + xhr.responseText);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
                                     </div>
                                 </div><!-- /.card-body -->
                             </div><!-- /.card -->
@@ -347,7 +558,67 @@
     <script src="plugins/summernote/summernote-bs4.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- Weitere Skripte ... -->
+    <!-- Select2 -->
+    <script src="plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+    <script src="plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <!-- InputMask -->
+    <script src="plugins/moment/moment.min.js"></script>
+    <script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap color picker -->
+    <script src="plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Bootstrap Switch -->
+    <script src="plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+    <!-- BS-Stepper -->
+    <script src="plugins/bs-stepper/js/bs-stepper.min.js"></script>
+    <!-- dropzonejs -->
+    <script src="plugins/dropzone/min/dropzone.min.js"></script>
+    <script>
+        $(function () {
+            $('#summernote').summernote({
+                height: 500,
+            });
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+            $('#reservation').daterangepicker();
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            });
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges   : {
+                        'Today'       : [moment(), moment()],
+                        'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate  : moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            });
+            $('select.duallistbox').bootstrapDualListbox({
+                moveOnSelect: false
+            });
+        })
+    </script>
 </body>
 
 </html>

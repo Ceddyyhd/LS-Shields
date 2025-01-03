@@ -649,32 +649,6 @@ error: function(xhr, status, error) {
 
                                             <script>
                                                 $(document).ready(function () {
-    $('#summernote').summernote({
-        height: 300,
-        focus: true,
-        callbacks: {
-            onImageUpload: function(files) {
-                var formData = new FormData();
-                formData.append("file", files[0]);
-
-                $.ajax({
-                    url: 'include/upload_image.php', // Der PHP-Endpunkt zum Hochladen von Bildern
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        // Bildpfad relativ zum Web-Root einfügen
-                        var imageUrl = response.filePath;
-                        $('#summernote').summernote('insertImage', imageUrl);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('Fehler beim Hochladen des Bildes:', error);
-                    }
-                });
-            }
-        }
-    });
 
     $('#submitForm').on('click', function () {
         var summernoteContent = $('#summernote').val();

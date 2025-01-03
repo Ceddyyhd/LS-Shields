@@ -781,16 +781,6 @@ error: function(xhr, status, error) {
 
                                                     foreach ($employees as $employee) {
                                                 ?>
-                                                <?php
-// Angenommene Berechtigung des Benutzers
-$userPermission = $_SESSION['user_permission'];  // oder eine andere Methode, um die Berechtigungen zu holen
-
-foreach ($employees as $employee) {
-    // Überprüfen, ob der aktuelle Benutzer der Mitarbeiter ist oder ob er die Berechtigung hat, alle Mitarbeiter abzumelden
-    $isOwnEmployee = $employee['id'] == $_SESSION['user_id'];  // ID des aktuellen Benutzers
-    $canRemoveAll = in_array('eventplanung_abmeldung_alle', $userPermission);  // Überprüfen, ob der Benutzer die Berechtigung hat
-}
-?>
                                                 <h4><?php echo htmlspecialchars($employee['name']); ?> (<?php echo htmlspecialchars($employee['notizen']); ?>)</h4>
                                                 <?php if ($isOwnEmployee || $canRemoveAll): ?>
         <button type="button" class="btn btn-warning" id="removeEmployee_<?php echo $employee['id']; ?>" data-event-id="<?php echo $eventId; ?>" data-employee-id="<?php echo $employee['id']; ?>">Abmelden</button>

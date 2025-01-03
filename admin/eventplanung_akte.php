@@ -780,7 +780,6 @@ error: function(xhr, status, error) {
                                                     $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                     foreach ($employees as $employee) {
-                                                        $isOwnEmployee = $employee['id'] == $_SESSION['user_id'];  // ID des aktuellen Benutzers
                                                         $canRemoveAll = in_array('eventplanung_abmeldung_alle', $userPermission);  // Überprüfen, ob der Benutzer die Berechtigung hat
                                                     
                                                 ?>

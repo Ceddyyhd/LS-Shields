@@ -658,14 +658,15 @@ error: function(xhr, status, error) {
                 formData.append("file", files[0]);
 
                 $.ajax({
-                    url: 'include/upload_image.php', // Hier muss der PHP-Endpunkt zum Speichern des Bildes angegeben werden
+                    url: 'include/upload_image.php', // Der PHP-Endpunkt zum Hochladen von Bildern
                     type: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        // Das Bild in Summernote einfügen
-                        $('#summernote').summernote('insertImage', response.filePath);
+                        // Bildpfad relativ zum Web-Root einfügen
+                        var imageUrl = response.filePath;
+                        $('#summernote').summernote('insertImage', imageUrl);
                     },
                     error: function(xhr, status, error) {
                         console.log('Fehler beim Hochladen des Bildes:', error);

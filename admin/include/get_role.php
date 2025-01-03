@@ -26,6 +26,11 @@ try {
     $stmtPerm->execute();
     $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
+    // Bereichsdaten aus der `permissions_areas`-Tabelle abrufen
+    $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
+    $stmtArea->execute();
+    $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
+
     if ($role) {
         echo json_encode([
             'success' => true,
@@ -35,7 +40,8 @@ try {
                 'value' => $role['value'], // Hier wird der Wert hinzugefügt
                 'permissions' => json_decode($role['permissions'], true) ?? [] // Rechte als Array
             ],
-            'all_permissions' => $permissions // Alle Berechtigungen
+            'all_permissions' => $permissions, // Alle Berechtigungen
+            'areas' => $areas // Bereichsdaten hinzufügen
         ]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Rang nicht gefunden.']);

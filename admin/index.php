@@ -34,14 +34,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
 
     
-    <div class="card-body">
-      <div class="callout callout-danger">
-        <h5>Wichtige Ankündigung!</h5>
+    <<div class="card-body">
+      <!-- Ankündigungen werden hier dynamisch eingefügt -->
+  </div>
 
-        <p>Diese Seite befindet sich noch in aufbau!</p>
-      </div>
-    </div>
 
+    <script>
+      $(document).ready(function() {
+    // Ankündigungen abrufen
+    $.ajax({
+        url: 'include/fetch_ankuendigung.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                // Ankündigungen nach Priorität sortieren
+                const sortedData = data.sort((a, b) => {
+                    const priorityOrder = { 'high': 3, 'mid': 2, 'low': 1 };
+                    return priorityOrder[b.prioritaet.toLowerCase()] - priorityOrder[a.prioritaet.toLowerCase()];
+                });
+
+                // Ankündigungen in das Callout einfügen
+                const cardBody = $('.card-body');  // Der Bereich, in dem die Ankündigungen angezeigt werden
+                cardBody.empty();  // Alte Ankündigungen leeren
+
+                sortedData.forEach(function(ankuendigung) {
+                    // Bestimme die Callout-Klasse basierend auf der Priorität
+                    let calloutClass = '';
+                    switch (ankuendigung.prioritaet.toLowerCase()) {
+                        case 'low':
+                            calloutClass = 'callout-success'; // Erfolgreich
+                            break;
+                        case 'mid':
+                            calloutClass = 'callout-warning'; // Mittel
+                            break;
+                        case 'high':
+                            calloutClass = 'callout-danger'; // Gefährlich
+                            break;
+                        default:
+                            calloutClass = 'callout-info'; // Standard
+                            break;
+                    }
+
+                    // Füge das Callout-Div für jede Ankündigung hinzu
+                    cardBody.append(`
+                        <div class="callout ${calloutClass}">
+                            <h5>${ankuendigung.display_name}</h5>
+                            <p>${ankuendigung.description}</p>
+                            <p>- ${ankuendigung.created_by}</p>  <!-- Der Ersteller der Ankündigung -->
+                        </div>
+                    `);
+                });
+            } else {
+                alert('Keine Ankündigungen gefunden.');
+            }
+        },
+        error: function() {
+            alert('Fehler beim Abrufen der Ankündigungen.');
+        }
+    });
+});
+
+    </script>
       <!-- TABLE: LATEST ORDERS -->
       <div class="card">
         <div class="card-header border-transparent">

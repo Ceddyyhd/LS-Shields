@@ -175,7 +175,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td>Details einblenden</td>
                 </tr>
                 <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
-                    <td colspan="1" div style="width: 50%">
+                    <td colspan="2" div style="width: 50%">
                         <div class="p-3">
                             <div class="mb-3">
                                 <strong>Vorschlag:</strong>
@@ -228,7 +228,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                       </div>
                         </div>
                     </td>
-                    <td colspan="5">
+                    <td colspan="4">
                         <div class="p-3">
                             
                             

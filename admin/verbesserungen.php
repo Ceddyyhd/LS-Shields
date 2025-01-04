@@ -179,7 +179,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="p-3">
                             <div class="mb-3">
                                 <strong>Vorschlag:</strong>
-                                <div><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
+                                <div style="width: 300px"><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Status:</strong>

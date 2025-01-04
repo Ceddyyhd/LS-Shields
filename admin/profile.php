@@ -396,8 +396,10 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#dokumente" data-toggle="tab">Dokumente</a></li>
                   <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>
+                 <?php if ($bewerber !== 'ja') {
+    echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
+    echo '<li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>';
+}?>
                 </ul>
               </div>
               <div class="card-body">

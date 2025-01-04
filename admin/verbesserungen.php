@@ -233,7 +233,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             
                             
                             
-                            Das ist ein Test
+                            
 
                             
                           

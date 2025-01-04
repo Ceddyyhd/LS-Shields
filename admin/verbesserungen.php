@@ -202,7 +202,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           </div>
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
-                            <div class="mb-3">
+                            <div class="mb-3" div style="width: 300px">
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
                               Zustimmen 
                           </button>

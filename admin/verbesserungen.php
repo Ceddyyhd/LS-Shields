@@ -183,15 +183,15 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <div class="mb-3">
                                 <strong>Status:</strong>
-                                <div><?= htmlspecialchars($vorschlag['status']) ?></div>
+                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['status']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Erstellt von:</strong>
-                                <div><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
+                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Datum & Uhrzeit:</strong>
-                                <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
+                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
 
                             <div class="mb-3">

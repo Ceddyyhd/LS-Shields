@@ -175,7 +175,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td>Details einblenden</td>
                 </tr>
                 <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
-                    <td colspan="6">
+                    <td colspan="2">
                         <div class="p-3">
                             <div class="mb-3">
                                 <strong>Vorschlag:</strong>
@@ -226,6 +226,17 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </button>       
                         <?php endif; ?>
                       </div>
+                        </div>
+                    </td>
+                    <td colspan="4">
+                        <div class="p-3">
+                            
+                            
+                            
+                            Das ist ein Test
+
+                            
+                          
                         </div>
                     </td>
                 </tr>

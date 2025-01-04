@@ -176,22 +176,22 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
                 <tr class="expandable-body" data-id="<?= $vorschlag['id'] ?>">
                     <td colspan="1">
-                        <div class="p-3">
+                        <div class="p-3" div style="width: 300px">
                             <div class="mb-3">
                                 <strong>Vorschlag:</strong>
-                                <div style="width: 300px"><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
+                                <div><?= htmlspecialchars($vorschlag['vorschlag']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Status:</strong>
-                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['status']) ?></div>
+                                <div><?= htmlspecialchars($vorschlag['status']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Erstellt von:</strong>
-                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
+                                <div><?= htmlspecialchars($vorschlag['erstellt_von']) ?></div>
                             </div>
                             <div class="mb-3">
                                 <strong>Datum & Uhrzeit:</strong>
-                                <div div style="width: 300px"><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
+                                <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
 
                             <div class="mb-3">
@@ -202,7 +202,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                           </div>
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
-                            <div class="mb-3" div style="width: 300px">
+                            <div class="mb-3">
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
                               Zustimmen 
                           </button>

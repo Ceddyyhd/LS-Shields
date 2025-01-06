@@ -401,11 +401,20 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#dokumente" data-toggle="tab">Dokumente</a></li>
+                  <?php if ($_SESSION['permissions']['view_employee_notes'] ?? false): ?>
                   <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
-                 <?php if ($user['bewerber'] !== 'ja') {
-    echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
-    echo '<li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>';
-}?>
+                  <?php endif; ?>
+                  <?php 
+                    echo '<ul>';
+                    if ($_SESSION['permissions']['view_employee_ausbildungen'] ?? false) {
+                        echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
+                    }
+
+                    if ($_SESSION['permissions']['view_employee_ausruestung'] ?? false) {
+                        echo '<li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>';
+                    }
+                    echo '</ul>';
+                    ?>
                 </ul>
               </div>
               <div class="card-body">

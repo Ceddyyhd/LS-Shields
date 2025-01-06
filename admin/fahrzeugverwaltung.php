@@ -306,14 +306,11 @@ $(document).ready(function() {
         success: function(response) {
             console.log(response);  // Ausgabe der Antwort zur Überprüfung
             if (response.success) {
-                alert('Fahrzeug erfolgreich hinzugefügt');
                 location.reload();
             } else {
-                alert('Fehler beim Hinzufügen des Fahrzeugs: ' + response.message);
             }
         },
         error: function() {
-            alert('Ein Fehler ist aufgetreten');
         }
     });
 });
@@ -338,7 +335,6 @@ $('.tanken-button').on('click', function() {
                     $('#edit-vehicle_id1').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
 
                     // Debugging: Zeige den Wert im Alert
-                    alert("Kennzeichen: " + vehicle.license_plate);
 
                     // Überprüfen, ob das Formularfeld den richtigen Wert bekommt
                     console.log("Form value set: ", $('#edit-license_plate1').val());
@@ -346,12 +342,10 @@ $('.tanken-button').on('click', function() {
                     // Zeige das Tanken-Modal
                     $('#vehicle-tanken').modal('show');
                 } catch (e) {
-                    alert('Fehler: Ungültige JSON-Antwort');
                     console.error('JSON Parsing Error: ', e);
                 }
             },
             error: function() {
-                alert('Fehler beim Laden der Fahrzeugdaten');
             }
         });
     });

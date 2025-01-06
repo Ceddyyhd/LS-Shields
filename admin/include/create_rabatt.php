@@ -2,12 +2,13 @@
 include 'db.php';
 header('Content-Type: application/json');
 
+// Eingabewerte
 $key_name = $_POST['key_name'] ?? null;
 $description = $_POST['description'] ?? null;
 $rabatt_percent = $_POST['rabatt_percent'] ?? null;
-$created_by = $_POST['created_by'] ?? $_SESSION['username'];
+$created_by = $_POST['created_by'] ?? null;  // Jetzt aus dem Formular holen
 
-if (!$key_name || !$description || !$rabatt_percent) {
+if (!$key_name || !$description || !$rabatt_percent || !$created_by) {
     echo json_encode(['success' => false, 'error' => 'Fehlende Eingabewerte']);
     exit;
 }

@@ -72,6 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="rabatt_percent">Rabatt in %</label>
                         <input type="number" class="form-control" id="rabatt_percent" name="rabatt_percent" placeholder="Rabatt in % eingeben">
                     </div>
+                    <input type="hidden" class="form-control" id="created_by" name="created_by" value="<?php echo htmlspecialchars($user_name); ?>" />
                 </form>
             </div>
             <div class="modal-footer justify-content-between">

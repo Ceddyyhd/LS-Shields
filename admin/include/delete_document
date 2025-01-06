@@ -34,4 +34,5 @@ require 'db.php';  // Deine DB-Verbindung
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Dokument-ID übergeben']);
     }
+
 ?>

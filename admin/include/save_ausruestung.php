@@ -13,7 +13,14 @@ include 'db.php';
 // Empfangen der Formulardaten via POST
 $user_id = $_POST['user_id'];  // Benutzer-ID
 $user_name = $_POST['user_name'];  // Benutzername aus dem Formular
-$ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
+
+// Überprüfe, ob Ausrüstungsdaten gesendet wurden
+if (isset($_POST['ausruestung']) && is_array($_POST['ausruestung'])) {
+    $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
+} else {
+    echo json_encode(['success' => false, 'message' => 'Keine Ausrüstungsdaten gesendet.']);
+    exit;
+}
 
 // Berechtigungsprüfung (z.B. ob der User die Berechtigung hat, Änderungen vorzunehmen)
 session_start();
@@ -34,6 +41,16 @@ try {
         $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
         $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Prüfe, ob genug Bestand vorhanden ist, wenn der Artikel hinzugefügt werden soll
+        $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
+        $stmt->execute([':key_name' => $key_name]);
+        $stock = $stmt->fetchColumn();
+
+        if ($status == 1 && $stock <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
+            exit;
+        }
 
         if ($existing) {
             // Wenn der Status geändert wurde, dann update
@@ -60,7 +77,7 @@ try {
             $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) VALUES (:user_id, :key_name, :status)");
             $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':status' => $status]);
 
-            // Bestimme die Aktion (Hinzufügen)
+            // Bestimme die Aktion (Hinzufügung)
             $action = 'Hinzufügung';
             $stock_change = -1; // Bestand reduzieren, weil ein neues Item hinzugefügt wird
 
@@ -75,18 +92,10 @@ try {
             ]);
         }
 
-        // Aktualisiere den 'stock' in der Tabelle 'ausruestungstypen'
-        $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
-        $stmt->execute([':key_name' => $key_name]);
-        $stock = $stmt->fetchColumn();
-
-        // Wenn der Status 1 ist, wird der Bestand reduziert (Gegenstand wurde hinzugefügt), sonst wird er erhöht
-        if ($status == 1) {
+        // Wenn der Artikel hinzugefügt wurde, reduziere den Bestand
+        if ($status == 1 && $existing['status'] == 0) {
             $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
             $stmt->execute([':stock' => $stock - 1, ':key_name' => $key_name]);
-        } else {
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
-            $stmt->execute([':stock' => $stock + 1, ':key_name' => $key_name]);
         }
     }
 

@@ -153,14 +153,7 @@ try {
             </tbody>
         </table>
     </div>
-    <!-- /.card-body -->
-</div>
 
-<div class="card" style="width: 25%">
-    <div class="card-header">
-        <h3 class="card-title">Anwesenheit</h3>
-    </div>
-    <!-- /.card-header -->
     <div class="card-body p-0">
         <table class="table table-sm">
             <thead>
@@ -187,6 +180,8 @@ try {
     </div>
     <!-- /.card-body -->
 </div>
+
+
 
 
     <!-- /.content -->

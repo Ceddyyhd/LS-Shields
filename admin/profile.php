@@ -227,10 +227,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             </p>
           </div>
           
+          <?php if ($_SESSION['permissions']['edit_employee'] ?? false): ?>
+
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">
                   User Bearbeiten
                 </button>
           <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
+          <?php endif; ?>
         </div>
       </div>
       <form id="userEditForm">

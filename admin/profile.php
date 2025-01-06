@@ -116,7 +116,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>
-    <?php else: ?>
+    <?php endif: ?>
 </p>
 
 <div class="modal fade" id="rang-bearbeiten">

@@ -1077,11 +1077,11 @@ foreach ($categories as $category => $items) {
     <label for="notiz">Notiz</label>
     <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
 </div>
-
+<button type="button" id="saveAusruestungButton" class="btn btn-primary">Ausruestung Speichern</button>
 <script>
     $(document).ready(function () {
-    $("#saveButton").on("click", function () {
-        var formData = $("#ausruestungForm").serializeArray();
+    // Speichern der Ausrüstungsdaten, letzte Spind Kontrolle und Notiz
+    $("#saveAusruestungButton").on("click", function () {
         var ausruestungStatus = {}; // Objekt zum Speichern des Status für jede Ausrüstung
 
         // Durch die Checkboxen iterieren und den Status sammeln
@@ -1096,10 +1096,13 @@ foreach ($categories as $category => $items) {
         var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
         var notiz = $('#notiz').val();
 
-        // Füge die Ausrüstungsdaten (Status) zu formData hinzu
-        formData.push({ name: 'ausruestung', value: JSON.stringify(ausruestungStatus) });
-        formData.push({ name: 'letzte_spind_kontrolle', value: letzteSpindKontrolle });
-        formData.push({ name: 'notiz', value: notiz });
+        // FormData erstellen, nur mit den relevanten Daten (Ausruestung, Notiz, letzte Spind Kontrolle)
+        var formData = [
+            { name: 'user_id', value: '<?= $user_id; ?>' },  // Benutzer-ID
+            { name: 'ausruestung', value: JSON.stringify(ausruestungStatus) },
+            { name: 'letzte_spind_kontrolle', value: letzteSpindKontrolle },
+            { name: 'notiz', value: notiz }
+        ];
 
         console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
 

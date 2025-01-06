@@ -2,16 +2,12 @@
 include 'db.php';
 session_start();
 
-// Debugging: Überprüfe, ob die Daten korrekt im POST ankommen
-var_dump($_POST);
-exit; // Verhindert die Ausführung des restlichen Codes, um nur die POST-Daten zu sehen
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerdaten aus POST holen
-    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
+    $user_id = $_POST['user_id'] ?? null;
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
-    $ausruestung = $_POST['ausruestung'] ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
+    $ausruestung = json_decode($_POST['ausruestung'], true) ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -57,15 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':notizen' => $notiz
             ]);
         }
-
-        // Log für die Änderung oder Erstellung
-        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
-                                VALUES (:user_id, :editor_name, :action)");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':editor_name' => $editor_name,
-            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
-        ]);
 
         // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
         foreach ($ausruestung as $key_name => $status) {

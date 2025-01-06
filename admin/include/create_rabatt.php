@@ -14,12 +14,22 @@ if (!$key_name || !$description || !$rabatt_percent || !$created_by) {
 }
 
 try {
+    // Rabatt erstellen
     $stmt = $conn->prepare("INSERT INTO rabatt (key_name, description, rabatt_percent, created_by) VALUES (:key_name, :description, :rabatt_percent, :created_by)");
     $stmt->execute([
         ':key_name' => $key_name,
         ':description' => $description,
         ':rabatt_percent' => $rabatt_percent,
         ':created_by' => $created_by
+    ]);
+    $rabatt_id = $conn->lastInsertId();  // ID des neu erstellten Rabatts
+
+    // Log-Eintrag für das Erstellen
+    $logStmt = $conn->prepare("INSERT INTO rabatt_logs (rabatt_id, action, changed_by) VALUES (:rabatt_id, :action, :changed_by)");
+    $logStmt->execute([
+        ':rabatt_id' => $rabatt_id,
+        ':action' => 'Erstellt',
+        ':changed_by' => $created_by  // Der Benutzer, der den Rabatt erstellt hat
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Rabatt erfolgreich erstellt']);

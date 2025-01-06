@@ -214,12 +214,15 @@ echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
 
         // Durch die Status-Optionen iterieren und den Status als ausgewählt markieren
         foreach ($statusOptions as $status) {
+            // Wenn der Status "Gelöscht" ist, wird er nicht auswählbar
+            $disabled = ($status == 'Gelöscht') ? 'disabled' : '';  
             $selected = ($status == $event['status']) ? 'selected' : '';  // Vergleiche mit dem aktuellen Event-Status
-            echo "<option value='{$status}' {$selected}>{$status}</option>";
+            echo "<option value='{$status}' {$selected} {$disabled}>{$status}</option>";
         }
         ?>
     </select>
 </div>
+
 
 <div class="form-group">
 <label>Event</label>

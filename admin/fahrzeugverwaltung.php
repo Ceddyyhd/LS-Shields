@@ -334,7 +334,6 @@ $(document).ready(function() {
             $('#edit-location').val(vehicle.location);
             $('#edit-next_inspection').val(vehicle.next_inspection);
             $('#edit-vehicle_id').val(vehicle.id);
-            $('#edit-license_plate-display').text(vehicle.license_plate);  // Zeigt das Kennzeichen als Text an
 
             // Notizen und Ausgemustert-Status einfügen
             $('#edit-notes').val(vehicle.notes);  // Notizen

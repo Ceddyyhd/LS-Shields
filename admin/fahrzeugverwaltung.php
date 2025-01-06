@@ -175,10 +175,10 @@
             <div class="modal-body">
             <form id="editVehicleForm">
             <div class="form-group">
-                        <label>Kennzeichen</label>
-                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
-                            <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
-                    </div>
+                <label>Kennzeichen</label>
+                <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
+                    <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
+            </div>
                 <div class="form-group">
                     <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
                     <div class="form-check">
@@ -334,7 +334,8 @@ $(document).ready(function() {
             $('#edit-location').val(vehicle.location);
             $('#edit-next_inspection').val(vehicle.next_inspection);
             $('#edit-vehicle_id').val(vehicle.id);
-            
+            $('#edit-license_plate-display').text(vehicle.license_plate);  // Zeigt das Kennzeichen als Text an
+
             // Notizen und Ausgemustert-Status einfügen
             $('#edit-notes').val(vehicle.notes);  // Notizen
             $('#edit-decommissioned').prop('checked', vehicle.decommissioned == 1);  // Ausgemustert

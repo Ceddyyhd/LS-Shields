@@ -124,62 +124,74 @@ try {
 
     </script>
       <!-- TABLE: LATEST ORDERS -->
-      <div class="card" style="width: 25%">
-    <div class="card-header">
-        <h3 class="card-title">Anwesenheit</h3>
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body p-0">
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Anwesend Seit</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($attendanceData)): ?>
-                    <?php foreach ($attendanceData as $attendance): ?>
+      <div class="row">
+    <!-- Erste Tabelle -->
+    <div class="col-md-6">
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                <h3 class="card-title">Anwesenheit 1</h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm">
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($attendance['name']); ?></td>
-                            <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                            <th>Name</th>
+                            <th>Anwesend Seit</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="2">Keine Anwesenheit erfasst.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($attendanceData)): ?>
+                            <?php foreach ($attendanceData as $attendance): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($attendance['name']); ?></td>
+                                    <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2">Keine Anwesenheit erfasst.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="card-body p-0">
-        <table class="table table-sm">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Anwesend Seit</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($attendanceData)): ?>
-                    <?php foreach ($attendanceData as $attendance): ?>
+    <!-- Zweite Tabelle -->
+    <div class="col-md-6">
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                <h3 class="card-title">Anwesenheit 2</h3>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm">
+                    <thead>
                         <tr>
-                            <td><?php echo htmlspecialchars($attendance['name']); ?></td>
-                            <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                            <th>Name</th>
+                            <th>Anwesend Seit</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="2">Keine Anwesenheit erfasst.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($attendanceData)): ?>
+                            <?php foreach ($attendanceData as $attendance): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($attendance['name']); ?></td>
+                                    <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2">Keine Anwesenheit erfasst.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <!-- /.card-body -->
 </div>
+
 
 
 

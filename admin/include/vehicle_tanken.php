@@ -34,9 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
         }
 
+        // Log-Nachricht anpassen, um den Betrag mit einzubeziehen
+        if ($fuel_amount !== NULL) {
+            $changes[] = "Betrag -> " . $fuel_amount . " $";
+        }
+
         // Wenn Änderungen in den Tanken-Daten vorliegen, Eintrag ins Log
         if (!empty($changes)) {
-            $action = "Fahrzeug Tanken ($license_plate) (" . implode(", ", $changes) . ")";  // Hier wird das Kennzeichen korrekt gesetzt
+            $action = "Fahrzeug Tanken ($license_plate) (" . implode(", ", $changes) . ")";  // Hier wird das Kennzeichen und der Betrag korrekt gesetzt
             $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
             $log_stmt = $conn->prepare($log_sql);
             $log_stmt->execute([$vehicle_id, $action, $user_name]);

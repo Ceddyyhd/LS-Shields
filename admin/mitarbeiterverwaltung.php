@@ -378,32 +378,32 @@ $('#saveUserBtn').on('click', function() {
                 <form id="createUserForm">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                            <label for="nameCreate">Name</label>
+                            <input type="text" class="form-control" id="nameCreate" name="name" placeholder="Enter name">
                         </div>
                         <div class="form-group">
-                            <label for="email">Email Adresse</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                            <label for="emailCreate">Email Adresse</label>
+                            <input type="email" class="form-control" id="emailCreate" name="email" placeholder="Enter email">
                         </div>
                         <div class="form-group">
-                            <label for="umail">Umail Adresse</label>
-                            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
+                            <label for="umailCreate">Umail Adresse</label>
+                            <input type="email" class="form-control" id="umailCreate" name="umail" placeholder="Enter umail">
                         </div>
                         <div class="form-group">
-                            <label for="kontonummer">Kontonummer</label>
-                            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
+                            <label for="kontonummerCreate">Kontonummer</label>
+                            <input type="text" class="form-control" id="kontonummerCreate" name="kontonummer" placeholder="Enter kontonummer">
                         </div>
                         <div class="form-group">
-                            <label for="nummer">Tel. Nr.</label>
-                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
+                            <label for="nummerCreate">Tel. Nr.</label>
+                            <input type="text" class="form-control" id="nummerCreate" name="nummer" placeholder="Enter nummer">
                         </div>
                         <div class="form-group">
-                            <label for="password">Passwort</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                            <label for="passwordCreate">Passwort</label>
+                            <input type="password" class="form-control" id="passwordCreate" name="password" placeholder="Password">
                         </div>
                         <div class="form-group">
-                            <label for="confirmPassword">Passwort Bestätigen</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+                            <label for="confirmPasswordCreate">Passwort Bestätigen</label>
+                            <input type="password" class="form-control" id="confirmPasswordCreate" name="confirmPassword" placeholder="Password">
                         </div>
                         <div class="form-group">
                             <label for="profileImageInput">Profilbild</label>
@@ -447,13 +447,13 @@ $('#saveUserBtn').on('click', function() {
     // Event Listener für den Save-Button
     document.querySelector('#modal-user-create .btn-primary').addEventListener('click', function() {
         const formData = new FormData();
-        formData.append('name', document.querySelector('#name').value.trim());
-        formData.append('email', document.querySelector('#email').value.trim());
-        formData.append('umail', document.querySelector('#umail').value.trim());
-        formData.append('kontonummer', document.querySelector('#kontonummer').value.trim());
-        formData.append('nummer', document.querySelector('#nummer').value.trim());
-        formData.append('password', document.querySelector('#password').value.trim());
-        formData.append('confirmPassword', document.querySelector('#confirmPassword').value.trim());
+        formData.append('name', document.querySelector('#nameCreate').value.trim());
+        formData.append('email', document.querySelector('#emailCreate').value.trim());
+        formData.append('umail', document.querySelector('#umailCreate').value.trim());
+        formData.append('kontonummer', document.querySelector('#kontonummerCreate').value.trim());
+        formData.append('nummer', document.querySelector('#nummerCreate').value.trim());
+        formData.append('password', document.querySelector('#passwordCreate').value.trim());
+        formData.append('confirmPassword', document.querySelector('#confirmPasswordCreate').value.trim());
 
         const profileImageInput = document.querySelector('#profileImageInput');
         if (profileImageInput.files[0]) {
@@ -461,9 +461,9 @@ $('#saveUserBtn').on('click', function() {
         }
 
         // Überprüfung der Pflichtfelder
-        const email = document.querySelector('#email').value.trim();
-        const password = document.querySelector('#password').value.trim();
-        const confirmPassword = document.querySelector('#confirmPassword').value.trim();
+        const email = document.querySelector('#emailCreate').value.trim();
+        const password = document.querySelector('#passwordCreate').value.trim();
+        const confirmPassword = document.querySelector('#confirmPasswordCreate').value.trim();
 
         if (!email || !password) {
             alert('Bitte füllen Sie die erforderlichen Felder aus (Email, Passwort)!');
@@ -498,6 +498,7 @@ $('#saveUserBtn').on('click', function() {
         });
     });
 </script>
+
 
 <!-- JavaScript Section -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

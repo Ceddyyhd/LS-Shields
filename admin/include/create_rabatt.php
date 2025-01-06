@@ -1,6 +1,9 @@
 <?php
 include 'db.php';
 header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 
 // Eingabewerte
 $key_name = $_POST['key_name'] ?? null;

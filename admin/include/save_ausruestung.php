@@ -41,8 +41,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Benutzername für das Log sicherstellen
+    $editor_name = $_SESSION['user_name'] ?? 'Unbekannt';  // Standardwert 'Unbekannt' falls nicht gesetzt
+
+    // Debugging-Ausgabe: Wenn editor_name leer ist, wird 'Unbekannt' genutzt
+    if (empty($editor_name)) {
+        echo "Editor Name war leer, daher wird 'Unbekannt' verwendet.<br>";
+    }
+
     try {
-        
+        // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
+        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Wenn der Eintrag bereits existiert, aktualisieren
+        if ($existingEntry) {
+            $stmt = $conn->prepare("UPDATE spind_kontrolle_notizen 
+                                    SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
+                                    WHERE user_id = :user_id");
+            $stmt->execute([
+                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
+                ':notizen' => $notiz,
+                ':user_id' => $user_id
+            ]);
+        } else {
+            // Neuen Eintrag in die Tabelle einfügen
+            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
+                                    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
+                ':notizen' => $notiz
+            ]);
+        }
 
         // Log für die Änderung oder Erstellung
         $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
@@ -66,44 +98,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     // Bestandsänderung speichern
                     $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
-                    if ($stmt->execute([
+                    $stmt->execute([
                         ':stock' => $new_stock,
                         ':key_name' => $key_name
-                    ])) {
-                        // Debugging: Erfolgreiches Update
-                        echo "Bestand für $key_name erfolgreich aktualisiert. Neuer Bestand: $new_stock<br>";
-                    } else {
-                        // Fehlerprotokollierung
-                        $error = $stmt->errorInfo();
-                        echo "Fehler beim Bestandsupdate für $key_name: " . $error[2] . "<br>";
-                    }
+                    ]);
 
                     // Historie der Bestandsänderung speichern
                     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
                                             VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
 
-                    if ($stmt->execute([
+                    $stmt->execute([
                         ':user_id' => $user_id,
                         ':key_name' => $key_name,
                         ':action' => ($status === 1 ? 'Ausgegeben' : 'Zurückgegeben'),
                         ':stock_change' => ($status === 1 ? -1 : 1),
                         ':editor_name' => $editor_name
-                    ])) {
-                        // Debugging: Erfolgreiches Einfügen in die Historie
-                        echo "Historie für $key_name erfolgreich gespeichert.<br>";
-                    } else {
-                        // Fehlerprotokollierung
-                        $error = $stmt->errorInfo();
-                        echo "Fehler beim Speichern der Historie für $key_name: " . $error[2] . "<br>";
-                    }
+                    ]);
                 }
             }
         }
 
-        // Erfolgsnachricht
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {
-        // Fehlerbehandlung
         echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
     }
     exit;

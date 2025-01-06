@@ -1078,6 +1078,16 @@ foreach ($categories as $category => $items) {
     <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
 </div>
 <button type="button" id="saveAusruestungButton" class="btn btn-primary">Ausruestung Speichern</button>
+
+<?php 
+// Benutzername für das Log sicherstellen
+$editor_name = $_SESSION['user_name'] ?? 'Unbekannt';  // Standardwert 'Unbekannt' falls nicht gesetzt
+
+// Debugging-Ausgabe: Wenn editor_name leer ist, wird 'Unbekannt' genutzt
+if (empty($editor_name)) {
+    echo "Editor Name war leer, daher wird 'Unbekannt' verwendet.<br>";
+}
+?>
 <script>
     $(document).ready(function () {
     // Speichern der Ausrüstungsdaten, letzte Spind Kontrolle und Notiz

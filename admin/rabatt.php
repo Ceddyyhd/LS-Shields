@@ -85,7 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 <!-- Modal zum Bearbeiten einer Ankündigung -->
-<div class="modal fade" id="modal-ankuendigung-bearbeiten">
+<div class="modal fade" id="modal-rabatt-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,28 +95,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editAnkuendigungForm">
-                <div class="form-group">
-                        <label for="key_name">Firma</label>
-                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Titel eingeben">
-                    </div>
+                <form id="editRabattForm">
+                    <!-- Firma -->
                     <div class="form-group">
-                        <label for="description">Beschreibung</label>
-                        <textarea class="form-control" id="description" name="description" placeholder="Beschreibung eingeben"></textarea>
+                        <label for="edit_display_name">Firma</label>
+                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Titel eingeben">
                     </div>
+                    <!-- Beschreibung -->
                     <div class="form-group">
-                        <label for="description">Rabatt in %</label>
-                        <textarea class="form-control" id="description" name="description" placeholder="Beschreibung eingeben"></textarea>
+                        <label for="edit_description">Beschreibung</label>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Beschreibung eingeben"></textarea>
                     </div>
+                    <!-- Rabatt in % -->
+                    <div class="form-group">
+                        <label for="edit_rabatt_percent">Rabatt in %</label>
+                        <input type="number" class="form-control" id="edit_rabatt_percent" name="rabatt_percent" placeholder="Rabatt in % eingeben">
+                    </div>
+                    <!-- ID der Ankündigung -->
+                    <input type="hidden" id="edit_id" name="id">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveEditAnkuendigung">Speichern</button>
+                <button type="button" class="btn btn-primary" id="saveEditRabatt">Speichern</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Tabelle zur Anzeige der Ankündigungen -->

@@ -1,17 +1,64 @@
 <?php
 session_start();
 
-$user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
+session_regenerate_id(true);
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+include 'include/db.php';
+include 'auth.php'; // Authentifizierungslogik einbinden
 
-// Benutzerinformationen abrufen
-$sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
-            FROM users 
-            LEFT JOIN roles ON users.role_id = roles.id 
-            WHERE users.id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Session-Wiederherstellung prüfen
+restoreSessionIfRememberMe($conn);
+
+// Prüfen, ob der Benutzer eingeloggt ist
+if (!isset($_SESSION['user_id'])) {
+    // Prüfen, ob ein "Remember Me"-Cookie existiert
+    if (isset($_COOKIE['remember_me'])) {
+        $token = $_COOKIE['remember_me'];
+
+        // Token in der Datenbank prüfen
+        $stmt = $conn->prepare("SELECT id FROM users WHERE remember_token = :token");
+        $stmt->execute([':token' => $token]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            // Benutzer automatisch einloggen
+            $_SESSION['user_id'] = $user['id'];
+        } else {
+            // Ungültiges Token -> Cookie löschen
+            setcookie('remember_me', '', time() - 3600, '/');
+        }
+    }
+
+    // Wenn keine Anmeldung vorhanden ist, zur Login-Seite umleiten
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: index.html');
+        exit;
+    }
+}
+
+// Berechtigungen bei jedem Seitenaufruf neu laden
+$stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
+$stmt->execute([':id' => $_SESSION['user_id']]);
+$userRole = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($userRole) {
+    $roleId = $userRole['role_id'];
+    $stmt = $conn->prepare("SELECT permissions FROM roles WHERE id = :role_id");
+    $stmt->execute([':role_id' => $roleId]);
+    $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($role) {
+        $permissionsArray = json_decode($role['permissions'], true);
+        if (is_array($permissionsArray)) {
+            $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+        } else {
+            $_SESSION['permissions'] = [];
+        }
+    }
+}
 ?>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">

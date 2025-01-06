@@ -4,10 +4,10 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerdaten aus POST holen
-    $user_id = $_POST['user_id'] ?? null;
+    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
-    $ausruestung = json_decode($_POST['ausruestung'], true) ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
+    $ausruestung = $_POST['ausruestung'] ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -18,11 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$user_id) {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);
         exit;
-    }
-
-    // Wenn keine letzte Spind Kontrolle angegeben wurde, auf NULL setzen
-    if (empty($letzte_spind_kontrolle)) {
-        $letzte_spind_kontrolle = null;
     }
 
     try {
@@ -62,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Log für die Änderung oder Erstellung
         $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
                                 VALUES (:user_id, :editor_name, :action)");
-        $stmt->execute([ 
+        $stmt->execute([
             ':user_id' => $user_id,
             ':editor_name' => $editor_name,
             ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
@@ -72,11 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($ausruestung as $key_name => $status) {
             // Überprüfen, ob der Status der Ausrüstung geändert wurde
             if ($status == 1 || $status == 0) {
+                // Debugging: Anzeigen der Daten, bevor wir fortfahren
+                echo "Key Name: $key_name | Status: $status <br>";
+
+                // Hole die Ausrüstungsdaten aus der Datenbank
                 $stmt = $conn->prepare("SELECT * FROM ausruestungstypen WHERE key_name = :key_name");
                 $stmt->execute([':key_name' => $key_name]);
                 $ausruestungItem = $stmt->fetch(PDO::FETCH_ASSOC);
 
+                // Debugging: Anzeigen der Ausrüstungsdaten
                 if ($ausruestungItem) {
+                    echo "Ausrüstung gefunden: " . print_r($ausruestungItem, true) . "<br>";
+
                     $new_stock = $ausruestungItem['stock'] + ($status == 1 ? -1 : 1); // Bestandsänderung
 
                     // Bestandsänderung speichern
@@ -96,6 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':stock_change' => ($status == 1 ? -1 : 1),
                         ':editor_name' => $editor_name
                     ]);
+                } else {
+                    echo "Keine Ausrüstungsdaten gefunden für Key Name: $key_name<br>";
                 }
             }
         }

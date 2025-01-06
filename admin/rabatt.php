@@ -112,6 +112,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <!-- ID des Rabatts -->
                     <input type="hidden" id="edit_id" name="id">
+                    <!-- Benutzername für den Bearbeiter -->
+                    <input type="hidden" class="form-control" id="created_by" name="created_by" value="<?php echo htmlspecialchars($user_name); ?>" />
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -121,6 +123,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 
 <!-- Tabelle zur Anzeige der Rabatte -->
 <table id="example1" class="table table-bordered table-striped">
@@ -222,27 +225,27 @@ $(document).ready(function() {
 
     // Speichern der Bearbeitung
     $('#saveEditRabatt').click(function() {
-        const formData = new FormData(document.getElementById('editRabattForm'));
+    const formData = new FormData(document.getElementById('editRabattForm'));
 
-        $.ajax({
-            url: 'include/update_rabatt.php',  // PHP-Datei zum Bearbeiten des Rabatts
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    $('#modal-rabatt-bearbeiten').modal('hide');
-                    location.reload();
-                } else {
-                    alert('Fehler beim Bearbeiten des Rabatts');
-                }
-            },
-            error: function() {
+    $.ajax({
+        url: 'include/update_rabatt.php',  // PHP-Datei zum Bearbeiten des Rabatts
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                $('#modal-rabatt-bearbeiten').modal('hide');
+                location.reload();
+            } else {
                 alert('Fehler beim Bearbeiten des Rabatts');
             }
-        });
+        },
+        error: function() {
+            alert('Fehler beim Bearbeiten des Rabatts');
+        }
     });
+});
 
     // Löschen eines Rabatts
     window.deleteRabatt = function(id) {

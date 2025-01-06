@@ -6,20 +6,21 @@ $id = $_POST['id'] ?? null;
 $display_name = $_POST['display_name'] ?? null;
 $description = $_POST['description'] ?? null;
 $rabatt_percent = $_POST['rabatt_percent'] ?? null;
-$updated_by = $_SESSION['username'] ?? 'Unbekannt';  // Benutzername aus der Session holen
+$created_by = $_POST['created_by'] ?? null;  // Benutzername aus dem hidden input holen
 
-if (!$id || !$display_name || !$description || !$rabatt_percent) {
+if (!$id || !$display_name || !$description || !$rabatt_percent || !$created_by) {
     echo json_encode(['success' => false, 'error' => 'Fehlende Eingabewerte']);
     exit;
 }
 
 try {
-    $stmt = $conn->prepare("UPDATE rabatt SET display_name = :display_name, description = :description, rabatt_percent = :rabatt_percent WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE rabatt SET display_name = :display_name, description = :description, rabatt_percent = :rabatt_percent, created_by = :created_by WHERE id = :id");
     $stmt->execute([
         ':id' => $id,
         ':display_name' => $display_name,
         ':description' => $description,
-        ':rabatt_percent' => $rabatt_percent
+        ':rabatt_percent' => $rabatt_percent,
+        ':created_by' => $created_by  // Der Benutzer, der die Änderung vorgenommen hat
     ]);
 
     // Log-Eintrag für das Bearbeiten
@@ -27,11 +28,11 @@ try {
     $logStmt->execute([
         ':rabatt_id' => $id,
         ':action' => 'Bearbeitet',
-        ':changed_by' => $updated_by  // Der Benutzer, der die Änderung vorgenommen hat
+        ':changed_by' => $created_by  // Der Benutzer, der die Änderung vorgenommen hat
     ]);
 
-    echo json_encode(['success' => true, 'message' => 'Ankündigung erfolgreich bearbeitet']);
+    echo json_encode(['success' => true, 'message' => 'Rabatt erfolgreich bearbeitet']);
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'error' => 'Fehler beim Bearbeiten der Ankündigung: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => 'Fehler beim Bearbeiten des Rabatts: ' . $e->getMessage()]);
 }
 ?>

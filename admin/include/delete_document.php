@@ -6,21 +6,24 @@ require 'db.php';  // Deine DB-Verbindung
     // Sicherstellen, dass eine Dokument-ID übergeben wurde
     if (isset($_POST['document_id'])) {
         $document_id = (int) $_POST['document_id'];
-
-        // SQL-Abfrage, um das Dokument aus der Datenbank zu löschen
+        // Debugging-Ausgabe der übergebenen document_id
+        error_log('Received document_id: ' . $document_id);
+    
+        // SQL-Abfrage zum Überprüfen, ob das Dokument existiert
         $sql = "SELECT file_path FROM documents WHERE id = :document_id";
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':document_id', $document_id, PDO::PARAM_INT);
         $stmt->execute();
         $doc = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
+        // Überprüfen, ob das Dokument gefunden wurde
         if ($doc) {
-            // Das Dokument aus der Datenbank löschen
+            // Das Dokument löschen
             $deleteSql = "DELETE FROM documents WHERE id = :document_id";
             $deleteStmt = $conn->prepare($deleteSql);
             $deleteStmt->bindParam(':document_id', $document_id, PDO::PARAM_INT);
             if ($deleteStmt->execute()) {
-                // Auch die Datei vom Server löschen
+                // Datei auf dem Server löschen
                 if (file_exists($doc['file_path'])) {
                     unlink($doc['file_path']);
                 }
@@ -34,4 +37,5 @@ require 'db.php';  // Deine DB-Verbindung
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Dokument-ID übergeben']);
     }
+    
 ?>

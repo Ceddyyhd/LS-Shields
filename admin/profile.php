@@ -1006,7 +1006,7 @@ $("#noteForm").on("submit", function (e) {
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
     <?php
 // Deine Datenbankverbindung einbinden
-include 'include/connection.php';
+include 'include/db.php';
 
 // Einbinden der Ausrüstungslogik
 include 'include/ausruestung.php';

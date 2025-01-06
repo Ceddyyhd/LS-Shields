@@ -1102,19 +1102,18 @@ if (empty($editor_name)) {
                 }
             });
 
-            // FormData erstellen, nur mit den relevanten Daten (Ausruestung)
-            var formData = new FormData();
-            formData.append('user_id', '<?= $user_id; ?>');  // Benutzer-ID
-            formData.append('ausruestung', JSON.stringify(ausruestungStatus)); // JSON-String der Ausrüstungsdaten
+            // FormData als JSON string für Ausrüstung erstellen
+            var formData = {
+                user_id: '<?= $user_id; ?>',  // Benutzer-ID
+                ausruestung: JSON.stringify(ausruestungStatus)  // JSON-String der Ausrüstungsdaten
+            };
 
             console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
 
             $.ajax({
                 url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
                 type: "POST",
-                data: formData,
-                processData: false,  // Verhindert die Verarbeitung der Daten durch jQuery
-                contentType: false,  // Verhindert das Setzen eines falschen Content-Type-Headers
+                data: formData,  // Die Formulardaten direkt senden
                 success: function (response) {
                     console.log(response); // Debugging-Ausgabe
                     if (response.success) {
@@ -1131,6 +1130,7 @@ if (empty($editor_name)) {
         });
     });
 </script>
+
 
                 </div>
               </div>

@@ -64,6 +64,7 @@ try {
         if ($existing) {
             // Wenn der Status geändert wurde, dann update
             if ($existing['status'] != $status) {
+                // Status in der Tabelle benutzer_ausruestung aktualisieren
                 $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = :status WHERE user_id = :user_id AND key_name = :key_name");
                 $stmt->execute([':status' => $status, ':user_id' => $user_id, ':key_name' => $key_name]);
 
@@ -107,10 +108,18 @@ try {
             $stmt->execute([':stock' => $stock - 1, ':key_name' => $key_name]);
         }
 
-        // Wenn der Artikel zurückgegeben wurde, erhöhe den Bestand
+        // Wenn der Artikel zurückgegeben wurde, erhöhe den Bestand und logge in History
         if ($status == 0 && $existing['status'] == 1) {
             $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
             $stmt->execute([':stock' => $stock + 1, ':key_name' => $key_name]);
+
+            // History-Eintrag für zurückgegebene Ausrüstung
+            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':key_name' => $key_name,
+                ':editor_name' => $user_name
+            ]);
         }
     }
 

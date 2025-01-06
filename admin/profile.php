@@ -202,12 +202,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </li>
             </ul>
+            <?php
+// Überprüfen, ob der Benutzer als anwesend oder abwesend in der Tabelle gespeichert ist
+$user_id = $user['id']; // Benutzer-ID
+$attendanceStatus = 'none'; // Standardstatus (kein Eintrag)
 
+// SQL-Abfrage, um den Anwesenheitsstatus des Benutzers zu überprüfen
+$stmt = $conn->prepare("SELECT status FROM attendance WHERE user_id = :user_id ORDER BY timestamp DESC LIMIT 1");
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$attendanceStatusRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Wenn ein Anwesenheitsstatus vorhanden ist, setze den Status
+if ($attendanceStatusRow) {
+    $attendanceStatus = $attendanceStatusRow['status'];
+}
+?>
             <!-- Anwesend / Abwesend Buttons -->
             <div class="form-group">
-                <button class="btn btn-success" id="presentButton" data-user-id="<?= $user['id']; ?>">Anwesend</button>
-                <button class="btn btn-danger" id="absentButton" data-user-id="<?= $user['id']; ?>">Abwesend</button>
-            </div>
+    <?php if ($attendanceStatus === 'absent' || $attendanceStatus === 'none'): ?>
+        <!-- Wenn der Benutzer abwesend ist oder kein Eintrag vorhanden ist, zeigt den "Anwesend"-Button -->
+        <button class="btn btn-success" id="presentButton" data-user-id="<?= $user['id']; ?>">Anwesend</button>
+    <?php endif; ?>
+
+    <?php if ($attendanceStatus === 'present'): ?>
+        <!-- Wenn der Benutzer anwesend ist, zeigt nur den "Abwesend"-Button -->
+        <button class="btn btn-danger" id="absentButton" data-user-id="<?= $user['id']; ?>">Abwesend</button>
+    <?php endif; ?>
+</div>
             <script>
                 $(document).ready(function() {
     $('#presentButton').click(function() {

@@ -97,7 +97,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     </script>
       <!-- TABLE: LATEST ORDERS -->
-      <div class="card" style="width: 50%">
+      <div class="card" style="width: 25%">
               <div class="card-header">
                 <h3 class="card-title">Anwesenheit</h3>
               </div>

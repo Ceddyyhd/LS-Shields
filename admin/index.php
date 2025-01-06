@@ -158,6 +158,21 @@ try {
         </div>
     </div>
 
+    <?php
+include 'db.php';
+
+try {
+    // Abrufen der Rabatte aus der Datenbank
+    $stmt = $conn->prepare("SELECT display_name, description, rabatt_percent FROM rabatt");
+    $stmt->execute();
+    $rabatte = $stmt->fetchAll(PDO::FETCH_ASSOC); // Alle Rabatte abrufen
+
+} catch (PDOException $e) {
+    echo "Fehler beim Abrufen der Rabatte: " . $e->getMessage();
+    $rabatte = [];
+}
+?>
+
     <!-- Zweite Tabelle -->
     <div class="col-md-6">
         <div class="card" style="width: 100%;">
@@ -165,28 +180,30 @@ try {
                 <h3 class="card-title">Anwesenheit 2</h3>
             </div>
             <div class="card-body p-0">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Anwesend Seit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($attendanceData)): ?>
-                            <?php foreach ($attendanceData as $attendance): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($attendance['name']); ?></td>
-                                    <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Firma</th>
+                        <th>Beschreibung</th>
+                        <th>Rabatt in %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($rabatte)): ?>
+                        <?php foreach ($rabatte as $rabatt): ?>
                             <tr>
-                                <td colspan="2">Keine Anwesenheit erfasst.</td>
+                                <td><?php echo htmlspecialchars($rabatt['display_name']); ?></td>
+                                <td><?php echo htmlspecialchars($rabatt['description']); ?></td>
+                                <td><?php echo htmlspecialchars($rabatt['rabatt_percent']); ?>%</td>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="3">Keine Rabatte verfügbar.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
             </div>
         </div>
     </div>

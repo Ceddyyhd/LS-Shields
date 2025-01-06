@@ -419,7 +419,7 @@ $(document).ready(function() {
 
         // AJAX-Anfrage an vehicle_tanken.php
         $.ajax({
-            url: 'vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
+            url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
             type: 'POST',
             data: formData,
             dataType: 'json',  // Erwartet eine JSON-Antwort

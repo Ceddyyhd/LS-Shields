@@ -332,6 +332,10 @@ $('.tanken-button').on('click', function() {
             try {
                 var vehicle = JSON.parse(response);  // Antwort als JSON parsen
                 $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
+
+                // Debugging: Zeige den Wert im Alert
+                alert("Kennzeichen: " + vehicle.license_plate);
+
                 $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
 
                 // Zeige das Tanken-Modal
@@ -346,6 +350,7 @@ $('.tanken-button').on('click', function() {
         }
     });
 });
+
 
     // Fahrzeug Bearbeiten (AJAX)
     $('.bearbeiten-button').on('click', function() {

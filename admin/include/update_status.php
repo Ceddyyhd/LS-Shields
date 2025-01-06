@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':vorname_nachname' => $anfrage['vorname_nachname'],
                 ':telefonnummer' => $anfrage['telefonnummer'],
                 ':anfrage' => $anfrage['anfrage'],
+                ':datum_uhrzeit' => $anfrage['datum_uhrzeit'],
             ]);
 
             // Log-Eintrag für das Verschieben der Anfrage

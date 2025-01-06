@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Wenn keine letzte Spind Kontrolle angegeben wurde, auf NULL setzen
+    if (empty($letzte_spind_kontrolle)) {
+        $letzte_spind_kontrolle = null;
+    }
+
     try {
         // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
         $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
@@ -53,6 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':notizen' => $notiz
             ]);
         }
+
+        // Log für die Änderung oder Erstellung
+        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
+                                VALUES (:user_id, :editor_name, :action)");
+        $stmt->execute([ 
+            ':user_id' => $user_id,
+            ':editor_name' => $editor_name,
+            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
+        ]);
 
         // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
         foreach ($ausruestung as $key_name => $status) {

@@ -114,7 +114,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" class="img-circle elevation-2" alt="User Image">
                 </div>
             <div class="info">
-                <a href="#" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+                
+                <a href="profile.php?=id<?php echo htmlspecialchars($user_id); ?>" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
             </div>
         </div>
 

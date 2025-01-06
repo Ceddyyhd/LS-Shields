@@ -348,7 +348,7 @@ $('.tanken-button').on('click', function() {
 });
 
     // Fahrzeug Bearbeiten (AJAX)
-    $('.edit-button').on('click', function() {
+    $('.bearbeiten-button').on('click', function() {
     var vehicleId = $(this).data('vehicle-id');
     
     // Fahrzeugdaten laden

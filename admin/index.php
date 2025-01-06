@@ -98,99 +98,66 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </script>
       <!-- TABLE: LATEST ORDERS -->
       <div class="card">
-        <div class="card-header border-transparent">
-          <h3 class="card-title">Latest Orders</h3>
-
-          <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table m-0">
-              <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Item</th>
-                <th>Status</th>
-                <th>Popularity</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                <td>Call of Duty IV</td>
-                <td><span class="badge badge-success">Shipped</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-warning">Pending</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>iPhone 6 Plus</td>
-                <td><span class="badge badge-danger">Delivered</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-info">Processing</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00c0ef" data-height="20">90,80,-90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                <td>Samsung Smart TV</td>
-                <td><span class="badge badge-warning">Pending</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f39c12" data-height="20">90,80,-90,70,61,-83,68</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                <td>iPhone 6 Plus</td>
-                <td><span class="badge badge-danger">Delivered</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#f56954" data-height="20">90,-80,90,70,-61,83,63</div>
-                </td>
-              </tr>
-              <tr>
-                <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                <td>Call of Duty IV</td>
-                <td><span class="badge badge-success">Shipped</span></td>
-                <td>
-                  <div class="sparkbar" data-color="#00a65a" data-height="20">90,80,90,-70,61,-83,63</div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.table-responsive -->
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer clearfix">
-          <a href="javascript:void(0)" class="btn btn-sm btn-info float-left">Place New Order</a>
-          <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">View All Orders</a>
-        </div>
-        <!-- /.card-footer -->
-      </div>
+              <div class="card-header">
+                <h3 class="card-title">Condensed Full Width Table</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>Task</th>
+                      <th>Progress</th>
+                      <th style="width: 40px">Label</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1.</td>
+                      <td>Update software</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-danger">55%</span></td>
+                    </tr>
+                    <tr>
+                      <td>2.</td>
+                      <td>Clean database</td>
+                      <td>
+                        <div class="progress progress-xs">
+                          <div class="progress-bar bg-warning" style="width: 70%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-warning">70%</span></td>
+                    </tr>
+                    <tr>
+                      <td>3.</td>
+                      <td>Cron job running</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-primary" style="width: 30%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-primary">30%</span></td>
+                    </tr>
+                    <tr>
+                      <td>4.</td>
+                      <td>Fix and squish bugs</td>
+                      <td>
+                        <div class="progress progress-xs progress-striped active">
+                          <div class="progress-bar bg-success" style="width: 90%"></div>
+                        </div>
+                      </td>
+                      <td><span class="badge bg-success">90%</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
 
 
     <!-- /.content -->

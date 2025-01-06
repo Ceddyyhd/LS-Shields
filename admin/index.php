@@ -95,39 +95,62 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
 });
 
+
+<?php 
+// Datenbankverbindung
+include 'include/db.php';
+
+try {
+    // Verbindung zur Datenbank herstellen
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Anwesenheitsdaten abrufen
+    $stmt = $conn->prepare("SELECT u.name, a.timestamp FROM attendance a
+                            JOIN users u ON a.user_id = u.id
+                            WHERE a.status = 'present'
+                            ORDER BY a.timestamp DESC");
+    $stmt->execute();
+
+    // Alle Anwesenheitsdaten abrufen
+    $attendanceData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Fehler beim Abrufen der Daten: " . $e->getMessage();
+}
+?>
     </script>
       <!-- TABLE: LATEST ORDERS -->
       <div class="card" style="width: 25%">
-              <div class="card-header">
-                <h3 class="card-title">Anwesenheit</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body p-0">
-                <table class="table table-sm">
-                  <thead>
+    <div class="card-header">
+        <h3 class="card-title">Anwesenheit</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Anwesend Seit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($attendanceData)): ?>
+                    <?php foreach ($attendanceData as $attendance): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($attendance['name']); ?></td>
+                            <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                      <th>Name</th>
-                      <th>Anwesend Seit</th>
+                        <td colspan="2">Keine Anwesenheit erfasst.</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>User 1. </td>
-                      <td>06.01.2025 18:00 Uhr</td>
-                    </tr>
-                    <tr>
-                      <td>User 2. </td>
-                      <td>Clean database</td>
-                    </tr>
-                    <tr>
-                      <td>User 3. </td>
-                      <td>Cron job running</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
 
 
     <!-- /.content -->

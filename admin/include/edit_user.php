@@ -44,12 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-    // Bewerber und admin_bereich verarbeiten
-    $bewerber = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'ja' : 'nein';
-    $admin_bereich = ($bewerber === 'nein') ? 1 : 0;  // Wenn Bewerber 'nein', setze admin_bereich auf 1, andernfalls auf 0
+// Gekündigt und Bewerber verarbeiten
+$gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
+$bewerber = isset($_POST['bewerber']) && $_POST['bewerber'] === 'on' ? 'ja' : 'nein';
 
-    $updates['bewerber'] = $bewerber;  // Den Bewerber-Wert in das Updates-Array einfügen
-    $updates['admin_bereich'] = $admin_bereich;  // Den admin_bereich-Wert in das Updates-Array einfügen
+// admin_bereich je nach Bewerberstatus setzen
+$admin_bereich = ($bewerber === 'nein') ? 1 : 0;  // Wenn Bewerber 'nein', setze admin_bereich auf 1, andernfalls auf 0
+
+// Updates vorbereiten
+$updates['gekuendigt'] = $gekuendigt;  // Den Gekuendigt-Wert in das Updates-Array einfügen
+$updates['bewerber'] = $bewerber;  // Den Bewerber-Wert in das Updates-Array einfügen
+$updates['admin_bereich'] = $admin_bereich;  // Den admin_bereich-Wert in das Updates-Array einfügen
 
     // Daten aktualisieren
     if (!empty($updates)) {

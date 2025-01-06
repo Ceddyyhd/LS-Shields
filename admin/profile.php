@@ -308,22 +308,23 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="password" id="passwordField" name="password" class="form-control" placeholder="Neues Passwort" disabled>
                             </div>
                             <!-- Gekündigt -->
-                            <div class="form-group">
+<div class="form-group">
     <strong><i class="fas fa-user-times mr-1"></i> Gekuendigt</strong> 
     <div class="form-check">
-    <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['gekuendigt'] === 'gekuendigt' ? 'checked' : ''; ?>>
-    <label for="gekuendigtCheckbox" class="form-check-label">Benutzer als gekuendigt markieren</label>
+        <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['gekuendigt'] === 'gekuendigt' ? 'checked' : ''; ?>>
+        <label for="gekuendigtCheckbox" class="form-check-label">Benutzer als gekuendigt markieren</label>
     </div>
 </div>
 
 <?php if ($user['bewerber'] === 'ja'): ?>
+    <!-- Bewerber -->
     <div class="form-group">
-    <strong><i class="fas fa-user-times mr-1"></i> Bewerber</strong>
-    <div class="form-check">
-        <input type="checkbox" id="gekuendigtCheckbox" class="form-check-input" name="gekuendigt" <?php echo $user['bewerber'] === 'ja' ? 'checked' : ''; ?>>
-        <label for="gekuendigtCheckbox" class="form-check-label">Bewerber (Checkbox = User ist Bewerber / Checkbox uncheck = User wurde angenommen)</label>
+        <strong><i class="fas fa-user-times mr-1"></i> Bewerber</strong>
+        <div class="form-check">
+            <input type="checkbox" id="bewerberCheckbox" class="form-check-input" name="bewerber" <?php echo $user['bewerber'] === 'ja' ? 'checked' : ''; ?>>
+            <label for="bewerberCheckbox" class="form-check-label">Bewerber (Checkbox = User ist Bewerber / Checkbox uncheck = User wurde angenommen)</label>
+        </div>
     </div>
-</div>
 <?php endif; ?>
 
                         </div>

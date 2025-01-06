@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 try {
-    // Dein SQL-Statement für die Benutzerabfrage
+    // Dein SQL-Statement für die Benutzerabfrage, jetzt nach dem 'value' der Rolle sortiert
     $stmt = $conn->prepare("
         SELECT 
             u.id,
@@ -17,6 +17,7 @@ try {
             u.nummer,
             u.created_at,
             r.name AS role_name,
+            r.value AS role_value,  -- Füge den 'value' der Rolle hinzu
             CASE
                 -- Prüfen, ob der Mitarbeiter aktuell im Urlaub ist
                 WHEN EXISTS (
@@ -47,7 +48,9 @@ try {
         FROM users u
         LEFT JOIN roles r ON u.role_id = r.id
         WHERE u.gekuendigt = 'no_kuendigung'
-        AND u.bewerber = 'nein';  ");  // Hier wird geprüft, dass 'bewerber' auf 'nein' gesetzt ist
+        AND u.bewerber = 'nein'
+        ORDER BY r.value DESC;  -- Sortiere nach 'value' der Rolle in absteigender Reihenfolge
+    ");
 
     $stmt->execute();
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

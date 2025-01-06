@@ -614,7 +614,7 @@ $(document).ready(function () {
                         <!-- Löschen-Button, nur wenn der Benutzer die Berechtigung hat -->
                         <?php if ($_SESSION['permissions']['delete_documents'] ?? false): ?>
                             <button class='btn btn-danger btn-sm delete-document' data-id='<?php echo $doc['id']; ?>'>
-                                <i class='fas fa-trash'></i> <?php echo $doc['id']; ?>
+                                <i class='fas fa-trash'></i> 
                             </button>
                         <?php endif; ?>
                     </li>

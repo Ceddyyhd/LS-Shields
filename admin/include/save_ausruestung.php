@@ -2,6 +2,10 @@
 include 'db.php';
 session_start();
 
+// Debugging: Überprüfe, ob die Daten korrekt im POST ankommen
+var_dump($_POST);
+exit; // Verhindert die Ausführung des restlichen Codes, um nur die POST-Daten zu sehen
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerdaten aus POST holen
     $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
@@ -63,10 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
         ]);
 
-        // Debugging: Ausgabe der empfangenen Ausrüstungsdaten
-        var_dump($ausruestung); // Zeigt die empfangenen Ausrüstungsdaten an
-        exit; // Verhindert, dass der Code weiter ausgeführt wird, damit du die Daten siehst
-
         // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
         foreach ($ausruestung as $key_name => $status) {
             // Überprüfen, ob der Status der Ausrüstung geändert wurde
@@ -105,4 +105,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
-?>

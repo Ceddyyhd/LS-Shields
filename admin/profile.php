@@ -1104,21 +1104,24 @@ foreach ($categories as $category => $items) {
         formData.push({ name: 'notiz', value: notiz });
 
         $.ajax({
-            url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                if (response.success) {
-                    alert("Änderungen gespeichert.");
-                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
-                } else {
-                    alert("Fehler: " + response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                alert("Fehler: " + error);
-            },
-        });
+    url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
+    type: "POST",
+    data: formData,
+    success: function (response) {
+        console.log(response); // Debugging-Ausgabe
+        if (response.success) {
+            alert("Änderungen gespeichert.");
+            location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+        } else {
+            alert("Fehler: " + response.message);
+        }
+    },
+    error: function (xhr, status, error) {
+        console.log(error); // Debugging-Ausgabe
+        alert("Fehler: " + error);
+    }
+});
+
     });
 });
 </script>

@@ -156,6 +156,38 @@ try {
     <!-- /.card-body -->
 </div>
 
+<div class="card" style="width: 25%">
+    <div class="card-header">
+        <h3 class="card-title">Anwesenheit</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Anwesend Seit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($attendanceData)): ?>
+                    <?php foreach ($attendanceData as $attendance): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($attendance['name']); ?></td>
+                            <td><?php echo date('d.m.Y H:i', strtotime($attendance['timestamp'])); ?> Uhr</td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="2">Keine Anwesenheit erfasst.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+
 
     <!-- /.content -->
   </div>

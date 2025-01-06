@@ -61,8 +61,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
                 <form id="createRabattForm">
                     <div class="form-group">
-                        <label for="key_name">Firma</label>
-                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Firma eingeben">
+                        <label for="display_name">Firma</label>
+                        <input type="text" class="form-control" id="display_name" name="display_name" placeholder="Firma eingeben">
                     </div>
                     <div class="form-group">
                         <label for="description">Beschreibung</label>
@@ -82,6 +82,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 
 <!-- Modal zum Bearbeiten einer Ankündigung -->
 <div class="modal fade" id="modal-ankuendigung-bearbeiten">

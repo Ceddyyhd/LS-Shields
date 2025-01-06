@@ -6,12 +6,12 @@ error_reporting(E_ALL);
 
 
 // Eingabewerte
-$key_name = $_POST['key_name'] ?? null;
+$display_name = $_POST['display_name'] ?? null; // 'key_name' durch 'display_name' ersetzt
 $description = $_POST['description'] ?? null;
 $rabatt_percent = $_POST['rabatt_percent'] ?? null;
-$created_by = $_POST['created_by'] ?? null;  // Jetzt aus dem Formular holen
+$created_by = $_POST['created_by'] ?? null;
 
-if (!$key_name || !$description || !$rabatt_percent || !$created_by) {
+if (!$display_name || !$description || !$rabatt_percent || !$created_by) {
     echo json_encode(['success' => false, 'error' => 'Fehlende Eingabewerte']);
     exit;
 }
@@ -20,12 +20,12 @@ try {
     // Rabatt erstellen
     $stmt = $conn->prepare("INSERT INTO rabatt (display_name, description, rabatt_percent, created_by) 
                         VALUES (:display_name, :description, :rabatt_percent, :created_by)");
-        $stmt->execute([
-            ':display_name' => $display_name,
-            ':description' => $description,
-            ':rabatt_percent' => $rabatt_percent,
-            ':created_by' => $created_by
-        ]);
+    $stmt->execute([
+        ':display_name' => $display_name,
+        ':description' => $description,
+        ':rabatt_percent' => $rabatt_percent,
+        ':created_by' => $created_by
+    ]);
     $rabatt_id = $conn->lastInsertId();  // ID des neu erstellten Rabatts
 
     // Log-Eintrag für das Erstellen
@@ -40,4 +40,5 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'error' => 'Fehler beim Erstellen des Rabatts: ' . $e->getMessage()]);
 }
+
 ?>

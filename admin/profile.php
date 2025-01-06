@@ -474,11 +474,13 @@ if ($attendanceStatusRow) {
                   <li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>
                   <?php endif; ?>
                   <?php 
-                    if ($_SESSION['permissions']['view_employee_ausbildungen'] ?? false) {
-                        echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
+                  $isBewerber = $user['bewerber'] === 'ja'; // Überprüfen, ob der Benutzer als Bewerber markiert ist
+
+                  if ($_SESSION['permissions']['view_employee_ausbildungen'] ?? false && !$isBewerber) {
+                    echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
                     }
 
-                    if ($_SESSION['permissions']['view_employee_ausruestung'] ?? false) {
+                    if ($_SESSION['permissions']['view_employee_ausruestung'] ?? false && !$isBewerber) {
                         echo '<li class="nav-item"><a class="nav-link" href="#ausruestung" data-toggle="tab">Ausrüstung</a></li>';
                     }
                     ?>

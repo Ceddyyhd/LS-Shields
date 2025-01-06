@@ -39,7 +39,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 include 'include/db.php';
 
 // Ränge aus der Datenbank abrufen
-$stmt = $conn->prepare("SELECT * FROM roles");
+$stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

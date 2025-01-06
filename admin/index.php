@@ -99,59 +99,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- TABLE: LATEST ORDERS -->
       <div class="card" style="width: 50%">
               <div class="card-header">
-                <h3 class="card-title">Condensed Full Width Table</h3>
+                <h3 class="card-title">Anwesenheit</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body p-0">
                 <table class="table table-sm">
                   <thead>
                     <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Task</th>
-                      <th>Progress</th>
-                      <th style="width: 40px">Label</th>
+                      <th>Name</th>
+                      <th>Anwesend Seit</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>1.</td>
-                      <td>Update software</td>
-                      <td>
-                        <div class="progress progress-xs">
-                          <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-danger">55%</span></td>
+                      <td>User 1. </td>
+                      <td>06.01.2025 18:00 Uhr</td>
                     </tr>
                     <tr>
-                      <td>2.</td>
+                      <td>User 2. </td>
                       <td>Clean database</td>
-                      <td>
-                        <div class="progress progress-xs">
-                          <div class="progress-bar bg-warning" style="width: 70%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-warning">70%</span></td>
                     </tr>
                     <tr>
-                      <td>3.</td>
+                      <td>User 3. </td>
                       <td>Cron job running</td>
-                      <td>
-                        <div class="progress progress-xs progress-striped active">
-                          <div class="progress-bar bg-primary" style="width: 30%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-primary">30%</span></td>
-                    </tr>
-                    <tr>
-                      <td>4.</td>
-                      <td>Fix and squish bugs</td>
-                      <td>
-                        <div class="progress progress-xs progress-striped active">
-                          <div class="progress-bar bg-success" style="width: 90%"></div>
-                        </div>
-                      </td>
-                      <td><span class="badge bg-success">90%</span></td>
                     </tr>
                   </tbody>
                 </table>

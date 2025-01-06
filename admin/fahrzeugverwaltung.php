@@ -190,7 +190,7 @@
                         <input type="number" id="edit-fuel-amount" name="fuel_amount" class="form-control mt-2" placeholder="Betrag in EUR">
                     </div>
 
-                    <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
+                    <input type="hidden" name="vehicle_id" id="edit-vehicle_id1">
                     <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
 
                     <div class="modal-footer justify-content-between">
@@ -340,7 +340,7 @@ $('.tanken-button').on('click', function() {
                 // Überprüfen, ob das Formularfeld den richtigen Wert bekommt
                 console.log("Form value set: ", $('#edit-license_plate1').val());
 
-                $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
+                $('#edit-vehicle_id1').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
 
                 // Zeige das Tanken-Modal
                 $('#vehicle-tanken').modal('show');

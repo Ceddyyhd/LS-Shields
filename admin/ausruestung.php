@@ -215,70 +215,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <td>${ausruestung.key_name}</td>
                             <td>${ausruestung.display_name}</td>
                             <td>${ausruestung.description}</td>
-                            <td>
-                              <!-- Bearbeiten-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
-                              ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '">Bearbeiten</button>' : ''}
-                              <!-- Löschen-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
-                              ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
-                            </td>
-                        </tr>
-                    `);
-                });
-            } else {
-                alert('Keine Ausrüstungstypen gefunden.');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error); // Fehlerlog
-            alert('Fehler beim Abrufen der Ausrüstungstypen.');
-        }
-    });
-
-    // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
-    $.ajax({
-        url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            const categorySelect = $('#category, #edit_category'); // Beide Dropdowns für Erstellen und Bearbeiten
-            categorySelect.empty(); // Leere das Dropdown, bevor neue Kategorien hinzugefügt werden
-
-            // Kategorien durchlaufen und im Dropdown-Menü einfügen
-            data.forEach(function(category) {
-                categorySelect.append(`<option value="${category.category}">${category.category}</option>`);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Kategorien:', error); // Fehlerlog
-            alert('Fehler beim Abrufen der Kategorien.');
-        }
-    });
-});
-
-// Wenn der Bearbeiten-Button geklickt wird
-$(document).on('click', '.btn-outline-secondary', function() {
-    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausrüstungstyps
-    
-    // AJAX-Anfrage, um die Daten des Ausrüstungstyps abzurufen
-    $.ajax({
-        url: 'include/fetch_ausruestungstypen.php', // URL für das Abrufen der Daten
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            console.log('Daten erhalten:', data); // Logge die erhaltenen Daten in der Konsole
-            if (data && data.length > 0) {
-                // Wenn Daten vorhanden sind, befülle die Tabelle
-                const tableBody = $('#example1 tbody'); // Beispiel: ID der Tabelle, in der die Daten angezeigt werden
-                tableBody.empty(); // Leere das Tabellenbody, bevor neue Daten hinzugefügt werden
-
-                // Daten durchlaufen und in die Tabelle einfügen
-                data.forEach(function(ausruestung) {
-                    tableBody.append(`
-                        <tr>
-                            <td>${ausruestung.id}</td>
-                            <td>${ausruestung.key_name}</td>
-                            <td>${ausruestung.display_name}</td>
-                            <td>${ausruestung.description}</td>
                             <td>${ausruestung.stock}</td> <!-- Bestand hinzufügen -->
                             <td>
                               <!-- Bearbeiten-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
@@ -300,9 +236,7 @@ $(document).on('click', '.btn-outline-secondary', function() {
             alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
     });
-});
-
-function openHistoryModal(ausruestungId) {
+    function openHistoryModal(ausruestungId) {
     $.ajax({
         url: 'include/fetch_ausruestung_history.php', // URL, um die Historie zu laden
         type: 'GET',
@@ -337,6 +271,62 @@ function openHistoryModal(ausruestungId) {
         }
     });
 }
+    // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
+    $.ajax({
+        url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const categorySelect = $('#category, #edit_category'); // Beide Dropdowns für Erstellen und Bearbeiten
+            categorySelect.empty(); // Leere das Dropdown, bevor neue Kategorien hinzugefügt werden
+
+            // Kategorien durchlaufen und im Dropdown-Menü einfügen
+            data.forEach(function(category) {
+                categorySelect.append(`<option value="${category.category}">${category.category}</option>`);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Kategorien:', error); // Fehlerlog
+            alert('Fehler beim Abrufen der Kategorien.');
+        }
+    });
+});
+
+// Wenn der Bearbeiten-Button geklickt wird
+$(document).on('click', '.btn-outline-secondary', function() {
+    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausrüstungstyps
+    
+    // AJAX-Anfrage, um die Daten des Ausrüstungstyps abzurufen
+    $.ajax({
+        url: 'include/fetch_ausruestungstypen.php',
+        type: 'GET',
+        data: { id: id },
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                const ausruestung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+
+                // Setze die Modal-Felder mit den Daten des Ausrüstungstyps
+                $('#edit_id').val(ausruestung.id); // ID in hidden input
+                $('#edit_key_name').val(ausruestung.key_name); // Key Name
+                $('#edit_display_name').val(ausruestung.display_name); // Display Name
+                $('#edit_description').val(ausruestung.description); // Beschreibung
+                
+                // Setze die Kategorie im Bearbeitungsmodal
+                $('#edit_category').val(ausruestung.category); // Setze die Kategorie im Dropdown
+                
+                // Zeige das Bearbeitungsmodal an
+                $('#modal-ausruestung-edit').modal('show');
+            } else {
+                alert('Daten konnten nicht geladen werden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error);
+            alert('Fehler beim Abrufen der Ausrüstungstypen.');
+        }
+    });
+});
 // Wenn der "Speichern"-Button im Erstell Modal geklickt wird
 $('#saveAusruestung').click(function() {
         const formData = new FormData(document.getElementById('createAusruestungForm'));

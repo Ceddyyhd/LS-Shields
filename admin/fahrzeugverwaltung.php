@@ -317,6 +317,29 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    // Wenn der Tanken-Button geklickt wird
+    $('.edit-button').on('click', function() {
+        var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
+
+        // Fahrzeugdaten laden
+        $.ajax({
+            url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
+            method: 'GET',
+            data: { vehicle_id: vehicleId },
+            success: function(response) {
+                var vehicle = JSON.parse(response);
+                
+                // Werte in die Formularfelder des Tanken-Modals einfügen
+                $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
+                $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
+
+                // Zeige das Tanken-Modal
+                $('#vehicle-tanken').modal('show');
+            }
+        });
+    });
+
     // Fahrzeug Bearbeiten (AJAX)
     $('.edit-button').on('click', function() {
     var vehicleId = $(this).data('vehicle-id');

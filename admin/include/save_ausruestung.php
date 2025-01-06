@@ -14,21 +14,13 @@ include 'db.php';
 $user_id = $_POST['user_id'];  // Benutzer-ID
 $user_name = $_POST['user_name'];  // Benutzername aus dem Formular
 
-// Überprüfe, ob Ausrüstungsdaten gesendet wurden
-if (isset($_POST['ausruestung']) && is_array($_POST['ausruestung'])) {
-    $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
-} else {
-    // Wenn keine Checkbox aktiviert wurde, setzen wir alle Artikel auf "zurückgegeben"
-    $ausruestung = [];
-    $stmt = $conn->prepare("SELECT key_name FROM ausruestungstypen");
-    $stmt->execute();
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Setze den Status aller Artikel auf "zurückgegeben" (d.h., 0)
-    foreach ($items as $item) {
-        $ausruestung[$item['key_name']] = 0; // zurückgegeben
-    }
+// Überprüfen, ob Ausrüstungsdaten gesendet wurden
+if (!isset($_POST['ausruestung']) || !is_array($_POST['ausruestung'])) {
+    echo json_encode(['success' => false, 'message' => 'Keine Ausrüstungsdaten gesendet']);
+    exit;
 }
+
+$ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
 
 // Berechtigungsprüfung (z.B. ob der User die Berechtigung hat, Änderungen vorzunehmen)
 session_start();

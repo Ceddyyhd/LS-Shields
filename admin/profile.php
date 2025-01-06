@@ -1090,35 +1090,28 @@ if (empty($editor_name)) {
 ?>
 <script>
     $(document).ready(function () {
-        // Speichern der Ausrüstungsdaten
         $("#saveAusruestungButton").on("click", function () {
-            var ausruestungStatus = {}; // Objekt zum Speichern des Status für jede Ausrüstung
-
-            // Durch die Checkboxen iterieren und den Status sammeln
+            var ausruestungStatus = {};
             $(".form-check-input").each(function () {
-                var keyName = $(this).attr('name'); // Sammelt den Namen der Checkbox
+                var keyName = $(this).attr('name');
                 if (keyName && $(this).prop('checked') !== undefined) {
-                    ausruestungStatus[keyName] = $(this).prop('checked') ? 1 : 0; // Setzt den Wert auf 1 oder 0
+                    ausruestungStatus[keyName] = $(this).prop('checked') ? 1 : 0;
                 }
             });
 
-            // FormData als JSON string für Ausrüstung erstellen
             var formData = {
-                user_id: '<?= $user_id; ?>',  // Benutzer-ID
-                ausruestung: JSON.stringify(ausruestungStatus)  // JSON-String der Ausrüstungsdaten
+                user_id: '<?= $user_id; ?>',
+                ausruestung: JSON.stringify(ausruestungStatus)
             };
 
-            console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
-
             $.ajax({
-                url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
+                url: "include/save_ausruestung.php",
                 type: "POST",
-                data: formData,  // Die Formulardaten direkt senden
+                data: formData,
                 success: function (response) {
-                    console.log(response); // Debugging-Ausgabe
                     if (response.success) {
                         alert("Änderungen gespeichert.");
-                        location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+                        location.reload();
                     } else {
                         alert("Fehler: " + response.message);
                     }
@@ -1130,6 +1123,10 @@ if (empty($editor_name)) {
         });
     });
 </script>
+
+
+
+
 
 
                 </div>

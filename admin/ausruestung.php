@@ -12,7 +12,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <?php include 'include/navbar.php'; ?>
 <!-- jQuery (notwendig für Bootstrap) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<!-- JavaScript Section -->
+<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.6/js/dataTables.bootstrap4.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
@@ -238,13 +240,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
     function openHistoryModal(ausruestungId) {
     $.ajax({
-        url: 'include/fetch_ausruestung_history.php', // URL, um die Historie zu laden
+        url: 'include/fetch_ausruestung_history.php',
         type: 'GET',
         data: { id: ausruestungId },
         dataType: 'json',
         success: function(data) {
             if (data && data.length > 0) {
-                // Füllen Sie das Modal mit der Historie
                 const historyTableBody = $('#historyTable tbody');
                 historyTableBody.empty();
 
@@ -259,7 +260,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     `);
                 });
 
-                // Zeige das Historie Modal
                 $('#modal-history').modal('show');
             } else {
                 alert('Keine Historie für diesen Ausrüstungstyp gefunden.');
@@ -270,7 +270,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             alert('Fehler beim Abrufen der Historie.');
         }
     });
-}
+  }
     // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
     $.ajax({
         url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien
@@ -388,10 +388,7 @@ function deleteAusruestungTyp(id) {
 }
 </script>
 
-<!-- JavaScript Section -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.6/js/dataTables.bootstrap4.min.js"></script>
+
 
 
   <!-- /.col -->

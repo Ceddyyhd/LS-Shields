@@ -114,8 +114,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" class="img-circle elevation-2" alt="User Image">
                 </div>
             <div class="info">
-                
-                <a href="profile.php?=id<?php echo htmlspecialchars($user_id); ?>" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+            <?php  $user_id1 = $_SESSION['user_id']; ?>
+                <a href="profile.php?=id<?php echo htmlspecialchars($user_id1); ?>" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
             </div>
         </div>
 

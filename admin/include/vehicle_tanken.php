@@ -26,15 +26,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Log-Eintrag für Fahrzeugänderung (nur die Änderung der Tanken-Daten)
         $changes = [];
         if ($fuel_checked) {
-            $changes[] = "Getankt: Ja";
+            $changes[] = "Getankt: Ja, Deckel: Ja";
         } else {
-            $changes[] = "Getankt: Nein";
+            $changes[] = "Getankt: Ja, Deckel: Nein";
         }
+
         if ($fuel_location !== $old_vehicle['fuel_location']) {
             $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
         }
 
-        // Log-Nachricht anpassen, um den Betrag mit einzubeziehen
+        // Betrag einfügen, wenn verfügbar
         if ($fuel_amount !== NULL) {
             $changes[] = "Betrag -> " . $fuel_amount . " $";
         }

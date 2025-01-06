@@ -163,7 +163,6 @@
 </div>
 
 <!-- Modal for Tanken -->
-<!-- Modal for Tanken -->
 <div class="modal fade" id="vehicle-tanken">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -178,7 +177,7 @@
                     <div class="form-group">
                         <label>Kennzeichen</label>
                         <input type="text" class="form-control" name="license_plate" id="edit-license_plate1" placeholder="Enter ..." disabled>
-                        </div>
+                    </div>
 
                     <div class="form-group">
                         <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
@@ -202,6 +201,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -319,41 +319,40 @@ $(document).ready(function() {
 });
 
 $('.tanken-button').on('click', function() {
-    var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
+        var vehicleId = $(this).data('vehicle-id');  // Fahrzeug-ID holen
 
-    // Fahrzeugdaten laden
-    $.ajax({
-        url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
-        method: 'GET',
-        data: { vehicle_id: vehicleId },  // Die Fahrzeug-ID an die PHP-Datei übergeben
-        success: function(response) {
-            console.log(response);  // Ausgabe der Antwort zur Überprüfung
+        // Fahrzeugdaten laden
+        $.ajax({
+            url: 'include/vehicle_fetch.php',  // Fahrzeugdaten abrufen
+            method: 'GET',
+            data: { vehicle_id: vehicleId },  // Fahrzeug-ID als Parameter
+            success: function(response) {
+                console.log(response);  // Antwort zur Überprüfung ausgeben
 
-            try {
-                var vehicle = JSON.parse(response);  // Antwort als JSON parsen
-                console.log("Parsed vehicle: ", vehicle);  // Debugging-Ausgabe
-                $('#edit-license_plate1').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
+                try {
+                    var vehicle = JSON.parse(response);  // JSON-Antwort parsen
+                    console.log("Parsed vehicle: ", vehicle);  // Fahrzeugdaten zur Überprüfung
 
-                // Debugging: Zeige den Wert im Alert
-                alert("Kennzeichen: " + vehicle.license_plate);
+                    // Kennzeichen im Tanken-Modal einfügen
+                    $('#edit-license_plate1').val(vehicle.license_plate);  // Kennzeichen setzen
 
-                // Überprüfen, ob das Formularfeld den richtigen Wert bekommt
-                console.log("Form value set: ", $('#edit-license_plate1').val());
+                    // Vergewissere dich, dass der Wert korrekt gesetzt wird
+                    console.log("Kennzeichen im Modal gesetzt: ", $('#edit-license_plate1').val());
 
-                $('#edit-vehicle_id1').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
+                    $('#edit-vehicle_id1').val(vehicle.id);  // Fahrzeug-ID setzen
 
-                // Zeige das Tanken-Modal
-                $('#vehicle-tanken').modal('show');
-            } catch (e) {
-                alert('Fehler: Ungültige JSON-Antwort');
-                console.error('JSON Parsing Error: ', e);
+                    // Zeige das Modal
+                    $('#vehicle-tanken').modal('show');
+                } catch (e) {
+                    alert('Fehler: Ungültige JSON-Antwort');
+                    console.error('JSON Parsing Error: ', e);
+                }
+            },
+            error: function() {
+                alert('Fehler beim Laden der Fahrzeugdaten');
             }
-        },
-        error: function() {
-            alert('Fehler beim Laden der Fahrzeugdaten');
-        }
+        });
     });
-});
 
 
     // Fahrzeug Bearbeiten (AJAX)

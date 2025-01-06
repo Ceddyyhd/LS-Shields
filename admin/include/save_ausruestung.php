@@ -49,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Editor Name war leer, daher wird 'Unbekannt' verwendet.<br>";
     }
 
+    // Wenn keine letzte Spind Kontrolle übergeben wird, auf NULL setzen
+    $letzte_spind_kontrolle = !empty($letzte_spind_kontrolle) ? $letzte_spind_kontrolle : null;
+
+    // Überprüfen, ob das Datum im richtigen Format ist
+    if ($letzte_spind_kontrolle && !DateTime::createFromFormat('Y-m-d', $letzte_spind_kontrolle)) {
+        echo json_encode(['success' => false, 'message' => 'Ungültiges Datum für letzte Spind Kontrolle.']);
+        exit;
+    }
+
     try {
         // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
         $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");

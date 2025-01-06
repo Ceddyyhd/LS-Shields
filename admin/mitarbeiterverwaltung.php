@@ -375,7 +375,7 @@ $('#saveUserBtn').on('click', function() {
                 </button>
             </div>
             <div class="modal-body">
-                <form id="createUserForm">
+                <form id="createUserForm1">
                     <div class="card-body">
                         <div class="form-group">
                             <label for="nameCreate">Name</label>

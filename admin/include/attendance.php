@@ -16,11 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            // Zuerst den alten Anwesenheitseintrag löschen, wenn vorhanden
+            // Zuerst den alten Anwesenheitseintrag löschen, wenn der Status auf 'absent' gesetzt wird
             if ($status == 'absent') {
+                // Lösche den aktuellen Anwesenheitsdatensatz, wenn er existiert
                 $deleteStmt = $conn->prepare("DELETE FROM attendance WHERE user_id = :user_id AND status = 'present'");
                 $deleteStmt->bindParam(':user_id', $user_id);
                 $deleteStmt->execute();
+                
+                // Überprüfe, ob der Löschen-Vorgang erfolgreich war
+                if ($deleteStmt->rowCount() === 0) {
+                    // Es wurde kein Eintrag gelöscht, möglicherweise gibt es keinen "present"-Eintrag
+                    // Du kannst hier eine Nachricht oder einen Fehler loggen, wenn gewünscht
+                }
             }
 
             // Einfügen des neuen Anwesenheitsdatensatzes (ob Abwesenheit oder Anwesenheit)

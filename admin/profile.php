@@ -1090,51 +1090,45 @@ if (empty($editor_name)) {
 ?>
 <script>
     $(document).ready(function () {
-    // Speichern der Ausrüstungsdaten, letzte Spind Kontrolle und Notiz
-    $("#saveAusruestungButton").on("click", function () {
-        var ausruestungStatus = {}; // Objekt zum Speichern des Status für jede Ausrüstung
+        // Speichern der Ausrüstungsdaten
+        $("#saveAusruestungButton").on("click", function () {
+            var ausruestungStatus = {}; // Objekt zum Speichern des Status für jede Ausrüstung
 
-        // Durch die Checkboxen iterieren und den Status sammeln
-        $(".form-check-input").each(function () {
-            var keyName = $(this).attr('name'); // Sammelt den Namen der Checkbox
-            if (keyName && $(this).prop('checked') !== undefined) {
-                ausruestungStatus[keyName] = $(this).prop('checked') ? 1 : 0; // Setzt den Wert auf 1 oder 0
-            }
-        });
-
-        // Zusätzliche Felder wie letzte Spind Kontrolle und Notiz hinzufügen
-        var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
-        var notiz = $('#notiz').val();
-
-        // FormData erstellen, nur mit den relevanten Daten (Ausruestung, Notiz, letzte Spind Kontrolle)
-        var formData = [
-            { name: 'user_id', value: '<?= $user_id; ?>' },  // Benutzer-ID
-            { name: 'ausruestung', value: JSON.stringify(ausruestungStatus) },
-            { name: 'letzte_spind_kontrolle', value: letzteSpindKontrolle },
-            { name: 'notiz', value: notiz }
-        ];
-
-        console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
-
-        $.ajax({
-            url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
-            type: "POST",
-            data: formData,
-            success: function (response) {
-                console.log(response); // Debugging-Ausgabe
-                if (response.success) {
-                    alert("Änderungen gespeichert.");
-                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
-                } else {
-                    alert("Fehler: " + response.message);
+            // Durch die Checkboxen iterieren und den Status sammeln
+            $(".form-check-input").each(function () {
+                var keyName = $(this).attr('name'); // Sammelt den Namen der Checkbox
+                if (keyName && $(this).prop('checked') !== undefined) {
+                    ausruestungStatus[keyName] = $(this).prop('checked') ? 1 : 0; // Setzt den Wert auf 1 oder 0
                 }
-            },
-            error: function (xhr, status, error) {
-                alert("Fehler: " + error);
-            },
+            });
+
+            // FormData erstellen, nur mit den relevanten Daten (Ausruestung)
+            var formData = [
+                { name: 'user_id', value: '<?= $user_id; ?>' },  // Benutzer-ID
+                { name: 'ausruestung', value: JSON.stringify(ausruestungStatus) }
+            ];
+
+            console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
+
+            $.ajax({
+                url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    console.log(response); // Debugging-Ausgabe
+                    if (response.success) {
+                        alert("Änderungen gespeichert.");
+                        location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+                    } else {
+                        alert("Fehler: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Fehler: " + error);
+                },
+            });
         });
     });
-});
 </script>
 
                 </div>

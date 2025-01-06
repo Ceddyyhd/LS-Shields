@@ -4,9 +4,7 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzerdaten aus POST holen
-    $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
-    $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
-    $notiz = $_POST['notiz'] ?? null;
+    $user_id = $_POST['user_id'] ?? null;
     $ausruestung = $_POST['ausruestung'] ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
 
     // Berechtigungsprüfung
@@ -20,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Debugging: Überprüfen, ob ausruestung als JSON korrekt ist
+    // Überprüfen, ob ausruestung als JSON korrekt ist
     if (!isset($_POST['ausruestung'])) {
         echo json_encode(['success' => false, 'message' => 'Fehlende Ausrüstungsdaten']);
         exit;
@@ -44,51 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzername für das Log sicherstellen
     $editor_name = $_SESSION['user_name'] ?? 'Unbekannt';  // Standardwert 'Unbekannt' falls nicht gesetzt
 
-    // Wenn keine letzte Spind Kontrolle übergeben wird, auf NULL setzen
-    $letzte_spind_kontrolle = !empty($letzte_spind_kontrolle) ? $letzte_spind_kontrolle : null;
-
-    // Überprüfen, ob das Datum im richtigen Format ist
-    if ($letzte_spind_kontrolle && !DateTime::createFromFormat('Y-m-d', $letzte_spind_kontrolle)) {
-        echo json_encode(['success' => false, 'message' => 'Ungültiges Datum für letzte Spind Kontrolle.']);
-        exit;
-    }
-
     try {
-        // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
-        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Wenn der Eintrag bereits existiert, aktualisieren
-        if ($existingEntry) {
-            $stmt = $conn->prepare("UPDATE spind_kontrolle_notizen 
-                                    SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
-                                    WHERE user_id = :user_id");
-            $stmt->execute([
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notiz,
-                ':user_id' => $user_id
-            ]);
-        } else {
-            // Neuen Eintrag in die Tabelle einfügen
-            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
-                                    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notiz
-            ]);
-        }
-
-        // Log für die Änderung oder Erstellung
-        $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 
-                                VALUES (:user_id, :editor_name, :action)");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':editor_name' => $editor_name,
-            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
-        ]);
-
         // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
         foreach ($ausruestung as $key_name => $status) {
             // Überprüfen, ob der Status der Ausrüstung geändert wurde
@@ -107,26 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':key_name' => $key_name
                     ]);
 
-                    // Debugging: Erfolgreiches Update
-                    echo "Bestand für $key_name erfolgreich aktualisiert. Neuer Bestand: $new_stock<br>";
-
                     // Historie der Bestandsänderung speichern
                     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
                                             VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
 
-                    if ($stmt->execute([
-                        ':user_id' => $user_id,
-                        ':key_name' => $key_name,
-                        ':action' => ($status === 1 ? 'Ausgegeben' : 'Zurückgegeben'),
-                        ':stock_change' => ($status === 1 ? -1 : 1),
-                        ':editor_name' => $editor_name
+                    if ($stmt->execute([ 
+                        ':user_id' => $user_id, 
+                        ':key_name' => $key_name, 
+                        ':action' => ($status === 1 ? 'Ausgegeben' : 'Zurückgegeben'), 
+                        ':stock_change' => ($status === 1 ? -1 : 1), 
+                        ':editor_name' => $editor_name 
                     ])) {
-                        // Debugging: Erfolgreiches Einfügen in die Historie
-                        echo "Historie für $key_name erfolgreich gespeichert.<br>";
+                        // Erfolgreiches Einfügen in die Historie
                     } else {
                         // Fehlerprotokollierung
                         $error = $stmt->errorInfo();
-                        echo "Fehler beim Speichern der Historie für $key_name: " . $error[2] . "<br>";
                     }
                 }
             }

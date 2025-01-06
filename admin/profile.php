@@ -1001,99 +1001,108 @@ $("#noteForm").on("submit", function (e) {
 
 
                   <!-- Ausrüstung -->
-                  <div class="tab-pane" id="ausruestung">
-                  <form id="ausruestungForm">
-    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-    <?php
-// Deine Datenbankverbindung einbinden
-include 'include/db.php';
+<div class="tab-pane" id="ausruestung">
+    <form id="ausruestungForm">
+        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+        <?php
+        // Deine Datenbankverbindung einbinden
+        include 'include/db.php';
 
-// Einbinden der Ausrüstungslogik
-include 'include/ausruestung.php';
+        // Einbinden der Ausrüstungslogik
+        include 'include/ausruestung.php';
 
-// Die Rückgabe von `ausruestung.php` in Variablen speichern
-$data = include 'include/ausruestung.php';
+        // Die Rückgabe von `ausruestung.php` in Variablen speichern
+        $data = include 'include/ausruestung.php';
 
-// Zugriff auf die Variablen aus der `ausruestung.php`
-$canEdit = $data['canEdit'];
-$categories = $data['categories'];
-$userAusrüstung = $data['userAusrüstung'];
-$letzte_spind_kontrolle = $data['letzte_spind_kontrolle'];
-$notizen = $data['notizen'];
+        // Zugriff auf die Variablen aus der `ausruestung.php`
+        $canEdit = $data['canEdit'];
+        $categories = $data['categories'];
+        $userAusrüstung = $data['userAusrüstung'];
+        $letzte_spind_kontrolle = $data['letzte_spind_kontrolle'];
+        $notizen = $data['notizen'];
+        ?>
 
-// Dein HTML-Code folgt jetzt hier (inkl. der Anzeige der Ausrüstung und der weiteren Logik)
-?>
-    <?php
-    // HTML-Ausgabe der Ausrüstungs-Kategorien
-    foreach ($categories as $category => $items) {
-    ?>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
-            <div class="col-sm-10">
-                <?php foreach ($items as $item):
-                    $status = $userAusrüstung[$item['key_name']] ?? 0;
-                ?>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" 
-                               id="<?= $item['key_name']; ?>" 
-                               name="ausruestung[<?= $item['key_name']; ?>]" 
-                               value="1" <?= $status ? 'checked' : ''; ?>
-                               <?= $canEdit ? '' : 'disabled'; ?>>
-                        <label class="form-check-label" for="<?= $item['key_name']; ?>">
-                            <?= htmlspecialchars($item['display_name']); ?>
-                        </label>
-                    </div>
-                <?php endforeach; ?>
+        <?php
+        // HTML-Ausgabe der Ausrüstungs-Kategorien
+        foreach ($categories as $category => $items) {
+        ?>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
+                <div class="col-sm-10">
+                    <?php foreach ($items as $item):
+                        $status = $userAusrüstung[$item['key_name']] ?? 0;
+                    ?>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" 
+                                   id="<?= $item['key_name']; ?>" 
+                                   name="ausruestung[<?= $item['key_name']; ?>]" 
+                                   value="1" <?= $status ? 'checked' : ''; ?>
+                                   <?= $canEdit ? '' : 'disabled'; ?>>
+                            <label class="form-check-label" for="<?= $item['key_name']; ?>">
+                                <?= htmlspecialchars($item['display_name']); ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
-        </div>
-    <?php
-    }
-    ?>
-    <div class="form-group">
-        <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-        <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
-               value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
-    </div>
+        <?php
+        }
+        ?>
 
-    <div class="form-group">
-        <label for="notiz">Notiz</label>
-        <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
-    </div>
-    <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
-</form>
+        <div class="form-group">
+            <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
+            <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
+                   value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="notiz">Notiz</label>
+            <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
+        </div>
+
+        <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
+    </form>
+</div>
+
 <script>
     document.getElementById('saveAusruestungButton').addEventListener('click', function() {
-    // Formulardaten sammeln
-    var formData = new FormData(document.getElementById('ausruestungForm'));
+        // Formulardaten sammeln
+        var formData = new FormData(document.getElementById('ausruestungForm'));
 
-    // AJAX-Anfrage starten
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'include/save_ausruestung.php', true);
+        // AJAX-Anfrage starten
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'include/save_ausruestung.php', true);
 
-    // Response-Handler definieren
-    xhr.onload = function() {
-    if (xhr.status === 200) {
-        console.log(xhr.responseText); // Ausgabe der Antwort im Browser
-        try {
-            var response = JSON.parse(xhr.responseText);
-            if (response.success) {
-                alert('Änderungen wurden erfolgreich gespeichert!');
+        // Response-Handler definieren
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log(xhr.responseText); // Ausgabe der Antwort im Browser
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert('Änderungen wurden erfolgreich gespeichert!');
+                    } else {
+                        alert('Fehler beim Speichern: ' + response.message);
+                    }
+                } catch (e) {
+                    alert('Fehler beim Parsen der Antwort!');
+                    console.error(e);
+                }
             } else {
-                alert('Fehler beim Speichern: ' + response.message);
+                alert('Fehler beim Speichern: ' + xhr.status);
             }
-        } catch (e) {
-            alert('Fehler beim Parsen der Antwort!');
-            console.error(e);
-        }
-    } else {
-        alert('Fehler beim Speichern: ' + xhr.status);
-    }
-};
+        };
 
-    // Anfrage absenden
-    xhr.send(formData);
-});
+        // Fehler im Request
+        xhr.onerror = function() {
+            alert('Fehler beim Senden der Anfrage!');
+        };
+
+        // Anfrage absenden
+        xhr.send(formData);
+    });
 </script>
+
 
 
 

@@ -8,6 +8,7 @@ $stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestung
 $stmt->execute();
 $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Benutzer-Ausrüstung abrufen
 $stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
 $stmt->execute([':user_id' => $user_id]);
 $benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -63,6 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
         ]);
 
+        // Debugging: Ausgabe der empfangenen Ausrüstungsdaten
+        var_dump($ausruestung); // Zeigt die empfangenen Ausrüstungsdaten an
+        exit; // Verhindert, dass der Code weiter ausgeführt wird, damit du die Daten siehst
+
         // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
         foreach ($ausruestung as $key_name => $status) {
             // Überprüfen, ob der Status der Ausrüstung geändert wurde
@@ -101,3 +105,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
+?>

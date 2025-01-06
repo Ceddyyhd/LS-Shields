@@ -375,48 +375,48 @@ $('#saveUserBtn').on('click', function() {
                 </button>
             </div>
             <div class="modal-body">
-            <form id="createUserForm">
-    <div class="card-body">
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for="email">Email Adresse</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="umail">Umail Adresse</label>
-            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="kontonummer">Kontonummer</label>
-            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
-        </div>
-        <div class="form-group">
-            <label for="nummer">Tel. Nr.</label>
-            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
-        </div>
-        <div class="form-group">
-            <label for="password">Passwort</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="confirmPassword">Passwort Bestätigen</label>
-            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="profileImageInput">Profilbild</label>
-            <div class="input-group">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
-                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
-                </div>
-            </div>
-            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
-        </div>
-    </div>
-</form>
+                <form id="createUserForm">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Adresse</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="umail">Umail Adresse</label>
+                            <input type="email" class="form-control" id="umail" name="umail" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="kontonummer">Kontonummer</label>
+                            <input type="text" class="form-control" id="kontonummer" name="kontonummer" placeholder="Enter kontonummer">
+                        </div>
+                        <div class="form-group">
+                            <label for="nummer">Tel. Nr.</label>
+                            <input type="text" class="form-control" id="nummer" name="nummer" placeholder="Enter nummer">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Passwort</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Passwort Bestätigen</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileImageInput">Profilbild</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="profileImageInput" name="profile_image" accept="image/*">
+                                    <label class="custom-file-label" for="profileImageInput">Choose file</label>
+                                </div>
+                            </div>
+                            <img id="profileImagePreview" src="#" alt="Profilbild Vorschau" style="max-width: 100%; margin-top: 10px; display: none;">
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -426,8 +426,8 @@ $('#saveUserBtn').on('click', function() {
     </div>
 </div>
 
-<!-- Dein JavaScript -->
 <script>
+    // Profilbildvorschau
     document.getElementById('profileImageInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const preview = document.getElementById('profileImagePreview');
@@ -444,55 +444,59 @@ $('#saveUserBtn').on('click', function() {
         }
     });
 
-    // Listener nur für den "Save changes"-Button im Modal
+    // Event Listener für den Save-Button
     document.querySelector('#modal-user-create .btn-primary').addEventListener('click', function() {
-    const formData = new FormData();
-    formData.append('name', document.querySelector('#name').value.trim());
-    formData.append('email', document.querySelector('#email').value.trim());
-    formData.append('umail', document.querySelector('#umail').value.trim());
-    formData.append('kontonummer', document.querySelector('#kontonummer').value.trim());
-    formData.append('nummer', document.querySelector('#nummer').value.trim());
-    formData.append('password', document.querySelector('#password').value.trim());
-    formData.append('confirmPassword', document.querySelector('#confirmPassword').value.trim());
+        const formData = new FormData();
+        formData.append('name', document.querySelector('#name').value.trim());
+        formData.append('email', document.querySelector('#email').value.trim());
+        formData.append('umail', document.querySelector('#umail').value.trim());
+        formData.append('kontonummer', document.querySelector('#kontonummer').value.trim());
+        formData.append('nummer', document.querySelector('#nummer').value.trim());
+        formData.append('password', document.querySelector('#password').value.trim());
+        formData.append('confirmPassword', document.querySelector('#confirmPassword').value.trim());
 
-    const profileImageInput = document.querySelector('#profileImageInput');
-    if (profileImageInput.files[0]) {
-        formData.append('profile_image', profileImageInput.files[0]);
-    }
-
-    // Überprüfung der Pflichtfelder
-    const email = document.querySelector('#email').value.trim();
-    const password = document.querySelector('#password').value.trim();
-    const confirmPassword = document.querySelector('#confirmPassword').value.trim();
-
-    if (!email || !password) {
-        alert('Bitte füllen Sie die erforderlichen Felder aus (Email, Passwort)!');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        alert('Die Passwörter stimmen nicht überein!');
-        return;
-    }
-
-    fetch('include/user_create.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Benutzer erfolgreich erstellt.');
-            location.reload();
-        } else {
-            alert('Fehler: ' + data.message);
+        const profileImageInput = document.querySelector('#profileImageInput');
+        if (profileImageInput.files[0]) {
+            formData.append('profile_image', profileImageInput.files[0]);
         }
-    })
-    .catch(error => {
-        console.error('Fehler:', error);
-        alert('Ein unerwarteter Fehler ist aufgetreten.');
+
+        // Überprüfung der Pflichtfelder
+        const email = document.querySelector('#email').value.trim();
+        const password = document.querySelector('#password').value.trim();
+        const confirmPassword = document.querySelector('#confirmPassword').value.trim();
+
+        if (!email || !password) {
+            alert('Bitte füllen Sie die erforderlichen Felder aus (Email, Passwort)!');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('Die Passwörter stimmen nicht überein!');
+            return;
+        }
+
+        // Debugging: Log FormData
+        console.log('FormData:', formData);
+
+        // Absenden der Formulardaten per Fetch
+        fetch('include/user_create.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Benutzer erfolgreich erstellt.');
+                location.reload(); // Seite neu laden
+            } else {
+                alert('Fehler: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler:', error);
+            alert('Ein unerwarteter Fehler ist aufgetreten.');
+        });
     });
-});
 </script>
 
 <!-- JavaScript Section -->

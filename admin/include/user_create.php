@@ -11,6 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     session_start();
 
+    // Debugging: Überprüfung der empfangenen POST-Daten
+    var_dump($_POST);  // Gibt alle POST-Daten aus
+    var_dump($_FILES);  // Gibt alle hochgeladenen Dateien aus
+
     // Pflichtfelder prüfen
     $email = $_POST['email'] ?? null;
     $password = $_POST['password'] ?? null;

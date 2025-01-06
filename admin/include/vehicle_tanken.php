@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Fahrzeugdaten in der DB aktualisieren
-        $sql_update = "UPDATE vehicles SET fuel_checked = ?, fuel_location = ? WHERE id = ?";
+        $sql_update = "UPDATE vehicles SET license_plate = ?, fuel_checked = ?, fuel_location = ? WHERE id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->execute([$fuel_checked, $fuel_location, $vehicle_id]);
+        $stmt_update->execute([$license_plate, $fuel_checked, $fuel_location, $vehicle_id]);
 
-        // Log-Eintrag für Tanken-Änderung
+        // Log-Eintrag für Fahrzeugänderung
         $changes = [];
         if ($fuel_checked != $old_vehicle['fuel_checked']) {
             $changes[] = "Getankt: " . ($fuel_checked ? 'Ja' : 'Nein');
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if (!empty($changes)) {
-            $action = "Fahrzeug getankt ($license_plate) (" . implode(", ", $changes) . ")";
+            $action = "Fahrzeug bearbeitet ($license_plate) (" . implode(", ", $changes) . ")";
             $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
             $log_stmt = $conn->prepare($log_sql);
             $log_stmt->execute([$vehicle_id, $action, $user_name]);
@@ -50,43 +50,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql_finance = "INSERT INTO finances (typ, kategorie, notiz, betrag, erstellt_von) 
                             VALUES ('Ausgabe', 'Tanken', ?, ?, ?)";
             $stmt_finance = $conn->prepare($sql_finance);
-            $stmt_finance->execute([
-                "Getankt Kennzeichen: $license_plate in $fuel_location",
-                $fuel_amount,
-                $user_name
-            ]);
+            $stmt_finance->execute([ "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name ]);
 
             // Log für Finanztransaktion - Deckel
             $finance_log_sql = "INSERT INTO finances_logs (typ, kategorie, notiz, betrag, erstellt_von, vehicle_id) 
                                 VALUES ('Ausgabe', 'Tanken', ?, ?, ?, ?)";
             $finance_log_stmt = $conn->prepare($finance_log_sql);
-            $finance_log_stmt->execute([
-                "Getankt Kennzeichen: $license_plate in $fuel_location",
-                $fuel_amount,
-                $user_name,
-                $vehicle_id
-            ]);
+            $finance_log_stmt->execute([ "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name, $vehicle_id ]);
         } else {
             // Eintrag in die Finanz-Tabelle (wenn direkt vom Firmenkonto abgegangen)
             $sql_finance = "INSERT INTO finances (typ, kategorie, notiz, betrag, erstellt_von) 
                             VALUES ('Ausgabe', 'Tanken', ?, ?, ?)";
             $stmt_finance = $conn->prepare($sql_finance);
-            $stmt_finance->execute([
-                "Getankt Kennzeichen: $license_plate in $fuel_location",
-                $fuel_amount,
-                $user_name
-            ]);
+            $stmt_finance->execute([ "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name ]);
 
             // Log für Finanztransaktion - Firmenkonto
             $finance_log_sql = "INSERT INTO finances_logs (typ, kategorie, notiz, betrag, erstellt_von, vehicle_id) 
                                 VALUES ('Ausgabe', 'Tanken', ?, ?, ?, ?)";
             $finance_log_stmt = $conn->prepare($finance_log_sql);
-            $finance_log_stmt->execute([
-                "Getankt Kennzeichen: $license_plate in $fuel_location",
-                $fuel_amount,
-                $user_name,
-                $vehicle_id
-            ]);
+            $finance_log_stmt->execute([ "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name, $vehicle_id ]);
         }
 
         // Erfolgreiche Antwort zurückgeben

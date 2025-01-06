@@ -11,7 +11,7 @@ function has_permission($permission) {
 
 try {
     // SQL-Abfrage, um alle Ausrüstungstypen abzurufen
-    $sql = "SELECT id, key_name, display_name, category, description FROM ausruestungstypen";
+    $sql = "SELECT id, key_name, display_name, description, stock FROM ausruestungstypen ORDER BY category";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 

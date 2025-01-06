@@ -129,7 +129,7 @@ try {
     <div class="col-md-6">
         <div class="card" style="width: 100%;">
             <div class="card-header">
-                <h3 class="card-title">Anwesenheit 1</h3>
+                <h3 class="card-title">Anwesenheit</h3>
             </div>
             <div class="card-body p-0">
                 <table class="table table-sm">
@@ -177,7 +177,7 @@ try {
     <div class="col-md-6">
         <div class="card" style="width: 100%;">
             <div class="card-header">
-                <h3 class="card-title">Anwesenheit 2</h3>
+                <h3 class="card-title">Rabatte</h3>
             </div>
             <div class="card-body p-0">
             <table class="table table-sm">

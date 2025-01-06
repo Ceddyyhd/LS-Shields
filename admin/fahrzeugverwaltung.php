@@ -410,29 +410,6 @@ $(document).ready(function() {
     }
 
     $(document).ready(function() {
-    // Wenn der Tanken-Button geklickt wird
-    $('.edit-button').on('click', function() {
-        var vehicleId = $(this).data('vehicle-id');
-
-        // Fahrzeugdaten laden
-        $.ajax({
-            url: 'include/vehicle_fetch.php',
-            method: 'GET',
-            data: { vehicle_id: vehicleId },
-            success: function(response) {
-                var vehicle = JSON.parse(response);
-                
-                // Werte in die Formularfelder einfügen
-                $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen
-                $('#edit-fuel-location').val(vehicle.fuel_location);  // Tank-Ort (optional)
-                $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID
-
-                // Zeige das Tanken-Modal
-                $('#vehicle-tanken').modal('show');
-            }
-        });
-    });
-
     // Beim Absenden des Tanken-Formulars
     $('#tankenForm').submit(function(event) {
         event.preventDefault();  // Verhindert das Standard-Formular-Absenden

@@ -239,38 +239,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     });
     function openHistoryModal(ausruestungId) {
-    $.ajax({
-        url: 'include/fetch_ausruestung_history.php',
-        type: 'GET',
-        data: { id: ausruestungId },
-        dataType: 'json',
-        success: function(data) {
+        console.log("openHistoryModal aufgerufen mit id:", ausruestungId);
+
+        $.ajax({
+          url: "include/fetch_ausruestung_history.php", // URL für das Abrufen der Historie
+          type: "GET",
+          data: { id: ausruestungId },
+          dataType: "json",
+          success: function (data) {
+            console.log("Historie geladen:", data); // Debugging
+
             if (data && data.length > 0) {
-                const historyTableBody = $('#historyTable tbody');
-                historyTableBody.empty();
+              const historyTableBody = $("#historyTable tbody");
+              historyTableBody.empty(); // Leert den vorhandenen Inhalt
 
-                data.forEach(function(historyEntry) {
-                    historyTableBody.append(`
-                        <tr>
-                            <td>${historyEntry.timestamp}</td>
-                            <td>${historyEntry.action}</td>
-                            <td>${historyEntry.stock_change}</td>
-                            <td>${historyEntry.editor_name}</td>
-                        </tr>
-                    `);
-                });
+              // Historie in die Tabelle einfügen
+              data.forEach(function (historyEntry) {
+                historyTableBody.append(`
+                  <tr>
+                    <td>${historyEntry.timestamp}</td>
+                    <td>${historyEntry.action}</td>
+                    <td>${historyEntry.stock_change}</td>
+                    <td>${historyEntry.editor_name}</td>
+                  </tr>
+                `);
+              });
 
-                $('#modal-history').modal('show');
+              // Zeige das Modal mit der Historie an
+              $("#modal-history").modal("show");
             } else {
-                alert('Keine Historie für diesen Ausrüstungstyp gefunden.');
+              alert("Keine Historie für diesen Ausrüstungstyp gefunden.");
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Historie:', error);
-            alert('Fehler beim Abrufen der Historie.');
-        }
-    });
-  }
+          },
+          error: function (xhr, status, error) {
+            console.error("Fehler beim Abrufen der Historie:", error);
+            alert("Fehler beim Abrufen der Historie.");
+          },
+        });
+      }
     // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
     $.ajax({
         url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien

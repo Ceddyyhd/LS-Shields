@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($anfrage) {
             // Anfrage in die Tabelle 'eventplanung' verschieben
             $stmt = $conn->prepare("INSERT INTO eventplanung (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status)
-                                    VALUES (:vorname_nachname, :telefonnummer, :anfrage, NOW()), 'in Planung')");
+                                    VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Planung')");
             $stmt->execute([
                 ':vorname_nachname' => $anfrage['vorname_nachname'],
                 ':telefonnummer' => $anfrage['telefonnummer'],

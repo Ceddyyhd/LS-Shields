@@ -1079,50 +1079,6 @@ foreach ($categories as $category => $items) {
 </div>
 <button type="button" id="saveAusruestungButton" class="btn btn-primary">Ausruestung Speichern</button>
 
-<?php 
-// Benutzername für das Log sicherstellen
-$editor_name = $_SESSION['user_name'] ?? 'Unbekannt';  // Standardwert 'Unbekannt' falls nicht gesetzt
-
-// Debugging-Ausgabe: Wenn editor_name leer ist, wird 'Unbekannt' genutzt
-if (empty($editor_name)) {
-    echo "Editor Name war leer, daher wird 'Unbekannt' verwendet.<br>";
-}
-?>
-<script>
-    $(document).ready(function () {
-        $("#saveAusruestungButton").on("click", function () {
-            var ausruestungStatus = {};
-            $(".form-check-input").each(function () {
-                var keyName = $(this).attr('name');
-                if (keyName && $(this).prop('checked') !== undefined) {
-                    ausruestungStatus[keyName] = $(this).prop('checked') ? 1 : 0;
-                }
-            });
-
-            var formData = {
-                user_id: '<?= $user_id; ?>',
-                ausruestung: JSON.stringify(ausruestungStatus)
-            };
-
-            $.ajax({
-                url: "include/save_ausruestung.php",
-                type: "POST",
-                data: formData,
-                success: function (response) {
-                    if (response.success) {
-                        alert("Änderungen gespeichert.");
-                        location.reload();
-                    } else {
-                        alert("Fehler: " + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    alert("Fehler: " + error);
-                },
-            });
-        });
-    });
-</script>
 
 
 

@@ -177,6 +177,7 @@
                 <form id="tankenForm"> <!-- Spezielles Formular für Tanken -->
                     <div class="form-group">
                         <label>Kennzeichen</label>
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ...">
                         <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..." disabled>
                         </div>
 

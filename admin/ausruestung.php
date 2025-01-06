@@ -189,9 +189,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
-
-<!-- JavaScript für den gesamten Code -->
 <script>
+<!-- JavaScript für den gesamten Code -->
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
     $.ajax({
@@ -213,7 +212,7 @@ $(document).ready(function() {
                         <td>
                             ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
-                            <button class="btn btn-outline-info" onclick="openHistoryModal(${ausruestung.id})">Historie</button>
+                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>
                     </tr>
                 `);
@@ -224,7 +223,7 @@ $(document).ready(function() {
         }
     });
 
-    // Historie öffnen
+    // Funktion zum Öffnen des Historien-Modals
     function openHistoryModal(ausruestungId) {
         $.ajax({
             url: 'include/fetch_ausruestung_history.php',
@@ -254,7 +253,13 @@ $(document).ready(function() {
         });
     }
 
-    // Beim Speichern von Ausrüstungen
+    // Event-Listener für den Historien-Button
+    $(document).on('click', '.history-button', function() {
+        const ausruestungId = $(this).data('id');  // Hole die ID aus dem Button-Attribut
+        openHistoryModal(ausruestungId);  // Rufe die openHistoryModal Funktion auf
+    });
+
+    // Weitere Funktionen (Speichern, Bearbeiten, Löschen etc.)
     $('#saveAusruestung').click(function() {
         const formData = new FormData(document.getElementById('createAusruestungForm'));
 
@@ -312,6 +317,7 @@ $(document).ready(function() {
     }
 });
 </script>
+
 
 
 

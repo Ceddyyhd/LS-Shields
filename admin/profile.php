@@ -1063,27 +1063,36 @@ $notizen = $data['notizen'];
 </form>
 <script>
     document.getElementById('saveAusruestungButton').addEventListener('click', function() {
-        // Formulardaten sammeln
-        var formData = new FormData(document.getElementById('ausruestungForm'));
+    // Formulardaten sammeln
+    var formData = new FormData(document.getElementById('ausruestungForm'));
 
-        // AJAX-Anfrage starten
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'include/save_ausruestung.php', true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                // Erfolgreiche Antwort vom Server
+    // AJAX-Anfrage starten
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'include/save_ausruestung.php', true);
+
+    // Response-Handler definieren
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                // Antwort parsen
                 var response = JSON.parse(xhr.responseText);
                 if (response.success) {
                     alert('Änderungen wurden erfolgreich gespeichert!');
                 } else {
                     alert('Fehler beim Speichern: ' + response.message);
                 }
-            } else {
-                alert('Ein Fehler ist aufgetreten: ' + xhr.status);
+            } catch (e) {
+                alert('Fehler beim Parsen der Antwort!');
+                console.error(e);
             }
-        };
-        xhr.send(formData);
-    });
+        } else {
+            alert('Fehler beim Speichern: ' + xhr.status);
+        }
+    };
+
+    // Anfrage absenden
+    xhr.send(formData);
+});
 </script>
 
 

@@ -21,6 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Benutzername für das Log
+        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $editor_name = $user ? $user['name'] : 'Unbekannt'; // Falls keine Daten vorhanden sind
+
         // Bestandsänderungen und Historie
         foreach ($ausruestung as $key_name => $status) {
             // Bestandsänderung um 1 je nachdem, ob die Checkbox aktiviert oder deaktiviert wird
@@ -45,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':key_name' => $key_name,
                 ':action' => ($status == 1 ? 'Ausgegeben' : 'Zurückgegeben'),
                 ':stock_change' => ($status == 1 ? -1 : 1),
-                ':editor_name' => $_SESSION['user_name'] // Verwende den Benutzernamen des Editors
+                ':editor_name' => $editor_name
             ]);
         }
 
@@ -78,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 VALUES (:user_id, :editor_name, :action)");
         $stmt->execute([
             ':user_id' => $user_id,
-            ':editor_name' => $_SESSION['user_name'], // Verwende den Benutzernamen des Editors
+            ':editor_name' => $editor_name,
             ':action' => 'Änderungen gespeichert'
         ]);
 

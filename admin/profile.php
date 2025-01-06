@@ -1007,6 +1007,7 @@ $("#noteForm").on("submit", function (e) {
         <?php
 // Berechtigungsprüfung
 $canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
+$editor_name = $_SESSION['user_name'] ?? 'Unbekannt'; // Fallback-Wert, falls 'user_name' nicht existiert
 
 // Ausrüstungstypen und Benutzer-Ausrüstung abrufen
 $stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");

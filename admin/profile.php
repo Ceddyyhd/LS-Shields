@@ -1002,7 +1002,7 @@ $("#noteForm").on("submit", function (e) {
 
                   <!-- Ausrüstung -->
                   <div class="tab-pane" id="ausruestung">
-                  <form id="ausruestungForm">
+    <form id="ausruestungForm">
     <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
     <?php
     // Berechtigungsprüfung
@@ -1082,6 +1082,7 @@ $("#noteForm").on("submit", function (e) {
         });
     });
 });
+
 </script>
                 </div>
               </div>

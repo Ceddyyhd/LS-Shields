@@ -61,65 +61,44 @@ try {
             exit;
         }
 
-        if ($existing) {
-            // Wenn der Status geändert wurde, dann update
-            if ($existing['status'] != $status) {
-                // Status in der Tabelle benutzer_ausruestung aktualisieren
-                $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = :status WHERE user_id = :user_id AND key_name = :key_name");
-                $stmt->execute([':status' => $status, ':user_id' => $user_id, ':key_name' => $key_name]);
+        // Wenn der Artikel zurückgegeben wird (Status 0)
+        if ($status == 0) {
+            if ($existing && $existing['status'] == 1) {
+                // Bestands-Update und History-Eintrag, wenn Artikel zurückgegeben wird
+                $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 0 WHERE user_id = :user_id AND key_name = :key_name");
+                $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
 
-                // Bestimme die Aktion (Hinzufügung oder Zurückgabe)
-                $action = ($status == 1) ? 'Hinzufügung' : 'Zurückgabe';
-                $stock_change = ($status == 1) ? -1 : 1; // Bestand ändern: -1, wenn entfernt, +1, wenn hinzugefügt
+                // Bestands-Update in der Tabelle ausruestungstypen (Stock erhöhen)
+                $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock + 1 WHERE key_name = :key_name");
+                $stmt->execute([':key_name' => $key_name]);
 
-                // Füge eine neue Zeile in die History-Tabelle hinzu
-                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+                // History-Eintrag
+                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
                 $stmt->execute([
                     ':user_id' => $user_id,
                     ':key_name' => $key_name,
-                    ':action' => $action,
-                    ':stock_change' => $stock_change,
                     ':editor_name' => $user_name
                 ]);
             }
-        } else {
-            // Füge neuen Eintrag in die Tabelle hinzu, wenn noch nicht vorhanden
-            $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) VALUES (:user_id, :key_name, :status)");
-            $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':status' => $status]);
+        } elseif ($status == 1) {
+            // Wenn der Artikel ausgegeben wird (Status 1)
+            if ($existing) {
+                // Artikel ist bereits da, also den Bestand reduzieren
+                $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 1 WHERE user_id = :user_id AND key_name = :key_name");
+                $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
 
-            // Bestimme die Aktion (Hinzufügung)
-            $action = 'Hinzufügung';
-            $stock_change = -1; // Bestand reduzieren, weil ein neues Item hinzugefügt wird
+                // Bestands-Update in der Tabelle ausruestungstypen (Stock verringern)
+                $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock - 1 WHERE key_name = :key_name");
+                $stmt->execute([':key_name' => $key_name]);
 
-            // Füge auch hier die Änderung in die History-Tabelle hinzu
-            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':key_name' => $key_name,
-                ':action' => $action,
-                ':stock_change' => $stock_change,
-                ':editor_name' => $user_name
-            ]);
-        }
-
-        // Wenn der Artikel hinzugefügt wurde, reduziere den Bestand
-        if ($status == 1 && $existing['status'] == 0) {
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
-            $stmt->execute([':stock' => $stock - 1, ':key_name' => $key_name]);
-        }
-
-        // Wenn der Artikel zurückgegeben wurde, erhöhe den Bestand und logge in History
-        if ($status == 0 && $existing['status'] == 1) {
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
-            $stmt->execute([':stock' => $stock + 1, ':key_name' => $key_name]);
-
-            // History-Eintrag für zurückgegebene Ausrüstung
-            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':key_name' => $key_name,
-                ':editor_name' => $user_name
-            ]);
+                // History-Eintrag
+                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Hinzufügung', -1, :editor_name)");
+                $stmt->execute([
+                    ':user_id' => $user_id,
+                    ':key_name' => $key_name,
+                    ':editor_name' => $user_name
+                ]);
+            }
         }
     }
 

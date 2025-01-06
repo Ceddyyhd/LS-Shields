@@ -115,7 +115,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             <div class="info">
             <?php  $user_id1 = $_SESSION['user_id']; ?>
-                <a href="profile.php?=id<?php echo htmlspecialchars($user_id1); ?>" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
+                <a href="profile.php?=<?php echo htmlspecialchars($user_id1); ?>" class="d-block"><?php echo htmlspecialchars($user_name); ?></a>
             </div>
         </div>
 

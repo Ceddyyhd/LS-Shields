@@ -12,8 +12,8 @@ try {
     session_start();
 
     // Debugging: Überprüfung der empfangenen POST-Daten
-    var_dump($_POST);  // Gibt alle POST-Daten aus
-    var_dump($_FILES);  // Gibt alle hochgeladenen Dateien aus
+    error_log(print_r($_POST, true)); // Gibt alle POST-Daten ins Log aus
+    error_log(print_r($_FILES, true)); // Gibt alle Dateien ins Log aus
 
     // Pflichtfelder prüfen
     $email = $_POST['email'] ?? null;
@@ -75,7 +75,9 @@ try {
         $logStmt->execute([$createdById, $createdByName, $newUserId]);
     }
 
+    // Erfolgreiche Antwort im JSON-Format
     echo json_encode(['success' => true, 'message' => 'Benutzer erfolgreich erstellt.']);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    // Fehlerbehandlung: Wenn eine Ausnahme auftritt, Fehlernachricht als JSON zurückgeben
+    echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
 }

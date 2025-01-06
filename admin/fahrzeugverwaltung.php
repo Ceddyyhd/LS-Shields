@@ -173,35 +173,34 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editVehicleForm">
-                    <div class="form-group">
-                        <label>Kennzeichen</label>
-                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
-                            <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
+            <form id="editVehicleForm">
+                <div class="form-group">
+                    <label>Kennzeichen</label>
+                    <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..." disabled>
+                </div>
+                <div class="form-group">
+                    <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
+                    <div class="form-check">
+                        <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked">
+                        <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
                     </div>
-                    <div class="form-group">
-                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
-                        <div class="form-check">
-                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked"
-                                <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
-                        </div>
-                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?"
-                            <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
-                    </div>
+                    <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?">
+                    <input type="number" id="edit-fuel-amount" name="fuel_amount" class="form-control mt-2" placeholder="Betrag in EUR">
+                </div>
 
-                    <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
+                <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
+                <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
 
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                    <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
-                </form>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
             </div>
         </div>
     </div>
 </div>
+
 
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">
@@ -407,6 +406,37 @@ $(document).ready(function() {
             }
         });
     }
+
+    $(document).ready(function() {
+    // Beim Absenden des Formulars (Tanken) im Modal
+    $('#editVehicleForm').submit(function(event) {
+        event.preventDefault();  // Verhindert das Standard-Formular-Absenden
+
+        // Formulardaten sammeln
+        const formData = $(this).serialize();  // Sammelt die Daten des Formulars
+
+        // AJAX-Anfrage an vehicle_tanken.php
+        $.ajax({
+            url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
+            type: 'POST',
+            data: formData,
+            dataType: 'json',  // Erwartet eine JSON-Antwort
+            success: function(response) {
+                if (response.success) {
+                    alert('Fahrzeugdaten und Tanken-Daten erfolgreich aktualisiert.');
+                    $('#vehicle-tanken').modal('hide');  // Modal schließen
+                    location.reload();  // Seite neu laden, um die Änderungen zu sehen
+                } else {
+                    alert('Fehler: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Fehler beim Absenden der Anfrage.');
+            }
+        });
+    });
+});
+
 
     // Pagination-Links aktualisieren
     function updatePagination() {

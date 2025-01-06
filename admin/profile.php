@@ -208,6 +208,34 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <button class="btn btn-success" id="presentButton" data-user-id="<?= $user['id']; ?>">Anwesend</button>
                 <button class="btn btn-danger" id="absentButton" data-user-id="<?= $user['id']; ?>">Abwesend</button>
             </div>
+            <script>
+                $(document).ready(function() {
+    $('#presentButton').click(function() {
+        var userId = $(this).data('user-id');
+        $.ajax({
+            url: 'include/attendance.php',
+            type: 'POST',
+            data: { user_id: userId, status: 'present' },
+            success: function(response) {
+                alert(response.message);
+            }
+        });
+    });
+
+    $('#absentButton').click(function() {
+        var userId = $(this).data('user-id');
+        $.ajax({
+            url: 'include/attendance.php',
+            type: 'POST',
+            data: { user_id: userId, status: 'absent' },
+            success: function(response) {
+                alert(response.message);
+            }
+        });
+    });
+});
+
+            </script>
               </div>
             </div>
           <!-- About Me Box -->

@@ -1061,22 +1061,6 @@ $notizen = $data['notizen'];
     </div>
     <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
 </form>
-    <!-- Letzte Spind Kontrolle -->
-<div class="form-group">
-    <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-    <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
-           value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
-</div>
-
-<!-- Notiz -->
-<div class="form-group">
-    <label for="notiz">Notiz</label>
-    <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
-</div>
-<button type="button" id="saveAusruestungButton" class="btn btn-primary">Ausruestung Speichern</button>
-
-
-
 <script>
     document.getElementById('saveAusruestungButton').addEventListener('click', function() {
         // Formulardaten sammeln

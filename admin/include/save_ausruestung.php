@@ -8,8 +8,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
 
+    // Debugging: Ausgabe der 'ausruestung' Daten aus POST
+    var_dump($_POST['ausruestung']);  // Zeigt, was im POST-Request gesendet wird
+
     // Das JSON-Feld ausruestung dekodieren
-    $ausruestung = isset($_POST['ausruestung']) ? json_decode($_POST['ausruestung'], true) : [];
+    if (isset($_POST['ausruestung'])) {
+        $ausruestung = json_decode($_POST['ausruestung'], true);  // Dekodierung des JSON
+        
+        // Überprüfen, ob die Dekodierung erfolgreich war
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(['success' => false, 'message' => 'Ungültiges JSON: ' . json_last_error_msg()]);
+            exit;
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Fehlende Ausrüstungsdaten']);
+        exit;
+    }
+
+    // Nun sicherstellen, dass es ein Array ist
+    if (!is_array($ausruestung)) {
+        echo json_encode(['success' => false, 'message' => 'Ausruestung ist kein Array']);
+        exit;
+    }
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {

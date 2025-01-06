@@ -1078,35 +1078,38 @@ foreach ($categories as $category => $items) {
 </div>
 
 <script>
+    $(document).ready(function () {
     $("#saveButton").on("click", function () {
-    var formData = $("#ausruestungForm").serialize();
+        var formData = $("#ausruestungForm").serializeArray();
+        var ausruestungStatus = {}; // Objekt zum Speichern des Status für jede Ausrüstung
 
-    // Zusätzliche Felder
-    var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
-    var notiz = $('#notiz').val();
+        // Durch die Checkboxen iterieren und den Status sammeln
+        $(".form-check-input").each(function () {
+            ausruestungStatus[$(this).attr('id')] = $(this).prop('checked') ? 1 : 0;
+        });
 
-    console.log('Letzte Spind Kontrolle:', letzteSpindKontrolle);  // Überprüfe den Wert von letzteSpindKontrolle
-    console.log('Notiz:', notiz);  // Überprüfe den Wert von notiz
+        // Zusätzliche Felder
+        var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
+        var notiz = $('#notiz').val();
 
-    // Füge Felder zu formData hinzu
-    formData += '&letzte_spind_kontrolle=' + encodeURIComponent(letzteSpindKontrolle);
-    formData += '&notiz=' + encodeURIComponent(notiz);
+        formData.push({ name: 'ausruestung', value: JSON.stringify(ausruestungStatus) }); // Füge die Ausrüstungsdaten hinzu
 
-    $.ajax({
-        url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
-        type: "POST",
-        data: formData,
-        success: function (response) {
-            if (response.success) {
-                alert("Änderungen gespeichert.");
-                location.reload();  // Seite neu laden, um Änderungen anzuzeigen
-            } else {
-                alert("Fehler: " + response.message);
-            }
-        },
-        error: function (xhr, status, error) {
-            alert("Fehler: " + error);
-        },
+        $.ajax({
+            url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+                    alert("Änderungen gespeichert.");
+                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+                } else {
+                    alert("Fehler: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Fehler: " + error);
+            },
+        });
     });
 });
 </script>

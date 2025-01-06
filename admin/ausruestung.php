@@ -159,6 +159,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 
+<!-- Modal für die Historie -->
+<div class="modal fade" id="modal-history">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Bestandshistorie</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Aktion</th>
+                            <th>Bestand Veränderung</th>
+                            <th>Bearbeiter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Historie wird hier dynamisch geladen -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Dein JavaScript -->
@@ -230,35 +261,82 @@ $(document).on('click', '.btn-outline-secondary', function() {
     
     // AJAX-Anfrage, um die Daten des Ausrüstungstyps abzurufen
     $.ajax({
-        url: 'include/fetch_ausruestungstypen.php',
+        url: 'include/fetch_ausruestungstypen.php', // URL für das Abrufen der Daten
         type: 'GET',
-        data: { id: id },
         dataType: 'json',
         success: function(data) {
+            console.log('Daten erhalten:', data); // Logge die erhaltenen Daten in der Konsole
             if (data && data.length > 0) {
-                const ausruestung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+                // Wenn Daten vorhanden sind, befülle die Tabelle
+                const tableBody = $('#example1 tbody'); // Beispiel: ID der Tabelle, in der die Daten angezeigt werden
+                tableBody.empty(); // Leere das Tabellenbody, bevor neue Daten hinzugefügt werden
 
-                // Setze die Modal-Felder mit den Daten des Ausrüstungstyps
-                $('#edit_id').val(ausruestung.id); // ID in hidden input
-                $('#edit_key_name').val(ausruestung.key_name); // Key Name
-                $('#edit_display_name').val(ausruestung.display_name); // Display Name
-                $('#edit_description').val(ausruestung.description); // Beschreibung
-                
-                // Setze die Kategorie im Bearbeitungsmodal
-                $('#edit_category').val(ausruestung.category); // Setze die Kategorie im Dropdown
-                
-                // Zeige das Bearbeitungsmodal an
-                $('#modal-ausruestung-edit').modal('show');
+                // Daten durchlaufen und in die Tabelle einfügen
+                data.forEach(function(ausruestung) {
+                    tableBody.append(`
+                        <tr>
+                            <td>${ausruestung.id}</td>
+                            <td>${ausruestung.key_name}</td>
+                            <td>${ausruestung.display_name}</td>
+                            <td>${ausruestung.description}</td>
+                            <td>${ausruestung.stock}</td> <!-- Bestand hinzufügen -->
+                            <td>
+                              <!-- Bearbeiten-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
+                              ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '">Bearbeiten</button>' : ''}
+                              <!-- Löschen-Button nur anzeigen, wenn die Berechtigung vorhanden ist -->
+                              ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
+                              <!-- Button für Historie anzeigen -->
+                              <button class="btn btn-outline-info" onclick="openHistoryModal(${ausruestung.id})">Historie</button>
+                            </td>
+                        </tr>
+                    `);
+                });
             } else {
-                alert('Daten konnten nicht geladen werden.');
+                alert('Keine Ausrüstungstypen gefunden.');
             }
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error);
+            console.error('Fehler beim Abrufen der Ausrüstungstypen:', error); // Fehlerlog
             alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
     });
 });
+
+function openHistoryModal(ausruestungId) {
+    $.ajax({
+        url: 'include/fetch_ausruestung_history.php', // URL, um die Historie zu laden
+        type: 'GET',
+        data: { id: ausruestungId },
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                // Füllen Sie das Modal mit der Historie
+                const historyTableBody = $('#historyTable tbody');
+                historyTableBody.empty();
+
+                data.forEach(function(historyEntry) {
+                    historyTableBody.append(`
+                        <tr>
+                            <td>${historyEntry.timestamp}</td>
+                            <td>${historyEntry.action}</td>
+                            <td>${historyEntry.stock_change}</td>
+                            <td>${historyEntry.editor_name}</td>
+                        </tr>
+                    `);
+                });
+
+                // Zeige das Historie Modal
+                $('#modal-history').modal('show');
+            } else {
+                alert('Keine Historie für diesen Ausrüstungstyp gefunden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Historie:', error);
+            alert('Fehler beim Abrufen der Historie.');
+        }
+    });
+}
 // Wenn der "Speichern"-Button im Erstell Modal geklickt wird
 $('#saveAusruestung').click(function() {
         const formData = new FormData(document.getElementById('createAusruestungForm'));

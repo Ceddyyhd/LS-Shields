@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
+    $ausruestung = $_POST['ausruestung'] ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -18,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Benutzer-ID fehlt.']);
         exit;
     }
-
-    
 
     try {
         // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
@@ -63,6 +62,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':editor_name' => $editor_name,
             ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
         ]);
+
+        // Bestandsänderungen und Historie
+        foreach ($ausruestung as $key_name => $status) {
+            // Bestandsänderung um 1 je nachdem, ob die Checkbox aktiviert oder deaktiviert wird
+            $stmt = $conn->prepare("SELECT * FROM ausruestungstypen WHERE key_name = :key_name");
+            $stmt->execute([':key_name' => $key_name]);
+            $ausruestungItem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $new_stock = $ausruestungItem['stock'] + ($status == 1 ? -1 : 1); // Bestand anpassen
+
+            // Bestandsänderung speichern
+            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
+            $stmt->execute([
+                ':stock' => $new_stock,
+                ':key_name' => $key_name
+            ]);
+
+            // Historie der Bestandsänderung speichern
+            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
+                                    VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':key_name' => $key_name,
+                ':action' => ($status == 1 ? 'Ausgegeben' : 'Zurückgegeben'),
+                ':stock_change' => ($status == 1 ? -1 : 1),
+                ':editor_name' => $editor_name
+            ]);
+        }
 
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {

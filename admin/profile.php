@@ -1116,8 +1116,8 @@ foreach ($categories as $category => $items) {
         });
     });
 });
-
 </script>
+
                 </div>
               </div>
             </div>

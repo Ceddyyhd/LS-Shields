@@ -3,11 +3,11 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Benutzerdaten entweder aus POST oder URL holen
+    // Benutzerdaten aus POST holen
     $user_id = $_POST['user_id'] ?? $_GET['id'] ?? null;
     $letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
     $notiz = $_POST['notiz'] ?? null;
-    $ausruestung = json_decode($_POST['ausruestung'], true); // JSON-Daten in ein Array umwandeln
+    $ausruestung = $_POST['ausruestung'] ?? []; // Liste der Ausrüstungen mit ihrem Status (0 oder 1)
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['edit_employee'] ?? false)) {
@@ -21,46 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
+        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
+
         // Benutzername für das Log
         $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $editor_name = $user ? $user['name'] : 'Unbekannt'; // Falls keine Daten vorhanden sind
+        $editor_name = $user['name'] ?? 'Unbekannt';
 
-        // Bestandsänderungen und Historie
-        foreach ($ausruestung as $key_name => $status) {
-            // Bestandsänderung um 1 je nachdem, ob die Checkbox aktiviert oder deaktiviert wird
-            $stmt = $conn->prepare("SELECT * FROM ausruestungstypen WHERE key_name = :key_name");
-            $stmt->execute([':key_name' => $key_name]);
-            $ausruestungItem = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            $new_stock = $ausruestungItem['stock'] + ($status == 1 ? -1 : 1); // Bestand anpassen
-
-            // Bestandsänderung speichern
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
-            $stmt->execute([
-                ':stock' => $new_stock,
-                ':key_name' => $key_name
-            ]);
-
-            // Historie der Bestandsänderung speichern
-            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
-                                    VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':key_name' => $key_name,
-                ':action' => ($status == 1 ? 'Ausgegeben' : 'Zurückgegeben'),
-                ':stock_change' => ($status == 1 ? -1 : 1),
-                ':editor_name' => $editor_name
-            ]);
-        }
-
-        // Spindkontrolle und Notizen speichern
-        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
-
+        // Wenn der Eintrag bereits existiert, aktualisieren
         if ($existingEntry) {
             $stmt = $conn->prepare("UPDATE spind_kontrolle_notizen 
                                     SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
@@ -71,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':user_id' => $user_id
             ]);
         } else {
+            // Neuen Eintrag in die Tabelle einfügen
             $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
                                     VALUES (:user_id, :letzte_spind_kontrolle, :notizen)");
             $stmt->execute([
@@ -86,8 +60,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([
             ':user_id' => $user_id,
             ':editor_name' => $editor_name,
-            ':action' => 'Änderungen gespeichert'
+            ':action' => $existingEntry ? 'Aktualisiert' : 'Erstellt'
         ]);
+
+        // Bestandsänderungen und Historie nur für geänderte Ausrüstungen speichern
+        foreach ($ausruestung as $key_name => $status) {
+            // Überprüfen, ob der Status der Ausrüstung geändert wurde
+            if ($status == 1 || $status == 0) {
+                $stmt = $conn->prepare("SELECT * FROM ausruestungstypen WHERE key_name = :key_name");
+                $stmt->execute([':key_name' => $key_name]);
+                $ausruestungItem = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($ausruestungItem) {
+                    $new_stock = $ausruestungItem['stock'] + ($status == 1 ? -1 : 1); // Bestandsänderung
+
+                    // Bestandsänderung speichern
+                    $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
+                    $stmt->execute([
+                        ':stock' => $new_stock,
+                        ':key_name' => $key_name
+                    ]);
+
+                    // Historie der Bestandsänderung speichern
+                    $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
+                                            VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+                    $stmt->execute([
+                        ':user_id' => $user_id,
+                        ':key_name' => $key_name,
+                        ':action' => ($status == 1 ? 'Ausgegeben' : 'Zurückgegeben'),
+                        ':stock_change' => ($status == 1 ? -1 : 1),
+                        ':editor_name' => $editor_name
+                    ]);
+                }
+            }
+        }
 
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {

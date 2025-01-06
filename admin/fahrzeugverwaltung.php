@@ -317,9 +317,7 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // Wenn der Tanken-Button geklickt wird
-    $('.edit-button').on('click', function() {
+$('.edit-button').on('click', function() {
         var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
 
         // Fahrzeugdaten laden
@@ -491,6 +489,8 @@ $(document).ready(function() {
     loadVehicleLogs(currentPage);
 });
 });
+
+
 </script>
 </body>
 </html>

@@ -204,6 +204,23 @@ echo "<option value='{$user['id']}' {$selected}>{$user['name']}</option>";
 ?>
 </select>
 </div>
+
+<div class="form-group">
+    <label>Status</label>
+    <select class="form-control" name="status" id="status">
+        <?php
+        // Angenommene Variable $event['status'] enthält den aktuellen Status des Events
+        $statusOptions = ['in Planung', 'Abgeschlossen', 'Gelöscht'];
+
+        // Durch die Status-Optionen iterieren und den Status als ausgewählt markieren
+        foreach ($statusOptions as $status) {
+            $selected = ($status == $event['status']) ? 'selected' : '';  // Vergleiche mit dem aktuellen Event-Status
+            echo "<option value='{$status}' {$selected}>{$status}</option>";
+        }
+        ?>
+    </select>
+</div>
+
 <div class="form-group">
 <label>Event</label>
 <input type="text" class="form-control" name="event" id="event" value="<?= htmlspecialchars($event['event']); ?>">

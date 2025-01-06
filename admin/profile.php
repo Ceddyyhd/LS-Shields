@@ -112,9 +112,11 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
                 <p class="text-muted text-center">
     <?php echo htmlspecialchars($user['role_name']); ?>
+    <?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>
+    <?php else: ?>
 </p>
 
 <div class="modal fade" id="rang-bearbeiten">

@@ -1085,14 +1085,17 @@ foreach ($categories as $category => $items) {
 
         // Durch die Checkboxen iterieren und den Status sammeln
         $(".form-check-input").each(function () {
-            ausruestungStatus[$(this).attr('id')] = $(this).prop('checked') ? 1 : 0;
+            ausruestungStatus[$(this).attr('name')] = $(this).prop('checked') ? 1 : 0;
         });
 
-        // Zusätzliche Felder
+        // Zusätzliche Felder wie letzte Spind Kontrolle und Notiz hinzufügen
         var letzteSpindKontrolle = $('#letzteSpindKontrolle').val();
         var notiz = $('#notiz').val();
 
-        formData.push({ name: 'ausruestung', value: JSON.stringify(ausruestungStatus) }); // Füge die Ausrüstungsdaten hinzu
+        // Füge die Ausrüstungsdaten (Status) zu formData hinzu
+        formData.push({ name: 'ausruestung', value: JSON.stringify(ausruestungStatus) });
+        formData.push({ name: 'letzte_spind_kontrolle', value: letzteSpindKontrolle });
+        formData.push({ name: 'notiz', value: notiz });
 
         $.ajax({
             url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
@@ -1112,6 +1115,7 @@ foreach ($categories as $category => $items) {
         });
     });
 });
+
 </script>
                 </div>
               </div>

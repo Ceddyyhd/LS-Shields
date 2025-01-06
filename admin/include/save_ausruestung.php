@@ -41,18 +41,38 @@ try {
                 $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = :status WHERE user_id = :user_id AND key_name = :key_name");
                 $stmt->execute([':status' => $status, ':user_id' => $user_id, ':key_name' => $key_name]);
 
+                // Bestimme die Aktion (Hinzufügen oder Entfernen)
+                $action = ($status == 1) ? 'Hinzufügung' : 'Entfernung';
+                $stock_change = ($status == 1) ? -1 : 1; // Bestand ändern: -1, wenn entfernt, +1, wenn hinzugefügt
+
                 // Füge eine neue Zeile in die History-Tabelle hinzu
-                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, old_status, new_status, changed_by) VALUES (:user_id, :key_name, :old_status, :new_status, :changed_by)");
-                $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':old_status' => $existing['status'], ':new_status' => $status, ':changed_by' => $user_name ]);
+                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+                $stmt->execute([
+                    ':user_id' => $user_id,
+                    ':key_name' => $key_name,
+                    ':action' => $action,
+                    ':stock_change' => $stock_change,
+                    ':editor_name' => $user_name
+                ]);
             }
         } else {
             // Füge neuen Eintrag in die Tabelle hinzu, wenn noch nicht vorhanden
             $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) VALUES (:user_id, :key_name, :status)");
             $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':status' => $status]);
 
+            // Bestimme die Aktion (Hinzufügen)
+            $action = 'Hinzufügung';
+            $stock_change = -1; // Bestand reduzieren, weil ein neues Item hinzugefügt wird
+
             // Füge auch hier die Änderung in die History-Tabelle hinzu
-            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, old_status, new_status, changed_by) VALUES (:user_id, :key_name, 0, :new_status, :changed_by)");
-            $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':new_status' => $status, ':changed_by' => $user_name ]);
+            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':key_name' => $key_name,
+                ':action' => $action,
+                ':stock_change' => $stock_change,
+                ':editor_name' => $user_name
+            ]);
         }
 
         // Aktualisiere den 'stock' in der Tabelle 'ausruestungstypen'

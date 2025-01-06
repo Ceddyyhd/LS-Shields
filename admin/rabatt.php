@@ -83,13 +83,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-
-<!-- Modal zum Bearbeiten einer Ankündigung -->
+<!-- Modal zum Bearbeiten eines Rabatts -->
 <div class="modal fade" id="modal-rabatt-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Ankündigung Bearbeiten</h4>
+                <h4 class="modal-title">Rabatt Bearbeiten</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -111,7 +110,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_rabatt_percent">Rabatt in %</label>
                         <input type="number" class="form-control" id="edit_rabatt_percent" name="rabatt_percent" placeholder="Rabatt in % eingeben">
                     </div>
-                    <!-- ID der Ankündigung -->
+                    <!-- ID des Rabatts -->
                     <input type="hidden" id="edit_id" name="id">
                 </form>
             </div>
@@ -123,16 +122,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-
-
-<!-- Tabelle zur Anzeige der Ankündigungen -->
+<!-- Tabelle zur Anzeige der Rabatte -->
 <table id="example1" class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
             <th>Firma</th>
             <th>Beschreibung</th>
-            <th>Rabatt in &</th>
+            <th>Rabatt in %</th>
             <th>Aktion</th>
         </tr>
     </thead>
@@ -210,7 +207,7 @@ $(document).ready(function() {
                     const rabatt = data[0]; // Nur ein Element zurück
 
                     $('#edit_id').val(rabatt.id);
-                    $('#edit_key_name').val(rabatt.display_name);
+                    $('#edit_display_name').val(rabatt.display_name);
                     $('#edit_description').val(rabatt.description);
                     $('#edit_rabatt_percent').val(rabatt.rabatt_percent);
 
@@ -265,8 +262,8 @@ $(document).ready(function() {
         }
     };
 });
-
 </script>
+
 
 <!-- JavaScript Section -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

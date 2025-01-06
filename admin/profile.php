@@ -1103,10 +1103,9 @@ if (empty($editor_name)) {
             });
 
             // FormData erstellen, nur mit den relevanten Daten (Ausruestung)
-            var formData = [
-                { name: 'user_id', value: '<?= $user_id; ?>' },  // Benutzer-ID
-                { name: 'ausruestung', value: JSON.stringify(ausruestungStatus) }
-            ];
+            var formData = new FormData();
+            formData.append('user_id', '<?= $user_id; ?>');  // Benutzer-ID
+            formData.append('ausruestung', JSON.stringify(ausruestungStatus)); // JSON-String der Ausrüstungsdaten
 
             console.log(formData);  // Debugging: Gibt die formData aus, die gesendet wird
 
@@ -1114,6 +1113,8 @@ if (empty($editor_name)) {
                 url: "include/save_ausruestung.php",  // PHP-Skript zum Speichern
                 type: "POST",
                 data: formData,
+                processData: false,  // Verhindert die Verarbeitung der Daten durch jQuery
+                contentType: false,  // Verhindert das Setzen eines falschen Content-Type-Headers
                 success: function (response) {
                     console.log(response); // Debugging-Ausgabe
                     if (response.success) {

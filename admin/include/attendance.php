@@ -16,7 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         try {
-            // Einfügen des Anwesenheitsdatensatzes in die Tabelle
+            // Zuerst den alten Anwesenheitseintrag löschen, wenn vorhanden
+            if ($status == 'absent') {
+                $deleteStmt = $conn->prepare("DELETE FROM attendance WHERE user_id = :user_id AND status = 'present'");
+                $deleteStmt->bindParam(':user_id', $user_id);
+                $deleteStmt->execute();
+            }
+
+            // Einfügen des neuen Anwesenheitsdatensatzes (ob Abwesenheit oder Anwesenheit)
             $stmt = $conn->prepare("INSERT INTO attendance (user_id, status) VALUES (:user_id, :status)");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->bindParam(':status', $status);

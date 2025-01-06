@@ -177,7 +177,7 @@
                 <form id="tankenForm"> <!-- Spezielles Formular für Tanken -->
                     <div class="form-group">
                         <label>Kennzeichen</label>
-                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Kennzeichen">
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..." disabled>
                         </div>
 
                     <div class="form-group">
@@ -331,10 +331,14 @@ $('.tanken-button').on('click', function() {
 
             try {
                 var vehicle = JSON.parse(response);  // Antwort als JSON parsen
+                console.log("Parsed vehicle: ", vehicle);  // Debugging-Ausgabe
                 $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
 
                 // Debugging: Zeige den Wert im Alert
                 alert("Kennzeichen: " + vehicle.license_plate);
+
+                // Überprüfen, ob das Formularfeld den richtigen Wert bekommt
+                console.log("Form value set: ", $('#edit-license_plate').val());
 
                 $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
 

@@ -42,37 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Überprüfen, ob es bereits einen Eintrag für diesen Benutzer gibt
-        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Benutzername für das Log
-        $stmt = $conn->prepare("SELECT name FROM users WHERE id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $editor_name = $user['name'] ?? 'Unbekannt';
-
-        // Wenn der Eintrag bereits existiert, aktualisieren
-        if ($existingEntry) {
-            $stmt = $conn->prepare("UPDATE spind_kontrolle_notizen 
-                                    SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
-                                    WHERE user_id = :user_id");
-            $stmt->execute([
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notiz,
-                ':user_id' => $user_id
-            ]);
-        } else {
-            // Neuen Eintrag in die Tabelle einfügen
-            $stmt = $conn->prepare("INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen) 
-                                    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notiz
-            ]);
-        }
+        
 
         // Log für die Änderung oder Erstellung
         $stmt = $conn->prepare("INSERT INTO spind_kontrolle_logs (user_id, editor_name, action) 

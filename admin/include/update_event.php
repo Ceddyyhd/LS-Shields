@@ -11,8 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_lead = $_POST['event_lead'];
     $event = $_POST['event']; // Neues Event-Feld
     $anmerkung = $_POST['anmerkung']; // Neues Anmerkung-Feld
+    $status = $_POST['status']; // Der neue Status aus dem Formular
 
-    // SQL-Update-Abfrage zum Aktualisieren der Event-Daten
+    // SQL-Update-Abfrage zum Aktualisieren der Event-Daten inklusive Status
     $sql = "UPDATE eventplanung SET
             vorname_nachname = :vorname_nachname,
             telefonnummer = :telefonnummer,
@@ -20,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ort = :ort,
             event_lead = :event_lead,
             event = :event, 
-            anmerkung = :anmerkung
+            anmerkung = :anmerkung,
+            status = :status  -- Hier wird der Status ebenfalls aktualisiert
             WHERE id = :event_id"; // 'id' statt 'event_id' in der WHERE-Klausel
 
     // Datenbankvorbereitung und Bindung der Parameter
@@ -32,11 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':event_lead', $event_lead);
     $stmt->bindParam(':event', $event);
     $stmt->bindParam(':anmerkung', $anmerkung);
+    $stmt->bindParam(':status', $status); // Bindung des Status
     $stmt->bindParam(':event_id', $event_id);
 
     // Daten speichern und Antwort zurückgeben
     if ($stmt->execute()) {
-        echo json_encode(['message' => 'Änderungen erfolgreich gespeichert']);
+        echo json_encode(['message' => 'Änderungen erfolgreich gespeichert', 'status' => $status]);
     } else {
         // Fehlerausgabe, falls das Update fehlschlägt
         echo json_encode(['message' => 'Fehler beim Speichern der Änderungen', 'error' => $stmt->errorInfo()]);

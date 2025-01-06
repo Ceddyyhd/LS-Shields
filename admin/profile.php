@@ -1,5 +1,6 @@
 <?php
 session_start();  // Stelle sicher, dass die Session gestartet ist
+include 'include/db.php';
 
 // Überprüfe, ob der Benutzer angemeldet ist und die Berechtigung besitzt
 if (!isset($_SESSION['user_id'])) {

@@ -167,40 +167,41 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Fahrzeug Bearbeiten</h4>
+                <h4 class="modal-title">Fahrzeug Tanken</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-            <form id="editVehicleForm">
-            <div class="form-group">
-                <label>Kennzeichen</label>
-                <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
-                    <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
-            </div>
-                <div class="form-group">
-                    <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
-                    <div class="form-check">
-                        <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked">
-                        <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
+                <form id="tankenForm"> <!-- Spezielles Formular für Tanken -->
+                    <div class="form-group">
+                        <label>Kennzeichen</label>
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Kennzeichen" disabled>
                     </div>
-                    <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?">
-                    <input type="number" id="edit-fuel-amount" name="fuel_amount" class="form-control mt-2" placeholder="Betrag in EUR">
-                </div>
 
-                <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
-                <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
+                    <div class="form-group">
+                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
+                        <div class="form-check">
+                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked">
+                            <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
+                        </div>
+                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?">
+                        <input type="number" id="edit-fuel-amount" name="fuel_amount" class="form-control mt-2" placeholder="Betrag in EUR">
+                    </div>
 
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
+                    <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
+                    <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
       <!-- Modal for Adding Vehicle -->
@@ -409,8 +410,8 @@ $(document).ready(function() {
     }
 
     $(document).ready(function() {
-    // Beim Absenden des Formulars (Tanken) im Modal
-    $('#editVehicleForm').submit(function(event) {
+    // Beim Absenden des Tanken-Formulars
+    $('#tankenForm').submit(function(event) {
         event.preventDefault();  // Verhindert das Standard-Formular-Absenden
 
         // Formulardaten sammeln
@@ -418,7 +419,7 @@ $(document).ready(function() {
 
         // AJAX-Anfrage an vehicle_tanken.php
         $.ajax({
-            url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
+            url: 'vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
             type: 'POST',
             data: formData,
             dataType: 'json',  // Erwartet eine JSON-Antwort

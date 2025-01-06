@@ -1002,69 +1002,65 @@ $("#noteForm").on("submit", function (e) {
 
                   <!-- Ausrüstung -->
                   <div class="tab-pane" id="ausruestung">
-    <form id="ausruestungForm">
-        <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
-        <?php
-// Berechtigungsprüfung
-$canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
-$editor_name = $_SESSION['user_name'] ?? 'Unbekannt'; // Fallback-Wert, falls 'user_name' nicht existiert
+                  <form id="ausruestungForm">
+    <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+    <?php
+// Deine Datenbankverbindung einbinden
+include 'include/connection.php';
 
-// Ausrüstungstypen und Benutzer-Ausrüstung abrufen
-$stmt = $conn->prepare("SELECT key_name, display_name, category FROM ausruestungstypen ORDER BY category");
-$stmt->execute();
-$ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Einbinden der Ausrüstungslogik
+include 'include/ausruestung.php';
 
-$stmt = $conn->prepare("SELECT key_name, status FROM benutzer_ausruestung WHERE user_id = :user_id");
-$stmt->execute([':user_id' => $user_id]);
-$benutzerAusrüstung = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Die Rückgabe von `ausruestung.php` in Variablen speichern
+$data = include 'include/ausruestung.php';
 
-// Abrufen der letzten Spind Kontrolle und Notiz für den Benutzer
-$stmt = $conn->prepare("SELECT letzte_spind_kontrolle, notizen FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-$stmt->execute([':user_id' => $user_id]);
-$benutzerSpind_Kontrolle = $stmt->fetch(PDO::FETCH_ASSOC);
+// Zugriff auf die Variablen aus der `ausruestung.php`
+$canEdit = $data['canEdit'];
+$categories = $data['categories'];
+$userAusrüstung = $data['userAusrüstung'];
+$letzte_spind_kontrolle = $data['letzte_spind_kontrolle'];
+$notizen = $data['notizen'];
 
-// Falls keine Daten vorhanden sind, Standardwerte setzen
-$letzte_spind_kontrolle = $benutzerSpind_Kontrolle['letzte_spind_kontrolle'] ?? '';
-$notizen = $benutzerSpind_Kontrolle['notizen'] ?? '';
-
-// Benutzer-Ausrüstung in ein Array umwandeln
-$userAusrüstung = [];
-foreach ($benutzerAusrüstung as $item) {
-    $userAusrüstung[$item['key_name']] = (int)$item['status'];
-}
-
-// Nach Kategorien gruppieren
-$categories = [];
-foreach ($ausruestungstypen as $item) {
-    $categories[$item['category']][] = $item;
-}
-
-// HTML-Ausgabe der Ausrüstungs-Kategorien
-foreach ($categories as $category => $items) {
+// Dein HTML-Code folgt jetzt hier (inkl. der Anzeige der Ausrüstung und der weiteren Logik)
 ?>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
-                <div class="col-sm-10">
-                    <?php foreach ($items as $item): 
-                        $status = $userAusrüstung[$item['key_name']] ?? 0;
-                        ?>
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" 
-                                   id="<?= $item['key_name']; ?>" 
-                                   name="ausruestung[<?= $item['key_name']; ?>]" 
-                                   value="1" <?= $status ? 'checked' : ''; ?>
-                                   <?= $canEdit ? '' : 'disabled'; ?>>
-                            <label class="form-check-label" for="<?= $item['key_name']; ?>">
-                                <?= htmlspecialchars($item['display_name']); ?>
-                            </label>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+    <?php
+    // HTML-Ausgabe der Ausrüstungs-Kategorien
+    foreach ($categories as $category => $items) {
+    ?>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"><?= htmlspecialchars($category); ?></label>
+            <div class="col-sm-10">
+                <?php foreach ($items as $item):
+                    $status = $userAusrüstung[$item['key_name']] ?? 0;
+                ?>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" 
+                               id="<?= $item['key_name']; ?>" 
+                               name="ausruestung[<?= $item['key_name']; ?>]" 
+                               value="1" <?= $status ? 'checked' : ''; ?>
+                               <?= $canEdit ? '' : 'disabled'; ?>>
+                        <label class="form-check-label" for="<?= $item['key_name']; ?>">
+                            <?= htmlspecialchars($item['display_name']); ?>
+                        </label>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            <?php
-        }
-        ?>
-    </form>
+        </div>
+    <?php
+    }
+    ?>
+    <div class="form-group">
+        <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
+        <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
+               value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
+    </div>
+
+    <div class="form-group">
+        <label for="notiz">Notiz</label>
+        <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
+    </div>
+    <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
+</form>
     <!-- Letzte Spind Kontrolle -->
 <div class="form-group">
     <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
@@ -1081,7 +1077,30 @@ foreach ($categories as $category => $items) {
 
 
 
+<script>
+    document.getElementById('saveAusruestungButton').addEventListener('click', function() {
+        // Formulardaten sammeln
+        var formData = new FormData(document.getElementById('ausruestungForm'));
 
+        // AJAX-Anfrage starten
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'include/save_ausruestung.php', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Erfolgreiche Antwort vom Server
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert('Änderungen wurden erfolgreich gespeichert!');
+                } else {
+                    alert('Fehler beim Speichern: ' + response.message);
+                }
+            } else {
+                alert('Ein Fehler ist aufgetreten: ' + xhr.status);
+            }
+        };
+        xhr.send(formData);
+    });
+</script>
 
 
 

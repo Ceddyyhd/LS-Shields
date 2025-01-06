@@ -600,7 +600,7 @@ $(document).ready(function () {
 
     <!-- Liste der hochgeladenen Dokumente -->
     <div class="mt-4">
-            <h5>Hochgeladene Dokumente:</h5>
+    <h5>Hochgeladene Dokumente:</h5>
     <?php if ($_SESSION['permissions']['view_documents'] ?? false): ?>
         <ul>
             <?php if (!empty($documents)): ?>
@@ -608,7 +608,13 @@ $(document).ready(function () {
                     <li>
                         <a href="<?= htmlspecialchars($doc['file_path']); ?>" target="_blank">
                             <?= htmlspecialchars($doc['file_name']); ?>
-                        </a> (<?= htmlspecialchars($doc['uploaded_at']); ?>)
+                        </a> 
+                        (<?= htmlspecialchars($doc['uploaded_at']); ?>)
+                        
+                        <!-- Löschen-Button, nur wenn der Benutzer die Berechtigung hat -->
+                        <?php if ($_SESSION['permissions']['delete_documents'] ?? false): ?>
+                            <button class="btn btn-danger btn-sm delete-document" data-id="<?= $doc['id']; ?>">X</button>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -619,6 +625,40 @@ $(document).ready(function () {
         <p>Sie haben keine Berechtigung, die hochgeladenen Dokumente anzuzeigen.</p>
     <?php endif; ?>
 </div>
+<script>
+$(document).ready(function() {
+    // Event-Listener für den Löschen-Button
+    $('.delete-document').on('click', function() {
+        var documentId = $(this).data('id'); // Holen der Dokument-ID aus dem data-id Attribut
+
+        // Bestätigungsdialog
+        if (confirm("Möchten Sie dieses Dokument wirklich löschen?")) {
+            // AJAX-Anfrage zum Löschen des Dokuments
+            $.ajax({
+                url: ' include/delete_document.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    document_id: documentId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Erfolgsnachricht und das Dokument aus der Anzeige entfernen
+                        alert(response.message);
+                        // Entferne das Dokument aus der Liste
+                        $('button[data-id="'+documentId+'"]').closest('li').fadeOut();
+                    } else {
+                        alert(response.message); // Fehlermeldung anzeigen
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Es gab einen Fehler beim Löschen des Dokuments.');
+                }
+            });
+        }
+    });
+});
+</script>
 
 </div>
 

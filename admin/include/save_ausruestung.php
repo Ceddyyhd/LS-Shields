@@ -45,23 +45,21 @@ try {
 
     // Schleife durch die Änderungen und speichere sie in der 'benutzer_ausruestung'-Tabelle
     foreach ($ausruestung as $key_name => $status) {
+        // Prüfe den aktuellen Bestand
+        $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
+        $stmt->execute([':key_name' => $key_name]);
+        $stock = $stmt->fetchColumn();
+
+        // Wenn der Status auf 1 (ausgegeben) geändert wird, überprüfen, ob genug Bestand vorhanden ist
+        if ($status == 1 && $stock <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
+            exit;
+        }
+
         // Überprüfe, ob der Benutzer bereits diesen Gegenstand in der Tabelle 'benutzer_ausruestung' hat
         $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
         $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Prüfe den aktuellen Bestand, nur wenn der Status 1 ist (ausgegeben)
-        if ($status == 1) {
-            $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
-            $stmt->execute([':key_name' => $key_name]);
-            $stock = $stmt->fetchColumn();
-
-            // Wenn der Artikel ausgegeben wird, sicherstellen, dass genug Bestand vorhanden ist
-            if ($stock <= 0) {
-                echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
-                exit;
-            }
-        }
 
         // Wenn der Artikel zurückgegeben wird (Status 0)
         if ($status == 0) {

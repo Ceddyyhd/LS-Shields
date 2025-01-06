@@ -161,37 +161,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 
-<!-- Modal für die Historie -->
-<div class="modal fade" id="modal-history">
+<!-- Modal für Historie -->
+<div class="modal" id="modal-history">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Bestandshistorie</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Historie</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table">
+                <table id="historyTable" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Datum</th>
                             <th>Aktion</th>
-                            <th>Bestand Veränderung</th>
-                            <th>Bearbeiter</th>
+                            <th>Bestandsänderung</th>
+                            <th>Benutzer</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Historie wird hier dynamisch geladen -->
+                        <!-- Historie wird hier eingefügt -->
                     </tbody>
                 </table>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Dein JavaScript -->
@@ -242,41 +240,41 @@ scratch. This page gets rid of all links and provides the needed markup only.
         console.log("openHistoryModal aufgerufen mit id:", ausruestungId);
 
         $.ajax({
-          url: "include/fetch_ausruestung_history.php", // URL für das Abrufen der Historie
-          type: "GET",
-          data: { id: ausruestungId },
-          dataType: "json",
-          success: function (data) {
-            console.log("Historie geladen:", data); // Debugging
+            url: 'include/fetch_ausruestung_history.php', // URL für das Abrufen der Historie
+            type: 'GET',
+            data: { id: ausruestungId },
+            dataType: 'json',
+            success: function(data) {
+                console.log("Historie geladen:", data); // Debugging
 
-            if (data && data.length > 0) {
-              const historyTableBody = $("#historyTable tbody");
-              historyTableBody.empty(); // Leert den vorhandenen Inhalt
+                if (data && data.length > 0) {
+                    const historyTableBody = $("#historyTable tbody");
+                    historyTableBody.empty(); // Leert den vorhandenen Inhalt
 
-              // Historie in die Tabelle einfügen
-              data.forEach(function (historyEntry) {
-                historyTableBody.append(`
-                  <tr>
-                    <td>${historyEntry.timestamp}</td>
-                    <td>${historyEntry.action}</td>
-                    <td>${historyEntry.stock_change}</td>
-                    <td>${historyEntry.editor_name}</td>
-                  </tr>
-                `);
-              });
+                    // Historie in die Tabelle einfügen
+                    data.forEach(function(historyEntry) {
+                        historyTableBody.append(`
+                            <tr>
+                                <td>${historyEntry.timestamp}</td>
+                                <td>${historyEntry.action}</td>
+                                <td>${historyEntry.stock_change}</td>
+                                <td>${historyEntry.editor_name}</td>
+                            </tr>
+                        `);
+                    });
 
-              // Zeige das Modal mit der Historie an
-              $("#modal-history").modal("show");
-            } else {
-              alert("Keine Historie für diesen Ausrüstungstyp gefunden.");
-            }
-          },
-          error: function (xhr, status, error) {
-            console.error("Fehler beim Abrufen der Historie:", error);
-            alert("Fehler beim Abrufen der Historie.");
-          },
+                    // Zeige das Modal mit der Historie an
+                    $("#modal-history").modal("show");
+                } else {
+                    alert("Keine Historie für diesen Ausrüstungstyp gefunden.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Fehler beim Abrufen der Historie:", error);
+                alert("Fehler beim Abrufen der Historie.");
+            },
         });
-      }
+    }
     // AJAX-Anfrage zum Abrufen der Kategorien und Befüllen des Dropdowns
     $.ajax({
         url: 'include/fetch_kategorien.php', // URL für das Abrufen der Kategorien

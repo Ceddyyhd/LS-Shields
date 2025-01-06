@@ -2,7 +2,6 @@
 require 'db.php';  // Deine DB-Verbindung
 
 // Überprüfen, ob die Berechtigung vorhanden ist
-if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
 
     // Sicherstellen, dass eine Event-ID übergeben wurde
     if (isset($_POST['event_id'])) {
@@ -24,8 +23,4 @@ if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permiss
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Event-ID übergeben']);
     }
-} else {
-    // Falls der Benutzer nicht die Berechtigung hat, eine Aktion auszuführen
-    echo json_encode(['success' => false, 'message' => 'Keine Berechtigung für diese Aktion']);
-}
 ?>

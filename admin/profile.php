@@ -476,7 +476,7 @@ if ($attendanceStatusRow) {
                   <?php 
                     echo '<ul>';
                     if ($_SESSION['permissions']['view_employee_ausbildungen'] ?? false) {
-                        echo '<li class="nav-item"><a class="nav-link" href="#ausbildungen" data-toggle="tab">Ausbildungen</a></li>';
+                        echo '<li class="nav-item"><a class="nav-link" href="#notizen" data-toggle="tab">Notizen</a></li>';
                     }
 
                     if ($_SESSION['permissions']['view_employee_ausruestung'] ?? false) {

@@ -14,7 +14,7 @@ include 'db.php';
 $user_id = $_POST['user_id'];  // Benutzer-ID
 $user_name = $_POST['user_name'];  // Benutzername aus dem Formular
 
-// Überprüfen, ob Ausrüstungsdaten gesendet wurden
+// Überprüfe, ob Ausrüstungsdaten gesendet wurden
 if (isset($_POST['ausruestung']) && is_array($_POST['ausruestung'])) {
     $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
 } else {

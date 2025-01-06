@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Main content -->
   <div class="card">
-  <?php if (isset($_SESSION['permissions']['ankuendigung_create']) && $_SESSION['permissions']['ankuendigung_create']): ?>
+  <?php if (isset($_SESSION['permissions']['rabatt_create']) && $_SESSION['permissions']['rabatt_create']): ?>
   <div class="card-header">
     <h3 class="card-title">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-rabatt-create">

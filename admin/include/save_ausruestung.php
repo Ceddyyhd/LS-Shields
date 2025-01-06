@@ -44,11 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Benutzername für das Log sicherstellen
     $editor_name = $_SESSION['user_name'] ?? 'Unbekannt';  // Standardwert 'Unbekannt' falls nicht gesetzt
 
-    // Debugging-Ausgabe: Wenn editor_name leer ist, wird 'Unbekannt' genutzt
-    if (empty($editor_name)) {
-        echo "Editor Name war leer, daher wird 'Unbekannt' verwendet.<br>";
-    }
-
     // Wenn keine letzte Spind Kontrolle übergeben wird, auf NULL setzen
     $letzte_spind_kontrolle = !empty($letzte_spind_kontrolle) ? $letzte_spind_kontrolle : null;
 
@@ -112,23 +107,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':key_name' => $key_name
                     ]);
 
+                    // Debugging: Erfolgreiches Update
+                    echo "Bestand für $key_name erfolgreich aktualisiert. Neuer Bestand: $new_stock<br>";
+
                     // Historie der Bestandsänderung speichern
                     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) 
                                             VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
 
-                    $stmt->execute([
+                    if ($stmt->execute([
                         ':user_id' => $user_id,
                         ':key_name' => $key_name,
                         ':action' => ($status === 1 ? 'Ausgegeben' : 'Zurückgegeben'),
                         ':stock_change' => ($status === 1 ? -1 : 1),
                         ':editor_name' => $editor_name
-                    ]);
+                    ])) {
+                        // Debugging: Erfolgreiches Einfügen in die Historie
+                        echo "Historie für $key_name erfolgreich gespeichert.<br>";
+                    } else {
+                        // Fehlerprotokollierung
+                        $error = $stmt->errorInfo();
+                        echo "Fehler beim Speichern der Historie für $key_name: " . $error[2] . "<br>";
+                    }
                 }
             }
         }
 
         echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
     } catch (Exception $e) {
+        // Fehlerbehandlung
         echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
     }
     exit;

@@ -88,7 +88,7 @@
                     echo '<td>' . $vehicle['location'] . '</td>';
                     echo '<td><span class="badge ' . $badge_class . '">' . date('d.m.Y', $inspection_date) . '</span></td>';
                     echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
-                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
+                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Tanken</button></td>';
                     echo '</tr>';
                 }
                 ?>
@@ -132,18 +132,6 @@
                             <?php if (!($_SESSION['permissions']['edit_next_inspection'] ?? false)) echo 'disabled'; ?>>
                     </div>
 
-                    <!-- Checkbox für "Getankt" -->
-                    <div class="form-group">
-                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
-                        <div class="form-check">
-                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked"
-                                <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
-                        </div>
-                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?"
-                            <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
-                    </div>
-
                     <!-- Notizen-Feld -->
                     <div class="form-group">
                         <label for="edit-notes">Notizen</label>
@@ -173,6 +161,48 @@
         </div>
     </div>
 </div>
+
+<!-- Modal for Tanken -->
+<div class="modal fade" id="vehicle-tanken">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Fahrzeug Bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editVehicleForm">
+                    <div class="form-group">
+                        <label>Kennzeichen</label>
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Enter ..."
+                            <?php if (!($_SESSION['permissions']['edit_license_plate'] ?? false)) echo 'disabled'; ?>>
+                    </div>
+                    <div class="form-group">
+                        <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>
+                        <div class="form-check">
+                            <input type="checkbox" id="edit-fuel-checkbox" class="form-check-input" name="fuel_checked"
+                                <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-fuel-checkbox" class="form-check-label">Getankt</label>
+                        </div>
+                        <input type="text" id="edit-fuel-location" name="fuel_location" class="form-control" placeholder="Wo wurde getankt?"
+                            <?php if (!($_SESSION['permissions']['edit_fuel'] ?? false)) echo 'disabled'; ?>>
+                    </div>
+
+                    <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
+
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    <input type="hidden" name="user_name" value="<?php echo $_SESSION['username']; ?>">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
       <!-- Modal for Adding Vehicle -->
       <div class="modal fade" id="vehicle-create">
         <div class="modal-dialog">

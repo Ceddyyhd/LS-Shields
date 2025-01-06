@@ -157,7 +157,7 @@ $(document).ready(function() {
                     tableBody.append(`
                         <tr>
                             <td>${rabatt.id}</td>
-                            <td>${rabatt.key_name}</td>
+                            <td>${rabatt.display_name}</td>
                             <td>${rabatt.description}</td>
                             <td>${rabatt.rabatt_percent}%</td>
                             <td>
@@ -210,7 +210,7 @@ $(document).ready(function() {
                     const rabatt = data[0]; // Nur ein Element zurück
 
                     $('#edit_id').val(rabatt.id);
-                    $('#edit_key_name').val(rabatt.key_name);
+                    $('#edit_key_name').val(rabatt.display_name);
                     $('#edit_description').val(rabatt.description);
                     $('#edit_rabatt_percent').val(rabatt.rabatt_percent);
 

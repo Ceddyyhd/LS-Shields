@@ -87,8 +87,8 @@
                     echo '<td>' . $vehicle['license_plate'] . '</td>';
                     echo '<td>' . $vehicle['location'] . '</td>';
                     echo '<td><span class="badge ' . $badge_class . '">' . date('d.m.Y', $inspection_date) . '</span></td>';
-                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
-                    echo '<td><button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Tanken</button></td>';
+                    echo '<td><button type="button" class="btn btn-primary bearbeiten-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
+                    echo '<td><button type="button" class="btn btn-primary tanken-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Tanken</button></td>';
                     echo '</tr>';
                 }
                 ?>
@@ -339,30 +339,33 @@ $('.edit-button').on('click', function() {
     });
 
     // Fahrzeug Bearbeiten (AJAX)
-    $('.edit-button').on('click', function() {
-    var vehicleId = $(this).data('vehicle-id');
-    
-    // Fahrzeugdaten laden
-    $.ajax({
-        url: 'include/vehicle_fetch.php',
-        method: 'GET',
-        data: { vehicle_id: vehicleId },
-        success: function(response) {
-            var vehicle = JSON.parse(response);
-            
-            // Werte in die Formularfelder einfügen
-            $('#edit-model').val(vehicle.model);
-            $('#edit-license_plate').val(vehicle.license_plate);
-            $('#edit-location').val(vehicle.location);
-            $('#edit-next_inspection').val(vehicle.next_inspection);
-            $('#edit-vehicle_id').val(vehicle.id);
+    $('.bearbeiten-button').on('click', function() {
+        var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
 
-            // Notizen und Ausgemustert-Status einfügen
-            $('#edit-notes').val(vehicle.notes);  // Notizen
-            $('#edit-decommissioned').prop('checked', vehicle.decommissioned == 1);  // Ausgemustert
-        }
+        // Fahrzeugdaten laden
+        $.ajax({
+            url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
+            method: 'GET',
+            data: { vehicle_id: vehicleId },
+            success: function(response) {
+                var vehicle = JSON.parse(response);
+
+                // Werte in die Formularfelder des Bearbeiten-Modals einfügen
+                $('#edit-model').val(vehicle.model);
+                $('#edit-license_plate').val(vehicle.license_plate);
+                $('#edit-location').val(vehicle.location);
+                $('#edit-next_inspection').val(vehicle.next_inspection);
+                $('#edit-vehicle_id').val(vehicle.id);
+
+                // Notizen und Ausgemustert-Status einfügen
+                $('#edit-notes').val(vehicle.notes);  // Notizen
+                $('#edit-decommissioned').prop('checked', vehicle.decommissioned == 1);  // Ausgemustert
+
+                // Zeige das Bearbeiten-Modal
+                $('#vehicle-bearbeiten').modal('show');
+            }
+        });
     });
-});
 
     // Fahrzeug Bearbeiten speichern (AJAX)
     $('#editVehicleForm').on('submit', function(e) {
@@ -432,29 +435,23 @@ $('.edit-button').on('click', function() {
 
     $(document).ready(function() {
     // Beim Absenden des Tanken-Formulars
-    $('#tankenForm').submit(function(event) {
-        event.preventDefault();  // Verhindert das Standard-Formular-Absenden
+    $('.tanken-button').on('click', function() {
+        var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
 
-        // Formulardaten sammeln
-        const formData = $(this).serialize();  // Sammelt die Daten des Formulars
-
-        // AJAX-Anfrage an vehicle_tanken.php
+        // Fahrzeugdaten laden
         $.ajax({
-            url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
-            type: 'POST',
-            data: formData,
-            dataType: 'json',  // Erwartet eine JSON-Antwort
+            url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
+            method: 'GET',
+            data: { vehicle_id: vehicleId },
             success: function(response) {
-                if (response.success) {
-                    alert('Fahrzeugdaten und Tanken-Daten erfolgreich aktualisiert.');
-                    $('#vehicle-tanken').modal('hide');  // Modal schließen
-                    location.reload();  // Seite neu laden, um die Änderungen zu sehen
-                } else {
-                    alert('Fehler: ' + response.message);
-                }
-            },
-            error: function() {
-                alert('Fehler beim Absenden der Anfrage.');
+                var vehicle = JSON.parse(response);
+                
+                // Werte in die Formularfelder des Tanken-Modals einfügen
+                $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
+                $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
+
+                // Zeige das Tanken-Modal
+                $('#vehicle-tanken').modal('show');
             }
         });
     });

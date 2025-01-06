@@ -18,13 +18,14 @@ if (!$key_name || !$description || !$rabatt_percent || !$created_by) {
 
 try {
     // Rabatt erstellen
-    $stmt = $conn->prepare("INSERT INTO rabatt (key_name, description, rabatt_percent, created_by) VALUES (:key_name, :description, :rabatt_percent, :created_by)");
-    $stmt->execute([
-        ':key_name' => $key_name,
-        ':description' => $description,
-        ':rabatt_percent' => $rabatt_percent,
-        ':created_by' => $created_by
-    ]);
+    $stmt = $conn->prepare("INSERT INTO rabatt (display_name, description, rabatt_percent, created_by) 
+                        VALUES (:display_name, :description, :rabatt_percent, :created_by)");
+        $stmt->execute([
+            ':display_name' => $display_name,
+            ':description' => $description,
+            ':rabatt_percent' => $rabatt_percent,
+            ':created_by' => $created_by
+        ]);
     $rabatt_id = $conn->lastInsertId();  // ID des neu erstellten Rabatts
 
     // Log-Eintrag für das Erstellen

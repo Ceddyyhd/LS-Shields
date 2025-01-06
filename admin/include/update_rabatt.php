@@ -15,10 +15,10 @@ if (!$id || !$key_name || !$description || !$rabatt_percent || !$created_by) {
 
 try {
     // Rabatt aktualisieren
-    $stmt = $conn->prepare("UPDATE rabatt SET key_name = :key_name, description = :description, rabatt_percent = :rabatt_percent WHERE id = :id");
+    $stmt = $conn->prepare("UPDATE rabatt SET display_name = :display_name, description = :description, rabatt_percent = :rabatt_percent WHERE id = :id");
     $stmt->execute([
         ':id' => $id,
-        ':key_name' => $key_name,
+        ':display_name' => $display_name,  // Hier setzen wir display_name
         ':description' => $description,
         ':rabatt_percent' => $rabatt_percent
     ]);

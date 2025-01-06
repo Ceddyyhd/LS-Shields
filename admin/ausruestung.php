@@ -140,6 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <th>Key Name</th>
         <th>Display Name</th>
         <th>Description</th>
+        <th>Stock</th>
         <th>Aktion</th>
       </tr>
     </thead>
@@ -152,6 +153,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <th>Key Name</th>
         <th>Display Name</th>
         <th>Description</th>
+        <th>Stock</th>
         <th>Aktion</th>
       </tr>
     </tfoot>

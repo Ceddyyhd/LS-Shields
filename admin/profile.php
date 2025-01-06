@@ -21,7 +21,7 @@ if (!$user) {
 }
 
 // Dokumente abrufen
-$sql_documents = "SELECT file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
+$sql_documents = "SELECT id, file_name, file_path, uploaded_at FROM documents WHERE user_id = :user_id";
 $stmt_documents = $conn->prepare($sql_documents);
 $stmt_documents->execute(['user_id' => $user_id]);
 $documents = $stmt_documents->fetchAll(PDO::FETCH_ASSOC);

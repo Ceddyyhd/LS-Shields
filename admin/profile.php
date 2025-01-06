@@ -635,7 +635,7 @@ $(document).ready(function() {
         if (confirm("Möchten Sie dieses Dokument wirklich löschen?")) {
             // AJAX-Anfrage zum Löschen des Dokuments
             $.ajax({
-                url: ' include/delete_document.php',
+                url: 'include/delete_document.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {

@@ -1,12 +1,24 @@
 <?php
-include 'include/db.php';
-ini_set('display_errors', 0);
-error_reporting(0);
-// Beispiel: Nutzer-ID aus der Session oder URL (z. B. profile.php?id=1)
+session_start();  // Stelle sicher, dass die Session gestartet ist
+
+// Überprüfe, ob der Benutzer angemeldet ist und die Berechtigung besitzt
+if (!isset($_SESSION['user_id'])) {
+    die("Zugriff verweigert. Du bist nicht angemeldet.");
+}
+
+// Hole die Benutzer-ID aus der URL (von der Seite, die aufgerufen wird)
 $user_id = $_GET['id'] ?? null;
+
+// Überprüfen, ob die Benutzer-ID in der URL gesetzt ist
 if (!$user_id) {
     die("Benutzer-ID fehlt.");
 }
+
+// Wenn der Benutzer nicht seine eigene Seite aufruft und keine Berechtigung hat, leite ihn weiter
+if ($user_id != $_SESSION['user_id'] && !isset($_SESSION['permissions']['access_all_mitarbeiter_akten'])) {
+    die("Zugriff verweigert. Du hast keine Berechtigung, diese Seite zu sehen.");
+}
+
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name 
         FROM users 

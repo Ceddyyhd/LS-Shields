@@ -31,17 +31,17 @@
     <!-- /.content-header -->
 
     <?php
-    // SQL-Abfrage zum Abrufen aller Events nach ID aufsteigend
+    // SQL-Abfrage zum Abrufen aller Events mit dem Status 'in Planung'
     $query = "
     SELECT id, event, anmerkung, status, vorname_nachname, datum_uhrzeit
     FROM eventplanung
-    WHERE datum_uhrzeit >= CURDATE() - INTERVAL 3 DAY  -- Zeigt Events von gestern und aus der Zukunft
+    WHERE status = 'in Planung'  -- Zeigt nur Events mit dem Status 'in Planung'
     ORDER BY datum_uhrzeit ASC";  // Sortierung nach Datum und Uhrzeit aufsteigend
 
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    ?>
+?>
 
     <!-- Ausgabe der Events -->
     <table class="table table-striped projects">

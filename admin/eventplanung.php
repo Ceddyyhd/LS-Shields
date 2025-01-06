@@ -107,9 +107,10 @@
             // Aktionen
             echo "<td class='project-actions text-right'>";
             echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
-            echo "<a class='btn btn-info btn-sm' href='#'><i class='fas fa-pencil-alt'></i> Edit</a>";
-            echo "<a class='btn btn-danger btn-sm' href='#'><i class='fas fa-trash'></i> Delete</a>";
-            echo "</td>";
+            if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
+                // Der Delete-Button wird nur angezeigt, wenn der Benutzer die Berechtigung hat
+                echo "<button class='btn btn-danger btn-sm delete-event' data-id='" . $event['id'] . "'><i class='fas fa-trash'></i> Delete</button>";
+            }            echo "</td>";
             echo "</tr>";
         }
         ?>
@@ -117,7 +118,42 @@
     </table>
 </div>
     </div>
+    <script>
+// AJAX Delete Event
+$(document).ready(function() {
+    // Event-Listener für den Delete-Button
+    $('.delete-event').on('click', function() {
+        var eventId = $(this).data('id'); // Event-ID aus dem Button-Attribut holen
 
+        // Bestätigungsdialog
+        if (confirm("Möchten Sie dieses Event wirklich löschen?")) {
+            // AJAX-Anfrage zum Löschen des Events
+            $.ajax({
+                url: 'delete_event.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    event_id: eventId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Erfolgsmeldung und ggf. die Tabelle aktualisieren
+                        alert(response.message);
+                        // Optional: Event aus der Anzeige entfernen
+                        $('button[data-id="'+eventId+'"]').closest('tr').fadeOut();
+                    } else {
+                        // Fehlerbehandlung
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Es gab einen Fehler beim Löschen des Events.');
+                }
+            });
+        }
+    });
+});
+</script>
     <!-- JavaScript zum Initialisieren der Tooltips -->
     <script>
         $(document).ready(function () {

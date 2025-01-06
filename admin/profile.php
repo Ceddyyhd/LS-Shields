@@ -506,6 +506,8 @@ $(document).ready(function () {
 });
 </script>        
 <!-- Button für das Modal -->
+<?php if ($_SESSION['permissions']['upload_file'] ?? false): ?>
+
           <div class="form-group row">
               <label for="uploadButton" class="col-sm-2 col-form-label">Dokumente Hochladen</label>
               <div class="col-sm-10">
@@ -514,6 +516,8 @@ $(document).ready(function () {
                   </button>
               </div>
           </div>
+          <?php endif; ?>
+
     </form>
 
 <!-- Modal für Dateiupload -->

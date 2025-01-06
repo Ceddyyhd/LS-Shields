@@ -12,6 +12,7 @@ include 'db.php';
 
 // Empfangen der Formulardaten via POST
 $user_id = $_POST['user_id'];  // Benutzer-ID
+$user_name = $_POST['user_name'];  // Benutzername aus dem Formular
 $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
 
 // Berechtigungsprüfung (z.B. ob der User die Berechtigung hat, Änderungen vorzunehmen)
@@ -42,7 +43,7 @@ try {
 
                 // Füge eine neue Zeile in die History-Tabelle hinzu
                 $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, old_status, new_status, changed_by) VALUES (:user_id, :key_name, :old_status, :new_status, :changed_by)");
-                $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':old_status' => $existing['status'], ':new_status' => $status, ':changed_by' => $_SESSION['user_name'] ]);
+                $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':old_status' => $existing['status'], ':new_status' => $status, ':changed_by' => $user_name ]);
             }
         } else {
             // Füge neuen Eintrag in die Tabelle hinzu, wenn noch nicht vorhanden
@@ -51,7 +52,7 @@ try {
 
             // Füge auch hier die Änderung in die History-Tabelle hinzu
             $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, old_status, new_status, changed_by) VALUES (:user_id, :key_name, 0, :new_status, :changed_by)");
-            $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':new_status' => $status, ':changed_by' => $_SESSION['user_name'] ]);
+            $stmt->execute([ ':user_id' => $user_id, ':key_name' => $key_name, ':new_status' => $status, ':changed_by' => $user_name ]);
         }
 
         // Aktualisiere den 'stock' in der Tabelle 'ausruestungstypen'
@@ -61,21 +62,21 @@ try {
 
         // Wenn der Status 1 ist, wird der Bestand reduziert (Gegenstand wurde hinzugefügt), sonst wird er erhöht
         if ($status == 1) {
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock - 1 WHERE key_name = :key_name");
+            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
+            $stmt->execute([':stock' => $stock - 1, ':key_name' => $key_name]);
         } else {
-            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock + 1 WHERE key_name = :key_name");
+            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE key_name = :key_name");
+            $stmt->execute([':stock' => $stock + 1, ':key_name' => $key_name]);
         }
-        $stmt->execute([':key_name' => $key_name]);
     }
 
-    // Transaktion abschließen (alle Änderungen werden in einer Einheit übernommen)
+    // Alle Änderungen als Transaktion abschließen
     $conn->commit();
 
-    // Rückmeldung als JSON
-    echo json_encode(['success' => true, 'message' => 'Änderungen wurden gespeichert.']);
+    // Erfolgreiche Antwort zurückgeben
+    echo json_encode(['success' => true, 'message' => 'Änderungen wurden erfolgreich gespeichert!']);
 } catch (Exception $e) {
-    // Rollback, falls Fehler auftreten
+    // Bei Fehlern wird die Transaktion zurückgerollt
     $conn->rollBack();
     echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
 }
-?>

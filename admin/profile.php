@@ -1004,6 +1004,8 @@ $("#noteForm").on("submit", function (e) {
 <div class="tab-pane" id="ausruestung">
     <form id="ausruestungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
+        <input type="hidden" name="user_name" value="<?= htmlspecialchars($user_name); ?>"> <!-- Hidden input für user_name -->
+
         <?php
         // Deine Datenbankverbindung einbinden
         include 'include/db.php';
@@ -1102,6 +1104,7 @@ $("#noteForm").on("submit", function (e) {
         xhr.send(formData);
     });
 </script>
+
 
 
 

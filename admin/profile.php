@@ -613,7 +613,9 @@ $(document).ready(function () {
                         
                         <!-- Löschen-Button, nur wenn der Benutzer die Berechtigung hat -->
                         <?php if ($_SESSION['permissions']['delete_documents'] ?? false): ?>
-                            <button class="btn btn-danger btn-sm delete-document" data-id="<?= $doc['id']; ?>">X</button>
+                            <button class='btn btn-danger btn-sm delete-document' data-id='<?php echo $doc['id']; ?>'>
+                                <i class='fas fa-trash'></i> X
+                            </button>
                         <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
@@ -627,9 +629,10 @@ $(document).ready(function () {
 </div>
 <script>
 $(document).ready(function() {
-    // Event-Listener für den Löschen-Button
+    // Event-Listener für den Delete-Button
     $('.delete-document').on('click', function() {
         var documentId = $(this).data('id'); // Holen der Dokument-ID aus dem data-id Attribut
+        console.log("Document ID: ", documentId); // Debugging-Zeile
 
         // Bestätigungsdialog
         if (confirm("Möchten Sie dieses Dokument wirklich löschen?")) {

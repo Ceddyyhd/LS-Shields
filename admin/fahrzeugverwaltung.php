@@ -163,6 +163,7 @@
 </div>
 
 <!-- Modal for Tanken -->
+<!-- Modal for Tanken -->
 <div class="modal fade" id="vehicle-tanken">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -318,25 +319,28 @@ $(document).ready(function() {
 });
 
 $('.tanken-button').on('click', function() {
-        var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
+    var vehicleId = $(this).data('vehicle-id');  // Die Fahrzeug-ID aus dem Button-Attribut holen
 
-        // Fahrzeugdaten laden
-        $.ajax({
-            url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
-            method: 'GET',
-            data: { vehicle_id: vehicleId },
-            success: function(response) {
-                var vehicle = JSON.parse(response);
-                
-                // Werte in die Formularfelder des Tanken-Modals einfügen
-                $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
-                $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
+    // Fahrzeugdaten laden
+    $.ajax({
+        url: 'include/vehicle_fetch.php',  // Deine PHP-Datei, die Fahrzeugdaten abruft
+        method: 'GET',
+        data: { vehicle_id: vehicleId },  // Die Fahrzeug-ID an die PHP-Datei übergeben
+        success: function(response) {
+            var vehicle = JSON.parse(response);  // Antwort als JSON parsen
+            
+            // Werte in die Formularfelder des Tanken-Modals einfügen
+            $('#edit-license_plate').val(vehicle.license_plate);  // Kennzeichen im Tanken Modal
+            $('#edit-vehicle_id').val(vehicle.id);  // Fahrzeug-ID (für das versteckte Feld)
 
-                // Zeige das Tanken-Modal
-                $('#vehicle-tanken').modal('show');
-            }
-        });
+            // Zeige das Tanken-Modal
+            $('#vehicle-tanken').modal('show');
+        },
+        error: function() {
+            alert('Fehler beim Laden der Fahrzeugdaten');
+        }
     });
+});
 
     // Fahrzeug Bearbeiten (AJAX)
     $('.edit-button').on('click', function() {

@@ -63,6 +63,7 @@ try {
 
         // Wenn der Artikel zurückgegeben wird (Status 0)
         if ($status == 0) {
+            // Wenn der Artikel bereits ausgegeben war, dann zurückgeben
             if ($existing && $existing['status'] == 1) {
                 // Bestands-Update und History-Eintrag, wenn Artikel zurückgegeben wird
                 $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 0 WHERE user_id = :user_id AND key_name = :key_name");
@@ -83,8 +84,27 @@ try {
         } elseif ($status == 1) {
             // Wenn der Artikel ausgegeben wird (Status 1)
             if ($existing) {
-                // Artikel ist bereits da, also den Bestand reduzieren
-                $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 1 WHERE user_id = :user_id AND key_name = :key_name");
+                // Wenn der Artikel bereits vorhanden war, update den Status nur, wenn der Status 0 war
+                if ($existing['status'] == 0) {
+                    // Bestands-Update in der Tabelle ausruestungstypen (Stock verringern)
+                    $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock - 1 WHERE key_name = :key_name");
+                    $stmt->execute([':key_name' => $key_name]);
+
+                    // Bestandsänderung in der benutzer_ausruestung
+                    $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 1 WHERE user_id = :user_id AND key_name = :key_name");
+                    $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
+
+                    // History-Eintrag
+                    $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Hinzufügung', -1, :editor_name)");
+                    $stmt->execute([
+                        ':user_id' => $user_id,
+                        ':key_name' => $key_name,
+                        ':editor_name' => $user_name
+                    ]);
+                }
+            } else {
+                // Artikel ist noch nicht vergeben, also setze ihn als ausgegeben
+                $stmt = $conn->prepare("INSERT INTO benutzer_ausruestung (user_id, key_name, status) VALUES (:user_id, :key_name, 1)");
                 $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
 
                 // Bestands-Update in der Tabelle ausruestungstypen (Stock verringern)

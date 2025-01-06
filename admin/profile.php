@@ -239,7 +239,7 @@ if ($attendanceStatusRow) {
             type: 'POST',
             data: { user_id: userId, status: 'present' },
             success: function(response) {
-                alert(response.message);
+                location.reload();  // Lädt die Seite neu
             }
         });
     });
@@ -251,7 +251,7 @@ if ($attendanceStatusRow) {
             type: 'POST',
             data: { user_id: userId, status: 'absent' },
             success: function(response) {
-                alert(response.message);
+                location.reload();  // Lädt die Seite neu
             }
         });
     });

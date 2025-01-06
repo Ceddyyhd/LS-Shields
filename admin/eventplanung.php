@@ -129,7 +129,7 @@ $(document).ready(function() {
         if (confirm("Möchten Sie dieses Event wirklich löschen?")) {
             // AJAX-Anfrage zum Löschen des Events
             $.ajax({
-                url: 'delete_event.php',
+                url: 'include/delete_event.php',
                 type: 'POST',
                 dataType: 'json',
                 data: {

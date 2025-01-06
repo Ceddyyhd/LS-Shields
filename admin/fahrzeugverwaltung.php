@@ -177,8 +177,8 @@
                 <form id="tankenForm"> <!-- Spezielles Formular für Tanken -->
                     <div class="form-group">
                         <label>Kennzeichen</label>
-                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Kennzeichen" disabled>
-                    </div>
+                        <input type="text" class="form-control" name="license_plate" id="edit-license_plate" placeholder="Kennzeichen">
+                        </div>
 
                     <div class="form-group">
                         <strong><i class="fas fa-gas-pump mr-1"></i> Tanken</strong>

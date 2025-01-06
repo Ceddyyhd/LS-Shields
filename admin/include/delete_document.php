@@ -2,7 +2,6 @@
 require 'db.php';  // Deine DB-Verbindung
 
 // Überprüfen, ob der Benutzer die Berechtigung zum Löschen von Dokumenten hat
-if (isset($_SESSION['permissions']['delete_documents']) && $_SESSION['permissions']['delete_documents']) {
 
     // Sicherstellen, dass eine Dokument-ID übergeben wurde
     if (isset($_POST['document_id'])) {
@@ -35,8 +34,4 @@ if (isset($_SESSION['permissions']['delete_documents']) && $_SESSION['permission
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Dokument-ID übergeben']);
     }
-} else {
-    // Falls der Benutzer keine Berechtigung hat, die Aktion auszuführen
-    echo json_encode(['success' => false, 'message' => 'Keine Berechtigung für diese Aktion']);
-}
 ?>

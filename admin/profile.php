@@ -1086,7 +1086,12 @@ foreach ($categories as $category => $items) {
 
         // Durch die Checkboxen iterieren und den Status sammeln
         $(".form-check-input").each(function () {
-            ausruestungStatus[$(this).attr('name')] = $(this).prop('checked') ? 1 : 0;
+            // Nur geänderte Ausrüstungen zum Status hinzufügen
+            if ($(this).prop('checked') != $(this).data('previousStatus')) {
+                ausruestungStatus[$(this).attr('name')] = $(this).prop('checked') ? 1 : 0;
+                // Speichern des aktuellen Status für den Vergleich beim nächsten Mal
+                $(this).data('previousStatus', $(this).prop('checked'));
+            }
         });
 
         // Zusätzliche Felder wie letzte Spind Kontrolle und Notiz hinzufügen

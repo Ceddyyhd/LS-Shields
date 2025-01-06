@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php if (isset($_SESSION['permissions']['ankuendigung_create']) && $_SESSION['permissions']['ankuendigung_create']): ?>
   <div class="card-header">
     <h3 class="card-title">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ankuendigung-create">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-rabatt-create">
             Ankündigung erstellen
         </button>
     </h3>

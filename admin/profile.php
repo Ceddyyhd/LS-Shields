@@ -1072,23 +1072,23 @@ $notizen = $data['notizen'];
 
     // Response-Handler definieren
     xhr.onload = function() {
-        if (xhr.status === 200) {
-            try {
-                // Antwort parsen
-                var response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    alert('Änderungen wurden erfolgreich gespeichert!');
-                } else {
-                    alert('Fehler beim Speichern: ' + response.message);
-                }
-            } catch (e) {
-                alert('Fehler beim Parsen der Antwort!');
-                console.error(e);
+    if (xhr.status === 200) {
+        console.log(xhr.responseText); // Ausgabe der Antwort im Browser
+        try {
+            var response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                alert('Änderungen wurden erfolgreich gespeichert!');
+            } else {
+                alert('Fehler beim Speichern: ' + response.message);
             }
-        } else {
-            alert('Fehler beim Speichern: ' + xhr.status);
+        } catch (e) {
+            alert('Fehler beim Parsen der Antwort!');
+            console.error(e);
         }
-    };
+    } else {
+        alert('Fehler beim Speichern: ' + xhr.status);
+    }
+};
 
     // Anfrage absenden
     xhr.send(formData);

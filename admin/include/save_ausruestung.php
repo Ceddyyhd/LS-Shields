@@ -4,6 +4,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Setze Content-Type auf JSON
+header('Content-Type: application/json');
+
 // Datenbankverbindung einbinden
 include 'db.php';
 

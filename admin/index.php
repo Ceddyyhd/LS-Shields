@@ -105,11 +105,14 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Anwesenheitsdaten abrufen
-    $stmt = $conn->prepare("SELECT u.name, a.timestamp FROM attendance a
+    // Anwesenheitsdaten abrufen und nach dem 'value' der Rolle sortieren
+    $stmt = $conn->prepare("SELECT u.name, a.timestamp, r.value 
+                            FROM attendance a
                             JOIN users u ON a.user_id = u.id
+                            JOIN roles r ON u.role_id = r.id
                             WHERE a.status = 'present'
-                            ORDER BY a.timestamp DESC");
+                            ORDER BY r.value DESC, a.timestamp DESC");  // Zuerst nach 'value' der Rolle sortieren, dann nach Timestamp
+
     $stmt->execute();
 
     // Alle Anwesenheitsdaten abrufen
@@ -118,6 +121,7 @@ try {
     echo "Fehler beim Abrufen der Daten: " . $e->getMessage();
 }
 ?>
+
     </script>
       <!-- TABLE: LATEST ORDERS -->
       <div class="card" style="width: 25%">

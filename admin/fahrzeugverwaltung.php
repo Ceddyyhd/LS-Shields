@@ -433,29 +433,29 @@ $('.tanken-button').on('click', function() {
     $(document).ready(function() {
     // Beim Absenden des Tanken-Formulars
     $('#tankenForm').submit(function(event) {
-        event.preventDefault();  // Verhindert das Standard-Formular-Absenden
+    event.preventDefault();  // Verhindert das Standard-Formular-Absenden
 
-        // Formulardaten sammeln
-        const formData = $(this).serialize();  // Sammelt die Daten des Formulars
+    // Formulardaten sammeln
+    const formData = $(this).serialize();  // Sammelt die Daten des Formulars
 
-        // AJAX-Anfrage an vehicle_tanken.php
-        $.ajax({
-            url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
-            type: 'POST',
-            data: formData,
-            dataType: 'json',  // Erwartet eine JSON-Antwort
-            success: function(response) {
-                if (response.success) {
-                    alert('Fahrzeugdaten und Tanken-Daten erfolgreich aktualisiert.');
-                    $('#vehicle-tanken').modal('hide');  // Modal schließen
-                    location.reload();  // Seite neu laden, um die Änderungen zu sehen
-                } else {
-                    alert('Fehler: ' + response.message);
-                }
-            },
-            error: function() {
-                alert('Fehler beim Absenden der Anfrage.');
+    // AJAX-Anfrage an vehicle_tanken.php
+    $.ajax({
+        url: 'include/vehicle_tanken.php',  // Deine PHP-Datei für das Tanken
+        type: 'POST',
+        data: formData,
+        dataType: 'json',  // Erwartet eine JSON-Antwort
+        success: function(response) {
+            if (response.success) {
+                alert('Fahrzeugdaten und Tanken-Daten erfolgreich aktualisiert.');
+                $('#vehicle-tanken').modal('hide');  // Modal schließen
+                location.reload();  // Seite neu laden, um die Änderungen zu sehen
+            } else {
+                alert('Fehler: ' + response.message);
             }
+        },
+        error: function() {
+            alert('Fehler beim Absenden der Anfrage.');
+        }
         });
     });
 });

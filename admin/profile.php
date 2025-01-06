@@ -194,14 +194,20 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 
                 <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                <b>Tel. Nr.:</b> <a class="float-right"><?php echo htmlspecialchars($user['nummer']); ?></a>
-              </li>
-                  <li class="list-group-item">
+                    <b>Tel. Nr.:</b> <a class="float-right"><?php echo htmlspecialchars($user['nummer']); ?></a>
+                </li>
+                <li class="list-group-item">
                     <b>Erstellt am:</b> <a class="float-right">
-                      <?php echo htmlspecialchars($user['created_at']); ?>
+                        <?php echo htmlspecialchars($user['created_at']); ?>
                     </a>
-                  </li>
-                </ul>
+                </li>
+            </ul>
+
+            <!-- Anwesend / Abwesend Buttons -->
+            <div class="form-group">
+                <button class="btn btn-success" id="presentButton" data-user-id="<?= $user['id']; ?>">Anwesend</button>
+                <button class="btn btn-danger" id="absentButton" data-user-id="<?= $user['id']; ?>">Abwesend</button>
+            </div>
               </div>
             </div>
           <!-- About Me Box -->

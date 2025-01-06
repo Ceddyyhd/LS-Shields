@@ -14,7 +14,7 @@ include 'db.php';
 $user_id = $_POST['user_id'];  // Benutzer-ID
 $user_name = $_POST['user_name'];  // Benutzername aus dem Formular
 
-// Überprüfe, ob Ausrüstungsdaten gesendet wurden
+// Überprüfen, ob Ausrüstungsdaten gesendet wurden
 if (isset($_POST['ausruestung']) && is_array($_POST['ausruestung'])) {
     $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
 } else {
@@ -50,15 +50,17 @@ try {
         $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Prüfe den aktuellen Bestand
-        $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
-        $stmt->execute([':key_name' => $key_name]);
-        $stock = $stmt->fetchColumn();
+        // Prüfe den aktuellen Bestand, nur wenn der Status 1 ist (ausgegeben)
+        if ($status == 1) {
+            $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
+            $stmt->execute([':key_name' => $key_name]);
+            $stock = $stmt->fetchColumn();
 
-        // Wenn der Status auf 1 (ausgegeben) geändert wird, überprüfen, ob genug Bestand vorhanden ist
-        if ($status == 1 && $stock <= 0) {
-            echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
-            exit;
+            // Wenn der Artikel ausgegeben wird, sicherstellen, dass genug Bestand vorhanden ist
+            if ($stock <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
+                exit;
+            }
         }
 
         // Wenn der Artikel zurückgegeben wird (Status 0)

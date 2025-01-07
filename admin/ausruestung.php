@@ -173,64 +173,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-<div class="card-body">
-  <table id="example1" class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Stock</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Daten werden dynamisch geladen -->
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Stock</th>
-        <th>Aktion</th>
-      </tr>
-    </tfoot>
-  </table>
-</div>
-
-<!-- Modal für Historie -->
-<div class="modal" id="modal-history">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Historie</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table id="historyTable" class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Datum</th>
-                            <th>Aktion</th>
-                            <th>Bestandsänderung</th>
-                            <th>Benutzer</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Historie wird hier eingefügt -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <script>
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
@@ -264,6 +206,62 @@ $(document).ready(function() {
         }
     });
 
+    // Funktion zum Laden der Kategorien für das Erstellen eines Ausrüstungstyps
+    $.ajax({
+        url: 'include/fetch_kategorien.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const categorySelect = $('#category'); // Kategorie für das Erstellen eines Ausrüstungstyps
+            categorySelect.empty();
+
+            data.forEach(function(category) {
+                categorySelect.append(`<option value="${category.name}">${category.name}</option>`);
+            });
+        },
+        error: function() {
+            alert('Fehler beim Laden der Kategorien.');
+        }
+    });
+
+    // Speichern der neuen Ausrüstung
+    $('#saveAusruestung').click(function() {
+        const formData = new FormData(document.getElementById('createAusruestungForm'));
+
+        $.ajax({
+            url: 'include/create_ausruestungstyp.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('Ausrüstungstyp erfolgreich erstellt.');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('Fehler beim Erstellen des Ausrüstungstyps.');
+            }
+        });
+    });
+
+    // Kategorie hinzufügen
+    $('#saveNewCategory').click(function() {
+        const newCategoryName = $('#new_category_name').val();
+
+        $.ajax({
+            url: 'include/create_kategorie.php',
+            type: 'POST',
+            data: { new_category_name: newCategoryName },
+            success: function(response) {
+                alert('Kategorie erfolgreich hinzugefügt.');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('Fehler beim Hinzufügen der Kategorie.');
+            }
+        });
+    });
+
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
     window.openEditModal = function(button) {
         const id = $(button).data('id');
@@ -277,7 +275,7 @@ $(document).ready(function() {
         $('#edit_key_name').val(keyName);
         $('#edit_display_name').val(displayName);
         $('#edit_description').val(description);
-        $('#edit_stock').val(stock); // Bestandswert setzen
+        $('#edit_stock').val(stock);
 
         // Setze den Editor-Namen und den Benutzernamen
         const userName = '<?php echo $_SESSION["username"]; ?>'; // PHP-Session-Wert für den Benutzernamen
@@ -286,53 +284,11 @@ $(document).ready(function() {
 
         loadCategories(category);
         $('#modal-ausruestung-edit').modal('show');
-    }
-
-    // Funktion zum Laden der Kategorien
-    function loadCategories(selectedCategory) {
-        $.ajax({
-            url: 'include/fetch_kategorien.php',
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                const categorySelect = $('#edit_category');
-                categorySelect.empty();
-
-                data.forEach(function(category) {
-                    const isSelected = category.name === selectedCategory ? 'selected' : '';
-                    categorySelect.append(`<option value="${category.name}" ${isSelected}>${category.name}</option>`);
-                });
-            },
-            error: function() {
-                alert('Fehler beim Laden der Kategorien.');
-            }
-        });
-    }
-
-    // Speichern der Änderungen
-    $('#saveEditAusruestung').click(function() {
-        const formData = new FormData(document.getElementById('editAusruestungForm'));
-
-        $.ajax({
-            url: 'include/update_ausruestungstyp.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Ausrüstungstyp erfolgreich bearbeitet.');
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
-            }
-        });
-    });
+    };
 
     // Historie anzeigen
     $(document).on('click', '.history-button', function() {
         const ausruestungId = $(this).data('id');
-        // Historie anzeigen
         openHistoryModal(ausruestungId);
     });
 

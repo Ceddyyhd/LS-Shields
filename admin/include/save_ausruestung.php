@@ -46,7 +46,17 @@ try {
     // Zunächst Bestandsprüfung für Artikel, die ausgegeben werden sollen (status = 1)
     foreach ($ausruestung as $key_name => $status) {
         if ($status == 1) { // Nur Artikel mit status = 1 (ausgegeben) prüfen
-            // Prüfe den aktuellen Bestand des Artikels
+            // Prüfe, ob der Artikel bereits in benutzer_ausruestung existiert und den status = 1 hat
+            $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
+            $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
+            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Wenn der Artikel bereits zugewiesen wurde (status = 1), überspringe die Bestandsprüfung
+            if ($existing && $existing['status'] == 1) {
+                continue; // Artikel wurde bereits zugewiesen, überspringen
+            }
+
+            // Prüfe den aktuellen Bestand des Artikels (nur wenn der Artikel noch nicht zugewiesen wurde oder zurückgegeben ist)
             $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
             $stmt->execute([':key_name' => $key_name]);
             $stock = $stmt->fetchColumn();

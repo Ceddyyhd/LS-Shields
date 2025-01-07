@@ -48,25 +48,20 @@ try {
         ':stock' => (int)$stock // Stellen Sie sicher, dass stock als Zahl behandelt wird
     ]);
 
-    // History-Eintrag erstellen
-    $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Bestand geändert', :stock_change, :editor_name)");
+    // History-Eintrag erstellen (Bestand geändert + Notiz zusammen)
+    $action = "Bestand geändert";
+    if (!empty($note)) {
+        $action .= " ($note)"; // Füge die Notiz zur Aktion hinzu
+    }
+
+    $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
     $stmt->execute([
         ':user_id' => $user_id,
         ':key_name' => $key_name,
+        ':action' => $action, // Aktion enthält jetzt auch die Notiz
         ':stock_change' => (int)$stock, // Bestandsänderung
         ':editor_name' => $editor_name
     ]);
-
-    // Wenn eine Notiz hinzugefügt wurde, speichern wir sie auch in der History
-    if (!empty($note)) {
-        $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :note, 0, :editor_name)");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':key_name' => $key_name,
-            ':note' => $note, // Notiz
-            ':editor_name' => $editor_name
-        ]);
-    }
 
     // Alle Änderungen abschließen
     $conn->commit();

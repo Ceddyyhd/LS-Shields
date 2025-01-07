@@ -1,7 +1,4 @@
 <?php
-// Start der Session sicherstellen
-session_start();
-
 // Fehlerprotokollierung aktivieren (für Debugging)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -11,6 +8,9 @@ error_reporting(E_ALL);
 include 'db.php';
 
 // Überprüfen, ob der Benutzer eingeloggt ist
+session_start();
+
+// Wenn der Benutzer nicht eingeloggt ist, dann nichts tun
 if (!isset($_SESSION['user_id'])) {
     die("Kein Benutzer eingeloggt.");
 }
@@ -22,11 +22,10 @@ $display_name = $_POST['display_name'];
 $category = $_POST['category'];
 $description = $_POST['description'];
 $stock = $_POST['stock'];
-$note = $_POST['note']; // Notiz für die History
-$user_id = $_SESSION['user_id']; // Benutzer-ID
-$editor_name = $_SESSION['user_name']; // Benutzername (Editor)
+$note = $_POST['note']; // Notiz zur Bestandsänderung
+$user_name = $_POST['user_name']; // Benutzernamen vom versteckten Input
+$user_id = $_SESSION['user_id']; // Benutzer-ID aus der Session
 
-// Fehlerbehandlung
 try {
     // Beginne die Transaktion
     $conn->beginTransaction();
@@ -41,7 +40,7 @@ try {
         ':description' => $description
     ]);
 
-    // Bestandsänderung aktualisieren (Sicherstellen, dass stock als Zahl behandelt wird)
+    // Bestandsänderung aktualisieren
     $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE id = :id");
     $stmt->execute([
         ':id' => $id,
@@ -54,7 +53,7 @@ try {
         ':user_id' => $user_id,
         ':key_name' => $key_name,
         ':stock_change' => (int)$stock, // Bestandsänderung
-        ':editor_name' => $editor_name
+        ':editor_name' => $user_name
     ]);
 
     // Wenn eine Notiz hinzugefügt wurde, speichern wir sie auch in der History
@@ -64,7 +63,7 @@ try {
             ':user_id' => $user_id,
             ':key_name' => $key_name,
             ':note' => $note, // Notiz
-            ':editor_name' => $editor_name
+            ':editor_name' => $user_name
         ]);
     }
 

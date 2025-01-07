@@ -127,36 +127,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editAusruestungForm">
-                    <input type="hidden" id="edit_id" name="id">
-                    <div class="form-group">
-                        <label for="edit_key_name">Key Name</label>
-                        <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_display_name">Display Name</label>
-                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_category">Kategorie</label>
-                        <select class="form-control" id="edit_category" name="category">
-                            <!-- Kategorien werden hier dynamisch geladen -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_description">Beschreibung</label>
-                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_stock">Bestand</label>
-                        <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
-                    </div>
-                    <div class="form-group">
-                        <label for="note">Notiz zur Bestandsänderung</label>
-                        <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
-                    </div>
-                </form>
-            </div>
+    <form id="editAusruestungForm">
+        <input type="hidden" id="edit_user_name" name="user_name"> <!-- Verstecktes Input für Benutzernamen -->
+        <input type="hidden" id="edit_id" name="id">
+        <div class="form-group">
+            <label for="edit_key_name">Key Name</label>
+            <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
+        </div>
+        <div class="form-group">
+            <label for="edit_display_name">Display Name</label>
+            <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
+        </div>
+        <div class="form-group">
+            <label for="edit_category">Kategorie</label>
+            <select class="form-control" id="edit_category" name="category">
+                <!-- Kategorien werden hier dynamisch geladen -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="edit_description">Beschreibung</label>
+            <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="edit_stock">Bestand</label>
+            <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
+        </div>
+        <div class="form-group">
+            <label for="note">Notiz zur Bestandsänderung</label>
+            <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
+        </div>
+    </form>
+</div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                 <button type="button" class="btn btn-primary" id="saveEditAusruestung">Speichern</button>
@@ -276,20 +277,24 @@ $(document).ready(function() {
         $('#edit_stock').val(stock);
 
         loadCategories(category);
+        
+        // Hier den Benutzernamen aus der Session setzen und in das versteckte Input eintragen
+        const userName = '<?php echo $_SESSION["user_name"]; ?>'; // PHP-Session-Wert einfügen
+        $('#edit_user_name').val(userName);
+
         $('#modal-ausruestung-edit').modal('show');
     }
 
-    // Funktion zum Laden der Kategorien und Auswahl der richtigen Kategorie
+    // Funktion zum Laden der Kategorien
     function loadCategories(selectedCategory) {
         $.ajax({
-            url: 'include/fetch_kategorien.php', // Abrufen der Kategorien
+            url: 'include/fetch_kategorien.php',
             type: 'GET',
             dataType: 'json',
             success: function(data) {
                 const categorySelect = $('#edit_category');
                 categorySelect.empty();
 
-                // Füge alle Kategorien hinzu
                 data.forEach(function(category) {
                     const isSelected = category.name === selectedCategory ? 'selected' : '';
                     categorySelect.append(`<option value="${category.name}" ${isSelected}>${category.name}</option>`);

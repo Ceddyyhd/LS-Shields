@@ -294,7 +294,7 @@ $(document).ready(function() {
     // Funktion zum Laden der Kategorien (falls erforderlich)
     function loadCategories() {
         $.ajax({
-            url: 'include/fetch_categories.php', // Beispiel-URL für das Abrufen der Kategorien
+            url: 'include/fetch_kategorien.php', // Beispiel-URL für das Abrufen der Kategorien
             type: 'GET',
             dataType: 'json',
             success: function(data) {

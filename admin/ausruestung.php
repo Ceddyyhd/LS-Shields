@@ -209,7 +209,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
     $.ajax({
-        url: 'include/fetch_ausruestungstyp.php',
+        url: 'include/fetch_ausruestungstypen.php',
         type: 'GET',
         dataType: 'json',
         success: function(data) {

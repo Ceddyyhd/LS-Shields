@@ -2,14 +2,14 @@
 // Datenbankverbindung einbinden
 include 'db.php';
 
-// Überprüfen, ob die ID der Ausrüstung übergeben wurde
+// Überprüfen, ob der key_name der Ausrüstung übergeben wurde
 if (isset($_GET['id'])) {
-    $ausruestungId = (int) $_GET['id'];
+    $key_name = $_GET['id'];  // Der key_name wird als Parameter übergeben
 
-    // Abfrage zur Auswahl der Historie für die angegebene Ausrüstung
+    // Abfrage zur Auswahl der Historie für den angegebenen key_name
     $sql = "SELECT * FROM ausruestung_history WHERE key_name = :key_name ORDER BY timestamp DESC";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([':key_name' => $ausruestungId]);
+    $stmt->execute([':key_name' => $key_name]);
 
     // Alle Historie-Einträge abrufen
     $history = $stmt->fetchAll(PDO::FETCH_ASSOC);

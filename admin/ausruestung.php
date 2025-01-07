@@ -252,7 +252,7 @@ $(document).ready(function() {
                         <td>
                             ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
-                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
+                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.key_name}">Historie</button> <!-- Historie-Button -->
                         </td>
                     </tr>
                 `);

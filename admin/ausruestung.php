@@ -121,6 +121,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_description">Beschreibung</label>
                         <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
                     </div>
+                    <!-- Stock-Feld hinzufügen -->
+                    <div class="form-group">
+                        <label for="edit_stock">Bestand</label>
+                        <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
+                    </div>
+                    <!-- Notiz-Feld hinzufügen -->
+                    <div class="form-group">
+                        <label for="edit_note">Notiz</label>
+                        <textarea class="form-control" id="edit_note" name="note" placeholder="Enter a note for the history"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -130,6 +140,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 
 
 <div class="card-body">
@@ -282,23 +293,23 @@ $(document).ready(function() {
     });
 
     $('#saveEditAusruestung').click(function() {
-        const formData = new FormData(document.getElementById('editAusruestungForm'));
+    const formData = new FormData(document.getElementById('editAusruestungForm'));
 
-        $.ajax({
-            url: 'include/update_ausruestungstyp.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Ausrüstungstyp erfolgreich bearbeitet.');
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
-            }
-        });
+    $.ajax({
+        url: 'include/update_ausruestungstyp.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            alert('Ausrüstungstyp erfolgreich bearbeitet.');
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+            alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
+        }
     });
+});
 
     // Löschen
     function deleteAusruestungTyp(id) {

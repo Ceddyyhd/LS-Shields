@@ -52,9 +52,6 @@ try {
             $stmt->execute([':key_name' => $key_name]);
             $stock = $stmt->fetchColumn();
 
-            // Debugging: Ausgabe des Bestandswertes
-            echo 'Bestand für ' . $key_name . ': ' . $stock . '<br>';
-
             // Wenn der Bestand kleiner oder gleich 0 ist, zurückgeben
             if ($stock <= 0) {
                 echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);

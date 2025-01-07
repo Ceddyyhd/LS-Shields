@@ -115,7 +115,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
-
+<?php $user_name = $_POST['user_name']; // Benutzernamen vom versteckten Input
+?>
 <!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-edit">
     <div class="modal-dialog">

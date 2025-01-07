@@ -45,12 +45,15 @@ try {
 
     // Zunächst Bestandsprüfung für neue Artikel, die hinzugefügt werden
     foreach ($ausruestung as $key_name => $status) {
-        // Wenn der Status auf 1 (ausgegeben) gesetzt wird, überprüfen wir den Bestand nur für den neuen Artikel
+        // Nur wenn der Status auf 1 gesetzt ist, wird der Bestand überprüft
         if ($status == 1) {
             // Prüfe den aktuellen Bestand des Artikels
             $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
             $stmt->execute([':key_name' => $key_name]);
             $stock = $stmt->fetchColumn();
+
+            // Debugging: Ausgabe des Bestandswertes
+            echo 'Bestand für ' . $key_name . ': ' . $stock . '<br>';
 
             // Wenn der Bestand kleiner oder gleich 0 ist, zurückgeben
             if ($stock <= 0) {

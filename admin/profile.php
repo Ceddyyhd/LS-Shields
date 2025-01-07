@@ -1000,7 +1000,7 @@ $("#noteForm").on("submit", function (e) {
 </script>
 
 
-                  <!-- Ausrüstung -->
+<!-- Ausrüstung -->
 <div class="tab-pane" id="ausruestung">
     <form id="ausruestungForm">
         <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id); ?>">
@@ -1071,6 +1071,9 @@ $("#noteForm").on("submit", function (e) {
         // Formulardaten sammeln
         var formData = new FormData(document.getElementById('ausruestungForm'));
 
+        // Debugging: Ausgabe der Formulardaten
+        console.log("Formulardaten:", formData);
+
         // AJAX-Anfrage starten
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'include/save_ausruestung.php', true);
@@ -1104,7 +1107,6 @@ $("#noteForm").on("submit", function (e) {
         xhr.send(formData);
     });
 </script>
-
 
 
 

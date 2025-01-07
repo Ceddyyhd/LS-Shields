@@ -43,17 +43,20 @@ try {
     // Beginne die Transaktion (damit alle Änderungen als eine Einheit gespeichert werden)
     $conn->beginTransaction();
 
-    // Zunächst Bestandsprüfung für alle Artikel
+    // Zunächst Bestandsprüfung für neue Artikel, die hinzugefügt werden
     foreach ($ausruestung as $key_name => $status) {
-        // Prüfe den aktuellen Bestand
-        $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
-        $stmt->execute([':key_name' => $key_name]);
-        $stock = $stmt->fetchColumn();
+        // Wenn der Status auf 1 (ausgegeben) gesetzt wird, überprüfen wir den Bestand nur für den neuen Artikel
+        if ($status == 1) {
+            // Prüfe den aktuellen Bestand des Artikels
+            $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
+            $stmt->execute([':key_name' => $key_name]);
+            $stock = $stmt->fetchColumn();
 
-        // Wenn der Status auf 1 (ausgegeben) geändert wird, überprüfen, ob genug Bestand vorhanden ist
-        if ($status == 1 && $stock <= 0) {
-            echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
-            exit;
+            // Wenn der Bestand kleiner oder gleich 0 ist, zurückgeben
+            if ($stock <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
+                exit;
+            }
         }
     }
 

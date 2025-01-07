@@ -25,6 +25,7 @@ $stock = $_POST['stock'];
 $note = $_POST['note']; // Notiz zur Bestandsänderung
 $user_name = $_POST['user_name']; // Benutzernamen vom versteckten Input
 $user_id = $_SESSION['user_id']; // Benutzer-ID aus der Session
+$editor_name = $_POST['editor_name']; // Editor-Name aus dem versteckten Input
 
 try {
     // Beginne die Transaktion
@@ -53,7 +54,7 @@ try {
         ':user_id' => $user_id,
         ':key_name' => $key_name,
         ':stock_change' => (int)$stock, // Bestandsänderung
-        ':editor_name' => $user_name
+        ':editor_name' => $editor_name
     ]);
 
     // Wenn eine Notiz hinzugefügt wurde, speichern wir sie auch in der History
@@ -63,7 +64,7 @@ try {
             ':user_id' => $user_id,
             ':key_name' => $key_name,
             ':note' => $note, // Notiz
-            ':editor_name' => $user_name
+            ':editor_name' => $editor_name
         ]);
     }
 

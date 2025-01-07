@@ -115,15 +115,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
-<?php $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
-
-?>
+<?php $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist ?>
 <!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-edit">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?= htmlspecialchars($user_name); ?></h4>
+                <h4 class="modal-title">Ausrüstung Ändern</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -131,8 +129,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
                 <form id="editAusruestungForm">
                     <input type="hidden" id="edit_id" name="id">
-                    <input type="hidden" id="edit_user_name" name="user_name"> <!-- Hidden input für den Benutzernamen -->
-                    <input type="hidden" id="edit_editor_name" name="editor_name"> <!-- Hidden input für den Editor-Namen -->
+                    <input type="hidden" id="edit_user_name" name="user_name" value="<?php echo $user_name; ?>"> <!-- Benutzername aus der Session -->
+                    <input type="hidden" id="edit_editor_name" name="editor_name"> <!-- Hier setzen wir den `editor_name` -->
 
                     <div class="form-group">
                         <label for="edit_key_name">Key Name</label>
@@ -281,12 +279,12 @@ $(document).ready(function() {
         $('#edit_description').val(description);
         $('#edit_stock').val(stock); // Bestandswert setzen
 
-        // Setze die Kategorien und den Editor-Namen
-        loadCategories(category);
-        const userName = '<?php echo $_SESSION["user_name"]; ?>'; // PHP-Session-Wert für den Benutzernamen
+        // Setze den Editor-Namen und den Benutzernamen
+        const userName = '<?php echo $_SESSION["username"]; ?>'; // PHP-Session-Wert für den Benutzernamen
         $('#edit_user_name').val(userName); // Setze den Benutzernamen
         $('#edit_editor_name').val(userName); // Setze den Editor-Namen
 
+        loadCategories(category);
         $('#modal-ausruestung-edit').modal('show');
     }
 

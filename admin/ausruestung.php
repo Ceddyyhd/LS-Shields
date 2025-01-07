@@ -48,6 +48,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </button>
     </h3>
   </div>
+  <div class="card-header">
+    <h3 class="card-title">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
+            Ausbildungstyp erstellen
+        </button>
+    </h3>
+  </div>
 <?php endif; ?>
 
 <!-- Modal für das Erstellen eines neuen Ausrüstungstyps -->

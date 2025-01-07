@@ -22,6 +22,14 @@ try {
     // Beginne die Transaktion
     $conn->beginTransaction();
 
+    // Hole den aktuellen Bestand aus der Datenbank, um die Bestandsänderung zu berechnen
+    $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $existingStock = $stmt->fetchColumn();
+
+    // Berechne die Bestandsänderung
+    $stockChange = $stock - $existingStock;
+
     // Update des Ausrüstungstyps in der Tabelle
     $stmt = $conn->prepare("UPDATE ausruestungstypen SET key_name = :key_name, display_name = :display_name, category = :category, description = :description WHERE id = :id");
     $stmt->execute([
@@ -39,12 +47,12 @@ try {
         ':stock' => $stock
     ]);
 
-    // History-Eintrag erstellen
+    // History-Eintrag für die Bestandsänderung erstellen
     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Bestand geändert', :stock_change, :editor_name)");
     $stmt->execute([
         ':user_id' => $user_id,
         ':key_name' => $key_name,
-        ':stock_change' => $stock, // Bestandsänderung
+        ':stock_change' => $stockChange, // Bestandsänderung
         ':editor_name' => $editor_name
     ]);
 
@@ -69,3 +77,4 @@ try {
     $conn->rollBack();
     echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
 }
+?>

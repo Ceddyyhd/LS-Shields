@@ -1,14 +1,13 @@
 <?php
-require_once 'db.php'; // Deine DB-Verbindungsdatei
+require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Empfangen der neuen Kategorie
-    $newCategory = $_POST['new_category'];
+    $newCategoryName = $_POST['new_category_name'];
 
-    // SQL-Abfrage zum Einfügen der neuen Kategorie
-    $sql = "INSERT INTO ausruestungstypen (category) VALUES (:new_category)";
+    // Verhindern, dass eine doppelte Kategorie hinzugefügt wird
+    $sql = "INSERT INTO ausruestungskategorien (name) VALUES (:name)";
     $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':new_category', $newCategory);
+    $stmt->bindParam(':name', $newCategoryName);
 
     try {
         $stmt->execute();
@@ -20,5 +19,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
 }
 
-$conn = null; // Verbindung schließen
+$conn = null;
 ?>

@@ -209,7 +209,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
     $.ajax({
-        url: 'include/fetch_ausrueestungstypen.php',
+        url: 'include/fetch_ausruestungstypen.php',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -225,7 +225,7 @@ $(document).ready(function() {
                         <td>${ausruestung.description}</td>
                         <td>${ausruestung.stock}</td> <!-- Bestand -->
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
                             <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>

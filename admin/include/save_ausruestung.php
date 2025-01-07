@@ -76,24 +76,23 @@ try {
         $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Wenn der Artikel zurückgegeben wird (Status 0)
-        if ($status == 0) {
-            // Wenn der Artikel bereits ausgegeben war, dann zurückgeben
-            if ($existing && $existing['status'] == 1) {
-                // Bestands-Update und History-Eintrag, wenn Artikel zurückgegeben wird
-                $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 0 WHERE user_id = :user_id AND key_name = :key_name");
-                $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
+        // Wenn der Artikel zurückgegeben wird (Status 0) und der Artikel aktuell zugewiesen ist
+        if ($status == 0 && $existing && $existing['status'] == 1) {
+            // Setze den Artikel auf "zurückgegeben" (status = 0)
+            $stmt = $conn->prepare("UPDATE benutzer_ausruestung SET status = 0 WHERE user_id = :user_id AND key_name = :key_name");
+            $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
 
-                // Bestands-Update in der Tabelle ausruestungstypen (Stock erhöhen)
-                $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock + 1 WHERE key_name = :key_name");
-                $stmt->execute([':key_name' => $key_name]);
+            // Bestands-Update in der Tabelle ausruestungstypen (Stock erhöhen)
+            $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = stock + 1 WHERE key_name = :key_name");
+            $stmt->execute([':key_name' => $key_name]);
 
-                // History-Eintrag
-                $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
-                $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':editor_name' => $user_name]);
-            }
-        } elseif ($status == 1) {
-            // Wenn der Artikel ausgegeben wird (Status 1)
+            // History-Eintrag mit Aktion "Zurückgabe"
+            $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
+            $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':editor_name' => $user_name]);
+        }
+
+        // Wenn der Artikel ausgegeben wird (Status 1)
+        elseif ($status == 1) {
             if ($existing) {
                 // Wenn der Artikel bereits vorhanden war, update den Status nur, wenn der Status 0 war
                 if ($existing['status'] == 0) {

@@ -151,16 +151,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_stock">Bestand</label>
                         <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
                     </div>
+                    <!-- Notizfeld für die Bestandsänderung -->
                     <div class="form-group">
-                        <label for="new_category">Neue Kategorie</label>
-                        <input type="text" class="form-control" id="new_category" name="new_category" placeholder="Neue Kategorie hinzufügen">
+                        <label for="note">Notiz zur Bestandsänderung</label>
+                        <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                 <button type="button" class="btn btn-primary" id="saveEditAusruestung">Speichern</button>
-                <button type="button" class="btn btn-success" id="saveCategory">Kategorie hinzufügen</button>
             </div>
         </div>
     </div>
@@ -238,7 +238,7 @@ $(document).ready(function() {
         dataType: 'json',
         success: function(data) {
             const tableBody = $('#example1 tbody');
-            tableBody.empty(); 
+            tableBody.empty();
 
             data.forEach(function(ausruestung) {
                 tableBody.append(`
@@ -260,42 +260,6 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
             alert('Fehler beim Abrufen der Ausrüstungstypen.');
         }
-    });
-
-    // Funktion zum Öffnen des Historien-Modals
-    function openHistoryModal(ausruestungId) {
-        $.ajax({
-            url: 'include/fetch_ausruestung_history.php',
-            type: 'GET',
-            data: { id: ausruestungId },
-            dataType: 'json',
-            success: function(data) {
-                const historyTableBody = $("#historyTable tbody");
-                historyTableBody.empty();
-
-                data.forEach(function(historyEntry) {
-                    historyTableBody.append(`
-                        <tr>
-                            <td>${historyEntry.timestamp}</td>
-                            <td>${historyEntry.action}</td>
-                            <td>${historyEntry.stock_change}</td>
-                            <td>${historyEntry.editor_name}</td>
-                        </tr>
-                    `);
-                });
-
-                $("#modal-history").modal("show");
-            },
-            error: function(xhr, status, error) {
-                alert("Fehler beim Abrufen der Historie.");
-            }
-        });
-    }
-
-    // Event-Listener für den Historien-Button
-    $(document).on('click', '.history-button', function() {
-        const ausruestungId = $(this).data('id');
-        openHistoryModal(ausruestungId);
     });
 
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
@@ -357,44 +321,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // Speichern der neuen Ausrüstung
-    $('#saveAusruestung').click(function() {
-        const formData = new FormData(document.getElementById('createAusruestungForm'));
-
-        $.ajax({
-            url: 'include/create_ausruestungstyp.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Ausrüstungstyp erfolgreich erstellt.');
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Fehler beim Erstellen des Ausrüstungstyps.');
-            }
-        });
-    });
-
-    // Löschen der Ausrüstung
-    function deleteAusruestungTyp(id) {
-        if (confirm('Möchten Sie diesen Ausrüstungstyp wirklich löschen?')) {
-            $.ajax({
-                url: 'include/delete_ausruestungstyp.php',
-                type: 'POST',
-                data: { id: id },
-                success: function(response) {
-                    alert('Ausrüstungstyp archiviert');
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    alert('Fehler beim Archivieren des Ausrüstungstyps.');
-                }
-            });
-        }
-    }
 });
 
 

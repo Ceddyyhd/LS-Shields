@@ -11,7 +11,7 @@ include 'db.php';
 $id = $_POST['id']; // ID des Ausrüstungstyps
 $key_name = $_POST['key_name'];
 $display_name = $_POST['display_name'];
-$category = $_POST['category'];
+$category = $_POST['category']; // Kategorie ID
 $description = $_POST['description'];
 $stock = $_POST['stock'];
 $note = $_POST['note']; // Notiz für die History
@@ -36,7 +36,7 @@ try {
         ':id' => $id,
         ':key_name' => $key_name,
         ':display_name' => $display_name,
-        ':category' => $category,
+        ':category' => $category, // Kategorie wird über ID gesetzt
         ':description' => $description
     ]);
 

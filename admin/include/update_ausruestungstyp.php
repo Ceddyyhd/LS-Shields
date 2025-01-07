@@ -31,6 +31,11 @@ try {
     // Beginne die Transaktion
     $conn->beginTransaction();
 
+    // Holen des aktuellen Bestands
+    $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $currentStock = $stmt->fetchColumn();
+
     // Update des Ausrüstungstyps in der Tabelle
     $stmt = $conn->prepare("UPDATE ausruestungstypen SET key_name = :key_name, display_name = :display_name, category = :category, description = :description WHERE id = :id");
     $stmt->execute([
@@ -54,11 +59,15 @@ try {
         $action .= " ($note)"; // Füge die Notiz zur Aktion hinzu
     }
 
+    // Füge die Bestandsänderung in der History hinzu
+    $action .= " (Alter Bestand: $currentStock -> Neuer Bestand: $stock)"; // Zeige alte und neue Bestandszahlen an
+
+    // History-Eintrag für Bestandsänderung
     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
     $stmt->execute([
         ':user_id' => $user_id,
         ':key_name' => $key_name,
-        ':action' => $action, // Aktion enthält jetzt auch die Notiz
+        ':action' => $action, // Aktion enthält jetzt auch die Notiz und Bestandsänderung
         ':stock_change' => (int)$stock, // Bestandsänderung
         ':editor_name' => $editor_name
     ]);

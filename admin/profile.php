@@ -1068,44 +1068,57 @@ $("#noteForm").on("submit", function (e) {
 
 <script>
     document.getElementById('saveAusruestungButton').addEventListener('click', function() {
-        // Formulardaten sammeln
-        var formData = new FormData(document.getElementById('ausruestungForm'));
-
-        // Debugging: Ausgabe der Formulardaten
-        console.log("Formulardaten:", formData);
-
-        // AJAX-Anfrage starten
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'include/save_ausruestung.php', true);
-
-        // Response-Handler definieren
-        xhr.onload = function() {
-    if (xhr.status === 200) {
-        console.log(xhr.responseText); // Ausgabe der Antwort im Browser
-        try {
-            var response = JSON.parse(xhr.responseText);
-            if (response.success) {
-                alert('Änderungen wurden erfolgreich gespeichert!');
-            } else {
-                alert('Fehler beim Speichern: ' + response.message);
-            }
-        } catch (e) {
-            alert('Fehler beim Parsen der Antwort!');
-            console.error(e);
+    // Alle nicht aktivierten Checkboxen auf "0" setzen
+    var checkboxes = document.querySelectorAll('.form-check-input');
+    checkboxes.forEach(function(checkbox) {
+        if (!checkbox.checked) {
+            // Wenn die Checkbox nicht aktiviert ist, setze den Wert auf "0"
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ausruestung[' + checkbox.id + ']';
+            input.value = '0';
+            document.getElementById('ausruestungForm').appendChild(input);
         }
-    } else {
-        alert('Fehler beim Speichern: ' + xhr.status);
-    }
-};
-
-        // Fehler im Request
-        xhr.onerror = function() {
-            alert('Fehler beim Senden der Anfrage!');
-        };
-
-        // Anfrage absenden
-        xhr.send(formData);
     });
+
+    // Formulardaten sammeln
+    var formData = new FormData(document.getElementById('ausruestungForm'));
+
+    // Debugging: Ausgabe der Formulardaten
+    console.log("Formulardaten:", formData);
+
+    // AJAX-Anfrage starten
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'include/save_ausruestung.php', true);
+
+    // Response-Handler definieren
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            console.log(xhr.responseText); // Ausgabe der Antwort im Browser
+            try {
+                var response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    alert('Änderungen wurden erfolgreich gespeichert!');
+                } else {
+                    alert('Fehler beim Speichern: ' + response.message);
+                }
+            } catch (e) {
+                alert('Fehler beim Parsen der Antwort!');
+                console.error(e);
+            }
+        } else {
+            alert('Fehler beim Speichern: ' + xhr.status);
+        }
+    };
+
+    // Fehler im Request
+    xhr.onerror = function() {
+        alert('Fehler beim Senden der Anfrage!');
+    };
+
+    // Anfrage absenden
+    xhr.send(formData);
+});
 </script>
 
 

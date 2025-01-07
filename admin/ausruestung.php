@@ -126,20 +126,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_stock">Bestand</label>
                         <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
                     </div>
-                    <!-- Notiz-Feld hinzufügen -->
+                    <!-- Kategorie-Feld zum Hinzufügen -->
                     <div class="form-group">
-                        <label for="edit_note">Notiz</label>
-                        <textarea class="form-control" id="edit_note" name="note" placeholder="Enter a note for the history"></textarea>
+                        <label for="new_category">Neue Kategorie</label>
+                        <input type="text" class="form-control" id="new_category" name="new_category" placeholder="Neue Kategorie hinzufügen">
                     </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                 <button type="button" class="btn btn-primary" id="saveEditAusruestung">Speichern</button>
+                <button type="button" class="btn btn-success" id="saveCategory">Kategorie hinzufügen</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -207,7 +209,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
     $.ajax({
-        url: 'include/fetch_ausruestungstypen.php',
+        url: 'include/fetch_ausrueestungstypen.php',
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -223,7 +225,7 @@ $(document).ready(function() {
                         <td>${ausruestung.description}</td>
                         <td>${ausruestung.stock}</td> <!-- Bestand -->
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
                             <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>
@@ -268,60 +270,81 @@ $(document).ready(function() {
 
     // Event-Listener für den Historien-Button
     $(document).on('click', '.history-button', function() {
-        const ausruestungId = $(this).data('id');  // Hole die ID aus dem Button-Attribut
-        openHistoryModal(ausruestungId);  // Rufe die openHistoryModal Funktion auf
+        const ausruestungId = $(this).data('id');
+        openHistoryModal(ausruestungId);
     });
 
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
     function openEditModal(button) {
-    const id = $(button).data('id');
-    const keyName = $(button).data('keyname');
-    const displayName = $(button).data('displayname');
-    const category = $(button).data('category');
-    const description = $(button).data('description');
-    const stock = $(button).data('stock'); // Bestand
+        const id = $(button).data('id');
+        const keyName = $(button).data('keyname');
+        const displayName = $(button).data('displayname');
+        const category = $(button).data('category');
+        const description = $(button).data('description');
+        const stock = $(button).data('stock'); // Bestandswert
 
-    // Setze die Werte in das Bearbeiten-Formular
-    $('#edit_id').val(id);
-    $('#edit_key_name').val(keyName);
-    $('#edit_display_name').val(displayName);
-    $('#edit_description').val(description);
-    $('#edit_stock').val(stock); // Bestandswert setzen
-    $('#edit_category').val(category); // Kategorie setzen
+        // Setze die Werte in das Bearbeiten-Formular
+        $('#edit_id').val(id);
+        $('#edit_key_name').val(keyName);
+        $('#edit_display_name').val(displayName);
+        $('#edit_description').val(description);
+        $('#edit_stock').val(stock); // Setze den Stock-Wert
+        $('#edit_category').val(category); // Setze die Kategorie
 
-    // Lade die Kategorien und setze die richtige Auswahl im Kategorie-Select
-    loadCategories(category); // Lade Kategorien und setze den Wert auf die aktuelle Kategorie
+        // Lade die Kategorien und setze die richtige Auswahl im Kategorie-Select
+        loadCategories(category);
 
-    // Öffne das Modal
-    $('#modal-ausruestung-edit').modal('show');
-}
+        // Öffne das Modal
+        $('#modal-ausruestung-edit').modal('show');
+    }
 
-    // Funktion zum Laden der Kategorien (falls erforderlich)
+    // Funktion zum Laden der Kategorien
     function loadCategories(selectedCategory) {
-    $.ajax({
-        url: 'include/fetch_kategorien.php', // Abrufen der Kategorien
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            const categorySelect = $('#edit_category');
-            categorySelect.empty(); // Leere die alten Optionen
+        $.ajax({
+            url: 'include/fetch_kategorien.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const categorySelect = $('#edit_category');
+                categorySelect.empty(); // Leere die alten Optionen
 
-            // Füge die neuen Optionen hinzu
-            data.forEach(function(category) {
-                const isSelected = category.category === selectedCategory ? 'selected' : '';
-                categorySelect.append(`<option value="${category.category}" ${isSelected}>${category.category}</option>`);
+                // Füge die neuen Optionen hinzu
+                data.forEach(function(category) {
+                    const isSelected = category.category === selectedCategory ? 'selected' : '';
+                    categorySelect.append(`<option value="${category.category}" ${isSelected}>${category.category}</option>`);
+                });
+            },
+            error: function() {
+                alert('Fehler beim Laden der Kategorien.');
+            }
+        });
+    }
+
+    // Speichern der neuen Kategorie
+    $('#saveCategory').click(function() {
+        const newCategory = $('#new_category').val(); // Hole den Wert aus dem Eingabefeld
+
+        if (newCategory) {
+            $.ajax({
+                url: 'include/add_category.php',
+                type: 'POST',
+                data: { new_category: newCategory },
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    if (data.success) {
+                        alert('Kategorie erfolgreich hinzugefügt.');
+                        loadCategories(); // Aktualisiere die Kategorien im Modal
+                    } else {
+                        alert('Fehler beim Hinzufügen der Kategorie: ' + data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler beim Hinzufügen der Kategorie.');
+                }
             });
-        },
-        error: function() {
-            alert('Fehler beim Laden der Kategorien.');
+        } else {
+            alert('Bitte eine Kategorie eingeben.');
         }
-    });
-}
-
-    // Event-Listener für den Bearbeiten-Button
-    $(document).on('click', '.btn-outline-secondary', function() {
-        loadCategories(); // Lade die Kategorien, wenn das Modal geöffnet wird
-        openEditModal(this); // Öffne das Bearbeiten-Modal und setze die Daten
     });
 
     // Speichern der Änderungen
@@ -344,26 +367,6 @@ $(document).ready(function() {
         });
     });
 
-    // Speichern der neuen Ausrüstung
-    $('#saveAusruestung').click(function() {
-        const formData = new FormData(document.getElementById('createAusruestungForm'));
-
-        $.ajax({
-            url: 'include/create_ausruestungstyp.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Ausrüstungstyp erfolgreich erstellt.');
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Fehler beim Erstellen des Ausrüstungstyps.');
-            }
-        });
-    });
-
     // Löschen der Ausrüstung
     function deleteAusruestungTyp(id) {
         if (confirm('Möchten Sie diesen Ausrüstungstyp wirklich löschen?')) {
@@ -382,6 +385,7 @@ $(document).ready(function() {
         }
     }
 });
+
 
 </script>
 

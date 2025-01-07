@@ -203,7 +203,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <!-- Modal für Historie -->
 <div class="modal" id="modal-history">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 90%; margin: 30px auto;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Historie</h5>

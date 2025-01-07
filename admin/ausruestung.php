@@ -223,7 +223,7 @@ $(document).ready(function() {
                         <td>${ausruestung.description}</td>
                         <td>${ausruestung.stock}</td> <!-- Bestand -->
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
                             <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>
@@ -272,7 +272,73 @@ $(document).ready(function() {
         openHistoryModal(ausruestungId);  // Rufe die openHistoryModal Funktion auf
     });
 
-    // Weitere Funktionen (Speichern, Bearbeiten, Löschen etc.)
+    // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
+    function openEditModal(button) {
+        const id = $(button).data('id');
+        const keyName = $(button).data('keyname');
+        const displayName = $(button).data('displayname');
+        const category = $(button).data('category');
+        const description = $(button).data('description');
+
+        // Setze die Werte in das Bearbeiten-Formular
+        $('#edit_id').val(id);
+        $('#edit_key_name').val(keyName);
+        $('#edit_display_name').val(displayName);
+        $('#edit_category').val(category); // Hier muss eventuell auch das Kategorie-Select dynamisch geladen werden
+        $('#edit_description').val(description);
+
+        // Öffne das Modal
+        $('#modal-ausruestung-edit').modal('show');
+    }
+
+    // Funktion zum Laden der Kategorien (falls erforderlich)
+    function loadCategories() {
+        $.ajax({
+            url: 'include/fetch_categories.php', // Beispiel-URL für das Abrufen der Kategorien
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const categorySelect = $('#edit_category');
+                categorySelect.empty(); // Leere die alten Optionen
+
+                // Füge die neuen Optionen hinzu
+                data.forEach(function(category) {
+                    categorySelect.append(`<option value="${category.id}">${category.name}</option>`);
+                });
+            },
+            error: function() {
+                alert('Fehler beim Laden der Kategorien.');
+            }
+        });
+    }
+
+    // Event-Listener für den Bearbeiten-Button
+    $(document).on('click', '.btn-outline-secondary', function() {
+        loadCategories(); // Lade die Kategorien, wenn das Modal geöffnet wird
+        openEditModal(this); // Öffne das Bearbeiten-Modal und setze die Daten
+    });
+
+    // Speichern der Änderungen
+    $('#saveEditAusruestung').click(function() {
+        const formData = new FormData(document.getElementById('editAusruestungForm'));
+
+        $.ajax({
+            url: 'include/update_ausruestungstyp.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('Ausrüstungstyp erfolgreich bearbeitet.');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
+            }
+        });
+    });
+
+    // Speichern der neuen Ausrüstung
     $('#saveAusruestung').click(function() {
         const formData = new FormData(document.getElementById('createAusruestungForm'));
 
@@ -292,26 +358,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#saveEditAusruestung').click(function() {
-    const formData = new FormData(document.getElementById('editAusruestungForm'));
-
-    $.ajax({
-        url: 'include/update_ausruestungstyp.php',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            alert('Ausrüstungstyp erfolgreich bearbeitet.');
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            alert('Fehler beim Bearbeiten des Ausrüstungstyps.');
-        }
-    });
-});
-
-    // Löschen
+    // Löschen der Ausrüstung
     function deleteAusruestungTyp(id) {
         if (confirm('Möchten Sie diesen Ausrüstungstyp wirklich löschen?')) {
             $.ajax({
@@ -329,6 +376,7 @@ $(document).ready(function() {
         }
     }
 });
+
 </script>
 
 

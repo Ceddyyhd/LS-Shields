@@ -247,11 +247,11 @@ $(document).ready(function() {
                         <td>${ausruestung.key_name}</td>
                         <td>${ausruestung.display_name}</td>
                         <td>${ausruestung.description}</td>
-                        <td>${ausruestung.stock}</td>
+                        <td>${ausruestung.stock}</td> <!-- Bestand -->
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category_id + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
-                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button>
+                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>
                     </tr>
                 `);
@@ -262,8 +262,44 @@ $(document).ready(function() {
         }
     });
 
+    // Funktion zum Öffnen des Historien-Modals
+    function openHistoryModal(ausruestungId) {
+        $.ajax({
+            url: 'include/fetch_ausruestung_history.php',
+            type: 'GET',
+            data: { id: ausruestungId },
+            dataType: 'json',
+            success: function(data) {
+                const historyTableBody = $("#historyTable tbody");
+                historyTableBody.empty();
+
+                data.forEach(function(historyEntry) {
+                    historyTableBody.append(`
+                        <tr>
+                            <td>${historyEntry.timestamp}</td>
+                            <td>${historyEntry.action}</td>
+                            <td>${historyEntry.stock_change}</td>
+                            <td>${historyEntry.editor_name}</td>
+                        </tr>
+                    `);
+                });
+
+                $("#modal-history").modal("show");
+            },
+            error: function(xhr, status, error) {
+                alert("Fehler beim Abrufen der Historie.");
+            }
+        });
+    }
+
+    // Event-Listener für den Historien-Button
+    $(document).on('click', '.history-button', function() {
+        const ausruestungId = $(this).data('id');
+        openHistoryModal(ausruestungId);
+    });
+
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
-    function openEditModal(button) {
+    window.openEditModal = function(button) {
         const id = $(button).data('id');
         const keyName = $(button).data('keyname');
         const displayName = $(button).data('displayname');
@@ -341,7 +377,26 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Löschen der Ausrüstung
+    function deleteAusruestungTyp(id) {
+        if (confirm('Möchten Sie diesen Ausrüstungstyp wirklich löschen?')) {
+            $.ajax({
+                url: 'include/delete_ausruestungstyp.php',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    alert('Ausrüstungstyp archiviert');
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler beim Archivieren des Ausrüstungstyps.');
+                }
+            });
+        }
+    }
 });
+
 
 </script>
 

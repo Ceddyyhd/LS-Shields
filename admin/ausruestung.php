@@ -39,22 +39,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.content-header -->
 
   <!-- Main content -->
-  <div class="card">
-  <?php if (isset($_SESSION['permissions']['ausruestung_create']) && $_SESSION['permissions']['ausruestung_create']): ?>
-  <div class="card-header">
-    <h3 class="card-title">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
-            Ausbildungstyp erstellen
-        </button>
-    </h3>
-    <h3 class="card-title">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
-            Ausbildungstyp erstellen
-        </button>
-    </h3>
-  </div>
-  
-<?php endif; ?>
+<div class="card">
+    <?php if (isset($_SESSION['permissions']['ausruestung_create']) && $_SESSION['permissions']['ausruestung_create']): ?>
+    <div class="card-header">
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
+                Ausbildungstyp erstellen
+            </button>
+        </h3>
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kategorie-create">
+                Kategorie Erstellen
+            </button>
+        </h3>
+    </div>
+    <?php endif; ?>
 
 <!-- Modal für das Erstellen eines neuen Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-create">
@@ -121,7 +120,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
-<?php $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist ?>
+
+<?php $user_name = $_SESSION['username'] ?? 'Gast'; ?>
+
 <!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-edit">
     <div class="modal-dialog">
@@ -136,7 +137,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <form id="editAusruestungForm">
                     <input type="hidden" id="edit_id" name="id">
                     <input type="hidden" id="edit_user_name" name="user_name" value="<?php echo $user_name; ?>"> <!-- Benutzername aus der Session -->
-                    <input type="hidden" id="edit_editor_name" name="editor_name"> <!-- Hier setzen wir den `editor_name` -->
+                    <input type="hidden" id="edit_editor_name" name="editor_name">
 
                     <div class="form-group">
                         <label for="edit_key_name">Key Name</label>
@@ -160,7 +161,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_stock">Bestand</label>
                         <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
                     </div>
-                    <!-- Notizfeld für die Bestandsänderung -->
                     <div class="form-group">
                         <label for="note">Notiz zur Bestandsänderung</label>
                         <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
@@ -175,39 +175,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-
-
-
 <div class="card-body">
-  <table id="example1" class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Stock</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Daten werden dynamisch geladen -->
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Stock</th>
-        <th>Aktion</th>
-      </tr>
-    </tfoot>
-  </table>
-    </div>
-  </div>
+    <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Key Name</th>
+                <th>Display Name</th>
+                <th>Description</th>
+                <th>Stock</th>
+                <th>Aktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Daten werden dynamisch geladen -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Key Name</th>
+                <th>Display Name</th>
+                <th>Description</th>
+                <th>Stock</th>
+                <th>Aktion</th>
+            </tr>
+        </tfoot>
+    </table>
 </div>
-
 
 <!-- Modal für Historie -->
 <div class="modal" id="modal-history">
@@ -237,6 +231,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 <script>
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
@@ -335,8 +330,8 @@ $(document).ready(function() {
         });
     });
 });
-
 </script>
+
 
 
 

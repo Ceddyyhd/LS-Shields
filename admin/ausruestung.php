@@ -83,8 +83,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="saveAusruestung">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal für das Erstellen einer neuen Kategorie -->
+<div class="modal fade" id="modal-kategorie-create">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Kategorie Erstellen</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createKategorieForm">
+                    <div class="form-group">
+                        <label for="new_category_name">Kategorie Name</label>
+                        <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Kategorie hinzufügen">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-success" id="saveNewCategory">Kategorie hinzufügen</button>
             </div>
         </div>
     </div>
@@ -140,7 +166,70 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
+
+
+
+<div class="card-body">
+  <table id="example1" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Key Name</th>
+        <th>Display Name</th>
+        <th>Description</th>
+        <th>Stock</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Daten werden dynamisch geladen -->
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>#</th>
+        <th>Key Name</th>
+        <th>Display Name</th>
+        <th>Description</th>
+        <th>Stock</th>
+        <th>Aktion</th>
+      </tr>
+    </tfoot>
+  </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal für Historie -->
+<div class="modal" id="modal-history">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historie</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="historyTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Aktion</th>
+                            <th>Bestandsänderung</th>
+                            <th>Benutzer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Historie wird hier eingefügt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+<!-- JavaScript für den gesamten Code -->
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
     $.ajax({
@@ -233,8 +322,9 @@ $(document).ready(function() {
         });
     });
 });
-</script>
 
+
+</script>
 
 
 

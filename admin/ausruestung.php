@@ -279,19 +279,20 @@ $(document).ready(function() {
         $('#modal-ausruestung-edit').modal('show');
     }
 
-    // Funktion zum Laden der Kategorien (diesmal mit der Kategorie-ID)
+    // Funktion zum Laden der Kategorien und Auswahl der richtigen Kategorie
     function loadCategories(selectedCategory) {
         $.ajax({
-            url: 'include/fetch_kategorien.php',
+            url: 'include/fetch_kategorien.php', // Abrufen der Kategorien
             type: 'GET',
             dataType: 'json',
             success: function(data) {
                 const categorySelect = $('#edit_category');
                 categorySelect.empty();
 
+                // Füge alle Kategorien hinzu
                 data.forEach(function(category) {
-                    const isSelected = category.id === selectedCategory ? 'selected' : '';
-                    categorySelect.append(`<option value="${category.id}" ${isSelected}>${category.name}</option>`);
+                    const isSelected = category.name === selectedCategory ? 'selected' : '';
+                    categorySelect.append(`<option value="${category.name}" ${isSelected}>${category.name}</option>`);
                 });
             },
             error: function() {
@@ -320,6 +321,7 @@ $(document).ready(function() {
         });
     });
 });
+
 </script>
 
 

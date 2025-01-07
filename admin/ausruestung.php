@@ -274,43 +274,49 @@ $(document).ready(function() {
 
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
     function openEditModal(button) {
-        const id = $(button).data('id');
-        const keyName = $(button).data('keyname');
-        const displayName = $(button).data('displayname');
-        const category = $(button).data('category');
-        const description = $(button).data('description');
+    const id = $(button).data('id');
+    const keyName = $(button).data('keyname');
+    const displayName = $(button).data('displayname');
+    const category = $(button).data('category');
+    const description = $(button).data('description');
+    const stock = $(button).data('stock'); // Bestand
 
-        // Setze die Werte in das Bearbeiten-Formular
-        $('#edit_id').val(id);
-        $('#edit_key_name').val(keyName);
-        $('#edit_display_name').val(displayName);
-        $('#edit_category').val(category); // Hier muss eventuell auch das Kategorie-Select dynamisch geladen werden
-        $('#edit_description').val(description);
+    // Setze die Werte in das Bearbeiten-Formular
+    $('#edit_id').val(id);
+    $('#edit_key_name').val(keyName);
+    $('#edit_display_name').val(displayName);
+    $('#edit_description').val(description);
+    $('#edit_stock').val(stock); // Bestandswert setzen
+    $('#edit_category').val(category); // Kategorie setzen
 
-        // Öffne das Modal
-        $('#modal-ausruestung-edit').modal('show');
-    }
+    // Lade die Kategorien und setze die richtige Auswahl im Kategorie-Select
+    loadCategories(category); // Lade Kategorien und setze den Wert auf die aktuelle Kategorie
+
+    // Öffne das Modal
+    $('#modal-ausruestung-edit').modal('show');
+}
 
     // Funktion zum Laden der Kategorien (falls erforderlich)
-    function loadCategories() {
-        $.ajax({
-            url: 'include/fetch_kategorien.php', // Beispiel-URL für das Abrufen der Kategorien
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                const categorySelect = $('#edit_category');
-                categorySelect.empty(); // Leere die alten Optionen
+    function loadCategories(selectedCategory) {
+    $.ajax({
+        url: 'include/fetch_kategorien.php', // Abrufen der Kategorien
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const categorySelect = $('#edit_category');
+            categorySelect.empty(); // Leere die alten Optionen
 
-                // Füge die neuen Optionen hinzu
-                data.forEach(function(category) {
-                    categorySelect.append(`<option value="${category.id}">${category.name}</option>`);
-                });
-            },
-            error: function() {
-                alert('Fehler beim Laden der Kategorien.');
-            }
-        });
-    }
+            // Füge die neuen Optionen hinzu
+            data.forEach(function(category) {
+                const isSelected = category.category === selectedCategory ? 'selected' : '';
+                categorySelect.append(`<option value="${category.category}" ${isSelected}>${category.category}</option>`);
+            });
+        },
+        error: function() {
+            alert('Fehler beim Laden der Kategorien.');
+        }
+    });
+}
 
     // Event-Listener für den Bearbeiten-Button
     $(document).on('click', '.btn-outline-secondary', function() {

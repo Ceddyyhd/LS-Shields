@@ -43,10 +43,9 @@ try {
     // Beginne die Transaktion (damit alle Änderungen als eine Einheit gespeichert werden)
     $conn->beginTransaction();
 
-    // Zunächst Bestandsprüfung für neue Artikel, die hinzugefügt werden
+    // Zunächst Bestandsprüfung für Artikel, die ausgegeben werden sollen (status = 1)
     foreach ($ausruestung as $key_name => $status) {
-        // Nur wenn der Status auf 1 gesetzt ist, wird der Bestand überprüft
-        if ($status == 1) {
+        if ($status == 1) { // Nur Artikel mit status = 1 (ausgegeben) prüfen
             // Prüfe den aktuellen Bestand des Artikels
             $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
             $stmt->execute([':key_name' => $key_name]);

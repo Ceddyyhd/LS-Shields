@@ -43,25 +43,26 @@ try {
     // Beginne die Transaktion (damit alle Änderungen als eine Einheit gespeichert werden)
     $conn->beginTransaction();
 
-    // Schleife durch die Änderungen und speichere sie in der 'benutzer_ausruestung'-Tabelle
+    // Zunächst Bestandsprüfung für alle Artikel
     foreach ($ausruestung as $key_name => $status) {
-        // Überprüfe, ob der Benutzer bereits diesen Gegenstand in der Tabelle 'benutzer_ausruestung' hat
-        $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
-        $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
-        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
-
         // Prüfe den aktuellen Bestand
         $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
         $stmt->execute([':key_name' => $key_name]);
         $stock = $stmt->fetchColumn();
 
         // Wenn der Status auf 1 (ausgegeben) geändert wird, überprüfen, ob genug Bestand vorhanden ist
-        if ($status == 1) {
-            if ($stock <= 0) {
-                echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
-                exit;
-            }
+        if ($status == 1 && $stock <= 0) {
+            echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
+            exit;
         }
+    }
+
+    // Schleife durch die Änderungen und speichere sie in der 'benutzer_ausruestung'-Tabelle
+    foreach ($ausruestung as $key_name => $status) {
+        // Überprüfe, ob der Benutzer bereits diesen Gegenstand in der Tabelle 'benutzer_ausruestung' hat
+        $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
+        $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Wenn der Artikel zurückgegeben wird (Status 0)
         if ($status == 0) {
@@ -77,11 +78,7 @@ try {
 
                 // History-Eintrag
                 $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Zurückgabe', 1, :editor_name)");
-                $stmt->execute([
-                    ':user_id' => $user_id,
-                    ':key_name' => $key_name,
-                    ':editor_name' => $user_name
-                ]);
+                $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name, ':editor_name' => $user_name]);
             }
         } elseif ($status == 1) {
             // Wenn der Artikel ausgegeben wird (Status 1)

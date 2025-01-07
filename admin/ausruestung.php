@@ -326,6 +326,50 @@ $(document).ready(function() {
         }
     });
 
+    // Historie anzeigen
+    $(document).on('click', '.history-button', function() {
+        const ausruestungId = $(this).data('id');
+        openHistoryModal(ausruestungId);
+    });
+
+    function openHistoryModal(ausruestungId) {
+        $.ajax({
+            url: 'include/fetch_ausruestung_history.php',
+            type: 'GET',
+            data: { id: ausruestungId },
+            dataType: 'json',
+            success: function(data) {
+                const historyTableBody = $("#historyTable tbody");
+                historyTableBody.empty();
+
+                // Wenn keine Historie gefunden wird
+                if (data.success === false) {
+                    historyTableBody.append(`
+                        <tr><td colspan="4">${data.message}</td></tr>
+                    `);
+                } else {
+                    // Historie-Daten einfügen
+                    data.forEach(function(historyEntry) {
+                        historyTableBody.append(`
+                            <tr>
+                                <td>${historyEntry.timestamp}</td>
+                                <td>${historyEntry.action}</td>
+                                <td>${historyEntry.stock_change}</td>
+                                <td>${historyEntry.editor_name}</td>
+                            </tr>
+                        `);
+                    });
+                }
+
+                // Modal anzeigen
+                $("#modal-history").modal("show");
+            },
+            error: function(xhr, status, error) {
+                alert("Fehler beim Abrufen der Historie.");
+            }
+        });
+    }
+
     // Speichern der Änderungen für Ausrüstungen
     $('#saveAusruestung').click(function() {
         const formData = new FormData(document.getElementById('createAusruestungForm'));

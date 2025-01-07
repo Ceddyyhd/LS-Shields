@@ -1,4 +1,7 @@
 <?php
+// Start der Session sicherstellen
+session_start();
+
 // Fehlerprotokollierung aktivieren (für Debugging)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -7,28 +10,26 @@ error_reporting(E_ALL);
 // Datenbankverbindung einbinden
 include 'db.php';
 
+// Überprüfen, ob der Benutzer eingeloggt ist
+if (!isset($_SESSION['user_id'])) {
+    die("Kein Benutzer eingeloggt.");
+}
+
 // Empfangen der Formulardaten
 $id = $_POST['id']; // ID des Ausrüstungstyps
 $key_name = $_POST['key_name'];
 $display_name = $_POST['display_name'];
-$category = $_POST['category']; // Kategorie ID
+$category = $_POST['category'];
 $description = $_POST['description'];
 $stock = $_POST['stock'];
 $note = $_POST['note']; // Notiz für die History
 $user_id = $_SESSION['user_id']; // Benutzer-ID
 $editor_name = $_SESSION['user_name']; // Benutzername (Editor)
 
+// Fehlerbehandlung
 try {
     // Beginne die Transaktion
     $conn->beginTransaction();
-
-    // Hole den aktuellen Bestand aus der Datenbank, um die Bestandsänderung zu berechnen
-    $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-    $existingStock = $stmt->fetchColumn();
-
-    // Berechne die Bestandsänderung
-    $stockChange = $stock - $existingStock;
 
     // Update des Ausrüstungstyps in der Tabelle
     $stmt = $conn->prepare("UPDATE ausruestungstypen SET key_name = :key_name, display_name = :display_name, category = :category, description = :description WHERE id = :id");
@@ -36,23 +37,23 @@ try {
         ':id' => $id,
         ':key_name' => $key_name,
         ':display_name' => $display_name,
-        ':category' => $category, // Kategorie wird über ID gesetzt
+        ':category' => $category,
         ':description' => $description
     ]);
 
-    // Bestandsänderung aktualisieren
+    // Bestandsänderung aktualisieren (Sicherstellen, dass stock als Zahl behandelt wird)
     $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE id = :id");
     $stmt->execute([
         ':id' => $id,
-        ':stock' => $stock
+        ':stock' => (int)$stock // Stellen Sie sicher, dass stock als Zahl behandelt wird
     ]);
 
-    // History-Eintrag für die Bestandsänderung erstellen
+    // History-Eintrag erstellen
     $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, 'Bestand geändert', :stock_change, :editor_name)");
     $stmt->execute([
         ':user_id' => $user_id,
         ':key_name' => $key_name,
-        ':stock_change' => $stockChange, // Bestandsänderung
+        ':stock_change' => (int)$stock, // Bestandsänderung
         ':editor_name' => $editor_name
     ]);
 

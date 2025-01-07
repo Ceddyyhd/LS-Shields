@@ -38,7 +38,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </div>
   <!-- /.content-header -->
 
-  <!-- Main content -->
+<!-- Main content -->
 <div class="card">
     <?php if (isset($_SESSION['permissions']['ausruestung_create']) && $_SESSION['permissions']['ausruestung_create']): ?>
     <div class="card-header">
@@ -121,8 +121,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
 </div>
 
-<?php $user_name = $_SESSION['username'] ?? 'Gast'; ?>
-
 <!-- Modal für das Bearbeiten eines Ausrüstungstyps -->
 <div class="modal fade" id="modal-ausruestung-edit">
     <div class="modal-dialog">
@@ -136,7 +134,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
                 <form id="editAusruestungForm">
                     <input type="hidden" id="edit_id" name="id">
-                    <input type="hidden" id="edit_user_name" name="user_name" value="<?php echo $user_name; ?>"> <!-- Benutzername aus der Session -->
+                    <input type="hidden" id="edit_user_name" name="user_name" value="<?php echo $_SESSION['username']; ?>"> <!-- Benutzername aus der Session -->
                     <input type="hidden" id="edit_editor_name" name="editor_name">
 
                     <div class="form-group">
@@ -176,31 +174,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 
 <div class="card-body">
-    <table id="example1" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Key Name</th>
-                <th>Display Name</th>
-                <th>Description</th>
-                <th>Stock</th>
-                <th>Aktion</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Daten werden dynamisch geladen -->
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Key Name</th>
-                <th>Display Name</th>
-                <th>Description</th>
-                <th>Stock</th>
-                <th>Aktion</th>
-            </tr>
-        </tfoot>
-    </table>
+  <table id="example1" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Key Name</th>
+        <th>Display Name</th>
+        <th>Description</th>
+        <th>Stock</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Daten werden dynamisch geladen -->
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>#</th>
+        <th>Key Name</th>
+        <th>Display Name</th>
+        <th>Description</th>
+        <th>Stock</th>
+        <th>Aktion</th>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
 <!-- Modal für Historie -->
@@ -231,6 +229,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
     </div>
 </div>
+
 
 <script>
 $(document).ready(function() {
@@ -329,6 +328,42 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Historie anzeigen
+    $(document).on('click', '.history-button', function() {
+        const ausruestungId = $(this).data('id');
+        // Historie anzeigen
+        openHistoryModal(ausruestungId);
+    });
+
+    function openHistoryModal(ausruestungId) {
+        $.ajax({
+            url: 'include/fetch_ausruestung_history.php',
+            type: 'GET',
+            data: { id: ausruestungId },
+            dataType: 'json',
+            success: function(data) {
+                const historyTableBody = $("#historyTable tbody");
+                historyTableBody.empty();
+
+                data.forEach(function(historyEntry) {
+                    historyTableBody.append(`
+                        <tr>
+                            <td>${historyEntry.timestamp}</td>
+                            <td>${historyEntry.action}</td>
+                            <td>${historyEntry.stock_change}</td>
+                            <td>${historyEntry.editor_name}</td>
+                        </tr>
+                    `);
+                });
+
+                $("#modal-history").modal("show");
+            },
+            error: function(xhr, status, error) {
+                alert("Fehler beim Abrufen der Historie.");
+            }
+        });
+    }
 });
 </script>
 

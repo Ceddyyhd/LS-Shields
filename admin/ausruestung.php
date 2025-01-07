@@ -122,43 +122,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Ausrüstung Ändern</h4>
+                <h4 class="modal-title"><?= htmlspecialchars($user_name); ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-    <form id="editAusruestungForm">
-        <input type="hidden" id="edit_user_name" name="user_name"> <!-- Verstecktes Input für Benutzernamen -->
-        <input type="hidden" id="edit_id" name="id">
-        <div class="form-group">
-            <label for="edit_key_name">Key Name</label>
-            <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
-        </div>
-        <div class="form-group">
-            <label for="edit_display_name">Display Name</label>
-            <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
-        </div>
-        <div class="form-group">
-            <label for="edit_category">Kategorie</label>
-            <select class="form-control" id="edit_category" name="category">
-                <!-- Kategorien werden hier dynamisch geladen -->
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="edit_description">Beschreibung</label>
-            <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="edit_stock">Bestand</label>
-            <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
-        </div>
-        <div class="form-group">
-            <label for="note">Notiz zur Bestandsänderung</label>
-            <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
-        </div>
-    </form>
-</div>
+                <form id="editAusruestungForm">
+                    <input type="hidden" id="edit_id" name="id">
+                    <input type="hidden" id="edit_user_name" name="user_name"> <!-- Hidden input für den Benutzernamen -->
+                    <input type="hidden" id="edit_editor_name" name="editor_name"> <!-- Hidden input für den Editor-Namen -->
+
+                    <div class="form-group">
+                        <label for="edit_key_name">Key Name</label>
+                        <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_display_name">Display Name</label>
+                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_category">Kategorie</label>
+                        <select class="form-control" id="edit_category" name="category">
+                            <!-- Kategorien werden hier dynamisch geladen -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_description">Beschreibung</label>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_stock">Bestand</label>
+                        <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Enter stock amount">
+                    </div>
+                    <!-- Notizfeld für die Bestandsänderung -->
+                    <div class="form-group">
+                        <label for="note">Notiz zur Bestandsänderung</label>
+                        <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
+                    </div>
+                </form>
+            </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
                 <button type="button" class="btn btn-primary" id="saveEditAusruestung">Speichern</button>
@@ -249,7 +252,7 @@ $(document).ready(function() {
                         <td>${ausruestung.description}</td>
                         <td>${ausruestung.stock}</td> <!-- Bestand -->
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
                             ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
                             <button class="btn btn-outline-info history-button" data-id="${ausruestung.id}">Historie</button> <!-- Historie-Button -->
                         </td>
@@ -275,13 +278,13 @@ $(document).ready(function() {
         $('#edit_key_name').val(keyName);
         $('#edit_display_name').val(displayName);
         $('#edit_description').val(description);
-        $('#edit_stock').val(stock);
+        $('#edit_stock').val(stock); // Bestandswert setzen
 
+        // Setze die Kategorien und den Editor-Namen
         loadCategories(category);
-        
-        // Hier den Benutzernamen aus der Session setzen und in das versteckte Input eintragen
-        const userName = '<?php echo $_SESSION["user_name"]; ?>'; // PHP-Session-Wert einfügen
-        $('#edit_user_name').val(userName);
+        const userName = '<?php echo $_SESSION["user_name"]; ?>'; // PHP-Session-Wert für den Benutzernamen
+        $('#edit_user_name').val(userName); // Setze den Benutzernamen
+        $('#edit_editor_name').val(userName); // Setze den Editor-Namen
 
         $('#modal-ausruestung-edit').modal('show');
     }

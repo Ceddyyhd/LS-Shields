@@ -25,37 +25,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        // Nur Status und Notiz aktualisieren, wenn sie gesetzt sind
+        $updateFields = [];
+        $updateParams = [];
+
+        if (!empty($status)) {
+            $updateFields[] = "status = :status";
+            $updateParams[':status'] = $status;
+        }
+
+        if (!empty($notiz)) {
+            $updateFields[] = "notiz = :notiz";
+            $updateParams[':notiz'] = $notiz;
+        }
+
         // SQL zum Aktualisieren des Vorschlags
-        $updateQuery = "UPDATE verbesserungsvorschlaege SET 
-                        status = :status, 
-                        notiz = :notiz, 
-                        WHERE id = :id";
+        if (!empty($updateFields)) {
+            $updateQuery = "UPDATE verbesserungsvorschlaege SET " . implode(", ", $updateFields) . " WHERE id = :id";
+            $updateParams[':id'] = $id;
 
-        $updateStmt = $conn->prepare($updateQuery);
-        $updateStmt->bindParam(':bereich', $bereich);
-        $updateStmt->bindParam(':betreff', $betreff);
-        $updateStmt->bindParam(':vorschlag', $vorschlag);
-        $updateStmt->bindParam(':status', $status);
-        $updateStmt->bindParam(':notiz', $notiz);
-        $updateStmt->bindParam(':anonym', $anonym);
-        $updateStmt->bindParam(':id', $id);
+            $updateStmt = $conn->prepare($updateQuery);
+            foreach ($updateParams as $param => $value) {
+                $updateStmt->bindParam($param, $value);
+            }
 
-        if (!$updateStmt->execute()) {
-            echo json_encode(['success' => false, 'message' => 'Fehler beim Bearbeiten des Vorschlags']);
-            exit;
+            if (!$updateStmt->execute()) {
+                echo json_encode(['success' => false, 'message' => 'Fehler beim Bearbeiten des Vorschlags']);
+                exit;
+            }
         }
 
         // Log-Eintrag erstellen
         $logMessage = "Vorschlag ID $id geändert von $user_name.\n";
         $logMessage .= "Änderungen: \n";
         
-        // Vergleiche alte und neue Daten, um die Änderungen zu protokollieren
-        if ($bereich != $oldData['bereich']) $logMessage .= "Bereich geändert: {$oldData['bereich']} -> $bereich\n";
-        if ($betreff != $oldData['betreff']) $logMessage .= "Betreff geändert: {$oldData['betreff']} -> $betreff\n";
-        if ($vorschlag != $oldData['vorschlag']) $logMessage .= "Vorschlag geändert: {$oldData['vorschlag']} -> $vorschlag\n";
         if ($status != $oldData['status']) $logMessage .= "Status geändert: {$oldData['status']} -> $status\n";
         if ($notiz != $oldData['notiz']) $logMessage .= "Notiz geändert: {$oldData['notiz']} -> $notiz\n";
-        if ($anonym != $oldData['anonym']) $logMessage .= "Anonym geändert: {$oldData['anonym']} -> $anonym\n";
 
         // SQL zum Hinzufügen eines Log-Eintrags
         $logQuery = "INSERT INTO vorschlag_logs (vorschlag_id, user_name, change_details) VALUES (:vorschlag_id, :user_name, :change_details)";

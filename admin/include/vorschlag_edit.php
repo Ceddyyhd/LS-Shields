@@ -27,12 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // SQL zum Aktualisieren des Vorschlags
         $updateQuery = "UPDATE verbesserungsvorschlaege SET 
-                        bereich = :bereich, 
-                        betreff = :betreff, 
-                        vorschlag = :vorschlag, 
                         status = :status, 
                         notiz = :notiz, 
-                        anonym = :anonym 
                         WHERE id = :id";
 
         $updateStmt = $conn->prepare($updateQuery);

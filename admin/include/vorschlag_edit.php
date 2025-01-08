@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = isset($_POST['status']) ? $_POST['status'] : '';
         $notiz = isset($_POST['notiz']) ? $_POST['notiz'] : '';
         $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
-        $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
         $user_name = $_POST['user_name']; // Benutzername aus dem versteckten Input
        
         // Abrufen der aktuellen Vorschlagsdaten für das Log

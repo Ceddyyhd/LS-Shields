@@ -314,7 +314,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                     <?php endif; ?>
                     <input type="hidden" name="user_name" value="<?php echo htmlspecialchars($user_name); ?>">
-                    </form>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
@@ -324,62 +324,63 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-
 <script>
     $('#saveEditBtn').on('click', function() {
-    const saveButton = $(this);
-    saveButton.prop('disabled', true); // Button deaktivieren, um mehrfaches Klicken zu verhindern
+        const saveButton = $(this);
+        saveButton.prop('disabled', true); // Button deaktivieren, um mehrfaches Klicken zu verhindern
 
-    const formData = new FormData(document.getElementById('editSuggestionForm'));
-    const suggestionId = $('#editSuggestionForm').data('id'); // Die ID des Vorschlags
+        const formData = new FormData(document.getElementById('editSuggestionForm'));
+        const suggestionId = $('#editSuggestionForm').data('id'); // Die ID des Vorschlags
 
-    // Zusätzliche Daten hinzufügen
-    formData.append('id', suggestionId);
+        // Zusätzliche Daten hinzufügen
+        formData.append('id', suggestionId);
 
-    // AJAX-Anfrage zum Speichern der Änderungen
-    fetch('include/vorschlag_edit.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Vorschlag erfolgreich bearbeitet!');
-            $('#modal-vorschlag-bearbeiten').modal('hide'); // Modal schließen
-            location.reload();  // Optional: Seite neu laden
-        } else {
-            alert('Fehler: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Fehler:', error);
-        alert('Ein unerwarteter Fehler ist aufgetreten.');
-    })
-    .finally(() => {
-        saveButton.prop('disabled', false); // Button wieder aktivieren
+        // Debugging: Ausgabe des 'status'-Wertes
+        console.log("Status:", $('#status').val());  // Hier wird der Wert des Dropdowns überprüft
+
+        // AJAX-Anfrage zum Speichern der Änderungen
+        fetch('include/vorschlag_edit.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Vorschlag erfolgreich bearbeitet!');
+                $('#modal-vorschlag-bearbeiten').modal('hide'); // Modal schließen
+                location.reload();  // Optional: Seite neu laden
+            } else {
+                alert('Fehler: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fehler:', error);
+            alert('Ein unerwarteter Fehler ist aufgetreten.');
+        })
+        .finally(() => {
+            saveButton.prop('disabled', false); // Button wieder aktivieren
+        });
     });
-});
-
 
     $('#modal-vorschlag-bearbeiten').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button, der das Modal geöffnet hat
-    var id = button.data('id');
-    var bereich = button.data('bereich');
-    var betreff = button.data('betreff');
-    var vorschlag = button.data('vorschlag');
-    var status = button.data('status');
-    var notiz = button.data('notiz');
-    var anonym = button.data('anonym');
+        var button = $(event.relatedTarget); // Button, der das Modal geöffnet hat
+        var id = button.data('id');
+        var bereich = button.data('bereich');
+        var betreff = button.data('betreff');
+        var vorschlag = button.data('vorschlag');
+        var status = button.data('status');
+        var notiz = button.data('notiz');
+        var anonym = button.data('anonym');
 
-    var modal = $(this);
-    modal.find('#bereich').val(bereich);
-    modal.find('#betreff').val(betreff);
-    modal.find('#vorschlag').val(vorschlag);
-    modal.find('#status').val(status);
-    modal.find('#notiz').val(notiz);
-    modal.find('#anonym').prop('checked', anonym == '1');
-    modal.find('#editSuggestionForm').data('id', id); // Speichert die ID im Formular
-});
+        var modal = $(this);
+        modal.find('#bereich').val(bereich);
+        modal.find('#betreff').val(betreff);
+        modal.find('#vorschlag').val(vorschlag);
+        modal.find('#status').val(status);
+        modal.find('#notiz').val(notiz);
+        modal.find('#anonym').prop('checked', anonym == '1');
+        modal.find('#editSuggestionForm').data('id', id); // Speichert die ID im Formular
+    });
 function rateSuggestion(vorschlagId, zustimmung) {
     fetch('include/rate_vorschlag.php', {
         method: 'POST',

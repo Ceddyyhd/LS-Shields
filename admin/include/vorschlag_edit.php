@@ -5,8 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Empfangene Daten
         $id = $_POST['id'];
-        $bereich = $_POST['bereich'];
-        $betreff = $_POST['betreff'];
         $vorschlag = $_POST['vorschlag'];
         $status = $_POST['status'];
         $notiz = $_POST['notiz'];

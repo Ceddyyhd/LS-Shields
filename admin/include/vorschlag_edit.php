@@ -5,9 +5,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Empfangene Daten
         $id = $_POST['id'];
-        $vorschlag = $_POST['vorschlag'];
-        $status = $_POST['status'];
-        $notiz = $_POST['notiz'];
+        $bereich = isset($_POST['bereich']) ? $_POST['bereich'] : '';
+        $betreff = isset($_POST['betreff']) ? $_POST['betreff'] : '';
+        $vorschlag = isset($_POST['vorschlag']) ? $_POST['vorschlag'] : '';
+        $status = isset($_POST['status']) ? $_POST['status'] : '';
+        $notiz = isset($_POST['notiz']) ? $_POST['notiz'] : '';
         $anonym = isset($_POST['fuel_checked']) ? 1 : 0;
         $user_name = $_POST['user_name']; // Benutzername aus dem versteckten Input
        

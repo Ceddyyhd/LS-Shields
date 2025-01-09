@@ -3,7 +3,7 @@
 <?php include 'include/header.php'; 
 // ID des aktuellen Benutzers aus der Session holen
 $user_id = $_SESSION['user_id'];
-
+include 'include/db.php'; 
 // SQL-Abfrage, um nur die Urlaubsanträge des aktuellen Benutzers anzuzeigen, deren `end_date` heute oder in der Zukunft liegt
 $query = "
     SELECT * FROM vacations 

@@ -60,58 +60,7 @@ if ($userRole) {
     }
 }
 
-// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingetragen ist
-$query = "SELECT * FROM user_sessions WHERE user_id = :user_id";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':user_id', $_SESSION['user_id']);
-$stmt->execute();
-$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$sessionCheck) {
-    // Kein Eintrag für diese Benutzer-ID gefunden -> Umleitung zur Login-Seite
-    header('Location: index.html');
-    exit;
-}
-
-// Überprüfen, ob eine Force-Logout-Anfrage vorliegt (wenn der Benutzer nicht sich selbst ausloggen möchte)
-if (isset($_GET['force_logout_user_id']) && $_SESSION['user_id'] != $_GET['force_logout_user_id']) {
-    // Verhindern, dass der Benutzer sich selbst ausloggt
-    echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
-    exit;
-}
-
-// Benutzer-ID für den Logout setzen (normalerweise wird der Wert aus der Session oder der URL übernommen)
-$user_id_to_logout = $_SESSION['user_id']; // Mitarbeiter kann nur sich selbst abmelden
-
-try {
-    // 1. Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
-    $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id_to_logout);
-    $stmt->execute();
-
-    // 2. Setze das 'remember_token' auf NULL in der `users`-Tabelle
-    $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id_to_logout);
-    $stmt->execute();
-
-    // 3. Lösche das 'remember_me' Cookie, falls gesetzt
-    setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
-
-    // 4. Lösche die Session-Daten und leite den Benutzer zur Login-Seite weiter
-    session_unset();  // Löscht alle Session-Daten
-    session_destroy();  // Zerstört die Session
-    setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
-
-    // Weiterleitung zur Login-Seite
-    header('Location: index.html');
-    exit;
-
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
-    exit;
-}
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 

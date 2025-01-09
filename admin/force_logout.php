@@ -31,11 +31,6 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
-                Anfrage erstellen
-            </button>
-          </div>
 
           <div class="card-body">
             <table class="table table-bordered table-hover">
@@ -96,11 +91,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
-                    Anfrage erstellen
-                </button>
-            </div>
 
             <div class="card-body">
                 <table class="table table-bordered table-hover">
@@ -125,7 +115,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?= htmlspecialchars($user['last_activity']) ?></td>
                                 <td>
                                     <!-- Force-Logout Button -->
-                                    <button class="btn btn-danger" onclick="forceLogoutemployee(<?= $user['id'] ?>)">Zwangs-Logout</button>
+                                    <button class="btn btn-danger" onclick="forceLogoutemploye(<?= $user['id'] ?>)">Zwangs-Logout</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

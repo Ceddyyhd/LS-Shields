@@ -137,7 +137,7 @@ $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- JavaScript für Force-Logout -->
     <script>
-function forceLogout(userId) {
+function forceLogoutKunde(userId) {
   if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
     fetch('include/force_logout.php', {
       method: 'POST',
@@ -164,7 +164,7 @@ function forceLogout(userId) {
 </script>
 
 <script>
-function forceLogoutemployee(userId) {
+function forceLogoutMitarbeiter(userId) {
   if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
     fetch('include/force_logout_employee.php', {  // Jetzt auf die neue Datei zeigen
       method: 'POST',

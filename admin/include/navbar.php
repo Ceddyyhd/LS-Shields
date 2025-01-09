@@ -38,9 +38,7 @@ if (!isset($_SESSION['user_id'])) {
         exit;
     }
 }
-
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
-
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
 $stmt->execute([':id' => $_SESSION['user_id']]);
@@ -62,37 +60,7 @@ if ($userRole) {
     }
 }
 
-// Force logout functionality if the admin wants to log out a user
-if (isset($_GET['force_logout_user_id']) && isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin') {
-    $user_id_to_logout = $_GET['force_logout_user_id'];
 
-    // Remove the session of the user from the sessions table
-    $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id_to_logout);
-    $stmt->execute();
-
-    // Remove the remember_token from the users table
-    $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id_to_logout);
-    $stmt->execute();
-
-    // Remove the 'remember_me' cookie if set
-    setcookie('remember_me', '', time() - 3600, '/');
-
-    // Destroy the session if the logged-in user is the one being logged out
-    if ($_SESSION['user_id'] == $user_id_to_logout) {
-        session_unset();
-        session_destroy();
-        setcookie('PHPSESSID', '', time() - 3600, '/');  // Clear PHP session cookie
-        header('Location: index.html');  // Redirect to login page
-        exit;
-    }
-
-    echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
-    exit;
-}
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
@@ -100,10 +68,9 @@ $sql = "SELECT users.*, roles.name AS role_name, users.profile_image
             LEFT JOIN roles ON users.role_id = roles.id 
             WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $_SESSION['user_id']]);
+$stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
-
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
     <!-- Left navbar links -->

@@ -60,7 +60,44 @@ if ($userRole) {
     }
 }
 
+// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingetragen ist (für Mitarbeiter)
+$query = "SELECT * FROM user_sessions WHERE user_id = :user_id";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':user_id', $_SESSION['user_id']);
+$stmt->execute();
+$sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$sessionCheck) {
+    // Kein Eintrag für diese Benutzer-ID gefunden -> Umleitung zur Login-Seite
+    header('Location: index.html');
+    exit;
+}
+
+// Überprüfen, ob der Benutzer ein Admin ist und ob eine Force-Logout-Anfrage vorliegt
+if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
+    $user_id_to_logout = $_GET['force_logout_user_id'];
+
+    // Das 'remember_token' des Benutzers löschen
+    $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id_to_logout);
+    $stmt->execute();
+
+    // Lösche das 'remember_me' Cookie, falls gesetzt
+    setcookie('remember_me', '', time() - 3600, '/');
+
+    // Falls der geloggte Benutzer derselbe ist, auch seine Session zerstören
+    if ($_SESSION['user_id'] == $user_id_to_logout) {
+        session_unset();
+        session_destroy();
+        setcookie('PHPSESSID', '', time() - 3600, '/');  // Löscht das PHP-Session-Cookie
+        header('Location: index.html');  // Weiterleitung zur Login-Seite
+        exit;
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
+    exit;
+}
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 

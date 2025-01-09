@@ -5,7 +5,7 @@ session_start();
 include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
 // Sicherstellen, dass der Admin die Sitzung eines anderen Benutzers beendet
-if ($_SESSION['role'] !== 'IT') {
+if ($_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
 }

@@ -125,7 +125,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?= htmlspecialchars($user['last_activity']) ?></td>
                                 <td>
                                     <!-- Force-Logout Button -->
-                                    <button class="btn btn-danger" onclick="forceLogout(<?= $user['id'] ?>)">Zwangs-Logout</button>
+                                    <button class="btn btn-danger" onclick="forceLogoutemployee(<?= $user['id'] ?>)">Zwangs-Logout</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -165,7 +165,7 @@ function forceLogout(userId) {
 </script>
 
 <script>
-function forceLogout(userId) {
+function forceLogoutemployee(userId) {
   if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
     fetch('include/force_logout_employee.php', {  // Jetzt auf die neue Datei zeigen
       method: 'POST',

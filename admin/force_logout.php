@@ -76,66 +76,6 @@
       </div>
     </div>
 
-    <?php
-// Datenbankverbindung einbinden
-include 'include/db.php';
-
-// Abfrage der Benutzer mit einer offenen Sitzung aus der `user_sessions`-Tabelle
-$query = "
-    SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.last_activity
-    FROM users u
-    INNER JOIN user_sessions us ON u.id = us.user_id
-    WHERE us.session_id IS NOT NULL";  // Nur Benutzer mit einer aktiven Sitzung anzeigen
-
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-<!-- HTML-Code für die Tabelle -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
-                    Anfrage erstellen
-                </button>
-            </div>
-
-            <div class="card-body">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Session ID</th>
-                            <th>IP-Adresse</th>
-                            <th>Letzte Aktivität</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($users as $user): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($user['id']) ?></td>
-                                <td><?= htmlspecialchars($user['name']) ?></td>
-                                <td><?= htmlspecialchars($user['session_id']) ?></td>
-                                <td><?= htmlspecialchars($user['ip_address']) ?></td>
-                                <td><?= htmlspecialchars($user['last_activity']) ?></td>
-                                <td>
-                                    <!-- Force-Logout Button -->
-                                    <button class="btn btn-danger" onclick="forceLogoutemployee(<?= $user['id'] ?>)">Zwangs-Logout</button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
     <!-- JavaScript für Force-Logout -->
     <script>
 function forceLogout(userId) {
@@ -151,33 +91,6 @@ function forceLogout(userId) {
       .then((data) => {
         if (data.success) {
           alert('Benutzer wurde erfolgreich abgemeldet.');
-          // Nach dem Logout des Benutzers erfolgt keine Umleitung des Admins, nur eine Benachrichtigung
-          location.reload();  // Seite neu laden, um die Änderungen zu sehen
-        } else {
-          alert('Fehler: ' + data.message);
-        }
-      })
-      .catch((error) => {
-        alert('Es ist ein Fehler aufgetreten: ' + error.message);
-      });
-  }
-}
-</script>
-
-<script>
-function forceLogoutemployee(userId) {
-  if (confirm("Möchten Sie den Benutzer wirklich abmelden?")) {
-    fetch('include/force_logout_employee.php', {  // Jetzt auf die neue Datei zeigen
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `user_id=${userId}`,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert('Mitarbeiter wurde erfolgreich abgemeldet.');
           // Nach dem Logout des Benutzers erfolgt keine Umleitung des Admins, nur eine Benachrichtigung
           location.reload();  // Seite neu laden, um die Änderungen zu sehen
         } else {

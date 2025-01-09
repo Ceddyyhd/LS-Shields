@@ -28,80 +28,79 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="row">
-  <div class="col-12">
-    <div class="card">
-
-      <div class="card-body">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>E-Mail</th>
-              <th>Aktionen</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php
-            // Alle Benutzer abfragen, die aktuell eine Session haben (nur die mit aktiver Session)
-            include 'include/db.php';
-
-            // Benutzerabfrage, die nur Kunden mit einer aktiven Session anzeigt
-            $query = "
-            SELECT k.id, k.name, k.umail, ks.session_id, ks.ip_address, ks.last_activity
-            FROM kunden k
-            INNER JOIN kunden_sessions ks ON k.id = ks.user_id
-            WHERE ks.session_id IS NOT NULL";  // Nur Kunden mit einer aktiven Sitzung anzeigen
-            $stmt = $conn->prepare($query);
-            $stmt->execute();
-            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            foreach ($users as $user): ?>
-              <tr>
-                <td><?= htmlspecialchars($user['id']) ?></td>
-                <td><?= htmlspecialchars($user['name']) ?></td>
-                <td><?= htmlspecialchars($user['umail']) ?></td>
-                <td>
-                  <!-- Force-Logout Button -->
-                  <button class="btn btn-danger" onclick="forceLogout(<?= $user['id'] ?>)">Zwangs-Logout</button>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
     <?php
 // Datenbankverbindung einbinden
 include 'include/db.php';
 
-// Abfrage der Benutzer mit einer offenen Sitzung aus der `user_sessions`-Tabelle
-$query = "
+// Abfrage der Kunden mit einer offenen Sitzung aus der `kunden_sessions`-Tabelle
+$kunden_query = "
+    SELECT k.id, k.name, k.umail, ks.session_id, ks.ip_address, ks.last_activity
+    FROM kunden k
+    INNER JOIN kunden_sessions ks ON k.id = ks.user_id
+    WHERE ks.session_id IS NOT NULL";  // Nur Kunden mit einer aktiven Sitzung anzeigen
+
+$stmt = $conn->prepare($kunden_query);
+$stmt->execute();
+$kunden = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Abfrage der Mitarbeiter mit einer offenen Sitzung aus der `user_sessions`-Tabelle
+$mitarbeiter_query = "
     SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.last_activity
     FROM users u
     INNER JOIN user_sessions us ON u.id = us.user_id
-    WHERE us.session_id IS NOT NULL";  // Nur Benutzer mit einer aktiven Sitzung anzeigen
+    WHERE us.session_id IS NOT NULL";  // Nur Mitarbeiter mit einer aktiven Sitzung anzeigen
 
-$stmt = $conn->prepare($query);
+$stmt = $conn->prepare($mitarbeiter_query);
 $stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<!-- HTML-Code für die Tabelle -->
+<!-- HTML-Code für die Kunden-Tabelle -->
 <div class="row">
     <div class="col-12">
         <div class="card">
-
             <div class="card-body">
+                <h4>Kunden mit aktiver Sitzung</h4>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Name</th>
+                            <th>E-Mail</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($kunden as $kunde): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($kunde['id']) ?></td>
+                                <td><?= htmlspecialchars($kunde['name']) ?></td>
+                                <td><?= htmlspecialchars($kunde['umail']) ?></td>
+                                <td>
+                                    <!-- Force-Logout Button für Kunden -->
+                                    <button class="btn btn-danger" onclick="forceLogoutKunde(<?= $kunde['id'] ?>)">Zwangs-Logout</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HTML-Code für die Mitarbeiter-Tabelle -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h4>Mitarbeiter mit aktiver Sitzung</h4>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>E-Mail</th>
                             <th>Session ID</th>
                             <th>IP-Adresse</th>
                             <th>Letzte Aktivität</th>
@@ -109,17 +108,17 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($users as $user): ?>
+                        <?php foreach ($mitarbeiter as $mitarbeiter): ?>
                             <tr>
-                                <td><?= htmlspecialchars($user['id']) ?></td>
-                                <td><?= htmlspecialchars($user['name']) ?></td>
-                                <td><?= htmlspecialchars($user['session_id']) ?></td>
-                                <td><?= htmlspecialchars($user['ip_address']) ?></td>
-                                <td><?= htmlspecialchars($user['last_activity']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['id']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['name']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['email']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['session_id']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['ip_address']) ?></td>
+                                <td><?= htmlspecialchars($mitarbeiter['last_activity']) ?></td>
                                 <td>
-                                    <!-- Force-Logout Button -->
-                                    <button class="btn btn-danger" onclick="forceLogoutemploye(<?= $user['id'] ?>)">Zwangs-Logout</button>
+                                    <!-- Force-Logout Button für Mitarbeiter -->
+                                    <button class="btn btn-danger" onclick="forceLogoutMitarbeiter(<?= $mitarbeiter['id'] ?>)">Zwangs-Logout</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

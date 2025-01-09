@@ -80,12 +80,12 @@
 // Datenbankverbindung einbinden
 include 'include/db.php';
 
-// Beispielhafte Benutzerabfrage (Mitarbeiter aus der `users`-Tabelle und deren Sitzungsdaten aus der `user_sessions`-Tabelle)
+// Abfrage der Sitzungsdaten aus der `user_sessions`-Tabelle und des Benutzernamens aus der `users`-Tabelle
 $query = "
-    SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.last_activity
+    SELECT u.id, u.name, us.session_id, us.ip_address, us.last_activity
     FROM users u
     LEFT JOIN user_sessions us ON u.id = us.user_id
-    WHERE u.role = 'employee'"; // Nur Mitarbeiter anzeigen, also filtere nach der Rolle 'employee'
+";  // Kein Filter nach `role`, da du nur Benutzerinformationen benötigst
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -108,7 +108,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>E-Mail</th>
                             <th>Session ID</th>
                             <th>IP-Adresse</th>
                             <th>Letzte Aktivität</th>
@@ -121,7 +120,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <tr>
                                 <td><?= htmlspecialchars($user['id']) ?></td>
                                 <td><?= htmlspecialchars($user['name']) ?></td>
-                                <td><?= htmlspecialchars($user['email']) ?></td>
                                 <td><?= htmlspecialchars($user['session_id']) ?></td>
                                 <td><?= htmlspecialchars($user['ip_address']) ?></td>
                                 <td><?= htmlspecialchars($user['last_activity']) ?></td>

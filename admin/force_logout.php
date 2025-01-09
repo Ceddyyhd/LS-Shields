@@ -48,9 +48,11 @@
             include 'include/db.php';
 
             // Benutzerabfrage, die nur Kunden mit einer aktiven Session anzeigt
-            $query = "SELECT k.id, k.name, k.umail
-                      FROM kunden k
-                      JOIN kunden_sessions cs ON k.id = cs.user_id";
+            $query = "
+            SELECT k.id, k.name, k.umail, ks.session_id, ks.ip_address, ks.last_activity
+            FROM kunden k
+            INNER JOIN kunden_sessions ks ON k.id = ks.user_id
+            WHERE ks.session_id IS NOT NULL";  // Nur Kunden mit einer aktiven Sitzung anzeigen
             $stmt = $conn->prepare($query);
             $stmt->execute();
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);

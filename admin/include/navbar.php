@@ -61,15 +61,14 @@ if ($userRole) {
     }
 }
 
-// Überprüfen, ob der Wartungsmodus aktiviert ist
 $query = "SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $maintenance = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Wenn der Wartungsmodus aktiviert ist und der Benutzer kein Admin ist
-if ($maintenance['setting_value'] === 'on' && $_SESSION['role'] !== 'admin') {
-    // Benutzer auf eine andere Seite weiterleiten, z.B. eine Wartungsseite
+// Wenn der Wartungsmodus aktiviert ist und der Benutzer keine Berechtigung hat, wird er weitergeleitet
+if ($maintenance['setting_value'] === 'on' && !($_SESSION['permissions']['access_maintenance'] ?? false)) {
+    // Benutzer ohne Berechtigung auf Wartungsseite umleiten
     header('Location: maintenance.php');
     exit;
 }

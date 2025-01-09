@@ -5,7 +5,7 @@ session_start();
 include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
 // Sicherstellen, dass der Admin die Sitzung eines anderen Benutzers beendet
-if ($_SESSION['role'] !== 'IT') {
+if ($_SESSION['role'] !== 'admin') { // Überprüfen, ob der eingeloggte Benutzer ein Admin ist
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
 }
@@ -21,22 +21,22 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
     }
 
     try {
-        // 1. Sitzung des Mitarbeiters aus der `user_sessions`-Tabelle entfernen
+        // Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
         $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
 
-        // 2. Setze das 'remember_token' auf NULL in der `users`-Tabelle
+        // Setze das 'remember_token' auf NULL in der `users`-Tabelle
         $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
 
-        // 3. Lösche das 'remember_me' Cookie, falls gesetzt
+        // Lösche das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
 
-        // 4. Falls der Admin nicht ausgeloggt werden soll, löschen wir seine Session nicht
+        // Falls der Admin nicht ausgeloggt werden soll, löschen wir seine Session nicht
         if ($_SESSION['user_id'] == $user_id_to_logout) {
             session_unset();  // Löscht alle Session-Daten
             session_destroy();  // Zerstört die Session
@@ -45,7 +45,7 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
             exit;
         }
 
-        echo json_encode(['success' => true, 'message' => 'Mitarbeiter wurde erfolgreich abgemeldet.']);
+        echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }

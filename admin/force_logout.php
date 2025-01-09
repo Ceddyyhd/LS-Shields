@@ -29,47 +29,49 @@
 
     <!-- Main content -->
     <div class="row">
-      <div class="col-12">
-        <div class="card">
+  <div class="col-12">
+    <div class="card">
 
-          <div class="card-body">
-            <table class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>E-Mail</th>
-                  <th>Aktionen</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php
-                // Alle Benutzer abfragen (nur Admins haben Zugriff auf diese Funktion)
-                include 'include/db.php';
+      <div class="card-body">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>E-Mail</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            // Alle Benutzer abfragen, die aktuell eine Session haben (nur die mit aktiver Session)
+            include 'include/db.php';
 
-                // Beispielhafte Benutzerabfrage (mit einer Admin-Berechtigung für diesen Bereich)
-                $query = "SELECT id, name, umail FROM kunden";
-                $stmt = $conn->prepare($query);
-                $stmt->execute();
-                $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Benutzerabfrage, die nur Kunden mit einer aktiven Session anzeigt
+            $query = "SELECT k.id, k.name, k.umail
+                      FROM kunden k
+                      JOIN kunden_sessions cs ON k.id = cs.user_id";
+            $stmt = $conn->prepare($query);
+            $stmt->execute();
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach ($users as $user): ?>
-                  <tr>
-                    <td><?= htmlspecialchars($user['id']) ?></td>
-                    <td><?= htmlspecialchars($user['name']) ?></td>
-                    <td><?= htmlspecialchars($user['umail']) ?></td>
-                    <td>
-                      <!-- Force-Logout Button -->
-                      <button class="btn btn-danger" onclick="forceLogout(<?= $user['id'] ?>)">Zwangs-Logout</button>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
-        </div>
+            foreach ($users as $user): ?>
+              <tr>
+                <td><?= htmlspecialchars($user['id']) ?></td>
+                <td><?= htmlspecialchars($user['name']) ?></td>
+                <td><?= htmlspecialchars($user['umail']) ?></td>
+                <td>
+                  <!-- Force-Logout Button -->
+                  <button class="btn btn-danger" onclick="forceLogout(<?= $user['id'] ?>)">Zwangs-Logout</button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
+</div>
 
     <?php
 // Datenbankverbindung einbinden

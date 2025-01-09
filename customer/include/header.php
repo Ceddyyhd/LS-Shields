@@ -57,12 +57,6 @@ if (!$sessionCheck) {
 if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     $user_id_to_logout = $_GET['force_logout_user_id'];
 
-    // Session des Benutzers aus der `user_sessions`-Tabelle entfernen
-    $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id_to_logout);
-    $stmt->execute();
-
     // Das 'remember_token' des Benutzers löschen
     $query = "UPDATE kunden SET remember_token = NULL WHERE id = :user_id";
     $stmt = $conn->prepare($query);

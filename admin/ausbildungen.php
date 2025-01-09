@@ -196,6 +196,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_leitfaden">Leitfaden</label>
                         <textarea id="edit_leitfaden" name="leitfaden" class="form-control"></textarea>
                     </div>
+                    <?= $event['summernote_content'] ?>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">

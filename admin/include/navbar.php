@@ -60,8 +60,8 @@ if ($userRole) {
     }
 }
 
-// Überprüfen, ob der Benutzer in der `kunden_sessions`-Tabelle eingetragen ist
-$query = "SELECT * FROM kunden_sessions WHERE user_id = :user_id";
+// Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingetragen ist
+$query = "SELECT * FROM user_sessions WHERE user_id = :user_id";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':user_id', $_SESSION['user_id']);
 $stmt->execute();
@@ -81,17 +81,17 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['user_id'] != $_GET['force
 }
 
 // Benutzer-ID für den Logout setzen (normalerweise wird der Wert aus der Session oder der URL übernommen)
-$user_id_to_logout = $_SESSION['user_id']; // Benutzer kann nur sich selbst abmelden
+$user_id_to_logout = $_SESSION['user_id']; // Mitarbeiter kann nur sich selbst abmelden
 
 try {
-    // 1. Sitzung des Benutzers aus der `kunden_sessions`-Tabelle entfernen
-    $query = "DELETE FROM kunden_sessions WHERE user_id = :user_id";
+    // 1. Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
+    $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':user_id', $user_id_to_logout);
     $stmt->execute();
 
-    // 2. Setze das 'remember_token' auf NULL in der `kunden`-Tabelle
-    $query = "UPDATE kunden SET remember_token = NULL WHERE id = :user_id";
+    // 2. Setze das 'remember_token' auf NULL in der `users`-Tabelle
+    $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':user_id', $user_id_to_logout);
     $stmt->execute();

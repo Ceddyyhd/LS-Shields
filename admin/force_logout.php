@@ -82,7 +82,7 @@ include 'include/db.php';
 
 // Beispielhafte Benutzerabfrage (Mitarbeiter aus der `users`-Tabelle und deren Sitzungsdaten aus der `user_sessions`-Tabelle)
 $query = "
-    SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.created_at
+    SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.last_activity
     FROM users u
     LEFT JOIN user_sessions us ON u.id = us.user_id
     WHERE u.role = 'employee'"; // Nur Mitarbeiter anzeigen, also filtere nach der Rolle 'employee'
@@ -111,7 +111,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <th>E-Mail</th>
                             <th>Session ID</th>
                             <th>IP-Adresse</th>
-                            <th>Erstellt am</th>
+                            <th>Letzte Aktivität</th>
                             <th>Aktionen</th>
                         </tr>
                     </thead>
@@ -124,7 +124,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?= htmlspecialchars($user['email']) ?></td>
                                 <td><?= htmlspecialchars($user['session_id']) ?></td>
                                 <td><?= htmlspecialchars($user['ip_address']) ?></td>
-                                <td><?= htmlspecialchars($user['created_at']) ?></td>
+                                <td><?= htmlspecialchars($user['last_activity']) ?></td>
                                 <td>
                                     <!-- Force-Logout Button -->
                                     <button class="btn btn-danger" onclick="forceLogout(<?= $user['id'] ?>)">Zwangs-Logout</button>

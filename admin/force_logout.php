@@ -67,6 +67,9 @@ $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <th>#</th>
                             <th>Name</th>
                             <th>E-Mail</th>
+                            <th>Session ID</th>
+                            <th>IP-Adresse</th>
+                            <th>Letzte Aktivität</th>
                             <th>Aktionen</th>
                         </tr>
                     </thead>
@@ -76,6 +79,9 @@ $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <td><?= htmlspecialchars($kunde['id']) ?></td>
                                 <td><?= htmlspecialchars($kunde['name']) ?></td>
                                 <td><?= htmlspecialchars($kunde['umail']) ?></td>
+                                <td><?= htmlspecialchars($kunde['session_id']) ?></td>
+                                <td><?= htmlspecialchars($kunde['ip_address']) ?></td>
+                                <td><?= htmlspecialchars($kunde['last_activity']) ?></td>
                                 <td>
                                     <!-- Force-Logout Button für Kunden -->
                                     <button class="btn btn-danger" onclick="forceLogoutKunde(<?= $kunde['id'] ?>)">Zwangs-Logout</button>

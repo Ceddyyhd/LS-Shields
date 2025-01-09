@@ -4,8 +4,8 @@ session_start();
 // Datenbankverbindung einbinden
 include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
 
-// Sicherstellen, dass der Admin die Sitzung eines anderen Benutzers beendet
-if ($_SESSION['role'] !== 'IT') { // Überprüfen, ob der eingeloggte Benutzer ein Admin ist
+// Sicherstellen, dass der Benutzer ein Admin ist, bevor eine andere Sitzung gelöscht wird
+if ($_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
 }
@@ -21,22 +21,22 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
     }
 
     try {
-        // Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
+        // 1. Sitzung des Benutzers aus der `user_sessions`-Tabelle entfernen
         $query = "DELETE FROM user_sessions WHERE user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
 
-        // Setze das 'remember_token' auf NULL in der `users`-Tabelle
+        // 2. Setze das 'remember_token' auf NULL in der `users`-Tabelle
         $query = "UPDATE users SET remember_token = NULL WHERE id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':user_id', $user_id_to_logout);
         $stmt->execute();
 
-        // Lösche das 'remember_me' Cookie, falls gesetzt
+        // 3. Lösche das 'remember_me' Cookie, falls gesetzt
         setcookie('remember_me', '', time() - 3600, '/');  // Cookie löschen
 
-        // Falls der Admin nicht ausgeloggt werden soll, löschen wir seine Session nicht
+        // 4. Falls der Admin nicht ausgeloggt werden soll, löschen wir seine Session nicht
         if ($_SESSION['user_id'] == $user_id_to_logout) {
             session_unset();  // Löscht alle Session-Daten
             session_destroy();  // Zerstört die Session

@@ -192,11 +192,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_display_name">Display Name</label>
                         <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
                     </div>
+                    
+                    <!-- Summernote für den Leitfaden -->
                     <div class="form-group">
                         <label for="edit_leitfaden">Leitfaden</label>
-                        <textarea id="edit_leitfaden" name="leitfaden" class="form-control"></textarea>
+                        <div id="edit_leitfaden" name="leitfaden"></div> <!-- Summernote div -->
                     </div>
-                    <?= $event['summernote_content'] ?>
+                    
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -279,35 +281,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
 });
 
 
-// Wenn der "Leitfaden bearbeiten"-Button geklickt wird
-function editLeitfaden(id) {
-    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
-    $.ajax({
-        url: 'include/fetch_ausbildungstypen.php',
-        type: 'GET',
-        data: { id: id },
-        dataType: 'json',
-        success: function(data) {
-            if (data && data.length > 0) {
-                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-
-                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
-                $('#edit_id').val(ausbildung.id); // ID in hidden input
-                $('#edit_display_name').val(ausbildung.display_name); // Display Name
-                $('#edit_leitfaden').summernote('code', ausbildung.leitfaden); // Setze den Leitfaden Text
-                
-                // Zeige das Bearbeitungsmodal für den Leitfaden an
-                $('#modal-ausbildung-edit').modal('show');
-            } else {
-                alert('Daten konnten nicht geladen werden.');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
-            alert('Fehler beim Abrufen der Ausbildungstypen.');
-        }
+$(document).ready(function() {
+    // Initialisiere Summernote für das Leitfaden-Feld
+    $('#edit_leitfaden').summernote({
+        height: 200,  // Höhe des Editors
+        placeholder: 'Geben Sie den Leitfaden für diesen Ausbildungstyp ein...',
     });
-}
+
+    // Wenn der Bearbeiten-Button geklickt wird
+    $(document).on('click', '.btn-outline-secondary', function() {
+        const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausbildungstyps
+        
+        // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+        $.ajax({
+            url: 'include/fetch_ausbildungstypen.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+
+                    // Setze die Modal-Felder mit den Daten des Ausbildungstyps
+                    $('#edit_id').val(ausbildung.id); // ID in hidden input
+                    $('#edit_display_name').val(ausbildung.display_name); // Display Name
+                    $('#edit_leitfaden').summernote('code', ausbildung.leitfaden); // Setze den Leitfaden Text
+                    
+                    // Zeige das Bearbeitungsmodal für den Leitfaden an
+                    $('#modal-ausbildung-edit').modal('show');
+                } else {
+                    alert('Daten konnten nicht geladen werden.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
+                alert('Fehler beim Abrufen der Ausbildungstypen.');
+            }
+        });
+    });
 
 // Wenn der Bearbeiten-Button geklickt wird
 $(document).on('click', '.btn-outline-secondary', function() {

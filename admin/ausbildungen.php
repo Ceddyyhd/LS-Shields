@@ -192,7 +192,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="edit_display_name">Display Name</label>
                         <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
                     </div>
-                    <?= $event['summernote_content'] ?>
+                    <div class="form-group">
+                        <label for="edit_leitfaden">Leitfaden</label>
+                        <textarea id="edit_leitfaden" name="leitfaden" class="form-control"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -225,7 +228,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
     });
 });
-                                            </script>
+</script>
 <!-- Dein JavaScript -->
 <script>
   $(document).ready(function() {
@@ -245,22 +248,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 data.forEach(function(ausbildung) {
                     tableBody.append(`
                         <tr>
-                            <td>${ausbildung.id}</td>
-                            <td>${ausbildung.key_name}</td>
-                            <td>${ausbildung.display_name}</td>
-                            <td>${ausbildung.description}</td>
-                            <td>
-                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_update']) && $_SESSION['permissions']['ausbildungstyp_update']): ?>
-                            <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
-                          <?php endif; ?>
-                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_remove']) && $_SESSION['permissions']['ausbildungstyp_remove']): ?>
-                              <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
-                          <?php endif; ?>
-                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_leitfaden']) && $_SESSION['permissions']['ausbildungstyp_leitfaden']): ?>
-                              <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
-                          <?php endif; ?>
+                          <td>${ausbildung.id}</td>
+                          <td>${ausbildung.key_name}</td>
+                          <td>${ausbildung.display_name}</td>
+                          <td>${ausbildung.description}</td>
+                          <td>
+                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_update']) && $_SESSION['permissions']['ausbildungstyp_update']): ?>
+                                  <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
+                              <?php endif; ?>
+                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_remove']) && $_SESSION['permissions']['ausbildungstyp_remove']): ?>
+                                  <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
+                              <?php endif; ?>
+                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_leitfaden']) && $_SESSION['permissions']['ausbildungstyp_leitfaden']): ?>
+                                  <button class="btn btn-outline-info" data-id="${ausbildung.id}" onclick="editLeitfaden(${ausbildung.id})">Leitfaden bearbeiten</button>
+                              <?php endif; ?>
                           </td>
-                        </tr>
+                      </tr>
                     `);
                 });
             } else {
@@ -273,6 +276,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     });
 });
+
+
+// Wenn der "Leitfaden bearbeiten"-Button geklickt wird
+function editLeitfaden(id) {
+    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+    $.ajax({
+        url: 'include/fetch_ausbildungstypen.php',
+        type: 'GET',
+        data: { id: id },
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+
+                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
+                $('#edit_id').val(ausbildung.id); // ID in hidden input
+                $('#edit_display_name').val(ausbildung.display_name); // Display Name
+                $('#edit_leitfaden').summernote('code', ausbildung.leitfaden); // Setze den Leitfaden Text
+                
+                // Zeige das Bearbeitungsmodal für den Leitfaden an
+                $('#modal-ausbildung-edit').modal('show');
+            } else {
+                alert('Daten konnten nicht geladen werden.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
+            alert('Fehler beim Abrufen der Ausbildungstypen.');
+        }
+    });
+}
 
 // Wenn der Bearbeiten-Button geklickt wird
 $(document).on('click', '.btn-outline-secondary', function() {

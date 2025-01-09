@@ -39,19 +39,6 @@ if (!isset($_SESSION['user_id'])) {
     }
 }
 
-// Überprüfen, ob der Wartungsmodus aktiviert ist
-$query = "SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$maintenance = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Wenn der Wartungsmodus aktiviert ist und der Benutzer kein Admin ist
-if ($maintenance['setting_value'] === 'on' && $_SESSION['role'] !== 'admin') {
-    // Benutzer auf eine andere Seite weiterleiten, z.B. eine Wartungsseite
-    header('Location: maintenance.php');
-    exit;
-}
-
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
@@ -72,6 +59,19 @@ if ($userRole) {
             $_SESSION['permissions'] = [];
         }
     }
+}
+
+// Überprüfen, ob der Wartungsmodus aktiviert ist
+$query = "SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$maintenance = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Wenn der Wartungsmodus aktiviert ist und der Benutzer kein Admin ist
+if ($maintenance['setting_value'] === 'on' && $_SESSION['role'] !== 'admin') {
+    // Benutzer auf eine andere Seite weiterleiten, z.B. eine Wartungsseite
+    header('Location: maintenance.php');
+    exit;
 }
 
 // Überprüfen, ob der Benutzer in der `user_sessions`-Tabelle eingetragen ist (für Mitarbeiter)

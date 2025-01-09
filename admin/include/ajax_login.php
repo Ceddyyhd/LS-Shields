@@ -38,6 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email'] = $user['email'];
             $_SESSION['profile_image'] = $user['profile_image']; // Profilbild speichern
 
+            // Sitzungsinformationen in der user_sessions-Tabelle speichern
+            $session_id = session_id();       // Die aktuelle Session-ID
+            $ip_address = $_SERVER['REMOTE_ADDR'];  // IP-Adresse des Benutzers
+            $query = "INSERT INTO user_sessions (user_id, session_id, ip_address) VALUES (:user_id, :session_id, :ip_address)";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':user_id', $_SESSION['user_id']);
+            $stmt->bindParam(':session_id', $session_id);
+            $stmt->bindParam(':ip_address', $ip_address);
+            $stmt->execute();
+
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));

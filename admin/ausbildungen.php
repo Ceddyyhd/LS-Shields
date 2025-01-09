@@ -51,347 +51,225 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Starter Page</h1>
+          <h1 class="m-0">Ausbildungstypen</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Starter Page</li>
+            <li class="breadcrumb-item active">Ausbildungstypen</li>
           </ol>
         </div>
       </div>
     </div>
   </div>
-  <!-- /.content-header -->
 
   <!-- Main content -->
   <div class="card">
-  <?php if (isset($_SESSION['permissions']['ausbildung_create']) && $_SESSION['permissions']['ausbildung_create']): ?>
-  <div class="card-header">
-    <h3 class="card-title">
+    <?php if (isset($_SESSION['permissions']['ausbildung_create']) && $_SESSION['permissions']['ausbildung_create']): ?>
+    <div class="card-header">
+      <h3 class="card-title">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausbildung-create">
-            Ausbildungstyp erstellen
+          Ausbildungstyp erstellen
         </button>
-    </h3>
+      </h3>
+    </div>
+    <?php endif; ?>
+
+    <!-- Modal für das Erstellen eines neuen Ausbildungstyps -->
+    <div class="modal fade" id="modal-ausbildung-create">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ausbildungstyp Erstellen</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="createAusbildungForm">
+              <div class="form-group">
+                <label for="key_name">Key Name</label>
+                <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Enter key name">
+              </div>
+              <div class="form-group">
+                <label for="display_name">Display Name</label>
+                <input type="text" class="form-control" id="display_name" name="display_name" placeholder="Enter display name">
+              </div>
+              <div class="form-group">
+                <label for="description">Beschreibung</label>
+                <textarea class="form-control" id="description" name="description" placeholder="Enter description"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="saveAusbildung">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal für das Bearbeiten eines Ausbildungstyps -->
+    <div class="modal fade" id="modal-ausbildung-edit">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ausbildungstyp Bearbeiten</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="editAusbildungForm">
+              <input type="hidden" id="edit_id" name="id"> <!-- ID des Ausbildungstyps -->
+              <div class="form-group">
+                <label for="edit_key_name">Key Name</label>
+                <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
+              </div>
+              <div class="form-group">
+                <label for="edit_display_name">Display Name</label>
+                <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
+              </div>
+              <div class="form-group">
+                <label for="edit_description">Beschreibung</label>
+                <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+            <button type="button" class="btn btn-primary" id="saveEditAusbildung">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal für das Bearbeiten des Leitfadens -->
+    <div class="modal fade" id="modal-ausbildung-leitfaden-edit">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Leitfaden Bearbeiten</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="editLeitfadenForm">
+              <input type="hidden" id="edit_leitfaden_id" name="id"> <!-- ID des Ausbildungstyps -->
+              <div class="form-group">
+                <label for="edit_leitfaden">Leitfaden</label>
+                <div id="edit_leitfaden" name="leitfaden"></div> <!-- Summernote div für den Leitfaden -->
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+            <button type="button" class="btn btn-primary" id="saveEditLeitfaden">Speichern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Key Name</th>
+            <th>Display Name</th>
+            <th>Description</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Dynamisch geladene Daten -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>#</th>
+            <th>Key Name</th>
+            <th>Display Name</th>
+            <th>Description</th>
+            <th>Aktion</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
-<?php endif; ?>
-
-<!-- Modal für das Erstellen eines neuen Ausbildungstyps -->
-<div class="modal fade" id="modal-ausbildung-create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ausbildungstyp Erstellen</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="createAusbildungForm">
-                    <div class="form-group">
-                        <label for="key_name">Key Name</label>
-                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Enter key name">
-                    </div>
-                    <div class="form-group">
-                        <label for="display_name">Display Name</label>
-                        <input type="text" class="form-control" id="display_name" name="display_name" placeholder="Enter display name">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Beschreibung</label>
-                        <textarea class="form-control" id="description" name="description" placeholder="Enter description"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveAusbildung">Speichern</button>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Modal für das Bearbeiten eines Ausbildungstyps -->
-<div class="modal fade" id="modal-ausbildung-edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ausbildungstyp Ändern</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editAusbildungForm">
-                    <input type="hidden" id="edit_id" name="id"> <!-- ID des Ausbildungstyps -->
-                    <div class="form-group">
-                        <label for="edit_key_name">Key Name</label>
-                        <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Enter key name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_display_name">Display Name</label>
-                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit_description">Beschreibung</label>
-                        <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveEditAusbildung">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="card-body">
-  <table id="example1" class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Daten werden dynamisch geladen -->
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>#</th>
-        <th>Key Name</th>
-        <th>Display Name</th>
-        <th>Description</th>
-        <th>Aktion</th>
-      </tr>
-    </tfoot>
-  </table>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal für das Bearbeiten eines Ausbildungstyps -->
-<div class="modal fade" id="modal-ausbildung-edit">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ausbildungs Leitfaden</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editAusbildungForm">
-                    <input type="hidden" id="edit_id" name="id"> <!-- ID des Ausbildungstyps -->
-                    <div class="form-group">
-                        <label for="edit_display_name">Display Name</label>
-                        <input type="text" class="form-control" id="edit_display_name" name="display_name" placeholder="Enter display name">
-                    </div>
-                    
-                    <!-- Summernote für den Leitfaden -->
-                    <div class="form-group">
-                        <label for="edit_leitfaden">Leitfaden</label>
-                        <div id="edit_leitfaden" name="leitfaden"></div> <!-- Summernote div -->
-                    </div>
-                    
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveEditAusbildung">Speichern</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
- $(document).ready(function () {
-
-    $('#submitForm').on('click', function () {
-        var summernoteContent = $('#summernote').val();
-
-        $.ajax({
-            url: 'include/speichern_eventplanung_summernote.php',
-            type: 'POST',
-            data: {
-                summernoteContent: summernoteContent,
-                id: <?= $event['id'] ?>
-            },
-            success: function (response) {
-                location.reload();
-            },
-            error: function (xhr, status, error) {
-                console.log('Fehler:', error);
-            }
-        });
-    });
-});
-</script>
-<!-- Dein JavaScript -->
 <script>
   $(document).ready(function() {
-    // AJAX-Anfrage zum Abrufen der Ausbildungstypen direkt beim Laden der Seite
-    $.ajax({
-        url: 'include/fetch_ausbildungstypen.php', // URL für das Abrufen der Daten
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            console.log('Daten erhalten:', data); // Logge die erhaltenen Daten in der Konsole
-            if (data && data.length > 0) {
-                // Wenn Daten vorhanden sind, befülle die Tabelle oder Modal
-                const tableBody = $('#example1 tbody'); // Beispiel: ID der Tabelle, in der die Daten angezeigt werden
-                tableBody.empty(); // Leere das Tabellenbody, bevor neue Daten hinzugefügt werden
-
-                // Daten durchlaufen und in die Tabelle einfügen
-                data.forEach(function(ausbildung) {
-                    tableBody.append(`
-                        <tr>
-                          <td>${ausbildung.id}</td>
-                          <td>${ausbildung.key_name}</td>
-                          <td>${ausbildung.display_name}</td>
-                          <td>${ausbildung.description}</td>
-                          <td>
-                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_update']) && $_SESSION['permissions']['ausbildungstyp_update']): ?>
-                                  <button class="btn btn-outline-secondary" data-id="${ausbildung.id}">Bearbeiten</button>
-                              <?php endif; ?>
-                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_remove']) && $_SESSION['permissions']['ausbildungstyp_remove']): ?>
-                                  <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
-                              <?php endif; ?>
-                              <?php if (isset($_SESSION['permissions']['ausbildungstyp_leitfaden']) && $_SESSION['permissions']['ausbildungstyp_leitfaden']): ?>
-                                  <button class="btn btn-outline-info" data-id="${ausbildung.id}" onclick="editLeitfaden(${ausbildung.id})">Leitfaden bearbeiten</button>
-                              <?php endif; ?>
-                          </td>
-                      </tr>
-                    `);
-                });
-            } else {
-                alert('Keine Ausbildungstypen gefunden.');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error); // Fehlerlog
-            alert('Fehler beim Abrufen der Ausbildungstypen.');
-        }
-    });
-});
-
-
-$(document).ready(function() {
-    // Initialisiere Summernote für das Leitfaden-Feld
+    // Initialisiere Summernote für den Leitfaden-Editor
     $('#edit_leitfaden').summernote({
-        height: 200,  // Höhe des Editors
-        placeholder: 'Geben Sie den Leitfaden für diesen Ausbildungstyp ein...',
+      height: 200,
+      placeholder: 'Geben Sie den Leitfaden ein...',
     });
 
-    // Wenn der Bearbeiten-Button geklickt wird
-    $(document).on('click', '.btn-outline-secondary', function() {
-        const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausbildungstyps
-        
-        // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
-        $.ajax({
-            url: 'include/fetch_ausbildungstypen.php',
-            type: 'GET',
-            data: { id: id },
-            dataType: 'json',
-            success: function(data) {
-                if (data && data.length > 0) {
-                    const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-
-                    // Setze die Modal-Felder mit den Daten des Ausbildungstyps
-                    $('#edit_id').val(ausbildung.id); // ID in hidden input
-                    $('#edit_display_name').val(ausbildung.display_name); // Display Name
-                    $('#edit_leitfaden').summernote('code', ausbildung.leitfaden); // Setze den Leitfaden Text
-                    
-                    // Zeige das Bearbeitungsmodal für den Leitfaden an
-                    $('#modal-ausbildung-edit').modal('show');
-                } else {
-                    alert('Daten konnten nicht geladen werden.');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
-                alert('Fehler beim Abrufen der Ausbildungstypen.');
-            }
-        });
-    });
-
-// Wenn der Bearbeiten-Button geklickt wird
-$(document).on('click', '.btn-outline-secondary', function() {
-    const id = $(this).data('id'); // Hole die ID des zu bearbeitenden Ausbildungstyps
-    
-    // AJAX-Anfrage, um die Daten des Ausbildungstyps abzurufen
+    // Abrufen der Ausbildungstypen
     $.ajax({
+      url: 'include/fetch_ausbildungstypen.php',
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        const tableBody = $('#example1 tbody');
+        tableBody.empty();
+        data.forEach(function(ausbildung) {
+          tableBody.append(`
+            <tr>
+              <td>${ausbildung.id}</td>
+              <td>${ausbildung.key_name}</td>
+              <td>${ausbildung.display_name}</td>
+              <td>${ausbildung.description}</td>
+              <td>
+                <button class="btn btn-outline-secondary" data-id="${ausbildung.id}" onclick="editLeitfaden(${ausbildung.id})">Leitfaden bearbeiten</button>
+                <button class="btn btn-outline-secondary" data-id="${ausbildung.id}" onclick="editAusbildung(${ausbildung.id})">Bearbeiten</button>
+                <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
+              </td>
+            </tr>
+          `);
+        });
+      }
+    });
+
+    // Leitfaden bearbeiten
+    function editLeitfaden(id) {
+      $.ajax({
         url: 'include/fetch_ausbildungstypen.php',
         type: 'GET',
         data: { id: id },
         dataType: 'json',
         success: function(data) {
-            if (data && data.length > 0) {
-                const ausbildung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
-
-                // Setze die Modal-Felder mit den Daten des Ausbildungstyps
-                $('#edit_id').val(ausbildung.id); // ID in hidden input
-                $('#edit_key_name').val(ausbildung.key_name); // Key Name
-                $('#edit_display_name').val(ausbildung.display_name); // Display Name
-                $('#edit_description').val(ausbildung.description); // Beschreibung
-                
-                // Zeige das Bearbeitungsmodal an
-                $('#modal-ausbildung-edit').modal('show');
-            } else {
-                alert('Daten konnten nicht geladen werden.');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Fehler beim Abrufen der Ausbildungstypen:', error);
-            alert('Fehler beim Abrufen der Ausbildungstypen.');
+          const ausbildung = data[0];
+          $('#edit_leitfaden_id').val(ausbildung.id);
+          $('#edit_leitfaden').summernote('code', ausbildung.leitfaden);
+          $('#modal-ausbildung-leitfaden-edit').modal('show');
         }
-    });
-});
+      });
+    }
 
-// Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
-$('#saveEditAusbildung').click(function() {
-    const formData = new FormData(document.getElementById('editAusbildungForm'));
+    // Speichern der Änderungen im Leitfaden
+    $('#saveEditLeitfaden').click(function() {
+      const formData = new FormData(document.getElementById('editLeitfadenForm'));
+      formData.append('leitfaden', $('#edit_leitfaden').summernote('code'));
 
-    $.ajax({
+      $.ajax({
         url: 'include/update_ausbildungstyp.php',
         type: 'POST',
         data: formData,
         processData: false,
         contentType: false,
         success: function(response) {
-            alert('Ausbildungstyp erfolgreich bearbeitet.');
-            location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+          alert('Leitfaden erfolgreich bearbeitet.');
+          location.reload();
         },
         error: function(xhr, status, error) {
-            console.error('Fehler beim Bearbeiten:', error);
-            alert('Fehler beim Bearbeiten des Ausbildungstyps.');
+          alert('Fehler beim Bearbeiten des Leitfadens.');
         }
+      });
     });
-});
-
-  // Löschen-Funktion
-  function deleteAusbildungTyp(id) {
-    if (confirm('Möchten Sie diesen Ausbildungstyp wirklich löschen? (Er wird archiviert)')) {
-        $.ajax({
-            url: 'include/delete_ausbildungstyp.php',
-            type: 'POST',
-            data: { id: id },
-            success: function(response) {
-                alert('Ausbildungstyp archiviert');
-                location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
-            },
-            error: function(xhr, status, error) {
-                console.error('Fehler beim Archivieren:', xhr.responseText);
-                alert('Fehler beim Archivieren des Ausbildungstyps.');
-            }
-        });
-    }
-  }
+  });
 </script>
 
 <!-- JavaScript Section -->

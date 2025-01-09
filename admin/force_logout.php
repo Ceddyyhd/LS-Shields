@@ -80,12 +80,12 @@
 // Datenbankverbindung einbinden
 include 'include/db.php';
 
-// Abfrage der Sitzungsdaten aus der `user_sessions`-Tabelle und des Benutzernamens aus der `users`-Tabelle
+// Abfrage der Benutzer mit einer offenen Sitzung aus der `user_sessions`-Tabelle
 $query = "
-    SELECT u.id, u.name, us.session_id, us.ip_address, us.last_activity
+    SELECT u.id, u.name, u.email, us.session_id, us.ip_address, us.last_activity
     FROM users u
-    LEFT JOIN user_sessions us ON u.id = us.user_id
-";  // Kein Filter nach `role`, da du nur Benutzerinformationen benötigst
+    INNER JOIN user_sessions us ON u.id = us.user_id
+    WHERE us.session_id IS NOT NULL";  // Nur Benutzer mit einer aktiven Sitzung anzeigen
 
 $stmt = $conn->prepare($query);
 $stmt->execute();

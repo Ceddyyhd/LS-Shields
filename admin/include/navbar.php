@@ -305,6 +305,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                                 <p>Ausrüstung Verwaltung</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="ankündigung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ankündigung.php' ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Ankündigungen</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

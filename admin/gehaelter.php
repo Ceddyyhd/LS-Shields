@@ -42,15 +42,9 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 include 'include/db.php';
 
 // SQL-Abfrage, um die Mitarbeiter-Daten (Name und Kontonummer) zu holen
-$query = "
-    SELECT id, name, kontonummer
-    FROM users
-    WHERE bewerber = 'nein'
-    AND gekuendigt = 'no_kuendigung'  -- Optional: Nur Mitarbeiter, die keine Bewerber sind
-";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmtEmployees = $conn->prepare("SELECT id, name FROM users WHERE bewerber = 'nein' AND gekuendigt = 'no_kuendigung'");
+$stmtEmployees->execute();
+$employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="card">

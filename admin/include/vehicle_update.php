@@ -12,11 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_name = $_SESSION['username'];  // Benutzername aus der Session holen
 
     // Zusätzliche Felder (für Logs und die vehicles DB)
-    $fuel_checked = isset($_POST['fuel_checked']) ? 1 : 0;  // Checkbox "Getankt"
-    $fuel_location = isset($_POST['fuel_location']) ? $_POST['fuel_location'] : NULL;  // Textfeld "Wo?"
     $notes = isset($_POST['notes']) ? $_POST['notes'] : NULL;  // Notizen
     $decommissioned = isset($_POST['decommissioned']) ? 1 : 0;  // Checkbox "Ausgemustert"
-    
+
+    // Tuning-Optionen
+    $turbo_tuning = isset($_POST['turbo_tuning']) ? 1 : 0;
+    $engine_tuning = isset($_POST['engine_tuning']) ? 1 : 0;
+    $transmission_tuning = isset($_POST['transmission_tuning']) ? 1 : 0;
+    $brake_tuning = isset($_POST['brake_tuning']) ? 1 : 0;
+
     try {
         // Vorherige Fahrzeugdaten abrufen
         $sql_select = "SELECT * FROM vehicles WHERE id = ?";
@@ -31,9 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Fahrzeugdaten in der DB aktualisieren (jetzt auch Notizen und Ausgemustert)
-        $sql_update = "UPDATE vehicles SET model = ?, license_plate = ?, location = ?, next_inspection = ?, notes = ?, decommissioned = ? WHERE id = ?";
+        $sql_update = "UPDATE vehicles SET 
+            model = ?, license_plate = ?, location = ?, next_inspection = ?, 
+            notes = ?, decommissioned = ?, turbo_tuning = ?, engine_tuning = ?, 
+            transmission_tuning = ?, brake_tuning = ? 
+            WHERE id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->execute([$model, $license_plate, $location, $next_inspection, $notes, $decommissioned, $vehicle_id]);
+        $stmt_update->execute([
+            $model, $license_plate, $location, $next_inspection, 
+            $notes, $decommissioned, $turbo_tuning, $engine_tuning, 
+            $transmission_tuning, $brake_tuning, $vehicle_id
+        ]);
 
         // Änderungen ermitteln und formatieren
         $changes = [];
@@ -49,21 +61,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($next_inspection !== $old_vehicle['next_inspection']) {
             $changes[] = "Nächste Inspektion: " . $old_vehicle['next_inspection'] . " -> " . $next_inspection;
         }
-
-        // Wenn fuel_checked oder fuel_location geändert wurden, fügen wir das zu den Logs hinzu
-        if ($fuel_checked != $old_vehicle['fuel_checked']) {
-            $changes[] = "Getankt: " . ($fuel_checked ? 'Ja' : 'Nein');
-        }
-        if ($fuel_location !== $old_vehicle['fuel_location']) {
-            $changes[] = "Wo getankt: " . $old_vehicle['fuel_location'] . " -> " . $fuel_location;
-        }
-
-        // Wenn Notizen oder Ausgemustert geändert wurden, fügen wir das auch zu den Änderungen hinzu
         if ($notes !== $old_vehicle['notes']) {
             $changes[] = "Notizen: " . $old_vehicle['notes'] . " -> " . $notes;
         }
         if ($decommissioned != $old_vehicle['decommissioned']) {
             $changes[] = "Ausgemustert: " . ($decommissioned ? 'Ja' : 'Nein');
+        }
+        if ($turbo_tuning != $old_vehicle['turbo_tuning']) {
+            $changes[] = "Turbotuning: " . ($turbo_tuning ? 'Ja' : 'Nein');
+        }
+        if ($engine_tuning != $old_vehicle['engine_tuning']) {
+            $changes[] = "Motortuning: " . ($engine_tuning ? 'Ja' : 'Nein');
+        }
+        if ($transmission_tuning != $old_vehicle['transmission_tuning']) {
+            $changes[] = "Getriebetuning: " . ($transmission_tuning ? 'Ja' : 'Nein');
+        }
+        if ($brake_tuning != $old_vehicle['brake_tuning']) {
+            $changes[] = "Bremsentuning: " . ($brake_tuning ? 'Ja' : 'Nein');
         }
 
         // Wenn keine Änderungen vorgenommen wurden
@@ -92,3 +106,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
     }
 }
+?>

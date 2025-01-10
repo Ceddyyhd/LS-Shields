@@ -149,27 +149,32 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <strong><i class="fas fa-trash-alt mr-1"></i> Tuning</strong>
-                        <div class="form-check">
+                    <!-- Tuning-Optionen -->
+                        <div class="form-group">
+                            <strong><i class="fas fa-tuning mr-1"></i> Tuning</strong>
+                            <div class="form-check">
+                                <!-- Turbotuning -->
+                                <input type="checkbox" class="form-check-input" id="edit-turbo_tuning" name="turbo_tuning"
+                                    <?php if (!($_SESSION['permissions']['edit_turbo_tuning'] ?? false)) echo 'disabled'; ?>>
+                                <label for="edit-turbo_tuning" class="form-check-label">Turbotuning</label>
 
-                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
-                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-decommissioned" class="form-check-label">Turbotuning</label>
+                                <!-- Motortuning -->
+                                <input type="checkbox" class="form-check-input" id="edit-engine_tuning" name="engine_tuning"
+                                    <?php if (!($_SESSION['permissions']['edit_engine_tuning'] ?? false)) echo 'disabled'; ?>>
+                                <label for="edit-engine_tuning" class="form-check-label">Motortuning</label>
 
-                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
-                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-decommissioned" class="form-check-label">Motortuning</label>
+                                <!-- Getriebetuning -->
+                                <input type="checkbox" class="form-check-input" id="edit-transmission_tuning" name="transmission_tuning"
+                                    <?php if (!($_SESSION['permissions']['edit_transmission_tuning'] ?? false)) echo 'disabled'; ?>>
+                                <label for="edit-transmission_tuning" class="form-check-label">Getriebetuning</label>
 
-                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
-                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-decommissioned" class="form-check-label">Getriebetuning</label>
-
-                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
-                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
-                            <label for="edit-decommissioned" class="form-check-label">Bremsentuning</label>
+                                <!-- Bremsentuning -->
+                                <input type="checkbox" class="form-check-input" id="edit-brake_tuning" name="brake_tuning"
+                                    <?php if (!($_SESSION['permissions']['edit_brake_tuning'] ?? false)) echo 'disabled'; ?>>
+                                <label for="edit-brake_tuning" class="form-check-label">Bremsentuning</label>
+                            </div>
                         </div>
-                    </div>
+
 
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
 
@@ -420,10 +425,16 @@ $('.tanken-button').on('click', function() {
             $('#edit-location').val(vehicle.location);
             $('#edit-next_inspection').val(vehicle.next_inspection);
             $('#edit-vehicle_id').val(vehicle.id);
-
+            
             // Notizen und Ausgemustert-Status einfügen
             $('#edit-notes').val(vehicle.notes);  // Notizen
             $('#edit-decommissioned').prop('checked', vehicle.decommissioned == 1);  // Ausgemustert
+
+            // Tuning-Checkboxen setzen
+            $('#edit-turbo_tuning').prop('checked', vehicle.turbo_tuning == 1);  // Turbotuning
+            $('#edit-engine_tuning').prop('checked', vehicle.engine_tuning == 1);  // Motortuning
+            $('#edit-transmission_tuning').prop('checked', vehicle.transmission_tuning == 1);  // Getriebetuning
+            $('#edit-brake_tuning').prop('checked', vehicle.brake_tuning == 1);  // Bremsentuning
         }
     });
 });

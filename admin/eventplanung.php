@@ -48,10 +48,10 @@
     <thead>
         <tr>
             <th style="width: 1%">#</th>
-            <th style="width: 20%">Ansprechpartner</th>
+            <th style="width: 15%">Ansprechpartner</th>
             <th style="width: 20%">Event</th>
             <th style="width: 20%">Anmerkung</th>
-            <th style="width: 20%">Datum & Uhrzeit</th>
+            <th style="width: 15%">Datum & Uhrzeit</th>
             <th style="width: 30%">Team Members</th>
             <th>Status</th>
             <th style="width: 30%">Actions</th>

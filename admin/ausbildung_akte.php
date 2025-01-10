@@ -31,42 +31,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.min.js"></script>
 
     <?php
-    // Verbindung zur Datenbank einbinden
-    include('include/db.php');
+// Verbindung zur Datenbank einbinden
+include('include/db.php');
 
-    // ID aus der URL holen
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-    } else {
-        die('Kein Eventplanungs-ID angegeben.');
-    }
+// ID aus der URL holen
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+} else {
+    die('Kein Ausbildungstyp-ID angegeben.');
+}
 
-    // SQL-Abfrage zum Abrufen der Eventplanung aus der Datenbank
-    try {
-        // Event-Daten mit Event Lead Name und Telefonnummer abfragen
-        $stmt = $conn->prepare("SELECT eventplanung.*, users.name AS event_lead_name, users.nummer AS event_lead_phone
-                                FROM eventplanung 
-                                LEFT JOIN users ON eventplanung.event_lead = users.id 
-                                WHERE eventplanung.id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+// SQL-Abfrage zum Abrufen der Ausbildungstypen aus der Datenbank
+try {
+    // Ausbildungstyp-Daten abfragen
+    $stmt = $conn->prepare("SELECT * FROM ausbildungstypen WHERE id = :id");
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+$stmt->execute();
 
-        // Ergebnis abrufen
-        $event = $stmt->fetch(PDO::FETCH_ASSOC);
+// Ergebnis abrufen
+$ausbildung = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$event) {
-            die('Eventplanung nicht gefunden.');
-        }
+if (!$ausbildung) {
+    die('Ausbildungstyp nicht gefunden.');
+}
 
-        // Benutzer aus der `users`-Tabelle abfragen
-        $userStmt = $conn->prepare("SELECT id, name FROM users");
-        $userStmt->execute();
-        $users = $userStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Fehler beim Abrufen der Daten: " . $e->getMessage());
+}
+?>
 
-    } catch (PDOException $e) {
-        die("Fehler beim Abrufen der Daten: " . $e->getMessage());
-    }
-    ?>
 
     <?php include 'include/header.php'; ?>
 </head>
@@ -110,7 +103,7 @@
     <div class="text-center">
     </div>
     <p class="text-muted text-center">Ausbildung</p>
-    <h3 class="profile-username text-center"><?= htmlspecialchars($event['event']); ?></h3>
+    <h3 class="profile-username text-center"><?= htmlspecialchars($ausbildung['display_name']); ?></h3>
 
 
 
@@ -133,17 +126,17 @@
                                 <div class="card-body">
                                     <div class="tab-content">
                                         <div class="active tab-pane" id="plan">
-                                            <?= $event['summernote_content'] ?>
+                                            <?= $ausbildung['leitfaden'] ?>
                                         </div>
 
                                         <div class="tab-pane" id="plan-bearbeiten">
-                                            <form action="speichern_eventplanung_summernote.php" method="POST">
+                                            <form action="speichern_ausbildung_summernote.php" method="POST">
                                                 <div class="form-group">
                                                     <label for="summernote">Anfrage:</label>
-                                                    <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($event['summernote_content']) ?></textarea>
+                                                    <textarea id="summernote" name="summernoteContent"><?= htmlspecialchars($ausbildung['leitfaden']) ?></textarea>
                                                 </div>
 
-                                                <input type="hidden" name="id" value="<?= $event['id'] ?>">
+                                                <input type="hidden" name="id" value="<?= $ausbildung['id'] ?>">
 
                                                 <button type="button" id="submitForm" class="btn btn-danger">Speichern</button>
                                             </form>
@@ -155,11 +148,11 @@
         var summernoteContent = $('#summernote').val();
 
         $.ajax({
-            url: 'include/speichern_eventplanung_summernote.php',
+            url: 'include/speichern_ausbildung_summernote.php',
             type: 'POST',
             data: {
                 summernoteContent: summernoteContent,
-                id: <?= $event['id'] ?>
+                id: <?= $ausbildung['id'] ?>
             },
             success: function (response) {
                 location.reload();

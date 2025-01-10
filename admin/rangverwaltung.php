@@ -38,16 +38,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 include 'include/db.php';
 
-// Ränge aus der Datenbank abrufen
 $stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+if (!$roles) {
+    echo 'Fehler beim Abrufen der Rollen aus der Datenbank.';
+}
 
 $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
+if (!$areas) {
+    echo 'Fehler beim Abrufen der Bereichsdaten aus der Datenbank.';
+}
 
-// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtPerm = $conn->prepare("
     SELECT p.*, pa.display_name AS bereich_display_name
     FROM permissions p
@@ -55,12 +59,9 @@ $stmtPerm = $conn->prepare("
 ");
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
-
-// Die Daten an JavaScript übergeben
-echo '<script>';
-echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($areas) . ';';
-echo '</script>';
+if (!$permissions) {
+    echo 'Fehler beim Abrufen der Berechtigungen aus der Datenbank.';
+}
 ?>
 
 
@@ -71,7 +72,7 @@ $(document).ready(function () {
 
     const permissionsContainer = $('#permissionsContainer');
 
-    // Bereichsdaten in ein Map umwandeln
+    // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
     const areaMap = {};
     areas.forEach(area => {
         areaMap[area.id] = area.display_name;
@@ -132,6 +133,7 @@ $(document).ready(function () {
     });
 });
 </script>
+
 
 
 

@@ -78,10 +78,13 @@ if (empty($areas)) {
     }
 
     // Daten für JavaScript vorbereiten
-    echo '<script>';
-    echo 'const permissions = ' . json_encode($permissions) . ';';
-    echo 'const areas = ' . json_encode($groupedAreas) . ';';
-    echo '</script>';
+    echo '<pre>';
+print_r($areas); // Zeigt alle Bereiche an
+echo '</pre>';
+
+echo '<pre>';
+print_r($permissions); // Zeigt alle Berechtigungen an
+echo '</pre>';
 }
 ?>
 
@@ -92,62 +95,48 @@ if (empty($areas)) {
 <script>
 $(document).ready(function() {
     const permissions = <?= json_encode($permissions) ?>;
-    const areas = <?= json_encode($areas) ?>;
-
-    console.log("Permissions:", permissions); // Überprüfe Berechtigungen
-    console.log("Areas:", areas); // Überprüfe Bereiche
+    const areas = <?= json_encode($groupedAreas) ?>; // Deine gruppierten Bereiche
 
     const permissionsContainer = $('#permissionsContainer');
 
-    // Bereichsdaten in ein Map umwandeln
-    const areaMap = {};
-    areas.forEach(area => {
-        areaMap[area.id] = area.display_name;
-    });
+    // Iteriere über die gruppierten Bereiche
+    areas.forEach(areaGroup => {
+        const parentArea = areaGroup.area; // Der Hauptbereich
+        const children = areaGroup.children; // Unterbereiche
 
-    // Berechtigungen gruppieren
-    const permissionsByArea = {};
-    permissions.forEach(permission => {
-        if (!permissionsByArea[permission.bereich]) {
-            permissionsByArea[permission.bereich] = [];
-        }
-        permissionsByArea[permission.bereich].push(permission);
-    });
+        // Bereichsnamen
+        const sectionLabel = parentArea.display_name || 'Unbekannter Bereich';
 
-    // Dynamisches HTML für die Bereiche und Berechtigungen erstellen
-    areas.forEach(area => {
-        const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
-        console.log("Bereich:", sectionLabel); // Überprüfe, ob Bereich korrekt gesetzt ist
-
-        let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+        // HTML für den Hauptbereich
+        let sectionDiv = permissionsContainer.find(`.section-${parentArea.id}`);
         if (!sectionDiv.length) {
-            // Abschnitt für den Bereich erstellen
-            permissionsContainer.append(
-                `<div class="permissions-section section-${area.id}">
-                    <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+            permissionsContainer.append(`
+                <div class="permissions-section section-${parentArea.id}">
+                    <h5 class="expandable-table" data-widget="expandable-table" aria-expanded="false">
                         <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                         ${sectionLabel}
                     </h5>
                     <div class="expandable-body" style="display: none;">
                         <table class="table table-hover">
-                            <tbody class="permissions-list">
+                            <tbody class="permissions-list-${parentArea.id}">
                             </tbody>
                         </table>
                     </div>
-                </div>`
-            );
-            sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+                </div>
+            `);
+            sectionDiv = permissionsContainer.find(`.section-${parentArea.id}`);
         }
 
-        // Berechtigungen für den Bereich hinzufügen
-        const permissionList = permissionsByArea[area.id];
-        const permissionsListContainer = sectionDiv.find('.permissions-list');
-        permissionList.forEach(permission => {
+        // Unterbereiche (z. B. Dashboard, Eventakte)
+        children.forEach(child => {
+            const permissionsListContainer = sectionDiv.find(`.permissions-list-${parentArea.id}`);
+            
+            // Berechtigungen für diesen Unterbereich anzeigen
             permissionsListContainer.append(`
                 <tr data-widget="expandable-table" aria-expanded="false">
                     <td>
                         <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                        ${permission.name}
+                        ${child.display_name}
                     </td>
                 </tr>
                 <tr class="expandable-body">
@@ -157,8 +146,8 @@ $(document).ready(function() {
                                 <tbody>
                                     <tr>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                                            <input class="form-check-input" type="checkbox" id="perm_${child.id}" name="permissions[]" value="${child.id}" data-name="${child.name}">
+                                            <label class="form-check-label" for="perm_${child.id}">${child.display_name} (${child.description})</label>
                                         </div>
                                     </tr>
                                 </tbody>
@@ -178,6 +167,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
 

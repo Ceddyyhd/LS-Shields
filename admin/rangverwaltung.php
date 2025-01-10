@@ -38,16 +38,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 include 'include/db.php';
 
-// Ränge aus der Datenbank abrufen
-$stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
-$stmt->execute();
-$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
+// Berechtigungen abrufen
 $stmtPerm = $conn->prepare("
     SELECT p.*, pa.display_name AS bereich_display_name
     FROM permissions p
@@ -56,12 +52,37 @@ $stmtPerm = $conn->prepare("
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
-// Die Daten an JavaScript übergeben
+// Bereichsdaten nach parent_id gruppieren
+$areaMap = [];
+$groupedAreas = [];
+
+foreach ($areas as $area) {
+    // Hauptbereich
+    if ($area['parent_id'] === NULL) {
+        $groupedAreas[$area['id']] = [
+            'area' => $area,
+            'children' => []
+        ];
+    } else {
+        // Unterbereiche der entsprechenden Parent-ID zuweisen
+        if (!isset($groupedAreas[$area['parent_id']])) {
+            // Falls die parent_id noch nicht existiert, als leeres Array initialisieren
+            $groupedAreas[$area['parent_id']] = [
+                'area' => null,
+                'children' => []
+            ];
+        }
+        $groupedAreas[$area['parent_id']]['children'][] = $area;
+    }
+}
+
+// Daten für JavaScript vorbereiten
 echo '<script>';
 echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($areas) . ';';
+echo 'const areas = ' . json_encode($groupedAreas) . ';';
 echo '</script>';
 ?>
+
 
 
 <script>

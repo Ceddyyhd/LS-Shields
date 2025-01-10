@@ -95,7 +95,7 @@ $(document).ready(function() {
             // Abschnitt für den Bereich erstellen
             permissionsContainer.append(
                 `<div class="permissions-section section-${area.id}">
-                    <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+                    <h5 class="expandable-table" data-widget="expandable-table" aria-expanded="false">
                         <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                         ${sectionLabel}
                     </h5>
@@ -115,32 +115,20 @@ $(document).ready(function() {
         const permissionsListContainer = sectionDiv.find('.permissions-list');
         permissionList.forEach(permission => {
             permissionsListContainer.append(`
-                <tr data-widget="expandable-table" aria-expanded="false">
+                <tr>
                     <td>
-                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                        ${permission.name}
-                    </td>
-                </tr>
-                <tr class="expandable-body">
-                    <td>
-                        <div class="p-0">
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                                        </div>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                            <label class="form-check-label" for="perm_${permission.id}">
+                                ${permission.display_name} (${permission.description})
+                            </label>
                         </div>
                     </td>
                 </tr>
             `);
         });
 
-        // Click Event für das Klappen des Bereichs
+        // Sicherstellen, dass das Klick-Event für jedes H5 gesetzt wird
         sectionDiv.find('h5').on('click', function() {
             const expandableBody = $(this).next('.expandable-body');
             expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
@@ -149,6 +137,8 @@ $(document).ready(function() {
         });
     });
 });
+
+
 </script>
 
 <div class="row">

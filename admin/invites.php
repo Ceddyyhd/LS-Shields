@@ -87,7 +87,7 @@
                 if (response.success) {
                     // Zeige das Popup mit dem neuen Einladungscode
                     alert('Neuer Einladungscode: ' + response.invite_code);
-                    
+                    location.reload();
                     // Der neue Code wird nicht zur Tabelle hinzugefügt, da sie beim Seitenladen automatisch geladen wird
                 } else {
                     alert('Fehler beim Erstellen des Einladungscodes: ' + response.message);

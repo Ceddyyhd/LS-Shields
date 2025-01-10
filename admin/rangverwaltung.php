@@ -54,28 +54,28 @@ if (empty($areas)) {
 } else {
     // Bereichsdaten nach parent_id gruppieren
     $areaMap = [];
-    $groupedAreas = [];
+    // Bereichsdaten nach parent_id gruppieren
+$groupedAreas = [];
 
-    // Durchlaufe alle Bereiche und gruppiere sie nach parent_id
-    foreach ($areas as $area) {
-        // Hauptbereich (parent_id ist NULL)
-        if ($area['parent_id'] === NULL) {
-            $groupedAreas[$area['id']] = [
-                'area' => $area,
+// Iteriere durch alle Bereiche und gruppiere sie nach ihrer parent_id
+foreach ($areas as $area) {
+    // Hauptbereich
+    if ($area['parent_id'] === NULL) {
+        $groupedAreas[$area['id']] = [
+            'area' => $area,
+            'children' => []
+        ];
+    } else {
+        // Unterbereiche der entsprechenden Parent-ID zuweisen
+        if (!isset($groupedAreas[$area['parent_id']])) {
+            $groupedAreas[$area['parent_id']] = [
+                'area' => null,
                 'children' => []
             ];
-        } else {
-            // Unterbereiche der entsprechenden Parent-ID zuweisen
-            if (!isset($groupedAreas[$area['parent_id']])) {
-                // Falls die parent_id noch nicht existiert, als leeres Array initialisieren
-                $groupedAreas[$area['parent_id']] = [
-                    'area' => null,
-                    'children' => []
-                ];
-            }
-            $groupedAreas[$area['parent_id']]['children'][] = $area;
         }
+        $groupedAreas[$area['parent_id']]['children'][] = $area;
     }
+}
 
     // Daten für JavaScript vorbereiten
     echo '<pre>';
@@ -95,19 +95,16 @@ echo '</pre>';
 <script>
 $(document).ready(function() {
     const permissions = <?= json_encode($permissions) ?>;
-    const areas = <?= json_encode($groupedAreas) ?>; // Deine gruppierten Bereiche
+    const areas = <?= json_encode(array_values($groupedAreas)) ?>; // Sicherstellen, dass es ein Array ist
 
     const permissionsContainer = $('#permissionsContainer');
 
-    // Iteriere über die gruppierten Bereiche
     areas.forEach(areaGroup => {
         const parentArea = areaGroup.area; // Der Hauptbereich
         const children = areaGroup.children; // Unterbereiche
 
-        // Bereichsnamen
         const sectionLabel = parentArea.display_name || 'Unbekannter Bereich';
 
-        // HTML für den Hauptbereich
         let sectionDiv = permissionsContainer.find(`.section-${parentArea.id}`);
         if (!sectionDiv.length) {
             permissionsContainer.append(`
@@ -127,11 +124,10 @@ $(document).ready(function() {
             sectionDiv = permissionsContainer.find(`.section-${parentArea.id}`);
         }
 
-        // Unterbereiche (z. B. Dashboard, Eventakte)
+        // Unterbereiche hinzufügen (z.B. Dashboard, Eventakte)
         children.forEach(child => {
             const permissionsListContainer = sectionDiv.find(`.permissions-list-${parentArea.id}`);
-            
-            // Berechtigungen für diesen Unterbereich anzeigen
+
             permissionsListContainer.append(`
                 <tr data-widget="expandable-table" aria-expanded="false">
                     <td>
@@ -167,6 +163,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
 

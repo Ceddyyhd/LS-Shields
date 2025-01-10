@@ -159,11 +159,19 @@ foreach ($employees as $employee) {
         object-fit: cover;
     }
 
-    .img-box img {
-        max-width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
+    /* Setzt alle Bilder auf eine feste Größe und stellt sicher, dass sie das Seitenverhältnis wahren */
+.img-box img {
+    width: 100%; /* Breite auf 100% der Box setzen */
+    height: 200px; /* Höhe für alle Bilder gleich einstellen */
+    object-fit: cover; /* Das Bild wird innerhalb des Containers skaliert und abgeschnitten, um das Container-Seitenverhältnis zu wahren */
+}
+
+/* Optional: Maximalgröße für Bildbox */
+.box .img-box {
+    max-width: 150px;  /* Maximale Breite der Bildbox */
+    max-height: 200px;  /* Maximale Höhe der Bildbox */
+    margin: 0 auto; /* Zentrieren der Box */
+}
 
     .text-center {
         text-align: center;

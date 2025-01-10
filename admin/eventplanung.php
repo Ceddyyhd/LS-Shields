@@ -108,7 +108,7 @@
         echo "<td class='project-actions text-right'>";
         echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
 
-        if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
+        if (isset($_SESSION['permissions']['eventplanung_kopieren']) && $_SESSION['permissions']['eventplanung_kopieren']) {
             // Der Delete-Button wird nur angezeigt, wenn der Benutzer die Berechtigung hat
             echo "<button class='btn btn-info btn-sm duplicate-event' data-id='" . $event['id'] . "'><i class='fas fa-copy'></i> Kopieren</button>";
         }

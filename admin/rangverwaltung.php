@@ -140,7 +140,19 @@ echo '</script>';
         });
     });
 </script>
+<style>
+  .expandable-body {
+    padding-left: 20px;
+}
 
+.expandable-table-caret {
+    margin-right: 10px;
+}
+
+h5.expandable-table {
+    cursor: pointer;
+}
+</style>
 
 <div class="row">
   <div class="col-12">
@@ -336,9 +348,7 @@ echo '</script>';
               <label for="roleValue">Wert (Value)</label>
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
-            <div id="permissionsContainer" class="row">
-                <!-- Bereichsdaten werden hier dynamisch hinzugefügt -->
-            </div>
+            <div id="permissionsContainer"></div>
           </div>
         </form>
       </div>

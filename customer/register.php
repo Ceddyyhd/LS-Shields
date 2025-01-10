@@ -24,6 +24,14 @@
       <p class="login-box-msg">Register a new membership</p>
 
       <form id="registerForm" method="post">
+      <div class="input-group mb-3">
+  <input type="text" class="form-control" id="invite_code" name="invite_code" placeholder="Invitation Code" required>
+  <div class="input-group-append">
+    <div class="input-group-text">
+      <span class="fas fa-key"></span>
+    </div>
+  </div>
+</div>
         <div class="input-group mb-3">
           <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
           <div class="input-group-append">
@@ -88,51 +96,51 @@
 <script src="dist/js/adminlte.min.js"></script>
 
 <script>
-$(document).ready(function () {
-  $('#registerForm').submit(function (e) {
-    e.preventDefault();
+$('#registerForm').submit(function (e) {
+  e.preventDefault();
 
-    const name = $('#name').val();
-    const umail = $('#umail').val();
-    const password = $('#password').val();
-    const repassword = $('#repassword').val();
-    const terms = $('#agreeTerms').is(':checked');
+  const name = $('#name').val();
+  const umail = $('#umail').val();
+  const password = $('#password').val();
+  const repassword = $('#repassword').val();
+  const terms = $('#agreeTerms').is(':checked');
+  const inviteCode = $('#invite_code').val();  // Einladungscode auslesen
 
-    if (password !== repassword) {
-      alert("Die Passwörter stimmen nicht überein.");
-      return;
-    }
-
-    if (!terms) {
-      alert("Du musst den Bedingungen zustimmen.");
-      return;
-    }
-
-    $.ajax({
-  url: 'include/register.php', // Hier wird die PHP-Registrierungsdatei aufgerufen
-  type: 'POST',
-  data: {
-    name: name,
-    umail: umail,
-    password: password,
-    repassword: repassword
-  },
-  dataType: 'json', // Wir erwarten JSON als Antwort
-  success: function (response) {
-    if (response.success) {
-      alert(response.message);
-      window.location.href = 'index.html'; // Weiterleitung zur Login-Seite
-    } else {
-      alert(response.message);
-    }
-  },
-  error: function (xhr, status, error) {
-    console.log('Fehlerdetails:', xhr.responseText);
-    console.log('Status:', status);
-    console.log('Error:', error);
-    alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+  if (password !== repassword) {
+    alert("Die Passwörter stimmen nicht überein.");
+    return;
   }
-});
+
+  if (!terms) {
+    alert("Du musst den Bedingungen zustimmen.");
+    return;
+  }
+
+  $.ajax({
+    url: 'include/register.php',
+    type: 'POST',
+    data: {
+      name: name,
+      umail: umail,
+      password: password,
+      repassword: repassword,
+      invite_code: inviteCode // Einladungscode hinzufügen
+    },
+    dataType: 'json',
+    success: function (response) {
+      if (response.success) {
+        alert(response.message);
+        window.location.href = 'index.html'; // Weiterleitung zur Login-Seite
+      } else {
+        alert(response.message);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.log('Fehlerdetails:', xhr.responseText);
+      console.log('Status:', status);
+      console.log('Error:', error);
+      alert('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+    }
   });
 });
 </script>

@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 
-// Hier wird überprüft, ob die Anfrage eine POST-Anfrage ist
+// Überprüfen, ob die Anfrage eine POST-Anfrage ist
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'db.php';  // Verbindungsdatei zu deiner DB
 
@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $umail = $_POST['umail'] ?? '';
     $password = $_POST['password'] ?? '';
     $repassword = $_POST['repassword'] ?? '';
+    $invite_code = $_POST['invite_code'] ?? '';  // Einladungscode
 
     // Überprüfen, ob alle Felder ausgefüllt sind
-    if (empty($name) || empty($umail) || empty($password) || empty($repassword)) {
+    if (empty($name) || empty($umail) || empty($password) || empty($repassword) || empty($invite_code)) {
         echo json_encode(['success' => false, 'message' => 'Bitte füllen Sie alle Felder aus.']);
         exit;
     }
@@ -35,6 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Diese E-Mail ist bereits registriert.']);
         exit;
     }
+
+    // Einladungscode überprüfen
+    $stmt = $conn->prepare("SELECT * FROM invites WHERE invite_code = :invite_code");
+    $stmt->execute([':invite_code' => $invite_code]);
+    $invite = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$invite) {
+        echo json_encode(['success' => false, 'message' => 'Der Einladungscode ist ungültig.']);
+        exit;
+    }
+
+    // Einladungscode löschen, wenn er verwendet wurde
+    $stmt = $conn->prepare("DELETE FROM invites WHERE invite_code = :invite_code");
+    $stmt->execute([':invite_code' => $invite_code]);
 
     // Passwortrücksetzung und Registrierung
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

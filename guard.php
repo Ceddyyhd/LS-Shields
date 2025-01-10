@@ -49,7 +49,7 @@ include 'db.php';
 $stmtEmployees = $conn->prepare("SELECT u.id, u.name, u.profile_image, u.role_id, r.name as role_name, r.level
                                  FROM users u
                                  JOIN roles r ON u.role_id = r.id
-                                 WHERE u.gkuendigt = 'no_kuendigung' AND u.bewerber = 'nein'");
+                                 WHERE u.gekuendigt = 'no_kuendigung' AND u.bewerber = 'nein'");
 $stmtEmployees->execute();
 $employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 

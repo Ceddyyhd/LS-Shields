@@ -79,36 +79,33 @@ echo '</script>';
       </thead>
       <tbody>
         <?php foreach ($employees as $employee): 
-            // Initialisiere Gehalt, Anteil und Trinkgeld mit 0
-            $gehalt = 0;
-            $anteil = 0;
-            $trinkgeld = 0;
+            // Initialisiere Gehalt, Anteil und Trinkgeld mit null
+            $gehalt = null;
+            $anteil = null;
+            $trinkgeld = null;
 
-            // Überprüfe, ob es Finanzdaten für den Mitarbeiter gibt und aggregiere
+            // Durchlaufe alle Finanzdaten und finde die Daten für den jeweiligen Mitarbeiter
             foreach ($financeEmployees as $finance) {
                 if ($finance['user_id'] == $employee['id']) {
-                    // Je nach Art des Betrags (Gehalt, Anteil, Trinkgeld) setzen wir die jeweiligen Werte
+                    // Setze die Werte, die in der Tabelle `mitarbeiter_finanzen` gespeichert sind
                     if ($finance['art'] == 'Gehalt') {
-                        $gehalt += $finance['betrag']; // Aggregieren der Gehaltseinträge
+                        $gehalt = $finance['gehalt']; // Hole Gehalt
                     }
                     if ($finance['art'] == 'Anteil') {
-                        $anteil += $finance['betrag']; // Aggregieren der Anteilsbeträge
+                        $anteil = $finance['anteil']; // Hole Anteil
                     }
                     if ($finance['art'] == 'Trinkgeld') {
-                        $trinkgeld += $finance['betrag']; // Aggregieren der Trinkgeldbeträge
+                        $trinkgeld = $finance['trinkgeld']; // Hole Trinkgeld
                     }
                 }
             }
-
-            // Debugging: Ausgabe der Finanzdaten, um zu sehen, ob sie korrekt geladen werden
-            var_dump($gehalt, $anteil, $trinkgeld);
         ?>
           <tr>
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
-            <td><?php echo number_format($gehalt, 2, ',', '.'); ?> $</td>
-            <td><?php echo number_format($anteil, 2, ',', '.'); ?> $</td>
-            <td><?php echo number_format($trinkgeld, 2, ',', '.'); ?> $</td>
+            <td><?php echo ($gehalt !== null) ? number_format($gehalt, 2, ',', '.') . ' $' : '0,00 $'; ?></td>
+            <td><?php echo ($anteil !== null) ? number_format($anteil, 2, ',', '.') . ' $' : '0,00 $'; ?></td>
+            <td><?php echo ($trinkgeld !== null) ? number_format($trinkgeld, 2, ',', '.') . ' $' : '0,00 $'; ?></td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
               <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">

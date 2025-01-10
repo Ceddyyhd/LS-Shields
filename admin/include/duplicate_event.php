@@ -15,7 +15,7 @@ if (isset($_POST['event_id'])) {
         // Event duplizieren (alle Felder außer 'event_lead' und 'team_verteilung', Status auf 'in Bearbeitung' setzen)
         $insertQuery = "
             INSERT INTO eventplanung (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, summernote_content, datum_uhrzeit_event, ort, event, anmerkung)
-            VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Bearbeitung', :summernote_content, :datum_uhrzeit_event, :ort, :event, :anmerkung)";
+            VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Planung', :summernote_content, :datum_uhrzeit_event, :ort, :event, :anmerkung)";
 
         $insertStmt = $conn->prepare($insertQuery);
         $insertStmt->bindParam(':vorname_nachname', $event['vorname_nachname']);

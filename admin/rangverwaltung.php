@@ -64,21 +64,25 @@ echo '</script>';
 ?>
 
 
-    <script>
+<script>
     $(document).ready(function () {
         // Berechtigungen und Bereichsdaten dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
         const areas = <?= json_encode($areas) ?>;
 
         const permissionsContainer = $('#permissionsContainer');
-        
-        // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
+
+        // Überprüfen, ob die Daten korrekt sind
+        console.log("Permissions:", permissions);
+        console.log("Areas:", areas);
+
+        // Bereichsdaten in ein Map umwandeln
         const areaMap = {};
         areas.forEach(area => {
             areaMap[area.id] = area.display_name;
         });
 
-        // Bereichsdaten nach Bereich gruppieren
+        // Berechtigungen nach Bereich gruppieren
         const permissionsByArea = {};
         permissions.forEach(permission => {
             if (!permissionsByArea[permission.bereich]) {
@@ -133,6 +137,7 @@ echo '</script>';
         });
     });
 </script>
+
 
 
 <div class="row">

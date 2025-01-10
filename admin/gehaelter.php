@@ -79,16 +79,13 @@ $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
-              <!-- Hier kann später der Gehaltseintrag angezeigt werden -->
-              <button class="btn btn-success btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="gehalt">Gehalt hinzufügen</button>
+              500$
             </td>
             <td>
-              <!-- Hier kann später der Anteilseintrag angezeigt werden -->
-              <button class="btn btn-warning btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="anteil">Anteil hinzufügen</button>
+            500$
             </td>
             <td>
-              <!-- Hier kann später der Trinkgeldseintrag angezeigt werden -->
-              <button class="btn btn-info btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="trinkgeld">Trinkgeld hinzufügen</button>
+            500$
             </td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->

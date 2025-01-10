@@ -10,7 +10,7 @@ if (isset($_POST['location'])) {
         // Wenn location "Unbekannt" ist, also NULL in der Datenbank
         if ($location === 'Unbekannt') {
             // Löschen der Einträge, bei denen die location NULL ist
-            $stmt = $conn->prepare("DELETE FROM deckel WHERE location IS ''");
+            $stmt = $conn->prepare("DELETE FROM deckel WHERE location = ''");
         } else {
             // Löschen der Einträge mit der angegebenen Location
             $stmt = $conn->prepare("DELETE FROM deckel WHERE location = :location");

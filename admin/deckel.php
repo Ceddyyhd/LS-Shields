@@ -86,36 +86,33 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
-  // JavaScript zum Löschen der Einträge einer bestimmten Location mit AJAX
-  document.querySelectorAll('.delete-location').forEach(button => {
-    button.addEventListener('click', function() {
-      const location = this.getAttribute('data-location');
-      
-      if (confirm('Möchten Sie wirklich alle Einträge für die Location "' + location + '" löschen?')) {
-        // AJAX-Anfrage senden
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'delete_location.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            if (response.success) {
-              alert('Alle Einträge für die Location "' + location + '" wurden gelöscht.');
-              // Zeile aus der Tabelle entfernen
-              button.closest('tr').remove();
-            } else {
-              alert('Fehler beim Löschen der Daten.');
-            }
+  $(document).ready(function() {
+  // Event-Listener für Löschen-Button
+  $('.delete-location').click(function() {
+    const location = $(this).data('location');
+    
+    if (confirm('Möchten Sie wirklich alle Einträge für die Location "' + location + '" löschen?')) {
+      $.ajax({
+        url: 'include/delete_location.php',  // Dein PHP-Skript zum Löschen der Location
+        method: 'POST',
+        data: { location: location },  // Sende die Location per POST
+        dataType: 'json',  // Wir erwarten eine JSON-Antwort
+        success: function(response) {
+          if (response.success) {
+            alert('Alle Einträge für die Location "' + location + '" wurden gelöscht.');
+            // Zeile aus der Tabelle entfernen
+            $(`[data-location="${location}"]`).closest('tr').remove();
           } else {
-            alert('Fehler beim Löschen der Daten.');
+            alert('Fehler beim Löschen der Daten: ' + response.message);
           }
-        };
-        
-        xhr.send('location=' + encodeURIComponent(location));
-      }
-    });
+        },
+        error: function() {
+          alert('Es gab einen Fehler bei der Anfrage.');
+        }
+      });
+    }
   });
+});
 </script>
   </div>
   <!-- Footer -->

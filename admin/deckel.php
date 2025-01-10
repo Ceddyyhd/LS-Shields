@@ -37,28 +37,86 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
     <!-- Main content -->
     
-    <!-- Table für Finanzdaten -->
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Finanzdaten</h3>
-      </div>
-      <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Typ</th>
-              <th>Kategorie</th>
-              <th>Notiz</th>
-              <th>Erstellt von</th>
-              <th>Betrag</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Hier werden die Daten dynamisch mit PHP eingefügt -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <?php
+// Datenbankverbindung einbinden
+include 'db.php';
+
+// SQL-Abfrage, um die Daten aus der Tabelle deckel zu holen und nach location zu gruppieren
+$query = "
+    SELECT 
+    IFNULL(NULLIF(location, ''), 'Unbekannt') AS location,
+    SUM(betrag) AS total_betrag
+FROM deckel
+GROUP BY location
+";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Finanzdaten</h3>
+  </div>
+  <div class="card-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Betrag</th>
+          <th>Löschen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($results as $row): ?>
+          <tr>
+            <td><?php echo htmlspecialchars($row['location']); ?></td>
+            <td><?php echo number_format($row['total_betrag'], 2, ',', '.'); ?></td>
+            <td>
+              <!-- Löschen Button für diese Location -->
+              <button class="btn btn-danger btn-sm delete-location" data-location="<?php echo htmlspecialchars($row['location']); ?>">
+                Löschen
+              </button>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // JavaScript zum Löschen der Einträge einer bestimmten Location mit AJAX
+  document.querySelectorAll('.delete-location').forEach(button => {
+    button.addEventListener('click', function() {
+      const location = this.getAttribute('data-location');
+      
+      if (confirm('Möchten Sie wirklich alle Einträge für die Location "' + location + '" löschen?')) {
+        // AJAX-Anfrage senden
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'delete_location.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+              alert('Alle Einträge für die Location "' + location + '" wurden gelöscht.');
+              // Zeile aus der Tabelle entfernen
+              button.closest('tr').remove();
+            } else {
+              alert('Fehler beim Löschen der Daten.');
+            }
+          } else {
+            alert('Fehler beim Löschen der Daten.');
+          }
+        };
+        
+        xhr.send('location=' + encodeURIComponent(location));
+      }
+    });
+  });
+</script>
   </div>
   <!-- Footer -->
   <footer class="main-footer">

@@ -39,7 +39,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
     
     <?php
 // Datenbankverbindung einbinden
-include 'db.php';
+include 'include/db.php';
 
 // SQL-Abfrage, um die Daten aus der Tabelle deckel zu holen und nach location zu gruppieren
 $query = "

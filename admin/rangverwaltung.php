@@ -63,7 +63,6 @@ echo 'const areas = ' . json_encode($areas) . ';';
 echo '</script>';
 ?>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -97,7 +96,7 @@ echo '</script>';
                 // Abschnitt für den Bereich erstellen, falls nicht vorhanden
                 permissionsContainer.append(
                     `<div class="permissions-section section-${area.id}">
-                        <h5 class="expandable-table" style="cursor:pointer;">
+                        <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
                             <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                             ${sectionLabel}
                         </h5>
@@ -140,19 +139,6 @@ echo '</script>';
         });
     });
 </script>
-<style>
-  .expandable-body {
-    padding-left: 20px;
-}
-
-.expandable-table-caret {
-    margin-right: 10px;
-}
-
-h5.expandable-table {
-    cursor: pointer;
-}
-</style>
 
 <div class="row">
   <div class="col-12">
@@ -348,7 +334,9 @@ h5.expandable-table {
               <label for="roleValue">Wert (Value)</label>
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
-            <div id="permissionsContainer"></div>
+            <div id="permissionsContainer" class="row">
+                <!-- Bereichsdaten werden hier dynamisch hinzugefügt -->
+            </div>
           </div>
         </form>
       </div>

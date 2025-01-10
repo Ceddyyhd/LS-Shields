@@ -156,6 +156,21 @@ echo '</script>';
 <script> 
    $(document).ready(function () {
     // Event-Listener für den Auszahlung-Button
+    $('.payout-button').click(function () {
+        const userId = $(this).data('userid');  // Die ID des Mitarbeiters
+        const employeeName = $(this).data('name');  // Der Name des Mitarbeiters
+
+        // Setze den Titel des Modals auf den Namen des Mitarbeiters
+        $('#modal-auszahlungen .modal-title').text('Auszahlung für ' + employeeName);
+
+        // Setze den Mitarbeiter-ID in einem versteckten Input (optional)
+        $('#modal-auszahlungen #user_id').val(userId);
+
+        // Öffne das Modal
+        $('#modal-auszahlungen').modal('show');
+    });
+
+    // Optional: Event-Listener für den Speichern-Button im Modal (diese Logik ist für später)
     $('#savePayoutButton').click(function () {
         const userId = $('#user_id').val();  // Mitarbeiter-ID
         const gehalt = parseFloat($('#gehaltInput').val());
@@ -165,46 +180,35 @@ echo '</script>';
         // Berechne den Gesamtbetrag
         const totalAmount = gehalt + anteil + trinkgeld;
 
-        // Überprüfen, ob die Eingabewerte korrekt sind
+        // Validierung des Betrags
         if (isNaN(totalAmount) || totalAmount <= 0) {
             alert('Bitte geben Sie einen gültigen Betrag ein!');
             return;
         }
 
-        // Daten für das Formular vorbereiten
-        const withdrawalData = {
-            user_id: userId,
-            gehalt: gehalt,
-            anteil: anteil,
-            trinkgeld: trinkgeld,
-            betrag: totalAmount, // Gesamtbetrag
-            erstellt_von: $('#created_by').val() // Der Benutzername aus dem Formular
-        };
-
-        // AJAX-Request zur Auszahlung
+        // AJAX-Request zur Auszahlung (muss später ergänzt werden)
         $.ajax({
             url: 'include/process_withdrawal.php',  // Dein PHP-Skript für die Auszahlung
             method: 'POST',
             data: {
-                withdrawalData: JSON.stringify(withdrawalData)
+                user_id: userId,
+                gehalt: gehalt,
+                anteil: anteil,
+                trinkgeld: trinkgeld,
+                total_amount: totalAmount
             },
-            dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     alert('Auszahlung erfolgreich durchgeführt!');
                     $('#modal-auszahlungen').modal('hide');
-                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+                    location.reload();  // Seite neu laden
                 } else {
                     alert('Fehler: ' + response.message);
                 }
-            },
-            error: function () {
-                alert('Es gab einen Fehler bei der Anfrage.');
             }
         });
     });
 });
-
 
 </script>
 

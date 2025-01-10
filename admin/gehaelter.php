@@ -117,6 +117,95 @@ echo '</script>';
   </div>
 </div>
 
+<!-- Modal für Auszahlungen -->
+<div class="modal" id="modal-auszahlungen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historie (Mitarbeiter Name)</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="gehaltInput">Gehalt</label>
+                    <input type="text" id="gehaltInput" class="form-control" placeholder="Betrag eingeben">
+                </div>
+
+                <div class="form-group">
+                    <label for="anteilInput">Anteil</label>
+                    <input type="text" id="anteilInput" class="form-control" placeholder="Betrag eingeben">
+                </div>
+
+                <div class="form-group">
+                    <label for="trinkgeldInput">Trinkgeld</label>
+                    <input type="text" id="trinkgeldInput" class="form-control" placeholder="Betrag eingeben">
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveWithdrawalButton">Speichern</button> <!-- Eindeutige ID für den Button -->
+            </div>
+        </div>
+    </div>
+</div>
+<script> 
+    $('#saveWithdrawalButton').click(function () {
+    const employeeId = $('#employeeSelect').val(); // Mitarbeiter
+    const gehalt = parseFloat($('#gehaltInput').val()); // Gehalt
+    const anteil = parseFloat($('#anteilInput').val()); // Anteil
+    const trinkgeld = parseFloat($('#trinkgeldInput').val()); // Trinkgeld
+    const betrag = gehalt + anteil + trinkgeld; // Gesamtbetrag (Gehalt + Anteil + Trinkgeld)
+
+    // Überprüfen, ob alle Felder gültige Werte haben
+    if (!employeeId || isNaN(gehalt) || isNaN(anteil) || isNaN(trinkgeld)) {
+        alert('Bitte geben Sie alle Werte korrekt ein!');
+        return;
+    }
+
+    // Daten für die Auszahlung vorbereiten
+    const withdrawalData = {
+        user_id: employeeId,
+        gehalt: gehalt,
+        anteil: anteil,
+        trinkgeld: trinkgeld,
+        betrag: betrag,
+        erstellt_von: 'admin'  // Beispiel: Hier kannst du den aktuellen Benutzernamen setzen
+    };
+
+    // Ladeanzeige aktivieren
+    $('#saveWithdrawalButton').prop('disabled', true).text('Speichern...');
+
+    // AJAX-Request um die Auszahlung durchzuführen
+    $.ajax({
+        url: 'include/process_withdrawal.php',
+        method: 'POST',
+        data: {
+            withdrawalData: JSON.stringify(withdrawalData)
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);  // Erfolgsmeldung
+                $('#modal-auszahlungen').modal('hide');  // Modal schließen
+                location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+            } else {
+                alert('Fehler: ' + response.message);  // Fehlermeldung
+            }
+            // Ladeanzeige deaktivieren
+            $('#saveWithdrawalButton').prop('disabled', false).text('Speichern');
+        },
+        error: function () {
+            alert('Es gab einen Fehler bei der Anfrage.');
+            $('#saveWithdrawalButton').prop('disabled', false).text('Speichern');
+        }
+    });
+});
+</script>
+
 <!-- Modal für Historie -->
 <div class="modal" id="modal-history">
     <div class="modal-dialog" style="max-width: 90%; margin: 30px auto;">

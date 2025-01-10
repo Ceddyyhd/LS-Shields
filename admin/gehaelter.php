@@ -84,15 +84,32 @@ echo '</script>';
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
-            <?php echo htmlspecialchars($financeEmployees['gehalt']); ?>
+              <?php 
+                // Finanzdaten des Mitarbeiters aus der Tabelle mitarbeiter_finanzen holen
+                $gehalt = 0;
+                $anteil = 0;
+                $trinkgeld = 0;
+
+                foreach ($financeEmployees as $finance) {
+                    if ($finance['user_id'] == $employee['id'] && $finance['art'] == 'Gehalt') {
+                        $gehalt = $finance['betrag'];
+                    }
+                    if ($finance['user_id'] == $employee['id'] && $finance['art'] == 'Anteil') {
+                        $anteil = $finance['betrag'];
+                    }
+                    if ($finance['user_id'] == $employee['id'] && $finance['art'] == 'Trinkgeld') {
+                        $trinkgeld = $finance['betrag'];
+                    }
+                }
+
+                echo number_format($gehalt, 2, ',', '.') . ' $';
+              ?>
             </td>
             <td>
-            <?php echo htmlspecialchars($financeEmployees['anteil']); ?>
-
+              <?php echo number_format($anteil, 2, ',', '.') . ' $'; ?>
             </td>
             <td>
-            <?php echo htmlspecialchars($financeEmployees['trinkgeld']); ?>
-
+              <?php echo number_format($trinkgeld, 2, ',', '.') . ' $'; ?>
             </td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
@@ -106,6 +123,7 @@ echo '</script>';
     </table>
   </div>
 </div>
+
 
 
 

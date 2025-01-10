@@ -41,13 +41,20 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 <div class="card">
   <div class="card-header">
     <h3 class="card-title">Finanzdaten</h3>
+    <div class="card-tools">
+        <?php if ($_SESSION['permissions']['role_create'] ?? false): ?>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
+          <?php endif; ?>
+        </div>
   </div>
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
       <thead>
         <tr>
-          <th>Location</th>
-          <th>Betrag</th>
+          <th>Mitarbeiter</th>
+          <th>Gehalt</th>
+          <th>Anteil</th>
+          <th>Trinkgeld</th>
           <th>Löschen</th>
         </tr>
       </thead>

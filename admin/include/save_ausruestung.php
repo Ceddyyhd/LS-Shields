@@ -50,8 +50,15 @@ try {
     // 1. Letzte Spind Kontrolle und Notizen speichern oder aktualisieren
     if ($letzte_spind_kontrolle !== null || $notizen !== null) {
         // Prüfe, ob bereits ein Eintrag für die User_ID existiert
-        $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
+        $stmt = $conn->prepare("
+    INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen)
+    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)
+    ");
+    $stmt->execute([
+        ':user_id' => $user_id,
+        ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
+        ':notizen' => $notizen
+    ]);
         $existingSpindKontrolle = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($existingSpindKontrolle) {

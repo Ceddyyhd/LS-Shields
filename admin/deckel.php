@@ -90,28 +90,29 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
   // Event-Listener für Löschen-Button
   $('.delete-location').click(function() {
     const location = $(this).data('location');
-    
+    console.log(location); // Überprüfe, ob der Wert korrekt ist
+
     if (confirm('Möchten Sie wirklich alle Einträge für die Location "' + location + '" löschen?')) {
-      $.ajax({
-        url: 'include/delete_location.php',  // Dein PHP-Skript zum Löschen der Location
-        method: 'POST',
-        data: { location: location },  // Sende die Location per POST
-        dataType: 'json',  // Wir erwarten eine JSON-Antwort
-        success: function(response) {
-          if (response.success) {
-            alert('Alle Einträge für die Location "' + location + '" wurden gelöscht.');
-            // Zeile aus der Tabelle entfernen
-            $(`[data-location="${location}"]`).closest('tr').remove();
-          } else {
-            alert('Fehler beim Löschen der Daten: ' + response.message);
-          }
-        },
-        error: function() {
-          alert('Es gab einen Fehler bei der Anfrage.');
-        }
-      });
+        $.ajax({
+            url: 'include/delete_location.php',
+            method: 'POST',
+            data: { location: location },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Alle Einträge für die Location "' + location + '" wurden gelöscht.');
+                    // Zeile aus der Tabelle entfernen
+                    $(`[data-location="${location}"]`).closest('tr').remove();
+                } else {
+                    alert('Fehler beim Löschen der Daten: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Es gab einen Fehler bei der Anfrage.');
+            }
+        });
     }
-  });
+});
 });
 </script>
   </div>

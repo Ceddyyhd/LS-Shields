@@ -181,6 +181,11 @@ echo '</script>';
               <label for="betragInput">Betrag</label>
               <input type="text" id="betragInput" class="form-control" placeholder="Betrag eingeben">
             </div>
+
+            <div class="form-group">
+                <label for="notizInput">Notiz</label>
+                <input type="text" id="notizInput" class="form-control" placeholder="Geben Sie eine Notiz ein">
+            </div>
             <input type="hidden" name="erstellt_von" value="<?= $user_name ?>"> <!-- Benutzername aus der Session -->
           </div>
         </form>
@@ -208,54 +213,65 @@ echo '</script>';
 
     // Event-Listener für den Speichern-Button im Modal
     $('#saveFinanceButton').click(function () {
-        const employeeId = $('#employeeSelect').val(); // Mitarbeiter
-        const art = $('#artSelect').val(); // Art (Gehalt, Anteil, Trinkgeld)
-        const betrag = parseFloat($('#betragInput').val()); // Betrag
-        const notiz = 'Eingetragener Betrag für den Mitarbeiter'; // Hier kann eine Notiz hinzugefügt werden
+    const employeeId = $('#employeeSelect').val(); // Mitarbeiter
+    const art = $('#artSelect').val(); // Art (Gehalt, Anteil, Trinkgeld)
+    const betrag = parseFloat($('#betragInput').val()); // Betrag
+    const notiz = $('#notizInput').val() || 'Eingetragener Betrag für den Mitarbeiter'; // Notiz
 
-        // Überprüfen, ob der Betrag eine gültige Zahl ist
-        if (isNaN(betrag)) {
-            alert('Bitte geben Sie einen gültigen Betrag ein!');
-            return;
-        }
+    // Überprüfen, ob alle Felder gültige Werte haben
+    if (!employeeId || !art) {
+        alert('Bitte wählen Sie einen Mitarbeiter und eine Art aus!');
+        return;
+    }
 
-        // Daten für die beiden Tabellen vorbereiten
-        const historyData = {
-            user_id: employeeId,
-            betrag: betrag,
-            art: art,
-            notiz: notiz
-        };
+    if (isNaN(betrag)) {
+        alert('Bitte geben Sie einen gültigen Betrag ein!');
+        return;
+    }
 
-        const totalData = {
-            user_id: employeeId,
-            art: art,
-            betrag: betrag
-        };
+    // Daten für die beiden Tabellen vorbereiten
+    const historyData = {
+        user_id: employeeId,
+        betrag: betrag,
+        art: art,
+        notiz: notiz
+    };
 
-        // AJAX-Request um sowohl die Historie als auch die Gesamtanzahl zu speichern
-        $.ajax({
-            url: 'include/save_finance_entry.php',
-            method: 'POST',
-            data: {
-                historyData: JSON.stringify(historyData),
-                totalData: JSON.stringify(totalData)
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    alert(response.message);  // Erfolgsmeldung
-                    $('#modal-neuen-eintrag').modal('hide');  // Modal schließen
-                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
-                } else {
-                    alert('Fehler: ' + response.message);  // Fehlermeldung
-                }
-            },
-            error: function () {
-                alert('Es gab einen Fehler bei der Anfrage.');
+    const totalData = {
+        user_id: employeeId,
+        art: art,
+        betrag: betrag
+    };
+
+    // Ladeanzeige aktivieren
+    $('#saveFinanceButton').prop('disabled', true).text('Speichern...');
+
+    // AJAX-Request um sowohl die Historie als auch die Gesamtanzahl zu speichern
+    $.ajax({
+        url: 'include/save_finance_entry.php',
+        method: 'POST',
+        data: {
+            historyData: JSON.stringify(historyData),
+            totalData: JSON.stringify(totalData)
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);  // Erfolgsmeldung
+                $('#modal-neuen-eintrag').modal('hide');  // Modal schließen
+                location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+            } else {
+                alert('Fehler: ' + response.message);  // Fehlermeldung
             }
-        });
+            // Ladeanzeige deaktivieren
+            $('#saveFinanceButton').prop('disabled', false).text('Speichern');
+        },
+        error: function () {
+            alert('Es gab einen Fehler bei der Anfrage.');
+            $('#saveFinanceButton').prop('disabled', false).text('Speichern');
+        }
     });
+});
 });
 
 </script>

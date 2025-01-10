@@ -33,7 +33,7 @@
     <button type="button" class="btn btn-primary" id="generateInviteCodeBtn">
         Einladungscode hinzufügen
     </button>
-<?php endif: ?>
+<?php endif ?>
     </div>
     <!-- /.card-header -->
     <div class="card-body">

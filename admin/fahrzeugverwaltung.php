@@ -149,6 +149,28 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <strong><i class="fas fa-trash-alt mr-1"></i> Tuning</strong>
+                        <div class="form-check">
+
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
+                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-decommissioned" class="form-check-label">Turbotuning</label>
+
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
+                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-decommissioned" class="form-check-label">Motortuning</label>
+
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
+                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-decommissioned" class="form-check-label">Getriebetuning</label>
+
+                            <input type="checkbox" class="form-check-input" id="edit-decommissioned" name="decommissioned"
+                                <?php if (!($_SESSION['permissions']['edit_decommissioned'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-decommissioned" class="form-check-label">Bremsentuning</label>
+                        </div>
+                    </div>
+
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">
 
                     <div class="modal-footer justify-content-between">

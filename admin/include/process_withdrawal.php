@@ -37,20 +37,20 @@ if (isset($_POST['withdrawalData'])) {
         $stmtUpdate = $conn->prepare("UPDATE mitarbeiter_finanzen SET gehalt = ?, anteil = ?, trinkgeld = ? WHERE user_id = ?");
         $stmtUpdate->execute([$newGehalt, $newAnteil, $newTrinkgeld, $withdrawalData['user_id']]);
 
-        // Eintrag in `finanzen_history` (historische Transaktionen)
+        // Eintrag in `finanzen_history` (historische Transaktionen) mit 'Auszahlung' als Art
         $stmtHistory = $conn->prepare("INSERT INTO finanzen_history (user_id, betrag, art, notiz, erstellt_von) VALUES (?, ?, ?, ?, ?)");
         $stmtHistory->execute([
             $withdrawalData['user_id'],
             $withdrawalData['betrag'],
-            'Ausgabe',
+            'Auszahlung',  // Hier wird 'Auszahlung' als Art eingetragen
             "Gehalt: " . $withdrawalData['gehalt'] . ", Anteil: " . $withdrawalData['anteil'] . ", Trinkgeld: " . $withdrawalData['trinkgeld'],
             $erstellt_von
         ]);
 
-        // Eintrag in `finanzen` Tabelle für Ausgaben
+        // Eintrag in `finanzen` Tabelle für Ausgaben mit dem Notiztext "Mitarbeiter Auszahlung: Name (Gehalt: 50, Anteil: 0, Trinkgeld: 0)"
         $stmtFinanzen = $conn->prepare("INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) VALUES ('Ausgabe', 'Mitarbeiter', ?, ?, ?)");
         $stmtFinanzen->execute([
-            "Gehalt: " . $withdrawalData['gehalt'] . ", Anteil: " . $withdrawalData['anteil'] . ", Trinkgeld: " . $withdrawalData['trinkgeld'],
+            "Mitarbeiter Auszahlung: " . $withdrawalData['user_id'] . " (Gehalt: " . $withdrawalData['gehalt'] . ", Anteil: " . $withdrawalData['anteil'] . ", Trinkgeld: " . $withdrawalData['trinkgeld'] . ")",
             $withdrawalData['betrag'],
             $erstellt_von
         ]);

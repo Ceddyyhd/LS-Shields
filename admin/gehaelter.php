@@ -181,8 +181,8 @@ echo '</script>';
               <label for="betragInput">Betrag</label>
               <input type="text" id="betragInput" class="form-control" placeholder="Betrag eingeben">
             </div>
-            <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>">
-            </div>
+            <input type="hidden" name="erstellt_von" value="<?= $user_name ?>"> <!-- Benutzername aus der Session -->
+          </div>
         </form>
       </div>
       <div class="modal-footer justify-content-between">

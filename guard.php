@@ -82,7 +82,7 @@ foreach ($employees as $employee) {
                     <div class="col-md-12">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -95,7 +95,7 @@ foreach ($employees as $employee) {
                         <div class="col-md-6">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                    <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -109,7 +109,7 @@ foreach ($employees as $employee) {
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                    <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>

@@ -66,6 +66,7 @@ echo '</script>';
 
 <script>
     $(document).ready(function () {
+        // Berechtigungen und Bereichsdaten dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
         const areas = <?= json_encode($areas) ?>;
 
@@ -77,7 +78,10 @@ echo '</script>';
             areaMap[area.id] = area.display_name;
         });
 
-        // Berechtigungen nach Bereich und Unterbereich gruppieren
+        console.log("Bereiche:", areas);
+        console.log("Berechtigungen:", permissions);
+
+        // Berechtigungen nach Bereich gruppieren
         const permissionsByArea = {};
         permissions.forEach(permission => {
             if (!permissionsByArea[permission.bereich]) {
@@ -89,6 +93,7 @@ echo '</script>';
         // Dynamisches HTML für die Bereiche und Berechtigungen erstellen
         areas.forEach(area => {
             const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
+            console.log("Bereich:", sectionLabel);
 
             let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
             if (!sectionDiv.length) {
@@ -112,6 +117,7 @@ echo '</script>';
             const permissionList = permissionsByArea[area.id];
             const permissionsListContainer = sectionDiv.find(`.permissions-list-${area.id}`);
             permissionList.forEach(permission => {
+                console.log("Berechtigung:", permission.display_name);
                 permissionsListContainer.append(`
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
@@ -132,6 +138,7 @@ echo '</script>';
         });
     });
 </script>
+
 
 <div class="row">
   <div class="col-12">

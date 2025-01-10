@@ -48,66 +48,58 @@ try {
     $conn->beginTransaction();
 
     // 1. Letzte Spind Kontrolle und Notizen speichern oder aktualisieren
-    if ($letzte_spind_kontrolle !== null || $notizen !== null) {
-        // Prüfe, ob bereits ein Eintrag für die User_ID existiert
+if ($letzte_spind_kontrolle !== null || $notizen !== null) {
+    // Prüfe, ob bereits ein Eintrag für die User_ID existiert
+    $stmt = $conn->prepare("SELECT id FROM spind_kontrolle_notizen WHERE user_id = :user_id");
+    $stmt->execute([':user_id' => $user_id]);
+    $existingSpindKontrolle = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($existingSpindKontrolle) {
+        // Wenn bereits ein Eintrag existiert, führe ein Update durch
         $stmt = $conn->prepare("
-    INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen)
-    VALUES (:user_id, :letzte_spind_kontrolle, :notizen)
-    ");
-    $stmt->execute([
-        ':user_id' => $user_id,
-        ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-        ':notizen' => $notizen
-    ]);
-        $existingSpindKontrolle = $stmt->fetch(PDO::FETCH_ASSOC);
+            UPDATE spind_kontrolle_notizen 
+            SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
+            WHERE user_id = :user_id
+        ");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':letzte_spind_kontrolle', $letzte_spind_kontrolle);
+        $stmt->bindParam(':notizen', $notizen);
+        $stmt->execute();
 
-        if ($existingSpindKontrolle) {
-            // Wenn bereits ein Eintrag existiert, führe ein Update durch
-            $stmt = $conn->prepare("
-                UPDATE spind_kontrolle_notizen 
-                SET letzte_spind_kontrolle = :letzte_spind_kontrolle, notizen = :notizen 
-                WHERE user_id = :user_id
-            ");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notizen
-            ]);
+        // Eintrag in spind_kontrolle_logs (History)
+        $stmt = $conn->prepare("
+            INSERT INTO spind_kontrolle_logs (user_id, editor_name, action)
+            VALUES (:user_id, :editor_name, :action)
+        ");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':editor_name', $user_name);
+        $stmt->bindParam(':action', $action);
+        $action = 'Spind Kontrolle bearbeitet'; // Logeintrag für Bearbeitung
+        $stmt->execute();
+    } else {
+        // Falls noch kein Eintrag existiert, füge einen neuen Eintrag hinzu
+        $stmt = $conn->prepare("
+            INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen)
+            VALUES (:user_id, :letzte_spind_kontrolle, :notizen)
+        ");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':letzte_spind_kontrolle', $letzte_spind_kontrolle);
+        $stmt->bindParam(':notizen', $notizen);
+        $stmt->execute();
 
-            // Eintrag in spind_kontrolle_logs (History)
-            $stmt = $conn->prepare("
-                INSERT INTO spind_kontrolle_logs (user_id, editor_name, action)
-                VALUES (:user_id, :editor_name, 'Spind Kontrolle bearbeitet')
-            ");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':editor_name' => $user_name,
-                ':action' => 'Spind Kontrolle bearbeitet'
-            ]);
-        } else {
-            // Falls noch kein Eintrag existiert, füge einen neuen Eintrag hinzu
-            $stmt = $conn->prepare("
-                INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen)
-                VALUES (:user_id, :letzte_spind_kontrolle, :notizen)
-            ");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-                ':notizen' => $notizen
-            ]);
-
-            // Eintrag in spind_kontrolle_logs (History)
-            $stmt = $conn->prepare("
-                INSERT INTO spind_kontrolle_logs (user_id, editor_name, action)
-                VALUES (:user_id, :editor_name, 'Spind Kontrolle hinzugefügt')
-            ");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':editor_name' => $user_name,
-                ':action' => 'Spind Kontrolle hinzugefügt'
-            ]);
-        }
+        // Eintrag in spind_kontrolle_logs (History)
+        $stmt = $conn->prepare("
+            INSERT INTO spind_kontrolle_logs (user_id, editor_name, action)
+            VALUES (:user_id, :editor_name, :action)
+        ");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':editor_name', $user_name);
+        $stmt->bindParam(':action', $action);
+        $action = 'Spind Kontrolle hinzugefügt'; // Logeintrag für Hinzufügung
+        $stmt->execute();
     }
+}
+
 
     // 2. Bestandsprüfung und Ausrüstungsänderungen
     foreach ($ausruestung as $key_name => $status) {

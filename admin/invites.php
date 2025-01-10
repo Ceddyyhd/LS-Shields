@@ -46,8 +46,25 @@
                     <th>expired_at</th>
                 </tr>
             </thead>
-            <tbody id="inviteTableBody">
-    <!-- Hier werden die Einladungen dynamisch angezeigt -->
+            <?php
+// Stellen Sie sicher, dass eine gültige Verbindung zur Datenbank besteht
+include 'include/db.php';
+
+// Abfrage zum Abrufen der Einladungs-Codes
+$stmt = $conn->prepare("SELECT * FROM invites ORDER BY created_at DESC");
+$stmt->execute();
+$invites = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<tbody>
+    <?php foreach ($invites as $invite): ?>
+        <tr>
+            <td><?php echo $invite['id']; ?></td>
+            <td><?php echo htmlspecialchars($invite['invite_code']); ?></td>
+            <td><?php echo $invite['created_at']; ?></td>
+            <td><?php echo $invite['expired_at'] ?: 'Kein Ablaufdatum'; ?></td>
+        </tr>
+    <?php endforeach; ?>
 </tbody>
         </table>
     </div>

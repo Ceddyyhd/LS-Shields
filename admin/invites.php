@@ -27,13 +27,13 @@
     <!-- /.content-header -->
 
     <!-- Main content -->
-    <div class="card">
+<div class="card">
     <div class="card-header">
-    <?php if ($_SESSION['permissions']['add_vehicle'] ?? false): ?>
-    <button type="button" class="btn btn-primary" id="generateInviteCodeBtn">
-        Einladungscode hinzufügen
-    </button>
-<?php endif ?>
+        <?php if ($_SESSION['permissions']['add_vehicle'] ?? false): ?>
+            <button type="button" class="btn btn-primary" id="generateInviteCodeBtn">
+                Einladungscode hinzufügen
+            </button>
+        <?php endif; ?>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
@@ -46,26 +46,26 @@
                     <th>expired_at</th>
                 </tr>
             </thead>
-            <?php
-// Stellen Sie sicher, dass eine gültige Verbindung zur Datenbank besteht
-include 'include/db.php';
+            <tbody id="inviteTableBody">
+                <?php
+                // Datenbankverbindung und Abfrage
+                include 'include/db.php';
 
-// Abfrage zum Abrufen der Einladungs-Codes
-$stmt = $conn->prepare("SELECT * FROM invites ORDER BY created_at DESC");
-$stmt->execute();
-$invites = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+                // Abfrage zum Abrufen der Einladungs-Codes
+                $stmt = $conn->prepare("SELECT * FROM invites ORDER BY created_at DESC");
+                $stmt->execute();
+                $invites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-<tbody>
-    <?php foreach ($invites as $invite): ?>
-        <tr>
-            <td><?php echo $invite['id']; ?></td>
-            <td><?php echo htmlspecialchars($invite['invite_code']); ?></td>
-            <td><?php echo $invite['created_at']; ?></td>
-            <td><?php echo $invite['expired_at'] ?: 'Kein Ablaufdatum'; ?></td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+                foreach ($invites as $invite):
+                ?>
+                    <tr>
+                        <td><?php echo $invite['id']; ?></td>
+                        <td><?php echo htmlspecialchars($invite['invite_code']); ?></td>
+                        <td><?php echo $invite['created_at']; ?></td>
+                        <td><?php echo $invite['expired_at'] ?: 'Kein Ablaufdatum'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
 </div>
@@ -80,19 +80,10 @@ $invites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    // Den neuen Code in der Tabelle oder irgendwo auf der Seite anzeigen
+                    // Zeige das Popup mit dem neuen Einladungscode
                     alert('Neuer Einladungscode: ' + response.invite_code);
                     
-                    // Optional: Den neuen Code in die Tabelle einfügen
-                    const newRow = `
-                        <tr>
-                            <td>${response.id}</td>
-                            <td>${response.invite_code}</td>
-                            <td>${response.created_at}</td>
-                            <td>${response.expired_at || 'Kein Ablaufdatum'}</td>
-                        </tr>
-                    `;
-                    $('#inviteTableBody').prepend(newRow);  // Den neuen Code an den Anfang der Tabelle einfügen
+                    // Der neue Code wird nicht zur Tabelle hinzugefügt, da sie beim Seitenladen automatisch geladen wird
                 } else {
                     alert('Fehler beim Erstellen des Einladungscodes: ' + response.message);
                 }

@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Die neu eingefügten Daten zurückgeben
         echo json_encode([
             'success' => true,
-            'id' => $conn->lastInsertId(),
             'invite_code' => $invite_code,
             'created_at' => date('Y-m-d H:i:s'),
             'expired_at' => $expired_at

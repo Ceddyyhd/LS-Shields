@@ -103,6 +103,9 @@ echo '</script>';
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
               <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
+                Historie
+              </button>
+              <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
                 Auszahlung
               </button>
             </td>
@@ -119,7 +122,7 @@ echo '</script>';
     <div class="modal-dialog" style="max-width: 90%; margin: 30px auto;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Historie</h5>
+                <h5 class="modal-title">Historie (Mitarbeiter Name)</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -129,9 +132,11 @@ echo '</script>';
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Aktion</th>
-                            <th>Bestandsänderung</th>
-                            <th>Benutzer</th>
+                            <th>Art </th>
+                            <th>Betrag </th>
+                            <th>Notiz</th>
+                            <th>Erstellt Am</th>
+                            <th>Erstellt Von</th>
                         </tr>
                     </thead>
                     <tbody>

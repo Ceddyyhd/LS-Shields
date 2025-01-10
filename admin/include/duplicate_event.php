@@ -4,8 +4,8 @@ require_once 'db.php'; // Verbindung zur Datenbank
 if (isset($_POST['event_id'])) {
     $event_id = $_POST['event_id'];
 
-    // Event-Daten abfragen
-    $query = "SELECT * FROM events WHERE id = :event_id";
+    // Event-Daten abfragen (Tabelle 'eventplanung' verwenden)
+    $query = "SELECT * FROM eventplanung WHERE id = :event_id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':event_id', $event_id, PDO::PARAM_INT);
     $stmt->execute();
@@ -14,7 +14,7 @@ if (isset($_POST['event_id'])) {
     if ($event) {
         // Event duplizieren (alle Felder außer 'event_lead' und 'team_verteilung', Status auf 'in Bearbeitung' setzen)
         $insertQuery = "
-            INSERT INTO events (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, summernote_content, datum_uhrzeit_event, ort, event, anmerkung)
+            INSERT INTO eventplanung (vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, status, summernote_content, datum_uhrzeit_event, ort, event, anmerkung)
             VALUES (:vorname_nachname, :telefonnummer, :anfrage, :datum_uhrzeit, 'in Bearbeitung', :summernote_content, :datum_uhrzeit_event, :ort, :event, :anmerkung)";
 
         $insertStmt = $conn->prepare($insertQuery);

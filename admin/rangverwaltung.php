@@ -38,12 +38,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 include 'include/db.php';
 
-// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
+// Ränge aus der Datenbank abrufen
+$stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
+$stmt->execute();
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen abrufen
+// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtPerm = $conn->prepare("
     SELECT p.*, pa.display_name AS bereich_display_name
     FROM permissions p
@@ -52,32 +56,17 @@ $stmtPerm = $conn->prepare("
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
-// Bereichsdaten nach parent_id gruppieren
-$groupedAreas = [];
-
-foreach ($areas as $area) {
-    // Hauptbereich
-    if ($area['parent_id'] === NULL) {
-        $groupedAreas[$area['id']] = [
-            'area' => $area,
-            'children' => []
-        ];
-    } else {
-        // Unterbereiche der entsprechenden Parent-ID zuweisen
-        $groupedAreas[$area['parent_id']]['children'][] = $area;
-    }
-}
-
-// Daten für JavaScript vorbereiten
+// Die Daten an JavaScript übergeben
 echo '<script>';
 echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($groupedAreas) . ';';
+echo 'const areas = ' . json_encode($areas) . ';';
 echo '</script>';
 ?>
 
 
 <script>
     $(document).ready(function () {
+        // Berechtigungen und Bereichsdaten dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
         const areas = <?= json_encode($areas) ?>;
 
@@ -89,64 +78,31 @@ echo '</script>';
             areaMap[area.id] = area.display_name;
         });
 
-        // Berechtigungen nach Bereich gruppieren
-        const permissionsByArea = {};
         permissions.forEach(permission => {
-            if (!permissionsByArea[permission.bereich]) {
-                permissionsByArea[permission.bereich] = [];
-            }
-            permissionsByArea[permission.bereich].push(permission);
-        });
-
-        // Dynamisches HTML für die Bereiche und Berechtigungen erstellen
-        areas.forEach(area => {
-            const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
-
-            let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+            // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
+            const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
+            
+            let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
             if (!sectionDiv.length) {
-                // Abschnitt für den Bereich erstellen
-                permissionsContainer.append(`
-                    <div class="permissions-section section-${area.id}">
-                        <h5 class="expandable-table" data-widget="expandable-table" aria-expanded="false">
-                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                            ${sectionLabel}
-                        </h5>
-                        <div class="expandable-body" style="display: none;">
-                            <div class="permissions-list-${area.id}">
-                            </div>
-                        </div>
-                    </div>
-                `);
-                sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+                // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+                permissionsContainer.append(
+                    `<div class="permissions-section section-${permission.bereich}">
+                        <h5>${sectionLabel}</h5>
+                    </div>`
+                );
+                sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
             }
 
-            // Berechtigungen für den Bereich hinzufügen
-            const permissionList = permissionsByArea[area.id];
-            const permissionsListContainer = sectionDiv.find(`.permissions-list-${area.id}`);
-            permissionList.forEach(permission => {
-                permissionsListContainer.append(`
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                        <label class="form-check-label" for="perm_${permission.id}">
-                            ${permission.display_name} (${permission.description})
-                        </label>
-                    </div>
-                `);
-            });
-
-            // Click Event für das Klappen des Bereichs
-            sectionDiv.find('h5').on('click', function() {
-                const expandableBody = $(this).next('.expandable-body');
-                expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
-                const caret = $(this).find('.expandable-table-caret');
-                caret.toggleClass('fa-caret-right fa-caret-down'); // Dreht das Caret-Symbol
-            });
+            // Checkbox für die Berechtigung hinzufügen
+            sectionDiv.append(`
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                    <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                </div>
+            `);
         });
     });
-</script>
-
-
-
+    </script>
 
 <div class="row">
   <div class="col-12">

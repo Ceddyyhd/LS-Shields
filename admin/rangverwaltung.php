@@ -226,6 +226,8 @@ echo '</script>';
               <select id="roleLevel" class="custom-select">
                 <option value="Inhaber">Inhaber</option>
                 <option value="Geschäftsführung">Geschäftsführung</option>
+                <option value="Ausbildungsabteilung">Ausbildungsabteilung</option>
+                <option value="Sonder">Sonder</option>
                 <option value="Mitarbeiter">Mitarbeiter</option>
               </select>
             </div>

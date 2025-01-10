@@ -2,6 +2,7 @@
 <html lang="en">
 <?php include 'include/header.php'; 
 // ID des aktuellen Benutzers aus der Session holen
+session_start(); // Session starten
 $user_id = $_SESSION['user_id'];
 include 'include/db.php'; 
 // SQL-Abfrage, um nur die Urlaubsanträge des aktuellen Benutzers anzuzeigen, deren `end_date` heute oder in der Zukunft liegt
@@ -140,7 +141,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
               <!-- /.card-header -->
               <div class="card-body">
-    <label><?php echo $user['id'];?></label>
+    <label><?php echo $user_id;?></label>
     <table class="table table-bordered">
         <thead>
             <tr>

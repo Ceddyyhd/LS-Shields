@@ -38,20 +38,35 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
     <!-- Main content -->
     
 
+    <?php
+include 'include/db.php';
+
+// SQL-Abfrage, um die Mitarbeiter-Daten (Name und Kontonummer) zu holen
+$query = "
+    SELECT id, name, kontonummer
+    FROM users
+    WHERE bewerber = 'nein'  -- Optional: Nur Mitarbeiter, die keine Bewerber sind
+";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Finanzdaten</h3>
+    <h3 class="card-title">Mitarbeiter Finanzen</h3>
     <div class="card-tools">
         <?php if ($_SESSION['permissions']['role_create'] ?? false): ?>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-role">Neue Rolle hinzufügen</button>
-          <?php endif; ?>
-        </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-neuen-eintrag">Neuen Eintrag hinzufügen</button>
+        <?php endif; ?>
+    </div>
   </div>
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
       <thead>
         <tr>
           <th>Mitarbeiter</th>
+          <th>Kontonummer</th>
           <th>Gehalt</th>
           <th>Anteil</th>
           <th>Trinkgeld</th>
@@ -59,13 +74,25 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($results as $row): ?>
+        <?php foreach ($employees as $employee): ?>
           <tr>
-            <td><?php echo htmlspecialchars($row['location']); ?></td>
-            <td><?php echo number_format($row['total_betrag'], 2, ',', '.'); ?></td>
+            <td><?php echo htmlspecialchars($employee['name']); ?></td>
+            <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
-              <!-- Löschen Button für diese Location -->
-              <button class="btn btn-danger btn-sm delete-location" data-location="<?php echo htmlspecialchars($row['location']); ?>">
+              <!-- Hier kann später der Gehaltseintrag angezeigt werden -->
+              <button class="btn btn-success btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="gehalt">Gehalt hinzufügen</button>
+            </td>
+            <td>
+              <!-- Hier kann später der Anteilseintrag angezeigt werden -->
+              <button class="btn btn-warning btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="anteil">Anteil hinzufügen</button>
+            </td>
+            <td>
+              <!-- Hier kann später der Trinkgeldseintrag angezeigt werden -->
+              <button class="btn btn-info btn-sm" data-userid="<?php echo $employee['id']; ?>" data-type="trinkgeld">Trinkgeld hinzufügen</button>
+            </td>
+            <td>
+              <!-- Löschen Button für diesen Mitarbeiter -->
+              <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
                 Löschen
               </button>
             </td>
@@ -73,6 +100,59 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
         <?php endforeach; ?>
       </tbody>
     </table>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modal-neuen-eintrag">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Neuen Eintrag hinzufügen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addRoleForm">
+          <div class="card-body">
+
+          <div class="form-group">
+              <label for="roleLevel">Mitarbeiter per Dropdown</label>
+              <select id="roleLevel" class="custom-select">
+                <option value="Inhaber">Inhaber</option>
+                <option value="Geschäftsführung">Geschäftsführung</option>
+                <option value="Mitarbeiter">Mitarbeiter</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="roleLevel">Art</label>
+              <select id="roleLevel" class="custom-select">
+                <option value="Inhaber">Gehalt</option>
+                <option value="Geschäftsführung">Anteil</option>
+                <option value="Mitarbeiter">Trinkgeld</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="roleName">Betrag</label>
+              <input type="text" id="roleName" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="roleValue">Wert (Value)</label>
+              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+        <button type="button" class="btn btn-primary" id="saveRoleButton">Speichern</button>
+      </div>
+    </div>
   </div>
 </div>
 

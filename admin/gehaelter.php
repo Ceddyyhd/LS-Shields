@@ -101,10 +101,11 @@ echo '</script>';
             <td><?php echo number_format($anteil, 2, ',', '.'); ?> $</td>
             <td><?php echo number_format($trinkgeld, 2, ',', '.'); ?> $</td>
             <td>
-              <!-- Löschen Button für diesen Mitarbeiter -->
-              <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
+              <!-- Historie Button für diesen Mitarbeiter -->
+              <button class="btn btn-info btn-sm view-history" data-userid="<?php echo $employee['id']; ?>" data-name="<?php echo htmlspecialchars($employee['name']); ?>">
                 Historie
               </button>
+              <!-- Auszahlung Button für diesen Mitarbeiter -->
               <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
                 Auszahlung
               </button>
@@ -115,7 +116,6 @@ echo '</script>';
     </table>
   </div>
 </div>
-
 
 <!-- Modal für Historie -->
 <div class="modal" id="modal-history">
@@ -131,7 +131,6 @@ echo '</script>';
                 <table id="historyTable" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Art </th>
                             <th>Betrag </th>
                             <th>Notiz</th>
@@ -139,7 +138,7 @@ echo '</script>';
                             <th>Erstellt Von</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="historyBody">
                         <!-- Historie wird hier eingefügt -->
                     </tbody>
                 </table>
@@ -148,6 +147,54 @@ echo '</script>';
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+    // Historie anzeigen
+    $('.view-history').click(function() {
+        const userId = $(this).data('userid');
+        const employeeName = $(this).data('name');
+
+        // Setze den Modal-Titel
+        $('#modal-history .modal-title').text('Historie (' + employeeName + ')');
+
+        // Lade die Historie für den Mitarbeiter
+        $.ajax({
+            url: 'include/get_finance_history.php', // PHP-Datei zum Abrufen der Historie-Daten
+            method: 'POST',
+            data: { user_id: userId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Lösche alte Daten
+                    $('#historyBody').empty();
+
+                    // Füge die neuen Daten hinzu
+                    response.history.forEach(function(entry) {
+                        $('#historyBody').append(
+                            `<tr>
+                                <td>${entry.art}</td>
+                                <td>${entry.betrag} $</td>
+                                <td>${entry.notiz}</td>
+                                <td>${entry.erstellt_am}</td>
+                                <td>${entry.erstellt_von}</td>
+                            </tr>`
+                        );
+                    });
+
+                    // Zeige das Modal an
+                    $('#modal-history').modal('show');
+                } else {
+                    alert('Fehler: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Es gab einen Fehler bei der Anfrage.');
+            }
+        });
+    });
+});
+
+</script>
 
 <div class="modal fade" id="modal-neuen-eintrag">
   <div class="modal-dialog">

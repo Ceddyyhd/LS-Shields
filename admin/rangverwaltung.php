@@ -345,7 +345,7 @@ h5.expandable-table {
               </select>
             </div>
             <div class="form-group">
-              <label for="roleValue">Wert (Value)</label>
+              <label for="roleValue">Wert (Value1)</label>
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
             

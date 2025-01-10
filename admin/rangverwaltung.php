@@ -38,12 +38,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 include 'include/db.php';
 
-// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
+// Ränge aus der Datenbank abrufen
+$stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
+$stmt->execute();
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen abrufen
+// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
 $stmtPerm = $conn->prepare("
     SELECT p.*, pa.display_name AS bereich_display_name
     FROM permissions p
@@ -61,6 +65,7 @@ echo '</script>';
 
 <script>
     $(document).ready(function () {
+        // Berechtigungen und Bereichsdaten dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
         const areas = <?= json_encode($areas) ?>;
 
@@ -72,7 +77,7 @@ echo '</script>';
             areaMap[area.id] = area.display_name;
         });
 
-        // Alle Berechtigungen nach Bereich gruppieren
+        // Berechtigungen nach Bereich gruppieren
         const permissionsByArea = {};
         permissions.forEach(permission => {
             if (!permissionsByArea[permission.bereich]) {
@@ -85,45 +90,40 @@ echo '</script>';
         areas.forEach(area => {
             const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
 
+            // Bereich-Abschnitt erstellen, wenn nicht vorhanden
             let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
             if (!sectionDiv.length) {
-                // Abschnitt für den Bereich erstellen
-                permissionsContainer.append(
-                    `<div class="permissions-section section-${area.id}">
-                        <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+                permissionsContainer.append(`
+                    <div class="permissions-section section-${area.id}">
+                        <h5 class="expandable-table" data-widget="expandable-table" aria-expanded="false">
                             <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                             ${sectionLabel}
                         </h5>
                         <div class="expandable-body" style="display: none;">
-                            <table class="table table-hover">
-                                <tbody class="permissions-list-${area.id}">
-                                </tbody>
-                            </table>
+                            <div class="permissions-list-${area.id}">
+                                <!-- Berechtigungen werden hier eingefügt -->
+                            </div>
                         </div>
-                    </div>`
-                );
+                    </div>
+                `);
                 sectionDiv = permissionsContainer.find(`.section-${area.id}`);
             }
 
             // Berechtigungen für den Bereich hinzufügen
             const permissionList = permissionsByArea[area.id];
-            const permissionsListContainer = sectionDiv.find('.permissions-list-' + area.id);
+            const permissionsListContainer = sectionDiv.find(`.permissions-list-${area.id}`);
             permissionList.forEach(permission => {
                 permissionsListContainer.append(`
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                                <label class="form-check-label" for="perm_${permission.id}">
-                                    ${permission.display_name} (${permission.description})
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                        <label class="form-check-label" for="perm_${permission.id}">
+                            ${permission.display_name} (${permission.description})
+                        </label>
+                    </div>
                 `);
             });
 
-            // Click Event für das Klappen des Bereichs
+            // Click-Event für das Klappen des Bereichs
             sectionDiv.find('h5').on('click', function () {
                 const expandableBody = $(this).next('.expandable-body');
                 expandableBody.toggle(); // Zeigt oder versteckt das Dropdown

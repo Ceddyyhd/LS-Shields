@@ -8,6 +8,7 @@ include 'include/db.php';
 $query = "
     SELECT * FROM vacations 
     WHERE user_id = :user_id 
+    AND end_date >= NOW()  -- Nur Anträge, deren Enddatum heute oder in der Zukunft liegt, inklusive Zeit
     AND status IN ('approved', 'pending')  -- Nur genehmigte oder noch ausstehende Urlaubsanträge
 ";
 
@@ -19,20 +20,6 @@ $stmt->execute();
 $vacations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Calendar</title>
-
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- fullCalendar -->
-  <link rel="stylesheet" href="plugins/fullcalendar/main.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-</head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -139,7 +126,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
               <!-- /.card-header -->
               <div class="card-body">
-    <label>Urlaub zurückziehen</label>
+    <label><?php echo $user_id?></label>
     <table class="table table-bordered">
         <thead>
             <tr>

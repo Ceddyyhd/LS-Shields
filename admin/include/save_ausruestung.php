@@ -14,10 +14,6 @@ include 'db.php';
 $user_id = $_POST['user_id'];  // Benutzer-ID
 $user_name = $_POST['user_name'];  // Benutzername aus dem Formular
 
-// Letzte Spind Kontrolle und Notizen
-$letzte_spind_kontrolle = $_POST['letzte_spind_kontrolle'] ?? null;
-$notizen = $_POST['notizen'] ?? null;
-
 // Überprüfe, ob Ausrüstungsdaten gesendet wurden
 if (isset($_POST['ausruestung']) && is_array($_POST['ausruestung'])) {
     $ausruestung = $_POST['ausruestung'];  // Die Ausrüstungsänderungen
@@ -47,39 +43,25 @@ try {
     // Beginne die Transaktion (damit alle Änderungen als eine Einheit gespeichert werden)
     $conn->beginTransaction();
 
-    // 1. Letzte Spind Kontrolle und Notizen speichern
-    if ($letzte_spind_kontrolle !== null || $notizen !== null) {
-        // Eintrag in spind_kontrolle_notizen
-        $stmt = $conn->prepare("
-            INSERT INTO spind_kontrolle_notizen (user_id, letzte_spind_kontrolle, notizen)
-            VALUES (:user_id, :letzte_spind_kontrolle, :notizen)
-        ");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':letzte_spind_kontrolle' => $letzte_spind_kontrolle,
-            ':notizen' => $notizen
-        ]);
-
-        // Eintrag in spind_kontrolle_logs (History)
-        $stmt = $conn->prepare("
-            INSERT INTO spind_kontrolle_logs (user_id, editor_name, action)
-            VALUES (:user_id, :editor_name, :action)
-        ");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':editor_name' => $user_name,
-            ':action' => 'Spind Kontrolle geändert'
-        ]);
-    }
-
-    // 2. Bestandsprüfung und Ausrüstungsänderungen
+    // Zunächst Bestandsprüfung für Artikel, die ausgegeben werden sollen (status = 1)
     foreach ($ausruestung as $key_name => $status) {
         if ($status == 1) { // Nur Artikel mit status = 1 (ausgegeben) prüfen
-            // Prüfe den aktuellen Bestand des Artikels
+            // Prüfe, ob der Artikel bereits in benutzer_ausruestung existiert und den status = 1 hat
+            $stmt = $conn->prepare("SELECT status FROM benutzer_ausruestung WHERE user_id = :user_id AND key_name = :key_name");
+            $stmt->execute([':user_id' => $user_id, ':key_name' => $key_name]);
+            $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Wenn der Artikel bereits zugewiesen wurde (status = 1), überspringe die Bestandsprüfung
+            if ($existing && $existing['status'] == 1) {
+                continue; // Artikel wurde bereits zugewiesen, überspringen
+            }
+
+            // Prüfe den aktuellen Bestand des Artikels (nur wenn der Artikel noch nicht zugewiesen wurde oder zurückgegeben ist)
             $stmt = $conn->prepare("SELECT stock FROM ausruestungstypen WHERE key_name = :key_name");
             $stmt->execute([':key_name' => $key_name]);
             $stock = $stmt->fetchColumn();
 
+            // Wenn der Bestand kleiner oder gleich 0 ist, zurückgeben
             if ($stock <= 0) {
                 echo json_encode(['success' => false, 'message' => 'Nicht genügend Artikel auf Lager!']);
                 exit;

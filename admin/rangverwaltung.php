@@ -345,105 +345,10 @@ h5.expandable-table {
               </select>
             </div>
             <div class="form-group">
-              <label for="roleValue">Wert (Value1)</label>
+              <label for="roleValue">Wert (Value)</label>
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
-            
-              <!-- ./card-header -->
-              <div class="card-body p-0">
-                <table class="table table-hover">
-                  <tbody>
-                    <tr data-widget="expandable-table" aria-expanded="true">
-                      <td>
-                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                        Mitarbeiter Bereich
-                      </td>
-                    </tr>
-                    <tr class="expandable-body">
-                      <td>
-                        <div class="p-0">
-                          <table class="table table-hover">
-                            <tbody>
-                              <tr data-widget="expandable-table" aria-expanded="false">
-                                <td>
-                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                  Dashboard
-                                </td>
-                              </tr>
-                              <tr class="expandable-body">
-                                <td>
-                                  <div class="p-0">
-                                    <table class="table table-hover">
-                                      <tbody>
-                                        <tr>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox">
-                                          <label class="form-check-label">Checkbox</label>
-                                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr data-widget="expandable-table" aria-expanded="false">
-                                <td>
-                                  <button type="button" class="btn btn-primary p-0">
-                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                  </button>
-                                  219-2
-                                </td>
-                              </tr>
-                              <tr class="expandable-body">
-                                <td>
-                                  <div class="p-0">
-                                    <table class="table table-hover">
-                                      <tbody>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-
+            <div id="permissionsContainer"></div>
           </div>
         </form>
       </div>

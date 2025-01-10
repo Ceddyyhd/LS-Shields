@@ -106,9 +106,9 @@ echo '</script>';
                 Historie
               </button>
               <!-- Auszahlung Button für diesen Mitarbeiter -->
-              <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
+              <button class="btn btn-danger btn-sm payout-button" data-userid="<?php echo $employee['id']; ?>" data-name="<?php echo htmlspecialchars($employee['name']); ?>">
                 Auszahlung
-              </button>
+            </button>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -122,13 +122,14 @@ echo '</script>';
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Historie (Mitarbeiter Name)</h5>
+                <h5 class="modal-title">Auszahlung für Mitarbeiter Name</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
+                <input type="hidden" id="user_id"> <!-- Hidden Input für die Mitarbeiter-ID -->
+                
                 <div class="form-group">
                     <label for="gehaltInput">Gehalt</label>
                     <input type="text" id="gehaltInput" class="form-control" placeholder="Betrag eingeben">
@@ -143,67 +144,72 @@ echo '</script>';
                     <label for="trinkgeldInput">Trinkgeld</label>
                     <input type="text" id="trinkgeldInput" class="form-control" placeholder="Betrag eingeben">
                 </div>
-
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" id="saveWithdrawalButton">Speichern</button> <!-- Eindeutige ID für den Button -->
+                <button type="button" class="btn btn-primary" id="savePayoutButton">Speichern</button>
             </div>
         </div>
     </div>
 </div>
+
 <script> 
-    $('#saveWithdrawalButton').click(function () {
-    const employeeId = $('#employeeSelect').val(); // Mitarbeiter
-    const gehalt = parseFloat($('#gehaltInput').val()); // Gehalt
-    const anteil = parseFloat($('#anteilInput').val()); // Anteil
-    const trinkgeld = parseFloat($('#trinkgeldInput').val()); // Trinkgeld
-    const betrag = gehalt + anteil + trinkgeld; // Gesamtbetrag (Gehalt + Anteil + Trinkgeld)
+   $(document).ready(function () {
+    // Event-Listener für den Auszahlung-Button
+    $('.payout-button').click(function () {
+        const userId = $(this).data('userid');  // Die ID des Mitarbeiters
+        const employeeName = $(this).data('name');  // Der Name des Mitarbeiters
 
-    // Überprüfen, ob alle Felder gültige Werte haben
-    if (!employeeId || isNaN(gehalt) || isNaN(anteil) || isNaN(trinkgeld)) {
-        alert('Bitte geben Sie alle Werte korrekt ein!');
-        return;
-    }
+        // Setze den Titel des Modals auf den Namen des Mitarbeiters
+        $('#modal-auszahlungen .modal-title').text('Auszahlung für ' + employeeName);
 
-    // Daten für die Auszahlung vorbereiten
-    const withdrawalData = {
-        user_id: employeeId,
-        gehalt: gehalt,
-        anteil: anteil,
-        trinkgeld: trinkgeld,
-        betrag: betrag,
-        erstellt_von: 'admin'  // Beispiel: Hier kannst du den aktuellen Benutzernamen setzen
-    };
+        // Setze den Mitarbeiter-ID in einem versteckten Input (optional)
+        $('#modal-auszahlungen #user_id').val(userId);
 
-    // Ladeanzeige aktivieren
-    $('#saveWithdrawalButton').prop('disabled', true).text('Speichern...');
+        // Öffne das Modal
+        $('#modal-auszahlungen').modal('show');
+    });
 
-    // AJAX-Request um die Auszahlung durchzuführen
-    $.ajax({
-        url: 'include/process_withdrawal.php',
-        method: 'POST',
-        data: {
-            withdrawalData: JSON.stringify(withdrawalData)
-        },
-        dataType: 'json',
-        success: function (response) {
-            if (response.success) {
-                alert(response.message);  // Erfolgsmeldung
-                $('#modal-auszahlungen').modal('hide');  // Modal schließen
-                location.reload();  // Seite neu laden, um Änderungen anzuzeigen
-            } else {
-                alert('Fehler: ' + response.message);  // Fehlermeldung
-            }
-            // Ladeanzeige deaktivieren
-            $('#saveWithdrawalButton').prop('disabled', false).text('Speichern');
-        },
-        error: function () {
-            alert('Es gab einen Fehler bei der Anfrage.');
-            $('#saveWithdrawalButton').prop('disabled', false).text('Speichern');
+    // Optional: Event-Listener für den Speichern-Button im Modal (diese Logik ist für später)
+    $('#savePayoutButton').click(function () {
+        const userId = $('#user_id').val();  // Mitarbeiter-ID
+        const gehalt = parseFloat($('#gehaltInput').val());
+        const anteil = parseFloat($('#anteilInput').val());
+        const trinkgeld = parseFloat($('#trinkgeldInput').val());
+
+        // Berechne den Gesamtbetrag
+        const totalAmount = gehalt + anteil + trinkgeld;
+
+        // Validierung des Betrags
+        if (isNaN(totalAmount) || totalAmount <= 0) {
+            alert('Bitte geben Sie einen gültigen Betrag ein!');
+            return;
         }
+
+        // AJAX-Request zur Auszahlung (muss später ergänzt werden)
+        $.ajax({
+            url: 'include/process_withdrawal.php',  // Dein PHP-Skript für die Auszahlung
+            method: 'POST',
+            data: {
+                user_id: userId,
+                gehalt: gehalt,
+                anteil: anteil,
+                trinkgeld: trinkgeld,
+                total_amount: totalAmount
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Auszahlung erfolgreich durchgeführt!');
+                    $('#modal-auszahlungen').modal('hide');
+                    location.reload();  // Seite neu laden
+                } else {
+                    alert('Fehler: ' + response.message);
+                }
+            }
+        });
     });
 });
+
 </script>
 
 <!-- Modal für Historie -->

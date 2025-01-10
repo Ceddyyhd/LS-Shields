@@ -41,15 +41,15 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
     <?php
 include 'include/db.php';
 
-// SQL-Abfrage, um die Mitarbeiter-Daten (Name und Kontonummer) zu holen
-$stmtEmployees = $conn->prepare("SELECT id, name, kontonummer FROM users WHERE bewerber = 'nein' AND gekuendigt = 'no_kuendigung'");
-$stmtEmployees->execute();
-$employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
-
-// 1. Neue Abfrage für mitarbeiter_finanzen (unabhängig von der alten)
+// 1. SQL-Abfrage für mitarbeiter_finanzen (Daten holen)
 $stmtFinanceEmployees = $conn->prepare("SELECT * FROM mitarbeiter_finanzen");
 $stmtFinanceEmployees->execute();
 $financeEmployees = $stmtFinanceEmployees->fetchAll(PDO::FETCH_ASSOC);
+
+// 2. SQL-Abfrage für Mitarbeiter-Daten (Name und Kontonummer holen)
+$stmtEmployees = $conn->prepare("SELECT id, name, kontonummer FROM users WHERE bewerber = 'nein' AND gekuendigt = 'no_kuendigung'");
+$stmtEmployees->execute();
+$employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 
 // Übergebe die Mitarbeiter-Daten an JavaScript
 echo '<script>';
@@ -79,42 +79,34 @@ echo '</script>';
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($employees as $employee): ?>
+        <?php foreach ($employees as $employee): 
+            // Initialisiere Gehalt, Anteil und Trinkgeld mit 0
+            $gehalt = 0;
+            $anteil = 0;
+            $trinkgeld = 0;
+
+            // Überprüfe, ob es Finanzdaten für den Mitarbeiter gibt
+            foreach ($financeEmployees as $finance) {
+                if ($finance['user_id'] == $employee['id']) {
+                    // Je nach Art des Betrags (Gehalt, Anteil, Trinkgeld) setzen wir die jeweiligen Werte
+                    if ($finance['art'] == 'Gehalt') {
+                        $gehalt = $finance['betrag'];
+                    }
+                    if ($finance['art'] == 'Anteil') {
+                        $anteil = $finance['betrag'];
+                    }
+                    if ($finance['art'] == 'Trinkgeld') {
+                        $trinkgeld = $finance['betrag'];
+                    }
+                }
+            }
+        ?>
           <tr>
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
-            <td>
-              <?php 
-
-                // Überprüfen, ob Finanzdaten für diesen Mitarbeiter vorhanden sind
-                foreach ($financeEmployees as $finance) {
-                    // Sicherstellen, dass der Vergleich korrekt ist
-                    if ($finance['user_id'] == $employee['id']) {
-                        // Wenn Gehalt gefunden wird, Wert zuweisen
-                        if ($finance['art'] == 'Gehalt') {
-                            $gehalt = $finance['betrag'];
-                        }
-                        // Wenn Anteil gefunden wird, Wert zuweisen
-                        if ($finance['art'] == 'Anteil') {
-                            $anteil = $finance['betrag'];
-                        }
-                        // Wenn Trinkgeld gefunden wird, Wert zuweisen
-                        if ($finance['art'] == 'Trinkgeld') {
-                            $trinkgeld = $finance['betrag'];
-                        }
-                    }
-                }
-
-                // Ausgabe der Werte
-                echo number_format($gehalt, 2, ',', '.') . ' $';
-              ?>
-            </td>
-            <td>
-              <?php echo number_format($anteil, 2, ',', '.') . ' $'; ?>
-            </td>
-            <td>
-              <?php echo number_format($trinkgeld, 2, ',', '.') . ' $'; ?>
-            </td>
+            <td><?php echo number_format($gehalt, 2, ',', '.'); ?> $</td>
+            <td><?php echo number_format($anteil, 2, ',', '.'); ?> $</td>
+            <td><?php echo number_format($trinkgeld, 2, ',', '.'); ?> $</td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
               <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">

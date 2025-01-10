@@ -41,6 +41,11 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
     <?php
 include 'include/db.php';
 
+// 1. Neue Abfrage für mitarbeiter_finanzen (unabhängig von der alten)
+$stmtFinanceEmployees = $conn->prepare("SELECT * FROM mitarbeiter_finanzen");
+$stmtFinanceEmployees->execute();
+$financeEmployees = $stmtFinanceEmployees->fetchAll(PDO::FETCH_ASSOC);
+
 // SQL-Abfrage, um die Mitarbeiter-Daten (Name und Kontonummer) zu holen
 $stmtEmployees = $conn->prepare("SELECT id, name, kontonummer FROM users WHERE bewerber = 'nein' AND gekuendigt = 'no_kuendigung'");
 $stmtEmployees->execute();
@@ -79,22 +84,15 @@ echo '</script>';
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
-              <?php 
-                // Hier kann später der Gehaltseintrag dynamisch eingefügt werden
-                echo '500$';
-              ?>
+            <?php echo htmlspecialchars($financeEmployees['gehalt']); ?>
             </td>
             <td>
-              <?php 
-                // Hier kann später der Anteilseintrag dynamisch eingefügt werden
-                echo '500$';
-              ?>
+            <?php echo htmlspecialchars($financeEmployees['anteil']); ?>
+
             </td>
             <td>
-              <?php 
-                // Hier kann später der Trinkgeldbetrag dynamisch eingefügt werden
-                echo '500$';
-              ?>
+            <?php echo htmlspecialchars($financeEmployees['trinkgeld']); ?>
+
             </td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->

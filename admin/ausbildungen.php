@@ -179,6 +179,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                           <?php if (isset($_SESSION['permissions']['ausbildungstyp_remove']) && $_SESSION['permissions']['ausbildungstyp_remove']): ?>
                               <button class="btn btn-outline-danger" onclick="deleteAusbildungTyp(${ausbildung.id})">Löschen</button>
                           <?php endif; ?>
+                          <?php if (isset($_SESSION['permissions']['ausbildungstyp_leitfaden']) && $_SESSION['permissions']['ausbildungstyp_leitfaden']): ?>
+                              <button class="btn btn-outline-danger" href="eventplanung_akte.php?id=<?php echo $ausbildung['id']; ?>">Akte</button>
+                          <?php endif; ?>
                           </td>
                         </tr>
                     `);

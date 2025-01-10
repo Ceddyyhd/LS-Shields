@@ -114,7 +114,34 @@ echo '</script>';
 </div>
 
 
-
+<!-- Modal für Historie -->
+<div class="modal" id="modal-history">
+    <div class="modal-dialog" style="max-width: 90%; margin: 30px auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Historie</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="historyTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Aktion</th>
+                            <th>Bestandsänderung</th>
+                            <th>Benutzer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Historie wird hier eingefügt -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="modal fade" id="modal-neuen-eintrag">
@@ -154,8 +181,8 @@ echo '</script>';
               <label for="betragInput">Betrag</label>
               <input type="text" id="betragInput" class="form-control" placeholder="Betrag eingeben">
             </div>
-            
-          </div>
+            <input type="hidden" name="erstellt_von" value="<?= $_SESSION['username'] ?>">
+            </div>
         </form>
       </div>
       <div class="modal-footer justify-content-between">

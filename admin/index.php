@@ -159,7 +159,6 @@ try {
     </div>
 
     <?php
-include 'db.php';
 
 try {
     // Abrufen der Rabatte aus der Datenbank

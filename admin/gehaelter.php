@@ -38,8 +38,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
     <!-- Main content -->
     
 
-    <?php
-include 'include/db.php';
+    include 'include/db.php';
 
 // 1. SQL-Abfrage für mitarbeiter_finanzen (Daten holen)
 $stmtFinanceEmployees = $conn->prepare("SELECT * FROM mitarbeiter_finanzen");
@@ -85,18 +84,18 @@ echo '</script>';
             $anteil = 0;
             $trinkgeld = 0;
 
-            // Überprüfe, ob es Finanzdaten für den Mitarbeiter gibt
+            // Überprüfe, ob es Finanzdaten für den Mitarbeiter gibt und aggregiere
             foreach ($financeEmployees as $finance) {
                 if ($finance['user_id'] == $employee['id']) {
                     // Je nach Art des Betrags (Gehalt, Anteil, Trinkgeld) setzen wir die jeweiligen Werte
                     if ($finance['art'] == 'Gehalt') {
-                        $gehalt = $finance['betrag'];
+                        $gehalt += $finance['betrag']; // Aggregieren der Gehaltseinträge
                     }
                     if ($finance['art'] == 'Anteil') {
-                        $anteil = $finance['betrag'];
+                        $anteil += $finance['betrag']; // Aggregieren der Anteilsbeträge
                     }
                     if ($finance['art'] == 'Trinkgeld') {
-                        $trinkgeld = $finance['betrag'];
+                        $trinkgeld += $finance['betrag']; // Aggregieren der Trinkgeldbeträge
                     }
                 }
             }

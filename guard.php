@@ -83,7 +83,7 @@ foreach ($employees as $employee) {
                     <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
+                                <img src="/admin<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -161,7 +161,7 @@ foreach ($employees as $employee) {
 
     .img-box img {
         max-width: 100%;
-        height: 500px;
+        height: 400px;
         object-fit: cover;
     }
 

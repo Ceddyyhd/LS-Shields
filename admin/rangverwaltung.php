@@ -66,43 +66,79 @@ echo '</script>';
 
 <script>
     $(document).ready(function () {
-        // Berechtigungen und Bereichsdaten dynamisch laden
+        // Bereichsdaten und Berechtigungen dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
-        const areas = <?= json_encode($areas) ?>;
+        const areas = <?= json_encode($permissions_areas) ?>;
 
         const permissionsContainer = $('#permissionsContainer');
-        
+
         // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
         const areaMap = {};
         areas.forEach(area => {
             areaMap[area.id] = area.display_name;
         });
 
+        // Alle Berechtigungen gruppiert nach Bereich
+        const permissionsByArea = {};
         permissions.forEach(permission => {
-            // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
-            const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
-            
-            let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+            if (!permissionsByArea[permission.bereich]) {
+                permissionsByArea[permission.bereich] = [];
+            }
+            permissionsByArea[permission.bereich].push(permission);
+        });
+
+        // Dynamisch HTML für jedes Bereich erstellen
+        areas.forEach(area => {
+            const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
+
+            let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
             if (!sectionDiv.length) {
                 // Abschnitt für den Bereich erstellen, falls nicht vorhanden
                 permissionsContainer.append(
-                    `<div class="permissions-section section-${permission.bereich}">
-                        <h5>${sectionLabel}</h5>
+                    `<div class="permissions-section section-${area.id}">
+                        <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                            ${sectionLabel}
+                        </h5>
+                        <div class="expandable-body" style="display: none;">
+                            <table class="table table-hover">
+                                <tbody class="permissions-list">
+                                </tbody>
+                            </table>
+                        </div>
                     </div>`
                 );
-                sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
+                sectionDiv = permissionsContainer.find(`.section-${area.id}`);
             }
 
-            // Checkbox für die Berechtigung hinzufügen
-            sectionDiv.append(`
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                    <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                </div>
-            `);
+            // Berechtigungen für den Bereich hinzufügen
+            const permissionList = permissionsByArea[area.id];
+            const permissionsListContainer = sectionDiv.find('.permissions-list');
+            permissionList.forEach(permission => {
+                permissionsListContainer.append(`
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
+                                <label class="form-check-label" for="perm_${permission.id}">
+                                    ${permission.display_name} (${permission.description})
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            });
+
+            // Click Event für das Klappen des Bereichs
+            sectionDiv.find('h5').on('click', function() {
+                const expandableBody = $(this).next('.expandable-body');
+                expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
+                const caret = $(this).find('.expandable-table-caret');
+                caret.toggleClass('fa-caret-right fa-caret-down'); // Dreht das Caret-Symbol
+            });
         });
     });
-    </script>
+</script>
 
 <div class="row">
   <div class="col-12">
@@ -257,6 +293,9 @@ echo '</script>';
             <!-- /.card -->
           </div>
         </div>
+
+
+
     <!-- /.card -->
   </div>
   <!-- /.col -->

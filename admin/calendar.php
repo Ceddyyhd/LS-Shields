@@ -141,7 +141,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
               <!-- /.card-header -->
               <div class="card-body">
-    <label><?php echo $user_id;?></label>
+    <label>Urlaub Zurückziehen</label>
     <table class="table table-bordered">
         <thead>
             <tr>

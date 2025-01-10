@@ -349,7 +349,6 @@ h5.expandable-table {
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
             
-            <div class="row">
           <div class="col-12">
             <div class="card">
               <div class="card-header">
@@ -452,7 +451,6 @@ h5.expandable-table {
             </div>
             <!-- /.card -->
           </div>
-        </div>
 
 
           </div>

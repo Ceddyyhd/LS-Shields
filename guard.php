@@ -170,10 +170,10 @@ foreach ($employees as $employee) {
         margin: 5px;
     }
     .team_section .box .detail-box {
-    position: absolute;
+    position: absolute !important;
     width: 100%;
     color: #ffffff;
-    /* padding: 25px 15px; */
+    padding: 0px 0px !important ;
     text-align: center;
     bottom: 0;
     background-color: rgba(28, 28, 28, 0.75);

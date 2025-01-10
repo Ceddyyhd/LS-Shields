@@ -186,7 +186,6 @@ echo '</script>';
                 <label for="notizInput">Notiz</label>
                 <input type="text" id="notizInput" class="form-control" placeholder="Geben Sie eine Notiz ein">
             </div>
-            <input type="hidden" name="erstellt_von" value="<?= $user_name ?>"> <!-- Benutzername aus der Session -->
           </div>
         </form>
       </div>

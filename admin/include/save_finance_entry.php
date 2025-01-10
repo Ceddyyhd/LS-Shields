@@ -1,5 +1,5 @@
 <?php
-include 'include/db.php';
+include 'db.php';
 
 // Daten aus dem Formular empfangen
 $historyData = json_decode($_POST['historyData'], true);

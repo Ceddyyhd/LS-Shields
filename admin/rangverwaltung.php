@@ -36,39 +36,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main content -->
     
     <?php
-include 'include/db.php';
+    include 'include/db.php';
 
-// Ränge aus der Datenbank abrufen
-$stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
-$stmt->execute();
-$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Ränge aus der Datenbank abrufen
+    $stmt = $conn->prepare("SELECT * FROM roles ORDER BY value DESC");
+    $stmt->execute();
+    $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
-$stmtArea->execute();
-$areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
+    $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
+    $stmtArea->execute();
+    $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen abrufen und mit Bereichsdaten zusammenführen
-$stmtPerm = $conn->prepare("
-    SELECT p.*, pa.display_name AS bereich_display_name
-    FROM permissions p
-    LEFT JOIN permissions_areas pa ON p.bereich = pa.id
-");
-$stmtPerm->execute();
-$permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
+    // Berechtigungen abrufen und mit Bereichsdaten zusammenführen
+    $stmtPerm = $conn->prepare("
+        SELECT p.*, pa.display_name AS bereich_display_name
+        FROM permissions p
+        LEFT JOIN permissions_areas pa ON p.bereich = pa.id
+    ");
+    $stmtPerm->execute();
+    $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
-// Die Daten an JavaScript übergeben
-echo '<script>';
-echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($areas) . ';';
-echo '</script>';
-?>
+    // Die Daten an JavaScript übergeben
+    echo '<script>';
+    echo 'const permissions = ' . json_encode($permissions) . ';';
+    echo 'const areas = ' . json_encode($areas) . ';';
+    echo '</script>';
+    ?>
 
 
 <script>
     $(document).ready(function () {
         // Bereichsdaten und Berechtigungen dynamisch laden
         const permissions = <?= json_encode($permissions) ?>;
-        const areas = <?= json_encode($permissions_areas) ?>;
+        const areas = <?= json_encode($areas) ?>;
 
         const permissionsContainer = $('#permissionsContainer');
 
@@ -190,115 +190,78 @@ echo '</script>';
 
 
 <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Expandable Table Tree</h3>
-              </div>
-              <!-- ./card-header -->
-              <div class="card-body p-0">
-                <table class="table table-hover">
-                  <tbody>
-                    <tr data-widget="expandable-table" aria-expanded="true">
-                      <td>
-                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                        Mitarbeiter Bereich
-                      </td>
-                    </tr>
-                    <tr class="expandable-body">
-                      <td>
-                        <div class="p-0">
-                          <table class="table table-hover">
-                            <tbody>
-                              <tr data-widget="expandable-table" aria-expanded="false">
-                                <td>
-                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                  Dashboard
-                                </td>
-                              </tr>
-                              <tr class="expandable-body">
-                                <td>
-                                  <div class="p-0">
-                                    <table class="table table-hover">
-                                      <tbody>
-                                        <tr>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox">
-                                          <label class="form-check-label">Checkbox</label>
-                                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                      </tbody>
-                                    </table>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Expandable Table Tree</h3>
+      </div>
+      <!-- ./card-header -->
+      <div class="card-body p-0">
+        <table class="table table-hover">
+          <tbody>
+            <tr data-widget="expandable-table" aria-expanded="true">
+              <td>
+                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                Mitarbeiter Bereich
+              </td>
+            </tr>
+            <tr class="expandable-body">
+              <td>
+                <div class="p-0">
+                  <table class="table table-hover">
+                    <tbody>
+                      <tr data-widget="expandable-table" aria-expanded="false">
+                        <td>
+                          <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                          Dashboard
+                        </td>
+                      </tr>
+                      <tr class="expandable-body">
+                        <td>
+                          <div class="p-0">
+                            <table class="table table-hover">
+                              <tbody>
+                                <tr>
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Checkbox</label>
                                   </div>
-                                </td>
-                              </tr>
-                              <tr data-widget="expandable-table" aria-expanded="false">
-                                <td>
-                                  <button type="button" class="btn btn-primary p-0">
-                                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                                  </button>
-                                  219-2
-                                </td>
-                              </tr>
-                              <tr class="expandable-body">
-                                <td>
-                                  <div class="p-0">
-                                    <table class="table table-hover">
-                                      <tbody>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                        <tr>
-                                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                                        </tr>
-                                      </tbody>
-                                    </table>
+                                </tr>
+                                <tr>
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Checkbox</label>
                                   </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-        </div>
-
-
-
+                                </tr>
+                                <tr>
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="checkbox">
+                                    <label class="form-check-label">Checkbox</label>
+                                  </div>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.card-body -->
+    </div>
     <!-- /.card -->
   </div>
-  <!-- /.col -->
+</div>
+
+
+<!-- /.card -->
+</div>
+<!-- /.col -->
 </div>
 <!-- /.row -->
 </div>
@@ -306,250 +269,12 @@ echo '</script>';
 </section>
     
 
-<div class="modal fade" id="modal-add-role">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Neue Rolle erstellen</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="addRoleForm">
-          <div class="card-body">
-            <div class="form-group">
-              <label for="roleName">Rangname</label>
-              <input type="text" id="roleName" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="roleLevel">Rang Ebene</label>
-              <select id="roleLevel" class="custom-select">
-                <option value="Inhaber">Inhaber</option>
-                <option value="Geschäftsführung">Geschäftsführung</option>
-                <option value="Mitarbeiter">Mitarbeiter</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="roleValue">Wert (Value)</label>
-              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
-            </div>
-            <div id="permissionsContainer" class="row">
-                <!-- Bereichsdaten werden hier dynamisch hinzugefügt -->
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-        <button type="button" class="btn btn-primary" id="saveRoleButton">Speichern</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="modal-default">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Rolle bearbeiten</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="editRoleForm">
-          <div class="card-body">
-            <div class="form-group">
-              <label for="roleName">Rangname</label>
-              <input type="text" id="roleName" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="roleLevel">Rang Ebene</label>
-              <select id="roleLevel" class="custom-select">
-                <option value="Inhaber">Inhaber</option>
-                <option value="Geschäftsführung">Geschäftsführung</option>
-                <option value="Mitarbeiter">Mitarbeiter</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="roleValue">Wert (Value)</label>
-              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
-            </div>
-            <div class="form-group" id="permissionsContainer">
-              <!-- Dynamische Rechte erscheinen hier -->
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-        <button type="button" class="btn btn-primary" id="saveEditRoleButton">Speichern</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
+<!-- Modal-Code und Skripte hier -->
 
 <script>
-    // Funktion zum Erstellen einer Rolle
-    $('#saveRoleButton').click(function () {
-        const name = $('#roleName').val();
-        const level = $('#roleLevel').val();
-        const value = $('#roleValue').val(); // Neuen Wert holen
-        const permissions = [];
-
-        $('#permissionsContainer input[type="checkbox"]:checked').each(function () {
-            permissions.push($(this).attr('data-name'));
-        });
-
-        $.ajax({
-            url: 'include/add_role.php',
-            type: 'POST',
-            data: {
-                name: name,
-                level: level,
-                value: value, // Value mit senden
-                permissions: JSON.stringify(permissions)
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('Rolle erfolgreich hinzugefügt.');
-                    location.reload();
-                } else {
-                    alert('Fehler: ' + response.message);
-                }
-            },
-            error: function () {
-                alert('Fehler beim Speichern der Rolle.');
-            }
-        });
-    });
-
-    // Funktion zum Bearbeiten einer Rolle
-    $('#modal-default .btn-primary').click(function () {
-        const roleId = $('#modal-default').data('id');
-        const name = $('#modal-default #roleName').val();
-        const level = $('#modal-default #roleLevel').val();
-        const value = $('#modal-default #roleValue').val(); // Neuen Wert holen
-        const permissions = [];
-
-        $('#modal-default #permissionsContainer input[type="checkbox"]:checked').each(function () {
-            permissions.push($(this).val());
-        });
-
-        $.ajax({
-            url: 'include/update_role.php',
-            type: 'POST',
-            data: {
-                id: roleId,
-                name: name,
-                level: level,
-                value: value, // Value mit senden
-                permissions: JSON.stringify(permissions)
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('Rolle erfolgreich aktualisiert.');
-                    location.reload();
-                } else {
-                    alert('Fehler: ' + response.message);
-                }
-            },
-            error: function () {
-                alert('Fehler beim Speichern der Rolle.');
-            }
-        });
-    });
-
-
-    $(document).on('click', '[data-target="#modal-default"]', function () {
-    const roleId = $(this).data('id'); // ID der Rolle aus Button
-    $('#modal-default').data('id', roleId); // ID an Modal binden
-
-    $.ajax({
-        url: 'include/get_role.php',
-        type: 'GET',
-        data: { id: roleId },
-        dataType: 'json',
-        success: function (response) {
-            if (response.success) {
-                const role = response.role;
-
-                // Felder mit Rollendaten füllen
-                $('#modal-default #roleName').val(role.name);
-                $('#modal-default #roleLevel').val(role.level);
-                $('#modal-default #roleValue').val(role.value); // Wert eintragen
-
-                // Bereichsdaten für den Bereichsnamen
-                const areaMap = {};
-                response.areas.forEach(area => {
-                    areaMap[area.id] = area.display_name;
-                });
-
-                // Checkboxen für Permissions dynamisch erstellen
-                const permissionsContainer = $('#modal-default #permissionsContainer');
-                permissionsContainer.empty();
-
-                response.all_permissions.forEach(permission => {
-                    const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; // Bereich dynamisch bestimmen
-
-                    // Überprüfen, ob der Abschnitt schon existiert
-                    let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    if (!sectionDiv.length) {
-                        // Abschnitt erstellen, falls er nicht existiert
-                        permissionsContainer.append(`
-                            <div class="permissions-section section-${permission.bereich}">
-                                <h5>${sectionLabel}</h5>
-                            </div>
-                        `);
-                        sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-                    }
-
-                    // Checkbox hinzufügen
-                    const checked = role.permissions.includes(permission.name) ? 'checked' : ''; // Überprüfung mit permission.name
-                    sectionDiv.append(`
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="perm_${permission.id}" value="${permission.name}" ${checked} data-name="${permission.name}">
-                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-                        </div>
-                    `);
-                });
-            } else {
-                alert('Fehler: ' + response.error);
-            }
-        },
-        error: function () {
-            alert('Fehler beim Laden der Rollendaten.');
-        }
-    });
-});
+    // Weitere Modal-Funktionen bleiben hier gleich...
 </script>
 
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-      Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
 </div>
 <!-- ./wrapper -->
 

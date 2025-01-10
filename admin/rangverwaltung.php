@@ -52,77 +52,88 @@ $stmtPerm = $conn->prepare("
 $stmtPerm->execute();
 $permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
 
-// Bereichsdaten nach parent_id gruppieren
-$groupedAreas = [];
-foreach ($areas as $area) {
-    if ($area['parent_id'] === NULL) {
-        $groupedAreas[$area['id']] = [
-            'area' => $area,
-            'children' => []
-        ];
-    } else {
-        if (!isset($groupedAreas[$area['parent_id']])) {
-            $groupedAreas[$area['parent_id']] = [
-                'area' => null,
-                'children' => []
-            ];
-        }
-        $groupedAreas[$area['parent_id']]['children'][] = $area;
-    }
-}
-
 // Die Daten an JavaScript übergeben
 echo '<script>';
 echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($groupedAreas) . ';';
+echo 'const areas = ' . json_encode($areas) . ';';
 echo '</script>';
 ?>
 
-
 <script>
     $(document).ready(function () {
-    // Berechtigungen und Bereichsdaten dynamisch laden
-    const permissions = <?= json_encode($permissions) ?>;
-    const areas = <?= json_encode($areas) ?>;
+        const permissions = <?= json_encode($permissions) ?>;
+        const areas = <?= json_encode($areas) ?>;
 
-    const permissionsContainer = $('#permissionsContainer');
-    
-    // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
-    const areaMap = {};
-    areas.forEach(area => {
-        // Absicherung: Nur hinzufügen, wenn die area ein display_name hat
-        if (area && area.display_name) {
-            areaMap[area.id] = area.display_name;
-        }
-    });
-
-    permissions.forEach(permission => {
-        // Bereichsbezeichnung dynamisch anhand der ID aus der areaMap setzen
-        const sectionLabel = areaMap[permission.bereich] || 'Unbekannter Bereich'; 
+        const permissionsContainer = $('#permissionsContainer');
         
-        let sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        if (!sectionDiv.length) {
-            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-            permissionsContainer.append(
-                `<div class="permissions-section section-${permission.bereich}">
-                    <h5>${sectionLabel}</h5>
-                </div>`
-            );
-            sectionDiv = permissionsContainer.find(`.section-${permission.bereich}`);
-        }
+        // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
+        const areaMap = {};
+        areas.forEach(area => {
+            areaMap[area.id] = area.display_name;
+        });
 
-        // Checkbox für die Berechtigung hinzufügen
-        sectionDiv.append(`
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
-            </div>
-        `);
+        // Alle Berechtigungen nach Bereich gruppieren
+        const permissionsByArea = {};
+        permissions.forEach(permission => {
+            if (!permissionsByArea[permission.bereich]) {
+                permissionsByArea[permission.bereich] = [];
+            }
+            permissionsByArea[permission.bereich].push(permission);
+        });
+
+        // Dynamisches HTML für die Bereiche und Berechtigungen erstellen
+        areas.forEach(area => {
+            const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
+
+            let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+            if (!sectionDiv.length) {
+                // Abschnitt für den Bereich erstellen
+                permissionsContainer.append(
+                    `<div class="permissions-section section-${area.id}">
+                        <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                            ${sectionLabel}
+                        </h5>
+                        <div class="expandable-body" style="display: none;">
+                            <table class="table table-hover">
+                                <tbody class="permissions-list-${area.id}">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`
+                );
+                sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+            }
+
+            // Berechtigungen für den Bereich hinzufügen
+            const permissionList = permissionsByArea[area.id];
+            const permissionsListContainer = sectionDiv.find('.permissions-list-' + area.id);
+            permissionList.forEach(permission => {
+                permissionsListContainer.append(`
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                                <label class="form-check-label" for="perm_${permission.id}">
+                                    ${permission.display_name} (${permission.description})
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            });
+
+            // Click Event für das Klappen des Bereichs
+            sectionDiv.find('h5').on('click', function () {
+                const expandableBody = $(this).next('.expandable-body');
+                expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
+                const caret = $(this).find('.expandable-table-caret');
+                caret.toggleClass('fa-caret-right fa-caret-down'); // Dreht das Caret-Symbol
+            });
+        });
     });
-});
-
-
 </script>
+
 
 
 <div class="row">

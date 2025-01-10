@@ -128,21 +128,22 @@ echo '</script>';
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="user_id"> <!-- Hidden Input für die Mitarbeiter-ID -->
-                
+                <input type="hidden" id="user_id"> <!-- Mitarbeiter-ID -->
+                <input type="hidden" id="created_by" value="<?php echo $_SESSION['username']; ?>"> <!-- Der Benutzername -->
+
                 <div class="form-group">
                     <label for="gehaltInput">Gehalt</label>
-                    <input type="text" id="gehaltInput" class="form-control" value="0" placeholder="Betrag eingeben">
+                    <input type="text" id="gehaltInput" class="form-control" placeholder="Betrag eingeben">
                 </div>
 
                 <div class="form-group">
                     <label for="anteilInput">Anteil</label>
-                    <input type="text" id="anteilInput" class="form-control" value="0" placeholder="Betrag eingeben">
+                    <input type="text" id="anteilInput" class="form-control" placeholder="Betrag eingeben">
                 </div>
 
                 <div class="form-group">
                     <label for="trinkgeldInput">Trinkgeld</label>
-                    <input type="text" id="trinkgeldInput" class="form-control" value="0" placeholder="Betrag eingeben">
+                    <input type="text" id="trinkgeldInput" class="form-control" placeholder="Betrag eingeben">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">
@@ -156,21 +157,6 @@ echo '</script>';
 <script> 
    $(document).ready(function () {
     // Event-Listener für den Auszahlung-Button
-    $('.payout-button').click(function () {
-        const userId = $(this).data('userid');  // Die ID des Mitarbeiters
-        const employeeName = $(this).data('name');  // Der Name des Mitarbeiters
-
-        // Setze den Titel des Modals auf den Namen des Mitarbeiters
-        $('#modal-auszahlungen .modal-title').text('Auszahlung für ' + employeeName);
-
-        // Setze den Mitarbeiter-ID in einem versteckten Input (optional)
-        $('#modal-auszahlungen #user_id').val(userId);
-
-        // Öffne das Modal
-        $('#modal-auszahlungen').modal('show');
-    });
-
-    // Optional: Event-Listener für den Speichern-Button im Modal (diese Logik ist für später)
     $('#savePayoutButton').click(function () {
         const userId = $('#user_id').val();  // Mitarbeiter-ID
         const gehalt = parseFloat($('#gehaltInput').val());
@@ -180,35 +166,46 @@ echo '</script>';
         // Berechne den Gesamtbetrag
         const totalAmount = gehalt + anteil + trinkgeld;
 
-        // Validierung des Betrags
+        // Überprüfen, ob die Eingabewerte korrekt sind
         if (isNaN(totalAmount) || totalAmount <= 0) {
             alert('Bitte geben Sie einen gültigen Betrag ein!');
             return;
         }
 
-        // AJAX-Request zur Auszahlung (muss später ergänzt werden)
+        // Daten für das Formular vorbereiten
+        const withdrawalData = {
+            user_id: userId,
+            gehalt: gehalt,
+            anteil: anteil,
+            trinkgeld: trinkgeld,
+            betrag: totalAmount, // Gesamtbetrag
+            erstellt_von: $('#created_by').val() // Der Benutzername aus dem Formular
+        };
+
+        // AJAX-Request zur Auszahlung
         $.ajax({
             url: 'include/process_withdrawal.php',  // Dein PHP-Skript für die Auszahlung
             method: 'POST',
             data: {
-                user_id: userId,
-                gehalt: gehalt,
-                anteil: anteil,
-                trinkgeld: trinkgeld,
-                total_amount: totalAmount
+                withdrawalData: JSON.stringify(withdrawalData)
             },
+            dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     alert('Auszahlung erfolgreich durchgeführt!');
                     $('#modal-auszahlungen').modal('hide');
-                    location.reload();  // Seite neu laden
+                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
                 } else {
                     alert('Fehler: ' + response.message);
                 }
+            },
+            error: function () {
+                alert('Es gab einen Fehler bei der Anfrage.');
             }
         });
     });
 });
+
 
 </script>
 

@@ -1,19 +1,19 @@
 <?php
 include 'db.php';
 
-// Überprüfen, ob die erforderlichen Daten gesendet wurden
+// Überprüfen, ob die Daten gesendet wurden
 if (isset($_POST['withdrawalData'])) {
     // Dekodieren der JSON-Daten
     $withdrawalData = json_decode($_POST['withdrawalData'], true);
 
     // Überprüfen, ob alle erforderlichen Felder vorhanden sind
-    if (!isset($withdrawalData['user_id'], $withdrawalData['gehalt'], $withdrawalData['anteil'], $withdrawalData['trinkgeld'], $withdrawalData['betrag'])) {
+    if (!isset($withdrawalData['user_id'], $withdrawalData['gehalt'], $withdrawalData['anteil'], $withdrawalData['trinkgeld'], $withdrawalData['betrag'], $withdrawalData['erstellt_von'])) {
         echo json_encode(['success' => false, 'message' => 'Fehlende Daten.']);
         exit;
     }
 
     // Hole den Benutzer, der den Eintrag erstellt hat
-    $erstellt_von = $withdrawalData['erstellt_von']; // Der Benutzername aus der Sitzung oder übergeben
+    $erstellt_von = $withdrawalData['erstellt_von'];
 
     // Hole den aktuellen Stand des Mitarbeiters
     $stmtTotal = $conn->prepare("SELECT * FROM mitarbeiter_finanzen WHERE user_id = ?");

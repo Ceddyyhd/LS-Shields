@@ -90,7 +90,7 @@ $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
               <button class="btn btn-danger btn-sm delete-employee" data-userid="<?php echo $employee['id']; ?>">
-                Löschen
+                Auszahlung
               </button>
             </td>
           </tr>

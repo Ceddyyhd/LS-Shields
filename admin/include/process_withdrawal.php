@@ -28,6 +28,12 @@ if (isset($_POST['withdrawalData'])) {
             exit;
         }
 
+        // Überprüfen, ob der angegebene Betrag für Gehalt, Anteil und Trinkgeld nicht höher ist als das verfügbare Guthaben
+        if ($withdrawalData['gehalt'] > $total['gehalt'] || $withdrawalData['anteil'] > $total['anteil'] || $withdrawalData['trinkgeld'] > $total['trinkgeld']) {
+            echo json_encode(['success' => false, 'message' => 'Der angegebene Betrag für Gehalt, Anteil oder Trinkgeld ist größer als das verfügbare Guthaben.']);
+            exit;
+        }
+
         // Berechnen und abziehen der Beträge aus `mitarbeiter_finanzen`
         $newGehalt = $total['gehalt'] - $withdrawalData['gehalt'];
         $newAnteil = $total['anteil'] - $withdrawalData['anteil'];

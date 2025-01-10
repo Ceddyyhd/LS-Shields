@@ -45,79 +45,105 @@
 
     <!-- Ausgabe der Events -->
     <table class="table table-striped projects">
-        <thead>
-            <tr>
-                <th style="width: 1%">#</th>
-                <th style="width: 20%">Ansprechpartner</th>
-                <th style="width: 20%">Event</th>
-                <th style="width: 20%">Anmerkung</th>
-                <th style="width: 20%">Datum & Uhrzeit</th>
-                <th style="width: 30%">Team Members</th>
-                <th>Status</th>
-                <th style="width: 20%">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-        // Zähler für die Reihenfolge der ID (wird hier von der kleinsten ID bis zur größten gezählt)
-        foreach ($events as $event) {
-            // Für jedes Event die Team-Mitglieder abfragen
-            $teamQuery = "
-                SELECT u.id AS employee_id, u.name, u.profile_image
-                FROM event_mitarbeiter_anmeldung eam
-                JOIN users u ON eam.employee_id = u.id
-                WHERE eam.event_id = :event_id";
+    <thead>
+        <tr>
+            <th style="width: 1%">#</th>
+            <th style="width: 20%">Ansprechpartner</th>
+            <th style="width: 20%">Event</th>
+            <th style="width: 20%">Anmerkung</th>
+            <th style="width: 20%">Datum & Uhrzeit</th>
+            <th style="width: 30%">Team Members</th>
+            <th>Status</th>
+            <th style="width: 20%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php
+    // Zähler für die Reihenfolge der ID (wird hier von der kleinsten ID bis zur größten gezählt)
+    foreach ($events as $event) {
+        // Für jedes Event die Team-Mitglieder abfragen
+        $teamQuery = "
+            SELECT u.id AS employee_id, u.name, u.profile_image
+            FROM event_mitarbeiter_anmeldung eam
+            JOIN users u ON eam.employee_id = u.id
+            WHERE eam.event_id = :event_id";
 
-            $teamStmt = $conn->prepare($teamQuery);
-            $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
-            $teamStmt->execute();
-            $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
+        $teamStmt = $conn->prepare($teamQuery);
+        $teamStmt->bindParam(':event_id', $event['id'], PDO::PARAM_INT);
+        $teamStmt->execute();
+        $team_members = $teamStmt->fetchAll(PDO::FETCH_ASSOC);
 
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($event['id']) . "</td>"; // Hier wird die ID der DB angezeigt
-            echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
-            echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
-            echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
-            echo "<td><span>" . htmlspecialchars($event['datum_uhrzeit']) . "</span></td>";
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($event['id']) . "</td>"; // Hier wird die ID der DB angezeigt
+        echo "<td><a>" . htmlspecialchars($event['vorname_nachname']) . "</a><br/><small>Created " . date('d.m.Y', strtotime($event['datum_uhrzeit'])) . "</small></td>";
+        echo "<td><span>" . htmlspecialchars($event['event']) . "</span></td>";
+        echo "<td><span>" . htmlspecialchars($event['anmerkung']) . "</span></td>";
+        echo "<td><span>" . htmlspecialchars($event['datum_uhrzeit']) . "</span></td>";
 
-            // Team-Mitglieder anzeigen
-            echo "<td><ul class='list-inline'>";
-            if (empty($team_members)) {
-                echo "<li>No team members available</li>";
-            } else {
-                foreach ($team_members as $member) {
-                    echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
-                    echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
-                    echo "</li>";
-                }
+        // Team-Mitglieder anzeigen
+        echo "<td><ul class='list-inline'>";
+        if (empty($team_members)) {
+            echo "<li>No team members available</li>";
+        } else {
+            foreach ($team_members as $member) {
+                echo "<li class='list-inline-item' data-toggle='tooltip' title='" . htmlspecialchars($member['name']) . "'>";
+                echo "<img alt='Avatar' class='table-avatar' src='" . htmlspecialchars($member['profile_image']) . "'>";
+                echo "</li>";
             }
-            echo "</ul></td>";
-
-            // Status anzeigen
-            echo "<td class='project-state'>";
-            if ($event['status'] == 'in Planung') {
-                echo "<span class='badge badge-warning'>In Planung</span>";
-            } elseif ($event['status'] == 'in Durchführung') {
-                echo "<span class='badge badge-danger'>In Durchführung</span>";
-            } elseif ($event['status'] == 'Abgeschlossen') {
-                echo "<span class='badge badge-success'>Abgeschlossen</span>";
-            }
-            echo "</td>";
-
-            // Aktionen
-            echo "<td class='project-actions text-right'>";
-            echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
-            if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
-                // Der Delete-Button wird nur angezeigt, wenn der Benutzer die Berechtigung hat
-                echo "<button class='btn btn-danger btn-sm delete-event' data-id='" . $event['id'] . "'><i class='fas fa-trash'></i> Delete</button>";
-            }            echo "</td>";
-            echo "</tr>";
         }
-        ?>
-        </tbody>
-    </table>
+        echo "</ul></td>";
+
+        // Status anzeigen
+        echo "<td class='project-state'>";
+        if ($event['status'] == 'in Planung') {
+            echo "<span class='badge badge-warning'>In Planung</span>";
+        } elseif ($event['status'] == 'in Durchführung') {
+            echo "<span class='badge badge-danger'>In Durchführung</span>";
+        } elseif ($event['status'] == 'Abgeschlossen') {
+            echo "<span class='badge badge-success'>Abgeschlossen</span>";
+        }
+        echo "</td>";
+
+        // Aktionen
+        echo "<td class='project-actions text-right'>";
+        echo "<a class='btn btn-primary btn-sm' href='eventplanung_akte.php?id=" . $event['id'] . "'><i class='fas fa-folder'></i> View</a>";
+
+        // Duplizieren Button
+        echo "<button class='btn btn-info btn-sm duplicate-event' data-id='" . $event['id'] . "'><i class='fas fa-copy'></i> Duplizieren</button>";
+
+        if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
+            // Der Delete-Button wird nur angezeigt, wenn der Benutzer die Berechtigung hat
+            echo "<button class='btn btn-danger btn-sm delete-event' data-id='" . $event['id'] . "'><i class='fas fa-trash'></i> Delete</button>";
+        }
+
+        echo "</td>";
+        echo "</tr>";
+    }
+    ?>
+    </tbody>
+</table>
 </div>
     </div>
+    <script>
+    // Duplizieren-Button Funktion mit jQuery AJAX
+    $(document).ready(function() {
+        $('.duplicate-event').on('click', function() {
+            const eventId = $(this).data('id');
+            $.ajax({
+                url: ' include/duplicate_event.php',
+                type: 'POST',
+                data: { event_id: eventId },
+                success: function(response) {
+                    alert('Event successfully duplicated!');
+                    location.reload(); // Seite neu laden, um das duplizierte Event zu sehen
+                },
+                error: function() {
+                    alert('An error occurred while duplicating the event.');
+                }
+            });
+        });
+    });
+</script>
     <script>
 // AJAX Delete Event
 $(document).ready(function() {

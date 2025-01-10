@@ -80,13 +80,22 @@ $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <td><?php echo htmlspecialchars($employee['name']); ?></td>
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
-              500$
+              <?php 
+                // Hier kann später der Gehaltseintrag dynamisch eingefügt werden
+                echo '500$';
+              ?>
             </td>
             <td>
-            500$
+              <?php 
+                // Hier kann später der Anteilseintrag dynamisch eingefügt werden
+                echo '500$';
+              ?>
             </td>
             <td>
-            500$
+              <?php 
+                // Hier kann später der Trinkgeldbetrag dynamisch eingefügt werden
+                echo '500$';
+              ?>
             </td>
             <td>
               <!-- Löschen Button für diesen Mitarbeiter -->
@@ -113,47 +122,108 @@ $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </button>
       </div>
       <div class="modal-body">
-        <form id="addRoleForm">
+        <form id="addFinanceForm">
           <div class="card-body">
 
-          <div class="form-group">
-              <label for="roleLevel">Mitarbeiter per Dropdown</label>
-              <select id="roleLevel" class="custom-select">
-                <option value="Inhaber">Inhaber</option>
-                <option value="Geschäftsführung">Geschäftsführung</option>
-                <option value="Mitarbeiter">Mitarbeiter</option>
+            <!-- Dropdown für Mitarbeiter -->
+            <div class="form-group">
+              <label for="employeeSelect">Mitarbeiter</label>
+              <select id="employeeSelect" class="custom-select">
+                <option value="">Bitte wählen</option>
+                <!-- Mitarbeiter werden hier dynamisch geladen -->
               </select>
             </div>
 
+            <!-- Dropdown für Art (Gehalt, Anteil, Trinkgeld) -->
             <div class="form-group">
-              <label for="roleLevel">Art</label>
-              <select id="roleLevel" class="custom-select">
-                <option value="Inhaber">Gehalt</option>
-                <option value="Geschäftsführung">Anteil</option>
-                <option value="Mitarbeiter">Trinkgeld</option>
+              <label for="artSelect">Art</label>
+              <select id="artSelect" class="custom-select">
+                <option value="Gehalt">Gehalt</option>
+                <option value="Anteil">Anteil</option>
+                <option value="Trinkgeld">Trinkgeld</option>
               </select>
             </div>
 
+            <!-- Eingabefeld für Betrag -->
             <div class="form-group">
-              <label for="roleName">Betrag</label>
-              <input type="text" id="roleName" class="form-control">
+              <label for="betragInput">Betrag</label>
+              <input type="text" id="betragInput" class="form-control" placeholder="Betrag eingeben">
             </div>
-
-            <div class="form-group">
-              <label for="roleValue">Wert (Value)</label>
-              <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
-            </div>
+            
           </div>
         </form>
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-        <button type="button" class="btn btn-primary" id="saveRoleButton">Speichern</button>
+        <button type="button" class="btn btn-primary" id="saveFinanceButton">Speichern</button>
       </div>
     </div>
   </div>
 </div>
 
+
+<script>
+    $(document).ready(function () {
+    // Mitarbeiter Dropdown füllen
+    employees.forEach(employee => {
+        $('#employeeSelect').append(
+            `<option value="${employee.id}">${employee.name}</option>`
+        );
+    });
+
+    // Event-Listener für den Speichern-Button im Modal
+    $('#saveFinanceButton').click(function () {
+        const employeeId = $('#employeeSelect').val(); // Mitarbeiter
+        const art = $('#artSelect').val(); // Art (Gehalt, Anteil, Trinkgeld)
+        const betrag = parseFloat($('#betragInput').val()); // Betrag
+        const notiz = 'Eingetragener Betrag für den Mitarbeiter'; // Hier kann eine Notiz hinzugefügt werden
+
+        // Überprüfen, ob der Betrag eine gültige Zahl ist
+        if (isNaN(betrag)) {
+            alert('Bitte geben Sie einen gültigen Betrag ein!');
+            return;
+        }
+
+        // Daten für die beiden Tabellen vorbereiten
+        const historyData = {
+            user_id: employeeId,
+            betrag: betrag,
+            art: art,
+            notiz: notiz
+        };
+
+        const totalData = {
+            user_id: employeeId,
+            art: art,
+            betrag: betrag
+        };
+
+        // AJAX-Request um sowohl die Historie als auch die Gesamtanzahl zu speichern
+        $.ajax({
+            url: 'include/save_finance_entry.php',
+            method: 'POST',
+            data: {
+                historyData: JSON.stringify(historyData),
+                totalData: JSON.stringify(totalData)
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);  // Erfolgsmeldung
+                    $('#modal-neuen-eintrag').modal('hide');  // Modal schließen
+                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
+                } else {
+                    alert('Fehler: ' + response.message);  // Fehlermeldung
+                }
+            },
+            error: function () {
+                alert('Es gab einen Fehler bei der Anfrage.');
+            }
+        });
+    });
+});
+
+</script>
   </div>
   <!-- Footer -->
   <footer class="main-footer">

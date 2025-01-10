@@ -43,45 +43,42 @@ $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
-// Berechtigungen abrufen
-$stmtPerm = $conn->prepare("
-    SELECT p.*, pa.display_name AS bereich_display_name
-    FROM permissions p
-    LEFT JOIN permissions_areas pa ON p.bereich = pa.id
-");
-$stmtPerm->execute();
-$permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
+// Debug: Überprüfen, ob $areas leer ist
+if (empty($areas)) {
+    echo "Keine Bereiche in der Datenbank gefunden.";
+} else {
+    // Bereichsdaten nach parent_id gruppieren
+    $areaMap = [];
+    $groupedAreas = [];
 
-// Bereichsdaten nach parent_id gruppieren
-$areaMap = [];
-$groupedAreas = [];
-
-foreach ($areas as $area) {
-    // Hauptbereich
-    if ($area['parent_id'] === NULL) {
-        $groupedAreas[$area['id']] = [
-            'area' => $area,
-            'children' => []
-        ];
-    } else {
-        // Unterbereiche der entsprechenden Parent-ID zuweisen
-        if (!isset($groupedAreas[$area['parent_id']])) {
-            // Falls die parent_id noch nicht existiert, als leeres Array initialisieren
-            $groupedAreas[$area['parent_id']] = [
-                'area' => null,
+    foreach ($areas as $area) {
+        // Hauptbereich
+        if ($area['parent_id'] === NULL) {
+            $groupedAreas[$area['id']] = [
+                'area' => $area,
                 'children' => []
             ];
+        } else {
+            // Unterbereiche der entsprechenden Parent-ID zuweisen
+            if (!isset($groupedAreas[$area['parent_id']])) {
+                // Falls die parent_id noch nicht existiert, als leeres Array initialisieren
+                $groupedAreas[$area['parent_id']] = [
+                    'area' => null,
+                    'children' => []
+                ];
+            }
+            $groupedAreas[$area['parent_id']]['children'][] = $area;
         }
-        $groupedAreas[$area['parent_id']]['children'][] = $area;
     }
-}
 
-// Daten für JavaScript vorbereiten
-echo '<script>';
-echo 'const permissions = ' . json_encode($permissions) . ';';
-echo 'const areas = ' . json_encode($groupedAreas) . ';';
-echo '</script>';
+    // Daten für JavaScript vorbereiten
+    echo '<script>';
+    echo 'const permissions = ' . json_encode($permissions) . ';';
+    echo 'const areas = ' . json_encode($groupedAreas) . ';';
+    echo '</script>';
+}
 ?>
+
 
 
 

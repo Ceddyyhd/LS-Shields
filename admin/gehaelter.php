@@ -211,12 +211,12 @@ echo '</script>';
         });
     }
 
-    // Event-Listener für den Speichern-Button im Modal
     $('#saveFinanceButton').click(function () {
     const employeeId = $('#employeeSelect').val(); // Mitarbeiter
     const art = $('#artSelect').val(); // Art (Gehalt, Anteil, Trinkgeld)
     const betrag = parseFloat($('#betragInput').val()); // Betrag
     const notiz = $('#notizInput').val() || 'Eingetragener Betrag für den Mitarbeiter'; // Notiz
+    const erstelltVon = '<?php echo $_SESSION['username']; ?>'; // Benutzername aus der Session
 
     // Überprüfen, ob alle Felder gültige Werte haben
     if (!employeeId || !art) {
@@ -234,7 +234,8 @@ echo '</script>';
         user_id: employeeId,
         betrag: betrag,
         art: art,
-        notiz: notiz
+        notiz: notiz,
+        erstellt_von: erstelltVon // Hinzugefügt
     };
 
     const totalData = {

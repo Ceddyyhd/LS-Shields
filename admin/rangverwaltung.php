@@ -185,6 +185,10 @@ echo '</script>';
                                   <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
                                   Eventplanung
                                 </td>
+                                <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">Checkbox</label>
+                              </div>
                               </tr>
                               <tr data-widget="expandable-table" aria-expanded="false">
                                 <td>

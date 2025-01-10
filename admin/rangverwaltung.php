@@ -63,81 +63,83 @@ echo 'const areas = ' . json_encode($areas) . ';';
 echo '</script>';
 ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        // Bereichsdaten und Berechtigungen dynamisch laden
-        const permissions = <?= json_encode($permissions) ?>;
-        const areas = <?= json_encode($permissions_areas) ?>;
+    // Bereichsdaten und Berechtigungen dynamisch laden
+    const permissions = <?= json_encode($permissions) ?>;
+    const areas = <?= json_encode($permissions_areas) ?>;
 
-        const permissionsContainer = $('#permissionsContainer');
+    const permissionsContainer = $('#permissionsContainer');
 
-        // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
-        const areaMap = {};
-        areas.forEach(area => {
-            areaMap[area.id] = area.display_name;
-        });
+    // Bereichsdaten in ein Map umwandeln, um den Namen schnell zu finden
+    const areaMap = {};
+    areas.forEach(area => {
+        areaMap[area.id] = area.display_name;
+    });
 
-        // Alle Berechtigungen gruppiert nach Bereich
-        const permissionsByArea = {};
-        permissions.forEach(permission => {
-            if (!permissionsByArea[permission.bereich]) {
-                permissionsByArea[permission.bereich] = [];
-            }
-            permissionsByArea[permission.bereich].push(permission);
-        });
+    // Alle Berechtigungen gruppiert nach Bereich
+    const permissionsByArea = {};
+    permissions.forEach(permission => {
+        if (!permissionsByArea[permission.bereich]) {
+            permissionsByArea[permission.bereich] = [];
+        }
+        permissionsByArea[permission.bereich].push(permission);
+    });
 
-        // Dynamisch HTML für jedes Bereich erstellen
-        areas.forEach(area => {
-            const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
+    // Dynamisch HTML für jedes Bereich erstellen
+    areas.forEach(area => {
+        const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
 
-            let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
-            if (!sectionDiv.length) {
-                // Abschnitt für den Bereich erstellen, falls nicht vorhanden
-                permissionsContainer.append(
-                    `<div class="permissions-section section-${area.id}">
-                        <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
-                            <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                            ${sectionLabel}
-                        </h5>
-                        <div class="expandable-body" style="display: none;">
-                            <table class="table table-hover">
-                                <tbody class="permissions-list">
-                                </tbody>
-                            </table>
+        let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+        if (!sectionDiv.length) {
+            // Abschnitt für den Bereich erstellen, falls nicht vorhanden
+            permissionsContainer.append(
+                `<div class="permissions-section section-${area.id}">
+                    <h5 class="expandable-table">
+                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                        ${sectionLabel}
+                    </h5>
+                    <div class="expandable-body" style="display: none;">
+                        <table class="table table-hover">
+                            <tbody class="permissions-list">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`
+            );
+            sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+        }
+
+        // Berechtigungen für den Bereich hinzufügen
+        const permissionList = permissionsByArea[area.id];
+        const permissionsListContainer = sectionDiv.find('.permissions-list');
+        permissionList.forEach(permission => {
+            permissionsListContainer.append(`
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
+                            <label class="form-check-label" for="perm_${permission.id}">
+                                ${permission.display_name} (${permission.description})
+                            </label>
                         </div>
-                    </div>`
-                );
-                sectionDiv = permissionsContainer.find(`.section-${area.id}`);
-            }
+                    </td>
+                </tr>
+            `);
+        });
 
-            // Berechtigungen für den Bereich hinzufügen
-            const permissionList = permissionsByArea[area.id];
-            const permissionsListContainer = sectionDiv.find('.permissions-list');
-            permissionList.forEach(permission => {
-                permissionsListContainer.append(`
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}">
-                                <label class="form-check-label" for="perm_${permission.id}">
-                                    ${permission.display_name} (${permission.description})
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                `);
-            });
-
-            // Click Event für das Klappen des Bereichs
-            sectionDiv.find('h5').on('click', function() {
-                const expandableBody = $(this).next('.expandable-body');
-                expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
-                const caret = $(this).find('.expandable-table-caret');
-                caret.toggleClass('fa-caret-right fa-caret-down'); // Dreht das Caret-Symbol
-            });
+        // Click Event für das Klappen des Bereichs
+        sectionDiv.find('h5').on('click', function() {
+            const expandableBody = $(this).next('.expandable-body');
+            expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
+            const caret = $(this).find('.expandable-table-caret');
+            caret.toggleClass('fa-caret-right fa-caret-down'); // Dreht das Caret-Symbol
         });
     });
+});
+
 </script>
 
 <div class="row">

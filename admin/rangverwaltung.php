@@ -43,6 +43,11 @@ $stmtArea = $conn->prepare("SELECT * FROM permissions_areas");
 $stmtArea->execute();
 $areas = $stmtArea->fetchAll(PDO::FETCH_ASSOC);
 
+// Berechtigungen abrufen
+$stmtPerm = $conn->prepare("SELECT p.*, pa.display_name AS bereich_display_name FROM permissions p LEFT JOIN permissions_areas pa ON p.bereich = pa.id");
+$stmtPerm->execute();
+$permissions = $stmtPerm->fetchAll(PDO::FETCH_ASSOC);
+
 // Debug: Überprüfen, ob $areas leer ist
 if (empty($areas)) {
     echo "Keine Bereiche in der Datenbank gefunden.";
@@ -51,8 +56,9 @@ if (empty($areas)) {
     $areaMap = [];
     $groupedAreas = [];
 
+    // Durchlaufe alle Bereiche und gruppiere sie nach parent_id
     foreach ($areas as $area) {
-        // Hauptbereich
+        // Hauptbereich (parent_id ist NULL)
         if ($area['parent_id'] === NULL) {
             $groupedAreas[$area['id']] = [
                 'area' => $area,
@@ -82,73 +88,88 @@ if (empty($areas)) {
 
 
 
+
 <script>
 $(document).ready(function() {
     const permissions = <?= json_encode($permissions) ?>;
     const areas = <?= json_encode($areas) ?>;
 
+    console.log("Permissions:", permissions); // Überprüfe Berechtigungen
+    console.log("Areas:", areas); // Überprüfe Bereiche
+
     const permissionsContainer = $('#permissionsContainer');
 
+    // Bereichsdaten in ein Map umwandeln
+    const areaMap = {};
+    areas.forEach(area => {
+        areaMap[area.id] = area.display_name;
+    });
+
+    // Berechtigungen gruppieren
+    const permissionsByArea = {};
+    permissions.forEach(permission => {
+        if (!permissionsByArea[permission.bereich]) {
+            permissionsByArea[permission.bereich] = [];
+        }
+        permissionsByArea[permission.bereich].push(permission);
+    });
+
     // Dynamisches HTML für die Bereiche und Berechtigungen erstellen
-    areas.forEach(areaGroup => {
-        // Bereich (Oberkategorie) hinzufügen
-        const sectionLabel = areaGroup.area.display_name || 'Unbekannter Bereich';
-        permissionsContainer.append(
-            `<div class="permissions-section section-${areaGroup.area.id}">
-                <h5 class="expandable-table" data-widget="expandable-table" aria-expanded="false">
-                    <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
-                    ${sectionLabel}
-                </h5>
-                <div class="expandable-body" style="display: none;">
-                    <table class="table table-hover">
-                        <tbody class="permissions-list">
-                        </tbody>
-                    </table>
-                </div>
-            </div>`
-        );
+    areas.forEach(area => {
+        const sectionLabel = areaMap[area.id] || 'Unbekannter Bereich';
+        console.log("Bereich:", sectionLabel); // Überprüfe, ob Bereich korrekt gesetzt ist
 
-        const sectionDiv = permissionsContainer.find(`.section-${areaGroup.area.id}`);
-        const permissionsListContainer = sectionDiv.find('.permissions-list');
-
-        // Berechtigungen für diesen Bereich hinzufügen
-        permissions.forEach(permission => {
-            if (permission.bereich == areaGroup.area.id) {
-                permissionsListContainer.append(`
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
-                                <label class="form-check-label" for="perm_${permission.id}">
-                                    ${permission.display_name} (${permission.description})
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                `);
-            }
-        });
-
-        // Unterkategorien (falls vorhanden)
-        if (areaGroup.children && areaGroup.children.length > 0) {
-            areaGroup.children.forEach(childArea => {
-                const childSectionLabel = childArea.display_name || 'Unbekannte Unterkategorie';
-                permissionsListContainer.append(`
-                    <tr>
-                        <td style="padding-left: 20px;">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="perm_${childArea.id}" name="permissions[]" value="${childArea.id}" data-name="${childArea.name}">
-                                <label class="form-check-label" for="perm_${childArea.id}">
-                                    ${childSectionLabel}
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                `);
-            });
+        let sectionDiv = permissionsContainer.find(`.section-${area.id}`);
+        if (!sectionDiv.length) {
+            // Abschnitt für den Bereich erstellen
+            permissionsContainer.append(
+                `<div class="permissions-section section-${area.id}">
+                    <h5 data-widget="expandable-table" aria-expanded="false" class="expandable-table">
+                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                        ${sectionLabel}
+                    </h5>
+                    <div class="expandable-body" style="display: none;">
+                        <table class="table table-hover">
+                            <tbody class="permissions-list">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`
+            );
+            sectionDiv = permissionsContainer.find(`.section-${area.id}`);
         }
 
-        // Klick-Event für das Klappen der Bereiche
+        // Berechtigungen für den Bereich hinzufügen
+        const permissionList = permissionsByArea[area.id];
+        const permissionsListContainer = sectionDiv.find('.permissions-list');
+        permissionList.forEach(permission => {
+            permissionsListContainer.append(`
+                <tr data-widget="expandable-table" aria-expanded="false">
+                    <td>
+                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                        ${permission.name}
+                    </td>
+                </tr>
+                <tr class="expandable-body">
+                    <td>
+                        <div class="p-0">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="perm_${permission.id}" name="permissions[]" value="${permission.id}" data-name="${permission.name}">
+                                            <label class="form-check-label" for="perm_${permission.id}">${permission.display_name} (${permission.description})</label>
+                                        </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        });
+
+        // Click Event für das Klappen des Bereichs
         sectionDiv.find('h5').on('click', function() {
             const expandableBody = $(this).next('.expandable-body');
             expandableBody.toggle(); // Zeigt oder versteckt das Dropdown
@@ -157,6 +178,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
 

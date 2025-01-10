@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Wenn der Haken gesetzt ist (Deckel bezahlt), Eintrag in die Deckel-Tabelle
         if ($fuel_checked) {
             $sql_deckel = "INSERT INTO deckel (vehicle_id, notiz, betrag, erstellt_von, location) 
-                           VALUES (?, ?, ?, ?, ?)";
+                           VALUES (?, ?, ?, ?, $fuel_location)";
             $stmt_deckel = $conn->prepare($sql_deckel);
-            $stmt_deckel->execute([ $vehicle_id, "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name, $fuel_location ]);
+            $stmt_deckel->execute([ $vehicle_id, "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name ]);
         } else {
             // Eintrag in die Finanz-Tabelle (wenn direkt vom Firmenkonto abgegangen)
             $sql_finance = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 

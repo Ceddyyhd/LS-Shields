@@ -1081,8 +1081,14 @@ $("#noteForm").on("submit", function (e) {
         }
     });
 
+    // Daten aus den Eingabefeldern "Letzte Spind Kontrolle" und "Notiz" holen
+    var letzteSpindKontrolle = document.getElementById('letzteSpindKontrolle').value;
+    var notiz = document.getElementById('notiz').value;
+
     // Formulardaten sammeln
     var formData = new FormData(document.getElementById('ausruestungForm'));
+    formData.append('letzte_spind_kontrolle', letzteSpindKontrolle);
+    formData.append('notizen', notiz);
 
     // Debugging: Ausgabe der Formulardaten
     console.log("Formulardaten:", formData);

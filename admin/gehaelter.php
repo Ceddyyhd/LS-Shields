@@ -85,10 +85,6 @@ echo '</script>';
             <td><?php echo htmlspecialchars($employee['kontonummer']); ?></td>
             <td>
               <?php 
-                // Variablen für Gehalt, Anteil und Trinkgeld
-                $gehalt = 0;
-                $anteil = 0;
-                $trinkgeld = 0;
 
                 // Überprüfen, ob Finanzdaten für diesen Mitarbeiter vorhanden sind
                 foreach ($financeEmployees as $finance) {

@@ -45,7 +45,8 @@ include 'include/db.php';
 $query = "
     SELECT id, name, kontonummer
     FROM users
-    WHERE bewerber = 'nein'  -- Optional: Nur Mitarbeiter, die keine Bewerber sind
+    WHERE bewerber = 'nein'
+    AND gekuenidgt = 'no_kuendigung'  -- Optional: Nur Mitarbeiter, die keine Bewerber sind
 ";
 $stmt = $conn->prepare($query);
 $stmt->execute();

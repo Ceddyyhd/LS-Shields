@@ -45,6 +45,11 @@ include 'include/db.php';
 $stmtEmployees = $conn->prepare("SELECT id, name, kontonummer FROM users WHERE bewerber = 'nein' AND gekuendigt = 'no_kuendigung'");
 $stmtEmployees->execute();
 $employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
+
+// Übergebe die Mitarbeiter-Daten an JavaScript
+echo '<script>';
+echo 'const employees = ' . json_encode($employees) . ';';
+echo '</script>';
 ?>
 
 <div class="card">
@@ -160,11 +165,13 @@ $employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 <script>
     $(document).ready(function () {
     // Mitarbeiter Dropdown füllen
-    employees.forEach(employee => {
-        $('#employeeSelect').append(
-            `<option value="${employee.id}">${employee.name} - ${employee.kontonummer}</option>`
-        );
-    });
+    if (employees.length > 0) {
+        employees.forEach(employee => {
+            $('#employeeSelect').append(
+                `<option value="${employee.id}">${employee.name} - ${employee.kontonummer}</option>`
+            );
+        });
+    }
 
     // Event-Listener für den Speichern-Button im Modal
     $('#saveFinanceButton').click(function () {

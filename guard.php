@@ -76,14 +76,14 @@ foreach ($employees as $employee) {
                 <?php
                 $numEmployees = count($levelEmployees);
 
-                // Wenn nur 1 Mitarbeiter in diesem Level
+                // Wenn nur 1 Mitarbeiter in der Ebene
                 if ($numEmployees == 1): 
                     $employee = $levelEmployees[0];
                 ?>
                     <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
+                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -93,26 +93,42 @@ foreach ($employees as $employee) {
                     </div>
                 <?php // Wenn 2 Mitarbeiter in diesem Level
                 elseif ($numEmployees == 2): 
-                    foreach ($levelEmployees as $employee): ?>
-                        <div class="col-md-6 text-center">
-                            <div class="box">
-                                <div class="img-box">
-                                    <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
-                                </div>
-                                <div class="detail-box">
-                                    <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
-                                    <h6><?php echo htmlspecialchars($employee['role_name']); ?></h6>
-                                </div>
+                    // 1. Mitarbeiter - links
+                    $employee1 = $levelEmployees[0];
+                    // 2. Mitarbeiter - rechts
+                    $employee2 = $levelEmployees[1];
+                ?>
+                    <div class="col-md-4 text-center">
+                        <div class="box">
+                            <div class="img-box">
+                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee1['profile_image']); ?>" alt="" class="img-fluid medium-img">
+                            </div>
+                            <div class="detail-box">
+                                <h5><?php echo htmlspecialchars($employee1['name']); ?></h5>
+                                <h6><?php echo htmlspecialchars($employee1['role_name']); ?></h6>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
+                    <!-- Leerer Platz für die Mitte -->
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 text-center">
+                        <div class="box">
+                            <div class="img-box">
+                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee2['profile_image']); ?>" alt="" class="img-fluid medium-img">
+                            </div>
+                            <div class="detail-box">
+                                <h5><?php echo htmlspecialchars($employee2['name']); ?></h5>
+                                <h6><?php echo htmlspecialchars($employee2['role_name']); ?></h6>
+                            </div>
+                        </div>
+                    </div>
                 <?php // Wenn 3 oder mehr Mitarbeiter in diesem Level
                 elseif ($numEmployees >= 3): 
                     foreach ($levelEmployees as $employee): ?>
                         <div class="col-md-4 text-center">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -129,9 +145,16 @@ foreach ($employees as $employee) {
 </section>
 
 <style>
-    /* Bildgröße anpassen */
+    /* Bildgröße für 1 Mitarbeiter */
     .small-img {
-        max-width: 80%; /* Kleinere Bilder für den einzelnen Mitarbeiter */
+        max-width: 50%; /* Kleinere Bilder für den einzelnen Mitarbeiter */
+        height: auto;
+        object-fit: cover;
+    }
+
+    /* Bildgröße für 2 Mitarbeiter */
+    .medium-img {
+        max-width: 70%; /* Mittelgroße Bilder für 2 Mitarbeiter */
         height: auto;
         object-fit: cover;
     }
@@ -174,16 +197,8 @@ foreach ($employees as $employee) {
     .detail-box h5, .detail-box h6 {
         margin: 5px;
     }
-    .team_section .box .detail-box {
-    position: absolute !important;
-    width: 100%;
-    color: #ffffff;
-    padding: 0px 0px !important ;
-    text-align: center;
-    bottom: 0;
-    background-color: rgba(28, 28, 28, 0.75);
-}
 </style>
+
 
 
 

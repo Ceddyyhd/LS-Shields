@@ -101,7 +101,7 @@ foreach ($employees as $employee) {
                     <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee1['profile_image']); ?>" alt="" class="img-fluid medium-img">
+                                <img src="/admin/<?php echo htmlspecialchars($employee1['profile_image']); ?>" alt="" class="img-fluid medium-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee1['name']); ?></h5>
@@ -114,7 +114,7 @@ foreach ($employees as $employee) {
                     <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee2['profile_image']); ?>" alt="" class="img-fluid medium-img">
+                                <img src="/admin/<?php echo htmlspecialchars($employee2['profile_image']); ?>" alt="" class="img-fluid medium-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee2['name']); ?></h5>
@@ -128,7 +128,7 @@ foreach ($employees as $employee) {
                         <div class="col-md-4 text-center">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                    <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>

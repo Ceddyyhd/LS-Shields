@@ -37,8 +37,8 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
     <!-- Main content -->
     
-<?php
-    include 'include/db.php';
+    <?php
+include 'include/db.php';
 
 // 1. SQL-Abfrage für mitarbeiter_finanzen (Daten holen)
 $stmtFinanceEmployees = $conn->prepare("SELECT * FROM mitarbeiter_finanzen");
@@ -99,6 +99,9 @@ echo '</script>';
                     }
                 }
             }
+
+            // Debugging: Ausgabe der Finanzdaten, um zu sehen, ob sie korrekt geladen werden
+            //var_dump($gehalt, $anteil, $trinkgeld);
         ?>
           <tr>
             <td><?php echo htmlspecialchars($employee['name']); ?></td>

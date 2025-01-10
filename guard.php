@@ -43,7 +43,7 @@
   <!-- team section -->
 
   <?php
-include '/admin/include/db.php';
+include 'db.php';
 
 // Abfrage der Mitarbeiter, die 'gekündigt' = 'no_kuendigung' und 'bewerber' = 'nein' sind
 $stmtEmployees = $conn->prepare("SELECT u.id, u.name, u.profile_image, u.role_id, r.name as role_name, r.level

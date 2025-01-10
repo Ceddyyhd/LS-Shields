@@ -132,17 +132,17 @@ echo '</script>';
                 
                 <div class="form-group">
                     <label for="gehaltInput">Gehalt</label>
-                    <input type="text" id="gehaltInput" class="form-control" placeholder="Betrag eingeben">
+                    <input type="text" id="gehaltInput" class="form-control" value="0" placeholder="Betrag eingeben">
                 </div>
 
                 <div class="form-group">
                     <label for="anteilInput">Anteil</label>
-                    <input type="text" id="anteilInput" class="form-control" placeholder="Betrag eingeben">
+                    <input type="text" id="anteilInput" class="form-control" value="0" placeholder="Betrag eingeben">
                 </div>
 
                 <div class="form-group">
                     <label for="trinkgeldInput">Trinkgeld</label>
-                    <input type="text" id="trinkgeldInput" class="form-control" placeholder="Betrag eingeben">
+                    <input type="text" id="trinkgeldInput" class="form-control" value="0" placeholder="Betrag eingeben">
                 </div>
             </div>
             <div class="modal-footer justify-content-between">

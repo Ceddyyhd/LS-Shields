@@ -151,6 +151,66 @@ echo '</script>';
     </div>
   </div>
 </div>
+
+
+<div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Expandable Table Tree</h3>
+              </div>
+              <!-- ./card-header -->
+              <div class="card-body p-0">
+                <table class="table table-hover">
+                  <tbody>
+                    <tr data-widget="expandable-table" aria-expanded="true">
+                      <td>
+                        <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                        Mitarbeiter Bereich
+                      </td>
+                    </tr>
+                    <tr class="expandable-body">
+                      <td>
+                        <div class="p-0">
+                          <table class="table table-hover">
+                            <tbody>
+                              <tr data-widget="expandable-table" aria-expanded="false">
+                                <td>
+                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                  Dashboard
+                                </td>
+                              </tr>
+                              <tr data-widget="expandable-table" aria-expanded="false">
+                                <td>
+                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                  Eventplanung
+                                </td>
+                              </tr>
+                              <tr data-widget="expandable-table" aria-expanded="false">
+                                <td>
+                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                  Trainings Kalender
+                                </td>
+                              </tr>
+                              <tr data-widget="expandable-table" aria-expanded="false">
+                                <td>
+                                  <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+                                 Anfragen
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
     <!-- /.card -->
   </div>
   <!-- /.col -->

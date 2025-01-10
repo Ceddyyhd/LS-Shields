@@ -42,278 +42,92 @@
 
   <!-- team section -->
 
-  <section class="team_section layout_padding">
+  <?php
+include '/admin/include/db.php';
+
+// Abfrage der Mitarbeiter, die 'gekündigt' = 'no_kuendigung' und 'bewerber' = 'nein' sind
+$stmtEmployees = $conn->prepare("SELECT u.id, u.name, u.profile_image, u.role_id, r.name as role_name, r.level
+                                 FROM users u
+                                 JOIN roles r ON u.role_id = r.id
+                                 WHERE u.gkuendigt = 'no_kuendigung' AND u.bewerber = 'nein'");
+$stmtEmployees->execute();
+$employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
+
+// Nach Level sortieren, damit du die Mitarbeiter je nach Level sortieren kannst
+$sortedEmployees = [];
+foreach ($employees as $employee) {
+    $sortedEmployees[$employee['level']][] = $employee;
+}
+?>
+
+<section class="team_section layout_padding">
     <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          Unsere Mitarbeiter
-        </h2>
-        <p>
-          Unsere Mitarbeiter sind erfahrene Fachkräfte, die für höchste Professionalität, Freundlichkeit und Kompetenz stehen. 
-          Sie sind speziell geschult, um Ihr Unternehmen bestmöglich zu repräsentieren und jede sicherheitsrelevante Aufgabe zuverlässig zu erfüllen.
-              </p>
-      </div>
-
-
-      <div class="heading_container heading_center">
-        <h2>
-          Geschäftsführung
-        </h2>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="">
-            <div class="img-box">
-              <img src="" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                
-              </h5>
-              <h6 class="">
-                
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t2.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Falco Hunter
-              </h5>
-              <h6 class="">
-                Chief Financial Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="">
-            <div class="img-box">
-              <img src="" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                
-              </h5>
-              <h6 class="">
-                
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Falco Hunter
-              </h5>
-              <h6 class="">
-                Chief Financial Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Aiden Knox
-              </h5>
-              <h6 class="">
-                Chief Operating Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                David Smith
-              </h5>
-              <h6 class="">
-                Chief Technology Officer
-              </h6>
-            </div>
-          </div>
-        </div>
         <div class="heading_container heading_center">
-        </br>
-      </br>
-    </br>
-          <h2>
-            Unsere Ausbilder
-          </h2>
-          <p>
-            Unser erfahrenes Ausbildungsteam sorgt dafür, dass unsere Mitarbeiter stets die notwendigen Fähigkeiten und Kenntnisse erwerben, um höchsten Ansprüchen gerecht zu werden. Durch regelmäßige Schulungen, praxisnahe Trainings und modernste Lehrmethoden stellen wir sicher, dass unser Team jederzeit bestens vorbereitet ist, um Ihnen den bestmöglichen Service zu bieten.
-          </p>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Ryder Sturm
-              </h5>
-              <h6 class="">
-                Supervisor
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Paul Garcia
-              </h5>
-              <h6 class="">
-                Instructor
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Frei
-              </h5>
-              <h6 class="">
-                Instructor
-              </h6>
-            </div>
-          </div>
+            <h2>Unsere Mitarbeiter</h2>
+            <p>Unsere Mitarbeiter sind erfahrene Fachkräfte, die für höchste Professionalität, Freundlichkeit und Kompetenz stehen.</p>
         </div>
 
+        <?php
+        // Durch die Level iterieren und die Mitarbeiter anzeigen
+        foreach ($sortedEmployees as $level => $levelEmployees):
+        ?>
+            <div class="heading_container heading_center">
+                <h2><?php echo htmlspecialchars($level); ?></h2>
+            </div>
+            <div class="row">
+                <?php
+                // Abhängig von der Anzahl der Mitarbeiter im Level die Anzeige anpassen
+                $numEmployees = count($levelEmployees);
 
-        <div class="heading_container heading_center">
-        </br>
-      </br>
-    </br>
-          <h2>
-            Unser Team
-          </h2>
-          <p>
-            Unsere engagierten Mitarbeiter stehen Ihnen mit Kompetenz, Zuverlässigkeit und Einsatzbereitschaft zur Seite. Jeder einzelne von ihnen trägt dazu bei, Ihre Sicherheit und Ihr Vertrauen zu gewährleisten. Mit ihrer fundierten Ausbildung und stetigen Weiterentwicklung sind sie bestens darauf vorbereitet, jede Aufgabe verantwortungsvoll und professionell zu meistern. Freundlichkeit, Diskretion und ein hohes Maß an Serviceorientierung sind dabei für unser Team selbstverständlich.
-          </p>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
+                if ($numEmployees == 1): // Nur ein Mitarbeiter, in der Mitte anzeigen
+                    $employee = $levelEmployees[0];
+                ?>
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="img-box">
+                                <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                            </div>
+                            <div class="detail-box">
+                                <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
+                                <h6><?php echo htmlspecialchars($employee['role_name']); ?></h6>
+                            </div>
+                        </div>
+                    </div>
+                <?php elseif ($numEmployees == 2): // Zwei Mitarbeiter, links und rechts anzeigen
+                    foreach ($levelEmployees as $employee): ?>
+                        <div class="col-md-6">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                                </div>
+                                <div class="detail-box">
+                                    <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
+                                    <h6><?php echo htmlspecialchars($employee['role_name']); ?></h6>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php elseif ($numEmployees >= 3): // Drei oder mehr Mitarbeiter, in einer Reihe anzeigen
+                    foreach ($levelEmployees as $employee): ?>
+                        <div class="col-md-4">
+                            <div class="box">
+                                <div class="img-box">
+                                    <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                                </div>
+                                <div class="detail-box">
+                                    <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
+                                    <h6><?php echo htmlspecialchars($employee['role_name']); ?></h6>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach;
+                endif;
+                ?>
             </div>
-            <div class="detail-box">
-              <h5>
-                Mike Brolin
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Mia Dawson
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Sebastian Martinez
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Ted Müller
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                Lyo Berger
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-6 mx-auto ">
-          <div class="box">
-            <div class="img-box">
-              <img src="images/t3.jpg" alt="">
-            </div>
-            <div class="detail-box">
-              <h5>
-                William Staubmann
-              </h5>
-              <h6 class="">
-                Security Officer
-              </h6>
-            </div>
-          </div>
-        </div>
-      </div>
+        <?php endforeach; ?>
     </div>
-  </section>
+</section>
+
 
   <!-- end team section -->
 

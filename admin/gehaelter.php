@@ -37,7 +37,7 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 
     <!-- Main content -->
     
-
+<?php
     include 'include/db.php';
 
 // 1. SQL-Abfrage für mitarbeiter_finanzen (Daten holen)

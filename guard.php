@@ -131,7 +131,7 @@ foreach ($employees as $employee) {
 <style>
     /* Bildgröße anpassen */
     .img-box img {
-        max-width: 100%; /* Bild wird nicht breiter als der Container */
+        max-width: 50%; /* Bild wird nicht breiter als der Container */
         height: auto; /* Seitenverhältnis bleibt erhalten */
         max-height: 200px; /* Maximalhöhe für die Bilder */
         object-fit: cover; /* Stellen Sie sicher, dass das Bild vollständig im Container sichtbar ist */
@@ -149,8 +149,6 @@ foreach ($employees as $employee) {
     }
 
     .box {
-        padding: 15px;
-        margin: 10px;
         background-color: #f0f0f0;
         border-radius: 10px;
         display: inline-block;
@@ -164,7 +162,6 @@ foreach ($employees as $employee) {
     .detail-box {
         background: rgba(0, 0, 0, 0.5);
         color: #fff;
-        padding: 10px;
         border-radius: 5px;
         text-align: center;
     }

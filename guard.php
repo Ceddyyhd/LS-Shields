@@ -43,17 +43,16 @@
   <!-- team section -->
 
   <?php
+// Beispiel-PHP-Code zum Abrufen der Mitarbeiterdaten (hier wurde bereits das Profilbild angepasst)
 include 'db.php';
 
-// Abfrage der Mitarbeiter, die 'gekündigt' = 'no_kuendigung' und 'bewerber' = 'nein' sind
 $stmtEmployees = $conn->prepare("SELECT u.id, u.name, u.profile_image, u.role_id, r.name as role_name, r.level
                                  FROM users u
                                  JOIN roles r ON u.role_id = r.id
-                                 WHERE u.gekuendigt = 'no_kuendigung' AND u.bewerber = 'nein'");
+                                 WHERE u.gkuendigt = 'no_kuendigung' AND u.bewerber = 'nein'");
 $stmtEmployees->execute();
 $employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 
-// Nach Level sortieren, damit du die Mitarbeiter je nach Level sortieren kannst
 $sortedEmployees = [];
 foreach ($employees as $employee) {
     $sortedEmployees[$employee['level']][] = $employee;
@@ -68,7 +67,6 @@ foreach ($employees as $employee) {
         </div>
 
         <?php
-        // Durch die Level iterieren und die Mitarbeiter anzeigen
         foreach ($sortedEmployees as $level => $levelEmployees):
         ?>
             <div class="heading_container heading_center">
@@ -76,16 +74,15 @@ foreach ($employees as $employee) {
             </div>
             <div class="row">
                 <?php
-                // Abhängig von der Anzahl der Mitarbeiter im Level die Anzeige anpassen
                 $numEmployees = count($levelEmployees);
 
-                if ($numEmployees == 1): // Nur ein Mitarbeiter, in der Mitte anzeigen
+                if ($numEmployees == 1): 
                     $employee = $levelEmployees[0];
                 ?>
                     <div class="col-md-12">
                         <div class="box">
                             <div class="img-box">
-                                <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                                <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -93,12 +90,12 @@ foreach ($employees as $employee) {
                             </div>
                         </div>
                     </div>
-                <?php elseif ($numEmployees == 2): // Zwei Mitarbeiter, links und rechts anzeigen
+                <?php elseif ($numEmployees == 2): 
                     foreach ($levelEmployees as $employee): ?>
                         <div class="col-md-6">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -107,12 +104,12 @@ foreach ($employees as $employee) {
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php elseif ($numEmployees >= 3): // Drei oder mehr Mitarbeiter, in einer Reihe anzeigen
+                <?php elseif ($numEmployees >= 3): 
                     foreach ($levelEmployees as $employee): ?>
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="img-box">
-                                    <img src="<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="">
+                                    <img src="/admin/images/profiles/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
                                 </div>
                                 <div class="detail-box">
                                     <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -127,6 +124,16 @@ foreach ($employees as $employee) {
         <?php endforeach; ?>
     </div>
 </section>
+
+<style>
+    /* Bildgröße anpassen */
+    .img-box img {
+        max-width: 100%; /* Bild wird nicht breiter als der Container */
+        height: auto; /* Seitenverhältnis bleibt erhalten */
+        max-height: 150px; /* Maximalhöhe für die Bilder */
+    }
+</style>
+
 
 
   <!-- end team section -->

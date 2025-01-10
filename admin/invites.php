@@ -71,6 +71,11 @@
 </div>
     </div>
   </div>
+  <!-- jQuery (wird benötigt, bevor dein eigenes Script läuft) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap 4 (falls du es verwendest) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     $(document).ready(function () {
     $('#generateInviteCodeBtn').click(function () {

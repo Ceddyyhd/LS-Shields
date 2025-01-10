@@ -101,7 +101,7 @@ echo '</script>';
             }
 
             // Debugging: Ausgabe der Finanzdaten, um zu sehen, ob sie korrekt geladen werden
-            //var_dump($gehalt, $anteil, $trinkgeld);
+            var_dump($gehalt, $anteil, $trinkgeld);
         ?>
           <tr>
             <td><?php echo htmlspecialchars($employee['name']); ?></td>

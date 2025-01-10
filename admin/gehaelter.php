@@ -156,12 +156,13 @@ $employees = $stmtEmployees->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 
+
 <script>
     $(document).ready(function () {
     // Mitarbeiter Dropdown füllen
     employees.forEach(employee => {
         $('#employeeSelect').append(
-            `<option value="${employee.id}">${employee.name}</option>`
+            `<option value="${employee.id}">${employee.name} - ${employee.kontonummer}</option>`
         );
     });
 

@@ -334,8 +334,8 @@ echo '</script>';
               <label for="roleValue">Wert (Value)</label>
               <input type="number" id="roleValue" class="form-control" min="1" max="100" placeholder="Zahlenwert für den Rang">
             </div>
-            <div class="form-group" id="permissionsContainer">
-              <!-- Dynamische Rechte erscheinen hier -->
+            <div id="permissionsContainer" class="row">
+                <!-- Bereichsdaten werden hier dynamisch hinzugefügt -->
             </div>
           </div>
         </form>

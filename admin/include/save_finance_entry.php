@@ -8,14 +8,14 @@ if (isset($_POST['historyData']) && isset($_POST['totalData'])) {
     $totalData = json_decode($_POST['totalData'], true);
 
     // Überprüfen, ob die benötigten Daten vorhanden sind
-    if (!isset($historyData['user_id'], $historyData['betrag'], $historyData['art'], $historyData['notiz']) ||
+    if (!isset($historyData['user_id'], $historyData['betrag'], $historyData['art'], $historyData['notiz'], $historyData['erstellt_von']) ||
         !isset($totalData['user_id'], $totalData['art'], $totalData['betrag'])) {
         echo json_encode(['success' => false, 'message' => 'Fehlende Daten.']);
         exit;
     }
 
-    // Hole den Benutzer, der den Eintrag erstellt hat
-    $erstellt_von = $_SESSION['username']; // Der Benutzername aus der Session
+    // Hole den Benutzer, der den Eintrag erstellt hat (aus den übergebenen Daten)
+    $erstellt_von = $historyData['erstellt_von']; // Der Benutzername wird nun übergeben
 
     // Daten für Historie speichern
     $stmt = $conn->prepare("INSERT INTO finanzen_history (user_id, betrag, art, notiz, erstellt_von) VALUES (?, ?, ?, ?, ?)");

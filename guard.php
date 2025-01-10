@@ -169,6 +169,15 @@ foreach ($employees as $employee) {
     .detail-box h5, .detail-box h6 {
         margin: 5px;
     }
+    .team_section .box .detail-box {
+    position: absolute;
+    width: 100%;
+    color: #ffffff;
+    /* padding: 25px 15px; */
+    text-align: center;
+    bottom: 0;
+    background-color: rgba(28, 28, 28, 0.75);
+}
 </style>
 
 

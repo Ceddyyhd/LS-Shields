@@ -186,6 +186,7 @@ echo '</script>';
                 <label for="notizInput">Notiz</label>
                 <input type="text" id="notizInput" class="form-control" placeholder="Geben Sie eine Notiz ein">
             </div>
+            <input type="hidden" name="erstellt_von" value="<?= $user_name ?>"> <!-- Benutzername aus der Session -->
           </div>
         </form>
       </div>
@@ -215,7 +216,7 @@ echo '</script>';
     const art = $('#artSelect').val(); // Art (Gehalt, Anteil, Trinkgeld)
     const betrag = parseFloat($('#betragInput').val()); // Betrag
     const notiz = $('#notizInput').val() || 'Eingetragener Betrag für den Mitarbeiter'; // Notiz
-    const erstelltVon = '<?php echo $_SESSION['username']; ?>'; // Benutzername aus der Session
+    const erstelltVon = '<?php echo $user_name ?>'; // Benutzername aus der Session
 
     // Überprüfen, ob alle Felder gültige Werte haben
     if (!employeeId || !art) {

@@ -149,31 +149,37 @@
                         </div>
                     </div>
 
-                    <!-- Tuning-Optionen -->
-                        <div class="form-group">
-                            <strong><i class="fas fa-tuning mr-1"></i> Tuning</strong>
-                            <div class="form-check">
-                                <!-- Turbotuning -->
-                                <input type="checkbox" class="form-check-input" id="edit-turbo_tuning" name="turbo_tuning"
-                                    <?php if (!($_SESSION['permissions']['edit_turbo_tuning'] ?? false)) echo 'disabled'; ?>>
-                                <label for="edit-turbo_tuning" class="form-check-label">Turbotuning</label>
-
-                                <!-- Motortuning -->
-                                <input type="checkbox" class="form-check-input" id="edit-engine_tuning" name="engine_tuning"
-                                    <?php if (!($_SESSION['permissions']['edit_engine_tuning'] ?? false)) echo 'disabled'; ?>>
-                                <label for="edit-engine_tuning" class="form-check-label">Motortuning</label>
-
-                                <!-- Getriebetuning -->
-                                <input type="checkbox" class="form-check-input" id="edit-transmission_tuning" name="transmission_tuning"
-                                    <?php if (!($_SESSION['permissions']['edit_transmission_tuning'] ?? false)) echo 'disabled'; ?>>
-                                <label for="edit-transmission_tuning" class="form-check-label">Getriebetuning</label>
-
-                                <!-- Bremsentuning -->
-                                <input type="checkbox" class="form-check-input" id="edit-brake_tuning" name="brake_tuning"
-                                    <?php if (!($_SESSION['permissions']['edit_brake_tuning'] ?? false)) echo 'disabled'; ?>>
-                                <label for="edit-brake_tuning" class="form-check-label">Bremsentuning</label>
-                            </div>
+                    <div class="form-group">
+                        <strong><i class="fas fa-tuning mr-1"></i> Tuning</strong>
+                        <div class="form-check d-block">
+                            <!-- Turbotuning -->
+                            <input type="checkbox" class="form-check-input" id="edit-turbo_tuning" name="turbo_tuning"
+                                <?php if (!($_SESSION['permissions']['edit_turbo_tuning'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-turbo_tuning" class="form-check-label">Turbotuning</label>
                         </div>
+
+                        <div class="form-check d-block">
+                            <!-- Motortuning -->
+                            <input type="checkbox" class="form-check-input" id="edit-engine_tuning" name="engine_tuning"
+                                <?php if (!($_SESSION['permissions']['edit_engine_tuning'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-engine_tuning" class="form-check-label">Motortuning</label>
+                        </div>
+
+                        <div class="form-check d-block">
+                            <!-- Getriebetuning -->
+                            <input type="checkbox" class="form-check-input" id="edit-transmission_tuning" name="transmission_tuning"
+                                <?php if (!($_SESSION['permissions']['edit_transmission_tuning'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-transmission_tuning" class="form-check-label">Getriebetuning</label>
+                        </div>
+
+                        <div class="form-check d-block">
+                            <!-- Bremsentuning -->
+                            <input type="checkbox" class="form-check-input" id="edit-brake_tuning" name="brake_tuning"
+                                <?php if (!($_SESSION['permissions']['edit_brake_tuning'] ?? false)) echo 'disabled'; ?>>
+                            <label for="edit-brake_tuning" class="form-check-label">Bremsentuning</label>
+                        </div>
+                    </div>
+
 
 
                     <input type="hidden" name="vehicle_id" id="edit-vehicle_id">

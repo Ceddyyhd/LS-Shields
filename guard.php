@@ -72,14 +72,15 @@ foreach ($employees as $employee) {
             <div class="heading_container heading_center">
                 <h2><?php echo htmlspecialchars($level); ?></h2>
             </div>
-            <div class="row">
+            <div class="row justify-content-center">
                 <?php
                 $numEmployees = count($levelEmployees);
 
+                // Wenn nur 1 Mitarbeiter in diesem Level
                 if ($numEmployees == 1): 
                     $employee = $levelEmployees[0];
                 ?>
-                    <div class="col-md-12">
+                    <div class="col-md-12 text-center">
                         <div class="box">
                             <div class="img-box">
                                 <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
@@ -90,9 +91,10 @@ foreach ($employees as $employee) {
                             </div>
                         </div>
                     </div>
-                <?php elseif ($numEmployees == 2): 
+                <?php // Wenn 2 Mitarbeiter in diesem Level
+                elseif ($numEmployees == 2): 
                     foreach ($levelEmployees as $employee): ?>
-                        <div class="col-md-6">
+                        <div class="col-md-6 text-center">
                             <div class="box">
                                 <div class="img-box">
                                     <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
@@ -104,9 +106,10 @@ foreach ($employees as $employee) {
                             </div>
                         </div>
                     <?php endforeach; ?>
-                <?php elseif ($numEmployees >= 3): 
+                <?php // Wenn 3 oder mehr Mitarbeiter in diesem Level
+                elseif ($numEmployees >= 3): 
                     foreach ($levelEmployees as $employee): ?>
-                        <div class="col-md-4">
+                        <div class="col-md-4 text-center">
                             <div class="box">
                                 <div class="img-box">
                                     <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
@@ -131,6 +134,24 @@ foreach ($employees as $employee) {
         max-width: 100%; /* Bild wird nicht breiter als der Container */
         height: auto; /* Seitenverhältnis bleibt erhalten */
         max-height: 150px; /* Maximalhöhe für die Bilder */
+    }
+
+    /* Text zentrieren und Boxen nebeneinander ausrichten */
+    .text-center {
+        text-align: center;
+    }
+
+    /* Anpassung für die Spalten bei einer oder zwei Mitarbeitern */
+    .row.justify-content-center {
+        display: flex;
+        justify-content: center;
+    }
+
+    .box {
+        padding: 15px;
+        margin: 10px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
     }
 </style>
 

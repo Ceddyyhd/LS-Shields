@@ -83,7 +83,7 @@ foreach ($employees as $employee) {
                     <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
+                                <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>

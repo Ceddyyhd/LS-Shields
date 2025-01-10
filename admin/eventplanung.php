@@ -54,7 +54,7 @@
             <th style="width: 20%">Datum & Uhrzeit</th>
             <th style="width: 30%">Team Members</th>
             <th>Status</th>
-            <th style="width: 20%">Actions</th>
+            <th style="width: 30%">Actions</th>
         </tr>
     </thead>
     <tbody>

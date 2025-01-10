@@ -110,7 +110,7 @@
 
         if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {
             // Der Delete-Button wird nur angezeigt, wenn der Benutzer die Berechtigung hat
-            echo "<button class='btn btn-info btn-sm duplicate-event' data-id='" . $event['id'] . "'><i class='fas fa-trash'></i> Duplizieren</button>";
+            echo "<button class='btn btn-info btn-sm duplicate-event' data-id='" . $event['id'] . "'><i class='fas fa-copy'></i> Kopieren</button>";
         }
 
         if (isset($_SESSION['permissions']['eventplanung_delete']) && $_SESSION['permissions']['eventplanung_delete']) {

@@ -153,6 +153,7 @@ echo '</script>';
     </div>
 </div>
 
+
 <script> 
    $(document).ready(function () {
     // Event-Listener für den Auszahlung-Button
@@ -163,14 +164,14 @@ echo '</script>';
         // Setze den Titel des Modals auf den Namen des Mitarbeiters
         $('#modal-auszahlungen .modal-title').text('Auszahlung für ' + employeeName);
 
-        // Setze den Mitarbeiter-ID in einem versteckten Input (optional)
+        // Setze den Mitarbeiter-ID in einem versteckten Input
         $('#modal-auszahlungen #user_id').val(userId);
 
         // Öffne das Modal
         $('#modal-auszahlungen').modal('show');
     });
 
-    // Optional: Event-Listener für den Speichern-Button im Modal (diese Logik ist für später)
+    // Event-Listener für den Speichern-Button im Modal
     $('#savePayoutButton').click(function () {
         const userId = $('#user_id').val();  // Mitarbeiter-ID
         const gehalt = parseFloat($('#gehaltInput').val());
@@ -186,29 +187,43 @@ echo '</script>';
             return;
         }
 
-        // AJAX-Request zur Auszahlung (muss später ergänzt werden)
+        // Hole den Benutzernamen aus dem Hidden-Input (erstellt_von)
+        const erstelltVon = "<?php echo $_SESSION['username']; ?>";  // Setze den Benutzernamen aus PHP in JavaScript
+
+        // Daten für das Formular vorbereiten
+        const withdrawalData = {
+            user_id: userId,
+            gehalt: gehalt,
+            anteil: anteil,
+            trinkgeld: trinkgeld,
+            betrag: totalAmount, // Gesamtbetrag
+            erstellt_von: erstelltVon  // Der Benutzername, der die Anfrage gemacht hat
+        };
+
+        // AJAX-Request zur Auszahlung
         $.ajax({
             url: 'include/process_withdrawal.php',  // Dein PHP-Skript für die Auszahlung
             method: 'POST',
             data: {
-                user_id: userId,
-                gehalt: gehalt,
-                anteil: anteil,
-                trinkgeld: trinkgeld,
-                total_amount: totalAmount
+                withdrawalData: JSON.stringify(withdrawalData)
             },
+            dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     alert('Auszahlung erfolgreich durchgeführt!');
                     $('#modal-auszahlungen').modal('hide');
-                    location.reload();  // Seite neu laden
+                    location.reload();  // Seite neu laden, um Änderungen anzuzeigen
                 } else {
                     alert('Fehler: ' + response.message);
                 }
+            },
+            error: function () {
+                alert('Es gab einen Fehler bei der Anfrage.');
             }
         });
     });
 });
+
 
 </script>
 

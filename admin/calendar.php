@@ -8,7 +8,6 @@ include 'include/db.php';
 $query = "
     SELECT * FROM vacations 
     WHERE user_id = :user_id 
-    AND end_date >= NOW()  -- Nur Anträge, deren Enddatum heute oder in der Zukunft liegt, inklusive Zeit
     AND status IN ('approved', 'pending')  -- Nur genehmigte oder noch ausstehende Urlaubsanträge
 ";
 

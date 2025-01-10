@@ -80,10 +80,10 @@ foreach ($employees as $employee) {
                 if ($numEmployees == 1): 
                     $employee = $levelEmployees[0];
                 ?>
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-4 text-center">
                         <div class="box">
                             <div class="img-box">
-                                <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid">
+                                <img src="/admin/<?php echo htmlspecialchars($employee['profile_image']); ?>" alt="" class="img-fluid small-img">
                             </div>
                             <div class="detail-box">
                                 <h5><?php echo htmlspecialchars($employee['name']); ?></h5>
@@ -130,25 +130,30 @@ foreach ($employees as $employee) {
 
 <style>
     /* Bildgröße anpassen */
-    .img-box img {
-        max-width: 50%; /* Bild wird nicht breiter als der Container */
-        height: auto; /* Seitenverhältnis bleibt erhalten */
-        max-height: 200px; /* Maximalhöhe für die Bilder */
-        object-fit: cover; /* Stellen Sie sicher, dass das Bild vollständig im Container sichtbar ist */
+    .small-img {
+        max-width: 80%; /* Kleinere Bilder für den einzelnen Mitarbeiter */
+        height: auto;
+        object-fit: cover;
     }
 
-    /* Text zentrieren und Boxen nebeneinander ausrichten */
+    .img-box img {
+        max-width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
     .text-center {
         text-align: center;
     }
 
-    /* Anpassung für die Spalten bei einer oder zwei Mitarbeitern */
     .row.justify-content-center {
         display: flex;
         justify-content: center;
     }
 
     .box {
+        padding: 15px;
+        margin: 10px;
         background-color: #f0f0f0;
         border-radius: 10px;
         display: inline-block;
@@ -158,10 +163,10 @@ foreach ($employees as $employee) {
         margin-bottom: 30px;
     }
 
-    /* Anpassung des Detailbox Layouts */
     .detail-box {
         background: rgba(0, 0, 0, 0.5);
         color: #fff;
+        padding: 10px;
         border-radius: 5px;
         text-align: center;
     }

@@ -251,7 +251,7 @@ $csrf_token = $_SESSION['csrf_token'];
 document.getElementById('saveAusruestungBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('createAusruestungForm'));
 
-    fetch('include/create_ausruestung.php', {
+    fetch('include/create_ausruestungstyp.php', {
         method: 'POST',
         body: formData,
     })
@@ -275,7 +275,7 @@ document.getElementById('saveAusruestungBtn').addEventListener('click', function
 document.getElementById('saveNewCategory').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('createKategorieForm'));
 
-    fetch('include/create_kategorie.php', {
+    fetch('include/create_category.php', {
         method: 'POST',
         body: formData,
     })
@@ -299,7 +299,7 @@ document.getElementById('saveNewCategory').addEventListener('click', function() 
 document.getElementById('saveEditAusruestung').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('editAusruestungForm'));
 
-    fetch('include/update_ausruestung.php', {
+    fetch('include/update_ausruestungstyp.php', {
         method: 'POST',
         body: formData,
     })
@@ -403,7 +403,7 @@ function deleteAusruestung(id) {
     formData.append('csrf_token', '<?php echo $csrf_token; ?>');
     formData.append('id', id);
 
-    fetch('include/delete_ausruestung.php', {
+    fetch('include/delete_ausbildungstyp.php', {
         method: 'POST',
         body: formData,
     })

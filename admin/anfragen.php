@@ -90,6 +90,8 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                       <!-- Hidden Field für 'erstellt_von' -->
                      <input type="hidden" id="erstellt_von" name="erstellt_von" value="<?php echo $_SESSION['username']; ?>">
+                     <!-- Hidden Field für CSRF-Token -->
+                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
                     </div>
                 </form>
@@ -233,7 +235,6 @@ function changeStatus(id, action) {
 
   // Füge die action manuell hinzu
   formData.append('action', action);
-  formData.append('csrf_token', '<?php echo $csrf_token; ?>'); // Append CSRF token
 
   fetch('include/update_status.php', {
     method: 'POST',

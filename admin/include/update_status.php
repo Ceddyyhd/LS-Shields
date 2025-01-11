@@ -1,4 +1,5 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
 include 'db.php'; // Datenbankverbindung
 
 session_start(); // Session starten, um Benutzerrechte abzurufen

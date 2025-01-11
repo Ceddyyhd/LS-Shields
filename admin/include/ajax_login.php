@@ -10,7 +10,7 @@ include 'db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']) && $_POST['remember'] === 'true';
 
@@ -48,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bindParam(':ip_address', $ip_address);
             $stmt->execute();
 
+            // Loggen des Logins
+            logAction('LOGIN', 'user_sessions', 'user_id: ' . $_SESSION['user_id'] . ', session_id: ' . $session_id);
+
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));
@@ -68,13 +71,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]
             ]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Ungültige Anmeldedaten.']);
+            echo json_encode(['success' => false, 'message' => 'Ungültige E-Mail-Adresse oder Passwort.']);
         }
     } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
+        error_log('Database error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Login: ' . $e->getMessage()]);
     }
+    exit;
+} else {
+    header('Location: ../error.php');
     exit;
 }
 
-// Falls die Anfrage keine POST-Anfrage ist
-echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
+}
+?>

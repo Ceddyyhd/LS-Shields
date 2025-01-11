@@ -86,6 +86,10 @@ $csrf_token = $_SESSION['csrf_token'];
                                 <label for="description">Beschreibung</label>
                                 <textarea name="description" id="description" class="form-control" rows="4" placeholder="Beschreibung eingeben" required></textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="stock">Lagerbestand</label>
+                                <input type="number" class="form-control" id="stock" name="stock" placeholder="Lagerbestand eingeben" required>
+                            </div>
                             <!-- Hidden Field für CSRF-Token -->
                             <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                         </div>
@@ -160,6 +164,10 @@ $csrf_token = $_SESSION['csrf_token'];
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="edit_stock">Lagerbestand</label>
+                            <input type="number" class="form-control" id="edit_stock" name="stock" placeholder="Lagerbestand eingeben" required>
+                        </div>
+                        <div class="form-group">
                             <label for="edit_description">Beschreibung</label>
                             <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
                         </div>
@@ -184,6 +192,7 @@ $csrf_token = $_SESSION['csrf_token'];
                     <th>Key Name</th>
                     <th>Display Name</th>
                     <th>Description</th>
+                    <th>Stock</th>
                     <th>Aktion</th>
                 </tr>
             </thead>
@@ -196,6 +205,7 @@ $csrf_token = $_SESSION['csrf_token'];
                     <th>Key Name</th>
                     <th>Display Name</th>
                     <th>Description</th>
+                    <th>Stock</th>
                     <th>Aktion</th>
                 </tr>
             </tfoot>
@@ -331,6 +341,7 @@ function fetchAusruestung() {
                     <td>${item.key_name}</td>
                     <td>${item.display_name}</td>
                     <td>${item.description}</td>
+                    <td>${item.stock}</td>
                     <td>
                         <button class="btn btn-info btn-sm" onclick="editAusruestung(${item.id})">Bearbeiten</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteAusruestung(${item.id})">Löschen</button>
@@ -369,6 +380,7 @@ function editAusruestung(id) {
                 document.getElementById('edit_key_name').value = item.key_name;
                 document.getElementById('edit_display_name').value = item.display_name;
                 document.getElementById('edit_description').value = item.description;
+                document.getElementById('edit_stock').value = item.stock;
                 $('#modal-ausruestung-edit').modal('show');
             } else {
                 alert('Fehler: Ausruestung nicht gefunden.');

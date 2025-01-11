@@ -54,10 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($remember) {
                 // Token für "Remember Me"-Funktion erstellen
                 $token = bin2hex(random_bytes(32));
-                setcookie('remember_me', $token, time() + 86400 * 30, '/', '', true, true); // 30 Tage gültig, HttpOnly und Secure
+                setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
 
                 // Token in der Datenbank speichern
-                $stmt = $conn->prepare("UPDATE users SET remember_token = :token, token_expiry = DATE_ADD(NOW(), INTERVAL 30 DAY) WHERE id = :id");
+                $stmt = $conn->prepare("UPDATE users SET remember_token = :token WHERE id = :id");
                 $stmt->execute([':token' => $token, ':id' => $user['id']]);
             }
 

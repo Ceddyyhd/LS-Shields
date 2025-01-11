@@ -95,8 +95,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="description">Beschreibung</label>
                         <textarea class="form-control" id="description" name="description" placeholder="Enter description"></textarea>
                     </div>
-                    <!-- Hidden Field für CSRF-Token -->
-                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -337,24 +335,29 @@ $(document).ready(function() {
 
     // Kategorie hinzufügen
     $('#saveNewCategory').click(function() {
-        const formData = new FormData(document.getElementById('createKategorieForm'));
-        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
+        const newCategoryName = $('#new_category_name').val();
 
-        $.ajax({
-            url: 'include/create_category.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                alert('Kategorie erfolgreich hinzugefügt.');
+        if (newCategoryName) {
+            $.ajax({
+                url: 'include/create_category.php', // Hier wird die PHP-Datei zum Erstellen der Kategorie aufgerufen
+                type: 'POST',
+                data: { name: newCategoryName },
+                success: function(response) {
+                    alert('Kategorie erfolgreich hinzugefügt.');
+                    loadCategories(); // Lade die Kategorien nach dem Hinzufügen neu
+                $('#modal-kategorie-create').modal('hide');
                 $('#modal-kategorie-create').modal('hide');
                 fetchAusruestung(); // Refresh the list
-            },
-            error: function(xhr, status, error) {
-                alert('Fehler beim Hinzufügen der Kategorie.');
-            }
-        });
+                    $('#modal-kategorie-create').modal('hide');
+                fetchAusruestung(); // Refresh the list
+                },
+                error: function(xhr, status, error) {
+                    alert('Fehler beim Hinzufügen der Kategorie.');
+                }
+            });
+        } else {
+            alert('Bitte geben Sie einen Kategorienamen ein.');
+        }
     });
 
     // Historie anzeigen

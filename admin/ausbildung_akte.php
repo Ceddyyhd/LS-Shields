@@ -1,3 +1,13 @@
+<?php
+session_start(); // Ensure session is started
+
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -137,6 +147,7 @@ if (!$ausbildung) {
                                                 </div>
 
                                                 <input type="hidden" name="id" value="<?= $ausbildung['id'] ?>">
+                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
                                                 <button type="button" id="submitForm" class="btn btn-danger">Speichern</button>
                                             </form>
@@ -152,7 +163,8 @@ if (!$ausbildung) {
             type: 'POST',
             data: {
                 summernoteContent: summernoteContent,
-                id: <?= $ausbildung['id'] ?>
+                id: <?= $ausbildung['id'] ?>,
+                csrf_token: '<?php echo htmlspecialchars($csrf_token); ?>'
             },
             success: function (response) {
                 location.reload();

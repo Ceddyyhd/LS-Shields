@@ -3,12 +3,6 @@ require_once 'db.php';
 session_start();
 header('Content-Type: application/json');
 
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
-    exit;
-}
-
 try {
     // SQL-Abfrage, um alle Kategorien abzurufen
     $sql = "SELECT name FROM ausruestungskategorien"; // Abhängig von deiner Tabellenstruktur

@@ -4,12 +4,6 @@ include 'db.php';
 session_start();
 header('Content-Type: application/json');
 
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
-    exit;
-}
-
 // Überprüfen, ob der key_name der Ausrüstung übergeben wurde
 if (isset($_GET['id'])) {
     $key_name = $_GET['id'];  // Der key_name wird als Parameter übergeben

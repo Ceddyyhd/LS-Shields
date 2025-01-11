@@ -4,12 +4,6 @@ include 'db.php'; // Datenbankverbindung
 session_start(); // Ensure session is started
 header('Content-Type: application/json');
 
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
-
 // Funktion, die überprüft, ob der Benutzer eine bestimmte Berechtigung hat
 function has_permission($permission) {
     return isset($_SESSION['permissions'][$permission]) && $_SESSION['permissions'][$permission];

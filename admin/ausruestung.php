@@ -337,25 +337,24 @@ $(document).ready(function() {
 
     // Kategorie hinzufügen
     $('#saveNewCategory').click(function() {
-        const newCategoryName = $('#new_category_name').val();
+        const formData = new FormData(document.getElementById('createKategorieForm'));
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
 
-        if (newCategoryName) {
-            $.ajax({
-                url: 'include/create_category.php', // Hier wird die PHP-Datei zum Erstellen der Kategorie aufgerufen
-                type: 'POST',
-                data: { name: newCategoryName },
-                success: function(response) {
-                    alert('Kategorie erfolgreich hinzugefügt.');
-                    loadCategories(); // Lade die Kategorien nach dem Hinzufügen neu
-                    $('#modal-kategorie-create').modal('hide');
-                },
-                error: function(xhr, status, error) {
-                    alert('Fehler beim Hinzufügen der Kategorie.');
-                }
-            });
-        } else {
-            alert('Bitte geben Sie einen Kategorienamen ein.');
-        }
+        $.ajax({
+            url: 'include/create_category.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert('Kategorie erfolgreich hinzugefügt.');
+                $('#modal-kategorie-create').modal('hide');
+                fetchAusruestung(); // Refresh the list
+            },
+            error: function(xhr, status, error) {
+                alert('Fehler beim Hinzufügen der Kategorie.');
+            }
+        });
     });
 
     // Historie anzeigen
@@ -426,6 +425,7 @@ $(document).ready(function() {
     // Speichern der Änderungen für den bearbeiteten Ausrüstungsgegenstand
     $('#saveEditAusruestung').click(function() {
         const formData = new FormData(document.getElementById('editAusruestungForm'));
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
 
         $.ajax({
             url: 'include/update_ausruestungstyp.php',

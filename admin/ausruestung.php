@@ -55,6 +55,15 @@ $csrf_token = $_SESSION['csrf_token'];
         </h3>
     </div>
     <?php endif; ?>
+    <?php if (isset($_SESSION['permissions']['ausruestung_create']) && $_SESSION['permissions']['ausruestung_create']): ?>
+    <div class="card-header">
+        <h3 class="card-title">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
+                Ausrüstungs Kategorie erstellen
+            </button>
+        </h3>
+    </div>
+    <?php endif; ?>
 
     <!-- Ausbildungstyp erstellen Modal -->
     <div class="modal fade" id="modal-ausruestung-create">

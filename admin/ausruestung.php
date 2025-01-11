@@ -9,10 +9,6 @@ $csrf_token = $_SESSION['csrf_token'];
 ?>
 
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
@@ -153,6 +149,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <select class="form-control" id="edit_category" name="category">
                                 <!-- Kategorien werden hier dynamisch geladen -->
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_description">Beschreibung</label>
+                            <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
                         </div>
                         <!-- Hidden Field für CSRF-Token -->
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">

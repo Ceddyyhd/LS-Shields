@@ -15,8 +15,13 @@ include('db.php');
 
 // Überprüfen, ob die benötigten Parameter übergeben wurden
 if (isset($_POST['event_id']) && isset($_POST['employee_id'])) {
-    $eventId = $_POST['event_id'];
-    $employeeId = $_POST['employee_id'];
+    $eventId = filter_input(INPUT_POST, 'event_id', FILTER_VALIDATE_INT);
+    $employeeId = filter_input(INPUT_POST, 'employee_id', FILTER_VALIDATE_INT);
+
+    if ($eventId === false || $employeeId === false) {
+        echo json_encode(['success' => false, 'error' => 'Invalid parameters']);
+        exit;
+    }
 
     try {
         // SQL-Abfrage, um den Eintrag zu löschen
@@ -32,10 +37,11 @@ if (isset($_POST['event_id']) && isset($_POST['employee_id'])) {
         echo json_encode(['success' => true]);
     } catch (PDOException $e) {
         // Fehlerbehandlung
-        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        error_log('Database error: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'error' => 'Database error']);
     }
 } else {
-    echo json_encode(['success' => false, 'error' => 'Fehlende Parameter']);
+    echo json_encode(['success' => false, 'error' => 'Missing parameters']);
 }
 
 // Funktion zum Loggen von Aktionen

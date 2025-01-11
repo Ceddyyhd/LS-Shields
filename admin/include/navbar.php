@@ -128,6 +128,10 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 ?>
+
+<script>
+    var csrfToken = '<?php echo $_SESSION['csrf_token']; ?>';  // CSRF-Token aus PHP setzen
+</script>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
     <!-- Left navbar links -->

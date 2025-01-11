@@ -128,7 +128,7 @@ $csrf_token = $_SESSION['csrf_token'];
                     <form id="createKategorieForm">
                         <div class="form-group">
                             <label for="new_category_name">Kategorie Name</label>
-                            <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Kategorie hinzufügen">
+                            <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Kategorie hinzufügen" required>
                         </div>
                         <!-- Hidden Field für CSRF-Token -->
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
@@ -169,7 +169,7 @@ $csrf_token = $_SESSION['csrf_token'];
                         </div>
                         <div class="form-group">
                             <label for="edit_category">Kategorie</label>
-                            <select class="form-control" id="edit_category" name="category">
+                            <select class="form-control" id="edit_category" name="category" required>
                                 <!-- Kategorien werden hier dynamisch geladen -->
                             </select>
                         </div>
@@ -180,6 +180,10 @@ $csrf_token = $_SESSION['csrf_token'];
                         <div class="form-group">
                             <label for="edit_description">Beschreibung</label>
                             <textarea class="form-control" id="edit_description" name="description" placeholder="Enter description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_notes">Notizen</label>
+                            <textarea class="form-control" id="edit_notes" name="notes" placeholder="Enter notes"></textarea>
                         </div>
                         <!-- Hidden Field für CSRF-Token -->
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
@@ -296,7 +300,7 @@ document.getElementById('saveNewCategory').addEventListener('click', function() 
             // Optionally, close the modal and reset the form
             $('#modal-kategorie-create').modal('hide');
             document.getElementById('createKategorieForm').reset();
-            fetchAusruestung(); // Refresh the list
+            fetchCategories(); // Refresh the categories
         } else {
             alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
         }
@@ -371,6 +375,33 @@ function fetchAusruestung() {
 // Call the function to fetch Ausruestung
 fetchAusruestung();
 
+function fetchCategories() {
+    fetch('include/fetch_kategorien.php')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const categorySelects = document.querySelectorAll('#category, #edit_category');
+            categorySelects.forEach(select => {
+                select.innerHTML = ''; // Clear existing options
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    select.appendChild(option);
+                });
+            });
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        alert('Ein Fehler ist aufgetreten: ' + error.message);
+    });
+}
+
+// Call the function to fetch categories
+fetchCategories();
+
 function editAusruestung(id) {
     // Fetch the Ausruestung data and populate the edit form
     const formData = new FormData();
@@ -391,7 +422,8 @@ function editAusruestung(id) {
                 document.getElementById('edit_display_name').value = item.display_name;
                 document.getElementById('edit_description').value = item.description;
                 document.getElementById('edit_stock').value = item.stock;
-                document.getElementById('edit_category').value = item.category;
+                document.getElementById('edit_notes').value = item.notes;
+                document.getElementById('edit_category').value = item.category_id;
                 $('#modal-ausruestung-edit').modal('show');
             } else {
                 alert('Fehler: Ausruestung nicht gefunden.');

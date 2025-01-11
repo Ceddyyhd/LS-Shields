@@ -294,11 +294,15 @@ function editAusbildung(id) {
     .then(data => {
         if (data.success) {
             const ausbildung = data.ausbildung;
-            document.getElementById('edit_id').value = ausbildung.id;
-            document.getElementById('edit_key_name').value = ausbildung.key_name;
-            document.getElementById('edit_display_name').value = ausbildung.display_name;
-            document.getElementById('edit_description').value = ausbildung.description;
-            $('#modal-ausbildung-edit').modal('show');
+            if (ausbildung) {
+                document.getElementById('edit_id').value = ausbildung.id;
+                document.getElementById('edit_key_name').value = ausbildung.key_name;
+                document.getElementById('edit_display_name').value = ausbildung.display_name;
+                document.getElementById('edit_description').value = ausbildung.description;
+                $('#modal-ausbildung-edit').modal('show');
+            } else {
+                alert('Fehler: Ausbildungstyp nicht gefunden.');
+            }
         } else {
             alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
         }

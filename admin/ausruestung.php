@@ -305,7 +305,7 @@ function fetchAusruestung() {
     const formData = new FormData();
     formData.append('csrf_token', '<?php echo $csrf_token; ?>');
 
-    fetch('include/fetch_ausruestung.php', {
+    fetch('include/fetch_ausruestungstypen.php', {
         method: 'POST',
         body: formData,
     })
@@ -347,7 +347,7 @@ function editAusruestung(id) {
     formData.append('csrf_token', '<?php echo $csrf_token; ?>');
     formData.append('id', id);
 
-    fetch('include/fetch_ausruestung.php', {
+    fetch('include/fetch_ausruestungstypen.php', {
         method: 'POST',
         body: formData,
     })

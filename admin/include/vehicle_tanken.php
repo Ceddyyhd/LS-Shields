@@ -3,6 +3,12 @@ include 'db.php';  // Datenbankverbindung einbinden
 session_start();   // Session starten, um auf $_SESSION zuzugreifen
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+        exit;
+    }
+
     // Werte aus dem POST holen
     $vehicle_id = $_POST['vehicle_id'];
     $license_plate = $_POST['license_plate'];  // Kennzeichen
@@ -46,26 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $log_sql = "INSERT INTO vehicles_logs (vehicle_id, action, user_name) VALUES (?, ?, ?)";
             $log_stmt = $conn->prepare($log_sql);
             $log_stmt->execute([$vehicle_id, $action, $user_name]);
+
+            // Allgemeiner Log-Eintrag
+            logAction('UPDATE', 'vehicles', 'Fahrzeug Tanken: ID: ' . $vehicle_id . ', geändert von: ' . $_SESSION['user_id']);
         }
 
-        // Wenn der Haken gesetzt ist (Deckel bezahlt), Eintrag in die Deckel-Tabelle
-        if ($fuel_checked) {
-            $sql_deckel = "INSERT INTO deckel (vehicle_id, notiz, betrag, erstellt_von, location) 
-                           VALUES (?, ?, ?, ?, ?)";
-            $stmt_deckel = $conn->prepare($sql_deckel);
-            $stmt_deckel->execute([ $vehicle_id, "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name, $fuel_location ]);
-        } else {
-            // Eintrag in die Finanz-Tabelle (wenn direkt vom Firmenkonto abgegangen)
-            $sql_finance = "INSERT INTO finanzen (typ, kategorie, notiz, betrag, erstellt_von) 
-                            VALUES ('Ausgabe', 'Tanken', ?, ?, ?)";
-            $stmt_finance = $conn->prepare($sql_finance);
-            $stmt_finance->execute([ "Getankt Kennzeichen: $license_plate in $fuel_location", $fuel_amount, $user_name ]);
-        }
+        // Fahrzeugdaten aktualisieren
+        $sql_update = "UPDATE vehicles SET fuel_checked = ?, fuel_location = ?, fuel_amount = ? WHERE id = ?";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->execute([$fuel_checked, $fuel_location, $fuel_amount, $vehicle_id]);
 
-        // Erfolgreiche Antwort zurückgeben
-        echo json_encode(['success' => true, 'message' => 'Tanken-Daten erfolgreich aktualisiert.']);
+        echo json_encode(['success' => true, 'message' => 'Fahrzeugdaten erfolgreich aktualisiert.']);
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren: ' . $e->getMessage()]);
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren der Fahrzeugdaten: ' . $e->getMessage()]);
     }
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

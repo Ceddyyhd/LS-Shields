@@ -1,7 +1,14 @@
 <?php
 require 'db.php'; // Deine DB-Verbindung
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+        exit;
+    }
+
     // Alle Formulardaten aus POST erhalten
     $event_id = $_POST['event_id']; // Event ID aus POST-Daten
     $vorname_nachname = $_POST['vorname_nachname'];
@@ -39,10 +46,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Daten speichern und Antwort zurückgeben
     if ($stmt->execute()) {
+        // Log-Eintrag für die Änderungen
+        logAction('UPDATE', 'eventplanung', 'event_id: ' . $event_id . ', bearbeitet von: ' . $_SESSION['user_id']);
+        
         echo json_encode(['message' => 'Änderungen erfolgreich gespeichert', 'status' => $status]);
     } else {
         // Fehlerausgabe, falls das Update fehlschlägt
         echo json_encode(['message' => 'Fehler beim Speichern der Änderungen', 'error' => $stmt->errorInfo()]);
     }
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

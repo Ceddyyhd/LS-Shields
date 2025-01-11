@@ -3,6 +3,13 @@ require_once 'db.php'; // Deine DB-Verbindungsdatei
 
 // Beispiel für die Berechtigung des Benutzers
 session_start();
+header('Content-Type: application/json');
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 // Funktion, die überprüft, ob der Benutzer eine bestimmte Berechtigung hat
 function has_permission($permission) {
@@ -27,7 +34,6 @@ try {
         }
 
         // Header setzen, um die Antwort als JSON zurückzugeben
-        header('Content-Type: application/json');
         echo json_encode($ausruestungstypen);
     } else {
         echo json_encode(['success' => false, 'message' => 'Keine Ausrüstungstypen gefunden.']);
@@ -35,6 +41,7 @@ try {
 
 } catch (PDOException $e) {
     // Fehlerbehandlung
+    error_log('Datenbankfehler: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 

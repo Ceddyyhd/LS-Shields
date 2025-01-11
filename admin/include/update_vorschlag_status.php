@@ -8,6 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'] ?? null; // ID des Verbesserungsvorschlags
     $action = $_POST['action'] ?? null; // Die durchgeführte Aktion
 
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+        exit;
+    }
+
     // Überprüfen, ob id und action übergeben wurden
     if (!$id || !$action) {
         echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
@@ -47,12 +53,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Überprüfen, ob die Zeilenanzahl durch das UPDATE geändert wurde
         if ($stmt->rowCount() > 0) {
-            echo json_encode(['success' => true, 'new_status' => $newStatus, 'message' => 'Status erfolgreich aktualisiert.']);
+            // Log-Eintrag für die Statusänderung
+            $logStmt = $conn->prepare("INSERT INTO vorschlag_logs (vorschlag_id, action, changed_by) VALUES (:vorschlag_id, :action, :changed_by)");
+            $logStmt->execute([
+                ':vorschlag_id' => $id,
+                ':action' => $action,
+                ':changed_by' => $_SESSION['user_id']
+            ]);
+
+            // Allgemeiner Log-Eintrag
+            logAction('UPDATE', 'verbesserungsvorschlaege', 'id: ' . $id . ', status auf "' . $newStatus . '" gesetzt von: ' . $_SESSION['user_id']);
+
+            echo json_encode(['success' => true, 'message' => 'Status erfolgreich geändert']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Keine Änderungen in der Datenbank vorgenommen.']);
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Status']);
         }
-    } catch (Exception $e) {
+    } catch (PDOException $e) {
+        error_log('Fehler beim Aktualisieren des Status: ' . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Status: ' . $e->getMessage()]);
     }
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

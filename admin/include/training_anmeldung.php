@@ -6,7 +6,15 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(['status' => 'fehlgeschlagen', 'message' => 'Ungültiges CSRF-Token']);
+        exit;
+    }
+
     // Aktion: Training erstellen
     if ($_POST['action'] == 'training_erstellen') {
         $grund = $_POST['grund'];
@@ -17,46 +25,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $stmt = $conn->prepare("INSERT INTO trainings (grund, info, leitung, datum_zeit) VALUES (?, ?, ?, ?)");
             $stmt->execute([$grund, $info, $leitung, $datum_zeit]);
+
+            // Log-Eintrag für das Erstellen des Trainings
+            logAction('INSERT', 'trainings', 'Training erstellt: ' . $grund . ', erstellt von: ' . $_SESSION['user_id']);
+
             echo json_encode(['status' => 'erfolgreich']);
         } catch (PDOException $e) {
+            error_log('Fehler beim Erstellen des Trainings: ' . $e->getMessage());
             echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
         }
     }
 
-
     // Aktion: Trainings abrufen
-if ($_POST['action'] == 'get_trainings') {
-    try {
-        // Alle Trainings abrufen
-        $stmt = $conn->query("SELECT * FROM trainings");
-        $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($_POST['action'] == 'get_trainings') {
+        try {
+            // Alle Trainings abrufen
+            $stmt = $conn->query("SELECT * FROM trainings");
+            $trainings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Den Anmeldestatus und die Mitarbeiter für jedes Training hinzufügen
-        foreach ($trainings as &$training) {
-            // Abfrage für den Anmeldestatus
-            $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
-            $stmt->execute([$training['id'], $_SESSION['username']]);
-            $isEnrolled = $stmt->fetchColumn();
+            // Den Anmeldestatus und die Mitarbeiter für jedes Training hinzufügen
+            foreach ($trainings as &$training) {
+                // Abfrage für den Anmeldestatus
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM trainings_anmeldungen WHERE training_id = ? AND benutzername = ?");
+                $stmt->execute([$training['id'], $_SESSION['username']]);
+                $isEnrolled = $stmt->fetchColumn();
 
-            // Anmeldestatus hinzufügen
-            $training['is_enrolled'] = ($isEnrolled > 0);
+                // Anmeldestatus hinzufügen
+                $training['is_enrolled'] = ($isEnrolled > 0);
 
-            // Mitarbeiter für dieses Training abrufen (Benutzernamen aus der `trainings_anmeldungen`-Tabelle)
-            $stmt = $conn->prepare("SELECT benutzername FROM trainings_anmeldungen WHERE training_id = ?");
-            $stmt->execute([$training['id']]);
-            $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                // Mitarbeiter für dieses Training abrufen (Benutzernamen aus der `trainings_anmeldungen`-Tabelle)
+                $stmt = $conn->prepare("SELECT benutzername FROM trainings_anmeldungen WHERE training_id = ?");
+                $stmt->execute([$training['id']]);
+                $mitarbeiter = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Die Benutzernamen der Mitarbeiter hinzufügen
-            $training['mitarbeiter'] = $mitarbeiter;
+                // Mitarbeiter hinzufügen
+                $training['mitarbeiter'] = $mitarbeiter;
+            }
+
+            echo json_encode(['status' => 'erfolgreich', 'trainings' => $trainings]);
+        } catch (PDOException $e) {
+            error_log('Fehler beim Abrufen der Trainings: ' . $e->getMessage());
+            echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
         }
-
-        // Gebe die Trainings als JSON zurück
-        echo json_encode($trainings);
-    } catch (PDOException $e) {
-        // Fehlerbehandlung
-        echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
     }
-}
 
     // Aktion: Anmelden
     if ($_POST['action'] == 'anmelden') {
@@ -114,5 +125,18 @@ if ($_POST['action'] == 'get_trainings') {
             echo json_encode(['status' => 'fehlgeschlagen', 'error' => $e->getMessage()]);
         }
     }
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

@@ -8,6 +8,12 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+    exit;
+}
+
 // Benutzernamen und Benutzer-ID aus der Session holen
 $erstellt_von = $_SESSION['username'];
 $user_id = $_SESSION['user_id'];
@@ -41,8 +47,24 @@ try {
         ':user_id' => $user_id, // Die Benutzer-ID wird hier gespeichert
     ]);
 
+    // Log-Eintrag für die Erstellung der Anfrage
+    logAction('CREATE', 'anfragen', 'Anfrage erstellt: Name: ' . $name . ', erstellt von: ' . $_SESSION['user_id']);
+
     echo json_encode(['success' => true, 'message' => 'Anfrage wurde erfolgreich erstellt.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

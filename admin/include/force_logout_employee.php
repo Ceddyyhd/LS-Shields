@@ -3,9 +3,16 @@ session_start();
 
 // Datenbankverbindung einbinden
 include 'db.php';  // Sicherstellen, dass die DB-Verbindung korrekt eingebunden ist
+header('Content-Type: application/json');
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 // Sicherstellen, dass der Benutzer ein Admin ist, bevor eine andere Sitzung gelöscht wird
-if ($_SESSION['role'] === 'admin') {
+if ($_SESSION['role'] !== 'admin') {
     echo json_encode(['success' => false, 'message' => 'Unzureichende Berechtigung']);
     exit;
 }
@@ -45,11 +52,28 @@ if (isset($_POST['user_id']) && is_numeric($_POST['user_id'])) {
             exit;
         }
 
+        // Log-Eintrag für das Ausloggen
+        logAction('LOGOUT', 'users', 'user_id: ' . $user_id_to_logout . ', logged_out_by: ' . $_SESSION['user_id']);
+
         echo json_encode(['success' => true, 'message' => 'Benutzer wurde erfolgreich abgemeldet.']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
+    } catch (PDOException $e) {
+        error_log('Fehler beim Abmelden des Benutzers: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Abmelden des Benutzers: ' . $e->getMessage()]);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage']);
+    echo json_encode(['success' => false, 'message' => 'Keine Benutzer-ID übergeben.']);
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

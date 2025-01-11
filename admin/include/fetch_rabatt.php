@@ -1,6 +1,13 @@
 <?php
 include 'db.php';
+session_start();
 header('Content-Type: application/json');
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
@@ -24,6 +31,7 @@ try {
         echo json_encode($rabatte); // Erfolgreiches Abrufen aller Rabatte
     }
 } catch (PDOException $e) {
+    error_log('Fehler beim Abrufen der Rabatte: ' . $e->getMessage());
     echo json_encode(['success' => false, 'error' => 'Fehler beim Abrufen der Rabatte: ' . $e->getMessage()]);
 }
 ?>

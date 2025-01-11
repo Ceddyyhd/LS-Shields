@@ -47,26 +47,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Einladungscode löschen, wenn er verwendet wurde
-    $stmt = $conn->prepare("DELETE FROM invites WHERE invite_code = :invite_code");
+    // Passwort-Hash erstellen
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+    // Benutzer in der Datenbank speichern
+    $stmt = $conn->prepare("INSERT INTO kunden (name, umail, password) VALUES (:name, :umail, :password)");
+    $stmt->execute([
+        ':name' => $name,
+        ':umail' => $umail,
+        ':password' => $passwordHash
+    ]);
+
+    // Einladungscode als verwendet markieren
+    $stmt = $conn->prepare("UPDATE invites SET used = 1 WHERE invite_code = :invite_code");
     $stmt->execute([':invite_code' => $invite_code]);
 
-    // Passwortrücksetzung und Registrierung
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Log-Eintrag für die Registrierung
+    logAction('REGISTER', 'kunden', 'Neuer Kunde registriert: E-Mail: ' . $umail);
 
-    // SQL-Statement, um den neuen Benutzer in der Datenbank zu speichern
-    try {
-        $stmt = $conn->prepare("INSERT INTO kunden (name, umail, password) VALUES (:name, :umail, :password)");
-        $stmt->execute([
-            ':name' => $name,
-            ':umail' => $umail,
-            ':password' => $hashedPassword
-        ]);
-
-        echo json_encode(['success' => true, 'message' => 'Registrierung erfolgreich!']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
-    }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
+    echo json_encode(['success' => true, 'message' => 'Registrierung erfolgreich']);
 }
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, NULL, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->execute();
+}
+?>

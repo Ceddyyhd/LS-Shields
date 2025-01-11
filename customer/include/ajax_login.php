@@ -10,6 +10,12 @@ include 'db.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+        exit;
+    }
+
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $remember = isset($_POST['remember']) && $_POST['remember'] === 'true';
@@ -47,29 +53,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $token = bin2hex(random_bytes(32));
                 setcookie('remember_me', $token, time() + 86400 * 30, '/'); // 30 Tage gültig
 
-                // Token in der Kunden-Datenbank speichern
-                $stmt = $conn->prepare("UPDATE kunden SET remember_token = :token WHERE id = :id");
-                $stmt->execute([':token' => $token, ':id' => $user['id']]);
+                // Token in der Datenbank speichern
+                $query = "INSERT INTO remember_me_tokens (user_id, token) VALUES (:user_id, :token)";
+                $stmt = $conn->prepare($query);
+                $stmt->bindParam(':user_id', $_SESSION['user_id']);
+                $stmt->bindParam(':token', $token);
+                $stmt->execute();
             }
 
-            echo json_encode([
-                'success' => true,
-                'message' => 'Login erfolgreich.',
-                'session_data' => [
-                    'user_id' => $_SESSION['user_id'],
-                    'username' => $_SESSION['username'],
-                    'email' => $_SESSION['email'],
-                    'role' => $_SESSION['role']
-                ]
-            ]);
+            // Log-Eintrag für den Login
+            logAction('LOGIN', 'kunden', 'Benutzer eingeloggt: ' . $email . ', IP-Adresse: ' . $ip_address);
+
+            echo json_encode(['success' => true, 'message' => 'Login erfolgreich']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Ungültige Anmeldedaten.']);
+            echo json_encode(['success' => false, 'message' => 'Ungültige E-Mail oder Passwort']);
         }
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
-    exit;
 }
 
-// Falls die Anfrage keine POST-Anfrage ist
-echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
+}
+?>

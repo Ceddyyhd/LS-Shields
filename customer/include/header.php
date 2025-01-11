@@ -48,7 +48,7 @@ $stmt->execute();
 $sessionCheck = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$sessionCheck) {
-    // Kein Eintrag für diese Benutzer-ID gefunden -> Umleitung zur Login-Seite
+    // Sitzung ist ungültig -> zur Login-Seite umleiten
     header('Location: index.html');
     exit;
 }

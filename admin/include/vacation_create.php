@@ -9,6 +9,12 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+    exit;
+}
+
 // Benutzernamen aus der Session holen
 $erstellt_von = $_SESSION['username'];
 
@@ -37,8 +43,24 @@ try {
         ':erstellt_von' => $erstellt_von,  // Der Benutzername wird hier gespeichert
     ]);
 
+    // Log-Eintrag für die Erstellung des Urlaubsantrags
+    logAction('CREATE', 'vacations', 'Urlaubsantrag erstellt: Startdatum: ' . $start_date . ', Enddatum: ' . $end_date . ', Status: ' . $status . ', erstellt von: ' . $_SESSION['user_id']);
+
     echo json_encode(['success' => true, 'message' => 'Urlaubsantrag erfolgreich erstellt.']);
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

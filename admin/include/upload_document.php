@@ -5,6 +5,11 @@ session_start();
 
 // Überprüfen, ob das Formular abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Fehler: Ungültiges CSRF-Token.");
+    }
+
     // Benutzer-ID und benutzerdefinierter Name überprüfen
     $user_id = $_POST['user_id'] ?? null;
     $custom_name = $_POST['document_name'] ?? null;
@@ -42,36 +47,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 'user_id' => $user_id,
-                'file_name' => $custom_name,
+                'file_name' => $unique_name,
                 'file_path' => $file_path,
                 'doc_type' => $doc_type
             ]);
 
-            // Benutzernamen ermitteln
-            $uploaded_by = $_SESSION['username'] ?? null;
+            // Log-Eintrag für den Upload
+            logAction('UPLOAD', 'documents', 'Dokument hochgeladen: ' . $unique_name . ', hochgeladen von: ' . $_SESSION['user_id']);
 
-            if (!$uploaded_by) {
-                // Benutzername aus der Datenbank abrufen, falls nicht in der Session gespeichert
-                $stmt_user = $conn->prepare("SELECT name FROM users WHERE id = :id");
-                $stmt_user->execute([':id' => $user_id]);
-                $user = $stmt_user->fetch(PDO::FETCH_ASSOC);
-                $uploaded_by = $user['name'] ?? 'Unbekannt';
-            }
-
-            // Log in die Datenbank schreiben
-            $sql_log = "INSERT INTO upload_logs (user_id, document_name, uploaded_by, created_at) 
-                        VALUES (:user_id, :document_name, :uploaded_by, NOW())";
-            $stmt_log = $conn->prepare($sql_log);
-            $stmt_log->execute([
-                'user_id' => $user_id,
-                'document_name' => $custom_name,
-                'uploaded_by' => $uploaded_by
-            ]);
+            echo "Dokument erfolgreich hochgeladen.";
+        } else {
+            die("Fehler: Datei konnte nicht hochgeladen werden.");
         }
+    } else {
+        die("Fehler: Keine Datei hochgeladen.");
     }
 
     // Weiterleitung zur Profilseite
     header("Location: ../profile.php?id=" . htmlspecialchars($user_id));
     exit;
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

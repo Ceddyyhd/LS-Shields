@@ -1,9 +1,16 @@
 <?php
 // Verbindung zur Datenbank
 include('db.php');
+session_start();
 
 // Event ID aus der URL holen
 $eventId = $_GET['id'];
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 // Überprüfen, ob die erforderlichen Daten über POST übermittelt wurden
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -46,69 +53,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     SELECT id FROM dienstplan 
                     WHERE event_id = :event_id AND employee_id = :employee_id
                 ");
-                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
-                $stmt->execute();
+                $stmt->execute([':event_id' => $eventId, ':employee_id' => $employeeId]);
                 $existingEntry = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($existingEntry) {
-                    // Datensatz existiert, also ein UPDATE ausführen
+                    // Update der bestehenden Einträge
                     $stmt = $conn->prepare("
-                        UPDATE dienstplan
-                        SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um, arbeitszeit = :arbeitszeit
+                        UPDATE dienstplan 
+                        SET max_time = :max_time, gestartet_um = :gestartet_um, gegangen_um = :gegangen_um, arbeitszeit = :arbeitszeit 
                         WHERE event_id = :event_id AND employee_id = :employee_id
                     ");
                 } else {
-                    // Datensatz existiert nicht, also ein INSERT ausführen
+                    // Einfügen neuer Einträge
                     $stmt = $conn->prepare("
-                        INSERT INTO dienstplan (event_id, employee_id, max_time, gestartet_um, gegangen_um, arbeitszeit)
+                        INSERT INTO dienstplan (event_id, employee_id, max_time, gestartet_um, gegangen_um, arbeitszeit) 
                         VALUES (:event_id, :employee_id, :max_time, :gestartet_um, :gegangen_um, :arbeitszeit)
                     ");
                 }
 
-                // Alle Parameter binden
-                $stmt->bindValue(':event_id', $eventId, PDO::PARAM_INT);
-                $stmt->bindValue(':employee_id', $employeeId, PDO::PARAM_INT);
+                $stmt->execute([
+                    ':event_id' => $eventId,
+                    ':employee_id' => $employeeId,
+                    ':max_time' => $maxTime,
+                    ':gestartet_um' => $gestartetUm,
+                    ':gegangen_um' => $gegangenUm,
+                    ':arbeitszeit' => $arbeitszeit
+                ]);
 
-                // Binde max_time, gestartet_um, gegangen_um nur, wenn sie nicht NULL sind
-                if ($maxTime === null) {
-                    $stmt->bindValue(':max_time', null, PDO::PARAM_NULL);
-                } else {
-                    $stmt->bindValue(':max_time', $maxTime, PDO::PARAM_STR);
-                }
-
-                if ($gestartetUm === null) {
-                    $stmt->bindValue(':gestartet_um', null, PDO::PARAM_NULL);
-                } else {
-                    $stmt->bindValue(':gestartet_um', $gestartetUm, PDO::PARAM_STR);
-                }
-
-                if ($gegangenUm === null) {
-                    $stmt->bindValue(':gegangen_um', null, PDO::PARAM_NULL);
-                } else {
-                    $stmt->bindValue(':gegangen_um', $gegangenUm, PDO::PARAM_STR);
-                }
-
-                // Binde die berechnete Arbeitszeit, wenn sie vorhanden ist
-                if ($arbeitszeit !== null) {
-                    $stmt->bindValue(':arbeitszeit', $arbeitszeit, PDO::PARAM_STR);
-                } else {
-                    $stmt->bindValue(':arbeitszeit', null, PDO::PARAM_NULL);
-                }
-
-                // SQL-Abfrage ausführen
-                $stmt->execute();
+                // Log-Eintrag für die Änderungen
+                logAction('UPDATE', 'dienstplan', 'event_id: ' . $eventId . ', employee_id: ' . $employeeId . ', changes: ' . json_encode($_POST) . ', edited_by: ' . $_SESSION['user_id']);
             }
         }
 
-        // Erfolgsantwort zurückgeben
-        echo json_encode(['status' => 'success', 'message' => 'Daten wurden erfolgreich gespeichert!']);
+        echo json_encode(['success' => true, 'message' => 'Dienstplan erfolgreich aktualisiert.']);
     } catch (PDOException $e) {
-        // Fehler im SQL-Code
-        echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
-    } catch (Exception $e) {
-        // Allgemeiner Fehler
-        echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
+        error_log('Fehler beim Aktualisieren des Dienstplans: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Dienstplans: ' . $e->getMessage()]);
     }
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

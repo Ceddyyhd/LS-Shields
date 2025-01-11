@@ -37,6 +37,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 // Datenbankverbindung einbinden
 include 'include/db.php';
 
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
 // Anfragen aus der Datenbank abrufen
 $query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, erstellt_von, status FROM anfragen ORDER BY datum_uhrzeit DESC";
 $stmt = $conn->prepare($query);
@@ -46,6 +52,8 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="row">
   <div class="col-12">
+    <!-- CSRF-Token in einem versteckten Feld einfügen -->
+    <input type="hidden" id="csrf_token" value="<?php echo $csrf_token; ?>">
     <div class="card">
       <div class="card-header">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">

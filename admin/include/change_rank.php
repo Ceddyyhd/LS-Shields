@@ -2,9 +2,17 @@
 include 'db.php';
 session_start();
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'] ?? null; // ID des Benutzers, dessen Rang geändert werden soll
-    $new_role_id = $_POST['role_id'] ?? null;
+    // Überprüfen, ob das CSRF-Token gültig ist
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        header('Location: ../error.php');
+        exit;
+    }
+
+    $user_id = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT); // ID des Benutzers, dessen Rang geändert werden soll
+    $new_role_id = filter_input(INPUT_POST, 'role_id', FILTER_VALIDATE_INT);
 
     // Berechtigungsprüfung
     if (!($_SESSION['permissions']['change_rank'] ?? false)) {
@@ -48,28 +56,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Rangänderung durchführen
-        $editor_name = $_SESSION['username'] ?? 'Unbekannt';
-        $stmt = $conn->prepare("UPDATE users SET role_id = :new_role_id, rank_last_changed_by = :changed_by WHERE id = :user_id");
-        $stmt->execute([
-            ':new_role_id' => $new_role_id,
-            ':changed_by' => $editor_name,
-            ':user_id' => $user_id,
-        ]);
+        // Rang des Zielbenutzers aktualisieren
+        $stmt = $conn->prepare("UPDATE users SET role_id = :new_role_id WHERE id = :user_id");
+        $stmt->execute([':new_role_id' => $new_role_id, ':user_id' => $user_id]);
 
-        // Log in die Tabelle `rank_change_logs` schreiben
-        $stmt = $conn->prepare("INSERT INTO rank_change_logs (user_id, old_role_id, new_role_id, changed_by) 
-                                VALUES (:user_id, :old_role_id, :new_role_id, :changed_by)");
-        $stmt->execute([
-            ':user_id' => $user_id,
-            ':old_role_id' => $old_role_id,
-            ':new_role_id' => $new_role_id,
-            ':changed_by' => $editor_name,
-        ]);
+        // Loggen der Rangänderung
+        logAction('UPDATE', 'users', 'user_id: ' . $user_id . ', old_role_id: ' . $old_role_id . ', new_role_id: ' . $new_role_id);
 
         echo json_encode(['success' => true, 'message' => 'Rang erfolgreich geändert.']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
+    } catch (PDOException $e) {
+        error_log('Fehler beim Ändern des Rangs: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Ändern des Rangs: ' . $e->getMessage()]);
     }
+    exit;
+} else {
+    header('Location: ../error.php');
+    exit;
+}
+
+// Funktion zum Loggen von Aktionen
+function logAction($action, $table, $details) {
+    global $conn;
+
+    // SQL-Abfrage zum Einfügen des Log-Eintrags
+    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
+    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
+    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
 }
 ?>

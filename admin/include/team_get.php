@@ -1,5 +1,13 @@
 <?php
 include('db.php');
+session_start();
+header('Content-Type: application/json');
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['status' => 'error', 'message' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 // Überprüfen, ob eine Event-ID übergeben wurde
 if (isset($_GET['event_id'])) {
@@ -38,6 +46,7 @@ if (isset($_GET['event_id'])) {
 
     } catch (PDOException $e) {
         // Fehler bei der Datenbankabfrage
+        error_log('Datenbankfehler: ' . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
 } else {

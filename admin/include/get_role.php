@@ -4,8 +4,14 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 include 'db.php';
-
+session_start();
 header('Content-Type: application/json');
+
+// Überprüfen, ob das CSRF-Token gültig ist
+if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
+    exit;
+}
 
 // ID des Rangs aus der Anfrage abrufen
 $roleId = $_GET['id'] ?? null;
@@ -46,7 +52,8 @@ try {
     } else {
         echo json_encode(['success' => false, 'error' => 'Rang nicht gefunden.']);
     }
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'error' => 'Datenbankfehler: ' . $e->getMessage()]);
+} catch (Exception $e) {
+    error_log('Fehler beim Abrufen des Rangs: ' . $e->getMessage());
+    echo json_encode(['success' => false, 'error' => 'Fehler beim Abrufen des Rangs: ' . $e->getMessage()]);
 }
 ?>

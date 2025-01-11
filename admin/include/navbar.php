@@ -120,6 +120,13 @@ $sql = "SELECT users.*, roles.name AS role_name, users.profile_image
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+// CSRF-Token erstellen und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Ein zufälliges Token generieren
+}
+
 ?>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">

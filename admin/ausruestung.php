@@ -249,35 +249,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
-    $.ajax({
-        url: 'include/fetch_ausruestungstypen.php',
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            const tableBody = $('#example1 tbody');
-            tableBody.empty();
+    function fetchAusruestung() {
+        const formData = new FormData();
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
 
-            data.forEach(function(ausruestung) {
-                tableBody.append(`
-                    <tr>
-                        <td>${ausruestung.id}</td>
-                        <td>${ausruestung.key_name}</td>
-                        <td>${ausruestung.display_name}</td>
-                        <td>${ausruestung.description}</td>
-                        <td>${ausruestung.stock}</td>
+        fetch('include/fetch_ausruestungstypen.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const tbody = document.querySelector('#example1 tbody');
+                tbody.innerHTML = ''; // Clear existing rows
+
+                data.ausruestung.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${item.key_name}</td>
+                        <td>${item.display_name}</td>
+                        <td>${item.description}</td>
+                        <td>${item.stock}</td>
                         <td>
-                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
-                            ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
-                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.key_name}">Historie</button> <!-- Historie-Button -->
+                            <button class="btn btn-info btn-sm" onclick="editAusruestung(${item.id})">Bearbeiten</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAusruestung(${item.id})">Löschen</button>
                         </td>
-                    </tr>
-                `);
-            });
-        },
-        error: function(xhr, status, error) {
-            alert('Fehler beim Abrufen der Ausrüstungstypen.');
-        }
-    });
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+            }
+        })
+        .catch(error => {
+            alert('Ein Fehler ist aufgetreten: ' + error.message);
+        });
+    }
+
+    // Call the function to fetch Ausruestung
+    fetchAusruestung();
 
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
     window.openEditModal = function(button) {

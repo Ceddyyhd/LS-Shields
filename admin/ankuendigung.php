@@ -1,13 +1,3 @@
-<?php
-session_start(); // Ensure session is started
-
-// CSRF-Token generieren und in der Session speichern
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-$csrf_token = $_SESSION['csrf_token'];
-?>
-
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -47,47 +37,270 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- /.content-header -->
 
   <!-- Main content -->
-  <div class="content">
-    <div class="container-fluid">
-      <!-- Your content here -->
-      <!-- Ankündigung erstellen Modal -->
-      <div class="modal fade" id="modal-ankuendigung-create">
-        <div class="modal-dialog">
-          <div class="modal-content">
+  <div class="card">
+  <?php if (isset($_SESSION['permissions']['ankuendigung_create']) && $_SESSION['permissions']['ankuendigung_create']): ?>
+  <div class="card-header">
+    <h3 class="card-title">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ankuendigung-create">
+            Ankündigung erstellen
+        </button>
+    </h3>
+  </div>
+<?php endif; ?>
+
+<!-- Modal zum Erstellen einer Ankündigung -->
+<div class="modal fade" id="modal-ankuendigung-create">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Ankündigung erstellen</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+                <h4 class="modal-title">Ankündigung Erstellen</h4>  <!-- Benutzername einfügen -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-              <form id="createAnkuendigungForm">
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="title">Titel</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Titel eingeben" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="description">Beschreibung</label>
-                    <textarea name="description" id="description" class="form-control" rows="4" placeholder="Beschreibung eingeben" required></textarea>
-                  </div>
-                  <!-- Hidden Field für CSRF-Token -->
-                  <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                </div>
-              </form>
+                <form id="createAnkuendigungForm">
+                    <div class="form-group">
+                        <label for="key_name">Titel</label>
+                        <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Titel eingeben">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Beschreibung</label>
+                        <textarea class="form-control" id="description" name="description" placeholder="Beschreibung eingeben"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Priorität</label>
+                        <select class="custom-select" name="prioritaet">
+                            <option value="Low">Low</option>
+                            <option value="Mid">Mid</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <!-- Eingabefeld für den Ersteller -->
+                    <div class="form-group">
+                        <label for="created_by">Erstellt von</label>
+                        <input type="text" class="form-control" id="created_by" name="created_by" value="<?php echo htmlspecialchars($user_name); ?>" placeholder="Ersteller eingeben">
+                    </div>
+                    <!-- Keine Notwendigkeit für 'created_by' im Modal, es wird automatisch gesetzt -->
+                </form>
             </div>
             <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-              <button type="button" class="btn btn-primary" id="saveAnkuendigungBtn">Speichern</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveCreateAnkuendigung">Speichern</button>
             </div>
-          </div>
         </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </div>
-  <!-- /.content -->
+    </div>
 </div>
-<!-- /.content-wrapper -->
+
+<!-- Modal zum Bearbeiten einer Ankündigung -->
+<div class="modal fade" id="modal-ankuendigung-bearbeiten">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ankündigung Bearbeiten</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editAnkuendigungForm">
+                    <input type="hidden" id="edit_id" name="id"> <!-- Versteckte ID für das Bearbeiten -->
+                    <div class="form-group">
+                        <label for="edit_key_name">Titel</label>
+                        <input type="text" class="form-control" id="edit_key_name" name="key_name" placeholder="Titel eingeben">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_description">Beschreibung</label>
+                        <textarea class="form-control" id="edit_description" name="description" placeholder="Beschreibung eingeben"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Priorität</label>
+                        <select class="custom-select" name="prioritaet" id="edit_prioritaet">
+                            <option value="Low">Low</option>
+                            <option value="Mid">Mid</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <!-- Der Name des Bearbeiters wird hier gesetzt -->
+                    <div class="form-group">
+                      <label for="edit_created_by">Bearbeitet von</label>
+                      <input type="text" class="form-control" id="edit_created_by" name="created_by" value="">
+                  </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" id="saveEditAnkuendigung">Speichern</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Tabelle zur Anzeige der Ankündigungen -->
+<table id="example1" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Titel</th>
+            <th>Beschreibung</th>
+            <th>Priorität</th>
+            <th>Aktion</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Daten werden hier dynamisch geladen -->
+    </tbody>
+</table>
+
+<!-- jQuery-Skript -->
+<script>
+$(document).ready(function() {
+    // Ankündigungen abrufen
+    $.ajax({
+        url: 'include/fetch_ankuendigung.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            if (data && data.length > 0) {
+                const tableBody = $('#example1 tbody');
+                tableBody.empty();  // Tabelle leeren, bevor neue Einträge hinzugefügt werden
+                data.forEach(function(ankuendigung) {
+                    tableBody.append(`
+                        <tr>
+                            <td>${ankuendigung.id}</td>
+                            <td>${ankuendigung.key_name}</td>
+                            <td>${ankuendigung.description}</td>
+                            <td>${ankuendigung.prioritaet}</td>
+                            <td>
+                                <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
+                                <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            } else {
+            }
+        },
+        error: function() {
+        }
+    });
+
+    // Wenn der Bearbeiten-Button geklickt wird
+    $(document).on('click', '.btn-outline-secondary', function() {
+        const id = $(this).data('id'); // Hole die ID der zu bearbeitenden Ankündigung
+        
+        // AJAX-Anfrage, um die Daten der Ankündigung abzurufen
+        $.ajax({
+            url: 'include/fetch_ankuendigung.php',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: function(data) {
+                if (data && data.length > 0) {
+                    const ankuendigung = data[0]; // Nur ein Element zurück, da wir nach ID filtern
+
+                    // Setze die Modal-Felder mit den Daten der Ankündigung
+                    $('#edit_id').val(ankuendigung.id); // ID in hidden input
+                    $('#edit_key_name').val(ankuendigung.key_name); // Key Name
+                    $('#edit_description').val(ankuendigung.description); // Beschreibung
+                    $('#edit_prioritaet').val(ankuendigung.prioritaet); // Priorität
+                    $('#edit_created_by').val(ankuendigung.created_by); // Ersteller des Eintrags
+
+                    // Zeige das Bearbeitungsmodal an
+                    $('#modal-ankuendigung-bearbeiten').modal('show');
+                } else {
+                }
+            },
+            error: function() {
+            }
+        });
+    });
+
+    // Wenn der "Speichern"-Button im Bearbeitungsmodal geklickt wird
+$('#saveEditAnkuendigung').click(function() {
+    const formData = new FormData(document.getElementById('editAnkuendigungForm'));
+
+    $.ajax({
+        url: 'include/update_ankuendigung.php',  // PHP-Datei zum Bearbeiten der Ankündigung
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response.success) {
+                $('#modal-ankuendigung-bearbeiten').modal('hide');  // Modal schließen
+                location.reload();  // Seite neu laden, um die Änderungen anzuzeigen
+            } else {
+            }
+        },
+        error: function() {
+        }
+    });
+});
+    // Löschen einer Ankündigung
+    window.deleteAnkuendigung = function(id) {
+        if (confirm('Möchten Sie diese Ankündigung wirklich löschen?')) {
+            $.ajax({
+                url: 'include/delete_ankuendigung.php',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    alert(response.message);
+                    location.reload(); // Seite neu laden, um die Änderungen anzuzeigen
+                },
+                error: function() {
+                    alert('Fehler beim Löschen der Ankündigung.');
+                }
+            });
+        }
+    };
+
+    // Erstellen einer neuen Ankündigung
+    $('#saveCreateAnkuendigung').click(function() {
+        const formData = $('#createAnkuendigungForm').serialize(); // Formulardaten sammeln
+
+        $.ajax({
+            url: 'include/create_ankuendigung.php', // PHP-Datei zum Erstellen der Ankündigung
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    $('#modal-ankuendigung-create').modal('hide'); // Modal schließen
+                    location.reload(); // Seite neu laden, um die neue Ankündigung anzuzeigen
+                } else {
+                }
+            },
+            error: function() {
+            }
+        });
+    });
+});
+
+</script>
+
+<!-- JavaScript Section -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.6/js/dataTables.bootstrap4.min.js"></script>
+
+
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+</div>
+<!-- /.container-fluid -->
+</section>
+    
+    
+    
+
+      
+
+
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
@@ -119,32 +332,5 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
-
-<!-- JavaScript zur Verarbeitung des Formulars -->
-<script>
-document.getElementById('saveAnkuendigungBtn').addEventListener('click', function() {
-    const formData = new FormData(document.getElementById('createAnkuendigungForm'));
-
-    fetch('include/ankuendigung_create.php', {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Ankündigung erfolgreich erstellt');
-            // Optionally, close the modal and reset the form
-            $('#modal-ankuendigung-create').modal('hide');
-            document.getElementById('createAnkuendigungForm').reset();
-        } else {
-            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
-        }
-    })
-    .catch(error => {
-        alert('Ein Fehler ist aufgetreten: ' + error.message);
-    });
-});
-</script>
-
 </body>
 </html>

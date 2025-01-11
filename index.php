@@ -1,13 +1,3 @@
-<?php
-session_start();
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://fonts.googleapis.com; style-src 'self' https://fonts.googleapis.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com;");
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
-error_reporting(E_ALL);
-?>
 <!DOCTYPE html>
 <html>
 
@@ -487,8 +477,7 @@ error_reporting(E_ALL);
         <div class="row">
           <div class="col-md-7 mx-auto">
             <!-- Formular mit ID für das AJAX-Skript -->
-            <form id="contactForm" method="POST">
-              <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <form id="contactForm">
               <div class="contact_form-container">
                 <div>
                   <h5> Ihr Name</h5>
@@ -525,33 +514,17 @@ error_reporting(E_ALL);
     const form = this; // Referenz zum Formular
     const formData = new FormData(form);
 
-    // Client-side validation
-    const name = formData.get('name');
-    const email = formData.get('email');
-    const message = formData.get('message');
-    const csrfToken = formData.get('csrf_token');
-
-    if (!name || !email || !message) {
-      document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Bitte füllen Sie alle Felder aus.</p>`;
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>`;
-      return;
-    }
-
     fetch('include/submit_form.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
         // Rückmeldung anzeigen
-        document.getElementById('responseMessage').innerHTML = `<p>${data.message}</p>`;
+        document.getElementById('responseMessage').innerHTML = `<p>${data}</p>`;
         
         // Formular zurücksetzen
-        if (data.success) {
+        if (data.includes('erfolgreich gesendet')) {
             form.reset();
         }
     })
@@ -560,13 +533,8 @@ error_reporting(E_ALL);
         document.getElementById('responseMessage').innerHTML = `<p style="color: red;">Fehler: ${error.message}</p>`;
     });
 });
-
-// Email validation function
-function validateEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
-}
 </script>
+
 
   <!-- end contact section -->
 

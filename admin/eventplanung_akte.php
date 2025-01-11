@@ -876,7 +876,7 @@ error: function(xhr, status, error) {
                 data: {
                     event_id: eventId,
                     employee_id: employeeId,
-                    csrf_token: $CSRFToken  // CSRF-Token senden
+                    csrf_token: '<?php echo $_SESSION['csrf_token']; ?>'  // CSRF-Token senden
                 },
                 success: function(response) {
                     // Falls erfolgreich, den Eintrag aus der Anzeige entfernen oder neu laden

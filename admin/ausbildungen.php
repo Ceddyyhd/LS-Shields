@@ -198,7 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 document.getElementById('saveAusbildungBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('createAusbildungForm'));
 
-    fetch('include/ausbildung_create.php', {
+    fetch('include/create_ausbildungstyp.php', {
         method: 'POST',
         body: formData,
     })
@@ -222,7 +222,7 @@ document.getElementById('saveAusbildungBtn').addEventListener('click', function(
 document.getElementById('saveEditAusbildung').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('editAusbildungForm'));
 
-    fetch('include/ausbildung_edit.php', {
+    fetch('include/update_ausbildungstyp.php', {
         method: 'POST',
         body: formData,
     })
@@ -321,7 +321,7 @@ function deleteAusbildung(id) {
     formData.append('csrf_token', '<?php echo $csrf_token; ?>');
     formData.append('id', id);
 
-    fetch('include/ausbildung_delete.php', {
+    fetch('include/delete_ausbildungstyp.php', {
         method: 'POST',
         body: formData,
     })

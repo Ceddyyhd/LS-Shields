@@ -1,3 +1,13 @@
+<?php
+session_start(); // Ensure session is started
+
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -85,6 +95,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="description">Beschreibung</label>
                         <textarea class="form-control" id="description" name="description" placeholder="Enter description"></textarea>
                     </div>
+                    <!-- Hidden Field für CSRF-Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -111,6 +123,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="new_category_name">Kategorie Name</label>
                         <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Kategorie hinzufügen">
                     </div>
+                    <!-- Hidden Field für CSRF-Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -163,6 +177,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="note">Notiz zur Bestandsänderung</label>
                         <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
                     </div>
+                    <!-- Hidden Field für CSRF-Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">

@@ -364,6 +364,31 @@ document.getElementById('saveAusbildungBtn').addEventListener('click', function(
         alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
 });
+
+// Fetch Ausbildungstypen with CSRF token
+function fetchAusbildungstypen() {
+    const formData = new FormData();
+    formData.append('csrf_token', '<?php echo $csrf_token; ?>');
+
+    fetch('include/fetch_ausbildungstypen.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Handle the fetched data
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        alert('Ein Fehler ist aufgetreten: ' + error.message);
+    });
+}
+
+// Call the function to fetch Ausbildungstypen
+fetchAusbildungstypen();
 </script>
 
 </body>

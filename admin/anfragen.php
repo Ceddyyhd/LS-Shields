@@ -1,8 +1,14 @@
+<?php
+session_start(); // Ensure session is started
+
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
@@ -19,12 +25,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Starter Page</h1>
+            <h1 class="m-0">Anfragen</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Starter Page</li>
+              <li class="breadcrumb-item active">Anfragen</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -36,12 +42,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <?php
 // Datenbankverbindung einbinden
 include 'include/db.php';
-
-// CSRF-Token generieren und in der Session speichern
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-$csrf_token = $_SESSION['csrf_token'];
 
 // Anfragen aus der Datenbank abrufen
 $query = "SELECT id, vorname_nachname, telefonnummer, anfrage, datum_uhrzeit, erstellt_von, status FROM anfragen ORDER BY datum_uhrzeit DESC";
@@ -233,6 +233,7 @@ function changeStatus(id, action) {
 
   // Füge die action manuell hinzu
   formData.append('action', action);
+  formData.append('csrf_token', '<?php echo $csrf_token; ?>'); // Append CSRF token
 
   fetch('include/update_status.php', {
     method: 'POST',

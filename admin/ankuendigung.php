@@ -1,3 +1,13 @@
+<?php
+session_start(); // Ensure session is started
+
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -82,6 +92,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <input type="text" class="form-control" id="created_by" name="created_by" value="<?php echo htmlspecialchars($user_name); ?>" placeholder="Ersteller eingeben">
                     </div>
                     <!-- Keine Notwendigkeit für 'created_by' im Modal, es wird automatisch gesetzt -->
+                    <!-- CSRF-Token in einem versteckten Feld einfügen -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -126,6 +138,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <label for="edit_created_by">Bearbeitet von</label>
                       <input type="text" class="form-control" id="edit_created_by" name="created_by" value="">
                   </div>
+                  <!-- CSRF-Token in einem versteckten Feld einfügen -->
+                  <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">

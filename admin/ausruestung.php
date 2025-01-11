@@ -426,6 +426,47 @@ $(document).ready(function() {
         });
     });
 });
+
+function fetchAusruestung() {
+    const formData = new FormData();
+    formData.append('csrf_token', '<?php echo $csrf_token; ?>');
+
+    fetch('include/fetch_ausruestungstypen.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const tbody = document.querySelector('#example1 tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+
+            data.ausruestung.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.key_name}</td>
+                    <td>${item.display_name}</td>
+                    <td>${item.description}</td>
+                    <td>${item.stock}</td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="editAusruestung(${item.id})">Bearbeiten</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAusruestung(${item.id})">Löschen</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        alert('Ein Fehler ist aufgetreten: ' + error.message);
+    });
+}
+
+// Call the function to fetch Ausruestung
+fetchAusruestung();
 </script>
 
 

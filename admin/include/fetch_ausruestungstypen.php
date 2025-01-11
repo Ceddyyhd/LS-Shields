@@ -19,7 +19,7 @@ if (isset($_POST['id'])) {
     // Einzelne Ausruestung abrufen
     $id = $_POST['id'];
     try {
-        $stmt = $conn->prepare("SELECT * FROM ausruestung WHERE id = :id");
+        $stmt = $conn->prepare("SELECT * FROM ausruestungstypen WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $ausruestung = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,7 +35,7 @@ if (isset($_POST['id'])) {
 } else {
     // Alle Ausruestung abrufen
     try {
-        $stmt = $conn->prepare("SELECT * FROM ausruestung");
+        $stmt = $conn->prepare("SELECT * FROM ausruestungstypen");
         $stmt->execute();
         $ausruestung = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

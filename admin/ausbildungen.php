@@ -290,7 +290,7 @@ function editAusbildung(id) {
     formData.append('csrf_token', '<?php echo $csrf_token; ?>');
     formData.append('id', id);
 
-    fetch('include/fetch_ausbildungstyp.php', {
+    fetch('include/fetch_ausbildungstypen.php', {
         method: 'POST',
         body: formData,
     })

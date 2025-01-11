@@ -4,7 +4,8 @@ require_once 'db.php';
 
 // Überprüfen, ob das CSRF-Token gültig ist
 if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die(json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token.']));
+    header('Location: ../error.php');
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['success' => false, 'message' => 'Fehler beim Hinzufügen der Kategorie.']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
+    header('Location: ../error.php');
+    exit;
 }
 
 $conn = null;

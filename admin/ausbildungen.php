@@ -264,6 +264,7 @@ function fetchAusbildungstypen() {
                     <td>
                         <button class="btn btn-info btn-sm" onclick="editAusbildung(${ausbildung.id})">Bearbeiten</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteAusbildung(${ausbildung.id})">Löschen</button>
+                        <button class="btn btn-primary btn-sm" onclick="openAusbildungAkte(${ausbildung.id})">Akte öffnen</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -337,6 +338,10 @@ function deleteAusbildung(id) {
     .catch(error => {
         alert('Ein Fehler ist aufgetreten: ' + error.message);
     });
+}
+
+function openAusbildungAkte(id) {
+    window.open(`ausbildung_akte.php?id=${id}`, '_blank');
 }
 </script>
 

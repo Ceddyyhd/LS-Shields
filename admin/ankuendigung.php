@@ -1,3 +1,13 @@
+<?php
+session_start(); // Ensure session is started
+
+// CSRF-Token generieren und in der Session speichern
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -82,6 +92,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <input type="text" class="form-control" id="created_by" name="created_by" value="<?php echo htmlspecialchars($user_name); ?>" placeholder="Ersteller eingeben">
                     </div>
                     <!-- Keine Notwendigkeit für 'created_by' im Modal, es wird automatisch gesetzt -->
+                    <!-- Hidden Field für CSRF-Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -332,5 +344,32 @@ $('#saveEditAnkuendigung').click(function() {
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
+
+<!-- JavaScript zur Verarbeitung des Formulars -->
+<script>
+document.getElementById('saveAnkuendigungBtn').addEventListener('click', function() {
+    const formData = new FormData(document.getElementById('createAnkuendigungForm'));
+
+    fetch('include/ankuendigung_create.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Ankündigung erfolgreich erstellt');
+            // Optionally, close the modal and reset the form
+            $('#modal-ankuendigung-create').modal('hide');
+            document.getElementById('createAnkuendigungForm').reset();
+        } else {
+            alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
+        }
+    })
+    .catch(error => {
+        alert('Ein Fehler ist aufgetreten: ' + error.message);
+    });
+});
+</script>
+
 </body>
 </html>

@@ -1,13 +1,3 @@
-<?php
-session_start(); // Ensure session is started
-
-// CSRF-Token generieren und in der Session speichern
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-$csrf_token = $_SESSION['csrf_token'];
-?>
-
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -121,8 +111,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="new_category_name">Kategorie Name</label>
                         <input type="text" class="form-control" id="new_category_name" name="new_category_name" placeholder="Kategorie hinzufügen">
                     </div>
-                    <!-- Hidden Field für CSRF-Token -->
-                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -175,8 +163,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <label for="note">Notiz zur Bestandsänderung</label>
                         <textarea class="form-control" id="note" name="note" placeholder="Geben Sie eine Notiz zur Bestandsänderung ein"></textarea>
                     </div>
-                    <!-- Hidden Field für CSRF-Token -->
-                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
@@ -247,54 +233,40 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
 $(document).ready(function() {
     // Daten für Ausrüstungen laden
-    function fetchAusruestung() {
-        const formData = new FormData();
-        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
+    formData.append('csrf_token', '<?php echo $csrf_token; ?>');
+    $.ajax({
+        url: 'include/fetch_ausruestungstypen.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const tableBody = $('#example1 tbody');
+            tableBody.empty();
 
-        fetch('include/fetch_ausruestungstypen.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const tbody = document.querySelector('#example1 tbody');
-                tbody.innerHTML = ''; // Clear existing rows
-
-                data.ausruestung.forEach((item, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${item.key_name}</td>
-                        <td>${item.display_name}</td>
-                        <td>${item.description}</td>
-                        <td>${item.stock}</td>
+            data.forEach(function(ausruestung) {
+                tableBody.append(`
+                    <tr>
+                        <td>${ausruestung.id}</td>
+                        <td>${ausruestung.key_name}</td>
+                        <td>${ausruestung.display_name}</td>
+                        <td>${ausruestung.description}</td>
+                        <td>${ausruestung.stock}</td>
                         <td>
-                            <button class="btn btn-info btn-sm" onclick="editAusruestung(${item.id})">Bearbeiten</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAusruestung(${item.id})">Löschen</button>
+                            ${ausruestung.can_edit ? '<button class="btn btn-outline-secondary" data-id="' + ausruestung.id + '" data-keyname="' + ausruestung.key_name + '" data-displayname="' + ausruestung.display_name + '" data-category="' + ausruestung.category + '" data-description="' + ausruestung.description + '" data-stock="' + ausruestung.stock + '" onclick="openEditModal(this)">Bearbeiten</button>' : ''}
+                            ${ausruestung.can_delete ? '<button class="btn btn-outline-danger" onclick="deleteAusruestungTyp(' + ausruestung.id + ')">Löschen</button>' : ''}
+                            <button class="btn btn-outline-info history-button" data-id="${ausruestung.key_name}">Historie</button> <!-- Historie-Button -->
                         </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } else {
-                alert('Fehler: ' + (data.message || 'Unbekannter Fehler'));
-            }
-        })
-        .catch(error => {
-            alert('Ein Fehler ist aufgetreten: ' + error.message);
-        });
-    }
-
-    // Call the function to fetch Ausruestung
-    fetchAusruestung();
+                    </tr>
+                `);
+            });
+        },
+        error: function(xhr, status, error) {
+            alert('Fehler beim Abrufen der Ausrüstungstypen.');
+        }
+    });
 
     // Funktion zum Öffnen des Bearbeitungs-Modals und Laden der Daten
     window.openEditModal = function(button) {
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
         const id = $(button).data('id');
         const keyName = $(button).data('keyname');
         const displayName = $(button).data('displayname');
@@ -314,6 +286,7 @@ $(document).ready(function() {
 
     // Funktion zum Laden der Kategorien
     function loadCategories(selectedCategory) {
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
         $.ajax({
             url: 'include/fetch_kategorien.php',
             type: 'GET',
@@ -336,6 +309,7 @@ $(document).ready(function() {
     // Kategorie hinzufügen
     $('#saveNewCategory').click(function() {
         const newCategoryName = $('#new_category_name').val();
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
 
         if (newCategoryName) {
             $.ajax({
@@ -345,11 +319,7 @@ $(document).ready(function() {
                 success: function(response) {
                     alert('Kategorie erfolgreich hinzugefügt.');
                     loadCategories(); // Lade die Kategorien nach dem Hinzufügen neu
-                $('#modal-kategorie-create').modal('hide');
-                $('#modal-kategorie-create').modal('hide');
-                fetchAusruestung(); // Refresh the list
                     $('#modal-kategorie-create').modal('hide');
-                fetchAusruestung(); // Refresh the list
                 },
                 error: function(xhr, status, error) {
                     alert('Fehler beim Hinzufügen der Kategorie.');
@@ -367,6 +337,7 @@ $(document).ready(function() {
     });
 
     function openHistoryModal(ausruestungId) {
+        formData.append('csrf_token', '<?php echo $csrf_token; ?>');
         $.ajax({
             url: 'include/fetch_ausruestung_history.php',
             type: 'GET',

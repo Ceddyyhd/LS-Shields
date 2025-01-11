@@ -1,14 +1,7 @@
 <?php
 include 'db.php';  // Datenbankverbindung einbinden
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-        exit;
-    }
-
     // Werte aus dem POST holen
     $vacation_id = $_POST['vacation_id'];
     $start_date = $_POST['start_date'];
@@ -47,9 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql_log = "INSERT INTO vacations_logs (vacation_id, action, user_name) VALUES (?, ?, ?)";
             $stmt_log = $conn->prepare($sql_log);
             $stmt_log->execute([$vacation_id, $action, $user_name]);
-
-            // Allgemeiner Log-Eintrag
-            logAction('UPDATE', 'vacations', 'Urlaubsantrag bearbeitet: ID: ' . $vacation_id . ', bearbeitet von: ' . $_SESSION['user_id']);
         }
 
         // Urlaubsantrag in der DB aktualisieren
@@ -57,22 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_update = $conn->prepare($sql_update);
         $stmt_update->execute([$start_date, $end_date, $status, $note, $vacation_id]);
 
-        echo json_encode(['success' => true, 'message' => 'Urlaubsantrag erfolgreich aktualisiert.']);
+        echo json_encode(['success' => true, 'message' => 'Urlaubsantrag erfolgreich bearbeitet.']);
     } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Urlaubsantrags: ' . $e->getMessage()]);
+        // Fehlerbehandlung
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
 }
 ?>

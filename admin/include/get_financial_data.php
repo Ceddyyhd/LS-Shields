@@ -1,13 +1,5 @@
 <?php
 include 'db.php'; // Deine PDO-Datenbankverbindung
-session_start();
-header('Content-Type: application/json');
-
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['status' => 'error', 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
 
 // SQL-Abfragen zum Berechnen der Einnahmen und Ausgaben
 $sql_einnahmen = "SELECT SUM(betrag) AS einnahmen FROM finanzen WHERE typ = 'Einnahme'";
@@ -37,10 +29,6 @@ try {
     ]);
 } catch (PDOException $e) {
     // Fehlerbehandlung: Gebe eine Fehlermeldung zurück, wenn die Datenbankabfragen fehlschlagen
-    error_log('Fehler bei der Datenbankabfrage: ' . $e->getMessage());
     echo json_encode(["status" => "error", "message" => "Fehler bei der Datenbankabfrage: " . $e->getMessage()]);
 }
-
-// Schließen der Verbindung
-$conn = null;
 ?>

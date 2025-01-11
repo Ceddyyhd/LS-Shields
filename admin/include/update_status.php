@@ -5,12 +5,6 @@ session_start(); // Session starten, um Benutzerrechte abzurufen
 
 // Überprüfen, ob der POST-Request korrekt ist
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
-        exit;
-    }
-
     // Überprüfe, ob die action gesetzt ist
     if (!isset($_POST['action'])) {
         echo json_encode(['success' => false, 'error' => 'Keine Aktion angegeben']);
@@ -55,10 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id' => $id
         ]);
 
-        // Allgemeiner Log-Eintrag
-        logAction('UPDATE', 'anfragen', 'id: ' . $id . ', status auf "in Bearbeitung" gesetzt von: ' . $_SESSION['user_id']);
-
-        echo json_encode(['success' => true, 'message' => 'Status erfolgreich geändert']);
+        // Erfolgreiche Antwort
+        echo json_encode(['success' => true, 'new_status' => 'in Bearbeitung']);
     } 
     
     // Überprüfe, ob die Aktion 'move_to_eventplanung' ist
@@ -109,18 +101,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else {
         echo json_encode(['success' => false, 'error' => 'Ungültige Aktion']);
     }
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
 }
 ?>

@@ -11,12 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     session_start();
 
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        header('Location: ../error.php');
-        exit;
-    }
-
     // Pflichtfelder prüfen
     $password = $_POST['password'] ?? null;
 
@@ -53,40 +47,29 @@ try {
     $kontonummer = $_POST['kontonummer'] ?? null;
     $nummer = $_POST['nummer'] ?? null;
 
-    // Benutzer in der Datenbank speichern
+    // Benutzer in die Datenbank einfügen
     $stmt = $conn->prepare("
-        INSERT INTO customers (name, umail, kontonummer, nummer, password, profile_image) 
-        VALUES (:name, :umail, :kontonummer, :nummer, :password, :profile_image)
+        INSERT INTO kunden (umail, name, nummer, kontonummer, password, profile_image, created_at, remember_token)
+        VALUES (?, ?, ?, ?, ?, ?, NOW(), NULL)
     ");
-    $stmt->execute([
-        ':name' => $name,
-        ':umail' => $umail,
-        ':kontonummer' => $kontonummer,
-        ':nummer' => $nummer,
-        ':password' => $passwordHash,
-        ':profile_image' => $profileImagePath
-    ]);
+    $stmt->execute([$umail, $name, $nummer, $kontonummer, $passwordHash, $profileImagePath]);
 
-    // Log-Eintrag für das Erstellen des Kunden
-    $customer_id = $conn->lastInsertId();
-    logAction('INSERT', 'customers', 'customer_id: ' . $customer_id . ', created_by: ' . $_SESSION['user_id']);
+    // ID des erstellten Benutzers abrufen
+    $newUserId = $conn->lastInsertId();
 
-    echo json_encode(['success' => true, 'message' => 'Kunde wurde erfolgreich erstellt.']);
-} catch (PDOException $e) {
-    error_log('Fehler beim Erstellen des Kunden: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Fehler beim Erstellen des Kunden: ' . $e->getMessage()]);
+    // Logging: Wer hat diesen Benutzer erstellt?
+    $createdById = $_SESSION['user_id'] ?? null; // ID des aktuellen Benutzers aus der Session
+    $createdByName = $_SESSION['username'] ?? 'Unbekannt'; // Name des aktuellen Benutzers aus der Session
+
+    if ($createdById) {
+        $logStmt = $conn->prepare("
+            INSERT INTO kunden_logs (created_by, created_by_name, action, target_user)
+            VALUES (?, ?, 'Kunde erstellt', ?)
+        ");
+        $logStmt->execute([$createdById, $createdByName, $newUserId]);
+    }
+
+    echo json_encode(['success' => true, 'message' => 'Benutzer erfolgreich erstellt.']);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
-}
-?>

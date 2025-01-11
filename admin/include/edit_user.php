@@ -2,13 +2,6 @@
 // Verbindung und Sitzung starten
 include 'db.php';
 session_start();
-header('Content-Type: application/json');
-
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
 
 // Überprüfen, ob die Anfrage korrekt ist
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,54 +44,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updates['password'] = $hashedPassword;
     }
 
-    // Gekündigt und Bewerber verarbeiten
-    $gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
-    $updates['gekuendigt'] = $gekuendigt;
+// Gekündigt und Bewerber verarbeiten
+$gekuendigt = isset($_POST['gekuendigt']) && $_POST['gekuendigt'] === 'on' ? 'gekuendigt' : 'no_kuendigung';
+$bewerber = isset($_POST['bewerber']) && $_POST['bewerber'] === 'on' ? 'ja' : 'nein';
 
-    $bewerber = isset($_POST['bewerber']) && $_POST['bewerber'] === 'on' ? 'ja' : 'nein';
-    $updates['bewerber'] = $bewerber;
+// admin_bereich je nach Bewerberstatus setzen
+$admin_bereich = ($bewerber === 'nein') ? 1 : 0;  // Wenn Bewerber 'nein', setze admin_bereich auf 1, andernfalls auf 0
+
+// Updates vorbereiten
+$updates['gekuendigt'] = $gekuendigt;  // Den Gekuendigt-Wert in das Updates-Array einfügen
+$updates['bewerber'] = $bewerber;  // Den Bewerber-Wert in das Updates-Array einfügen
+$updates['admin_bereich'] = $admin_bereich;  // Den admin_bereich-Wert in das Updates-Array einfügen
 
     // Daten aktualisieren
-    try {
-        $setPart = [];
-        foreach ($updates as $column => $value) {
-            $setPart[] = "$column = :$column";
+    if (!empty($updates)) {
+        $sql = "UPDATE users SET ";
+        $params = [];
+        foreach ($updates as $key => $value) {
+            $sql .= "$key = :$key, ";
+            $params[":$key"] = $value;  // Parameter in die $params-Array einfügen
         }
-        $setPart = implode(', ', $setPart);
+        $sql = rtrim($sql, ', ') . " WHERE id = :user_id";  // Entferne das letzte Komma
+        $params[':user_id'] = $user_id;  // Benutzer-ID hinzufügen
 
-        $sql = "UPDATE users SET $setPart WHERE id = :user_id";
-        $stmt = $conn->prepare($sql);
-        foreach ($updates as $column => $value) {
-            $stmt->bindValue(":$column", $value);
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);  // SQL mit den richtigen Parametern ausführen
+            echo json_encode(['success' => true, 'message' => 'Daten erfolgreich gespeichert.']);
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
         }
-        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
-
-        if ($stmt->execute()) {
-            // Log-Eintrag für das Bearbeiten
-            logAction('UPDATE', 'users', 'user_id: ' . $user_id . ', updated_by: ' . $_SESSION['user_id']);
-
-            echo json_encode(['success' => true, 'message' => 'Benutzerdaten erfolgreich aktualisiert.']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren der Benutzerdaten.']);
-        }
-    } catch (PDOException $e) {
-        error_log('Fehler beim Aktualisieren der Benutzerdaten: ' . $e->getMessage());
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren der Benutzerdaten: ' . $e->getMessage()]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Keine Änderungen vorgenommen.']);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage.']);
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
 }
 ?>

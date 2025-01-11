@@ -1,14 +1,7 @@
 <?php
 include 'db.php'; // Deine PDO-Datenbankverbindung
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['status' => 'error', 'message' => 'Ungültiges CSRF-Token']);
-        exit;
-    }
-
     // Holen der POST-Daten
     $invoiceNumber = $_POST['invoice_number']; // Rechnungsnummer
     $status = $_POST['status']; // 'Bezahlt' oder 'Offen'
@@ -23,9 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ini_set('display_errors', 1);
 
     try {
-        // Beginne die Transaktion
-        $conn->beginTransaction();
-
         // 1. Aktualisieren des Rechnungsstatus
         $sqlUpdateStatus = "UPDATE invoices SET status = :status WHERE invoice_number = :invoice_number";
         $stmt = $conn->prepare($sqlUpdateStatus);
@@ -53,39 +43,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Überprüfen, ob das Insert erfolgreich war
             if ($stmtFinanzen->rowCount() > 0) {
-                // Commit der Transaktion
-                $conn->commit();
-
-                // Log-Eintrag für die Änderungen
-                logAction('UPDATE', 'invoices', 'invoice_number: ' . $invoiceNumber . ', status: ' . $status . ', bearbeitet von: ' . $_SESSION['user_id']);
-                logAction('INSERT', 'finanzen', 'typ: ' . $typ . ', kategorie: ' . $kategorie . ', betrag: ' . $betrag . ', erstellt_von: ' . $erstellt_von);
-
                 // Wenn beide Operationen erfolgreich waren
                 echo json_encode(['status' => 'success', 'message' => 'Rechnung und Finanzdaten erfolgreich aktualisiert!']);
             } else {
                 throw new Exception("Fehler beim Einfügen der Finanzdaten.");
             }
+
         } else {
-            throw new Exception("Fehler beim Aktualisieren des Rechnungsstatus.");
+            throw new Exception("Fehler: Keine Änderung des Rechnungsstatus vorgenommen.");
         }
+
+    } catch (PDOException $e) {
+        // Fehlerbehandlung für PDO-Fehler
+        echo json_encode(['status' => 'error', 'message' => 'Fehler bei der Datenbankabfrage: ' . $e->getMessage()]);
     } catch (Exception $e) {
-        // Rollback der Transaktion bei Fehler
-        $conn->rollBack();
-        error_log('Fehler: ' . $e->getMessage());
-        echo json_encode(['status' => 'error', 'message' => 'Fehler: ' . $e->getMessage()]);
+        // Fehlerbehandlung für allgemeine Fehler
+        echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
 }
 ?>

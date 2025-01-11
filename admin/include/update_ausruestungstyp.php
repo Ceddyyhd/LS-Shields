@@ -15,12 +15,6 @@ if (!isset($_SESSION['user_id'])) {
     die("Kein Benutzer eingeloggt.");
 }
 
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
-
 // Empfangen der Formulardaten
 $id = $_POST['id']; // ID des Ausrüstungstyps
 $key_name = $_POST['key_name'];
@@ -52,42 +46,40 @@ try {
         ':description' => $description
     ]);
 
-    // Bestandsänderung protokollieren
-    if ($stock != $currentStock) {
-        $stmt = $conn->prepare("INSERT INTO ausruestung_history (ausruestungstyp_id, old_stock, new_stock, note, changed_by) VALUES (:ausruestungstyp_id, :old_stock, :new_stock, :note, :changed_by)");
-        $stmt->execute([
-            ':ausruestungstyp_id' => $id,
-            ':old_stock' => $currentStock,
-            ':new_stock' => $stock,
-            ':note' => $note,
-            ':changed_by' => $user_id
-        ]);
+    // Bestandsänderung aktualisieren
+    $stmt = $conn->prepare("UPDATE ausruestungstypen SET stock = :stock WHERE id = :id");
+    $stmt->execute([
+        ':id' => $id,
+        ':stock' => (int)$stock // Stellen Sie sicher, dass stock als Zahl behandelt wird
+    ]);
+
+    // History-Eintrag erstellen (Bestand geändert + Notiz zusammen)
+    $action = "Bestand geändert";
+    if (!empty($note)) {
+        $action .= " ($note)"; // Füge die Notiz zur Aktion hinzu
     }
 
-    // Commit der Transaktion
+    // Füge die Bestandsänderung in der History hinzu
+    $action .= " (Alter Bestand: $currentStock -> Neuer Bestand: $stock)"; // Zeige alte und neue Bestandszahlen an
+
+    // History-Eintrag für Bestandsänderung
+    $stmt = $conn->prepare("INSERT INTO ausruestung_history (user_id, key_name, action, stock_change, editor_name) VALUES (:user_id, :key_name, :action, :stock_change, :editor_name)");
+    $stmt->execute([
+        ':user_id' => $user_id,
+        ':key_name' => $key_name,
+        ':action' => $action, // Aktion enthält jetzt auch die Notiz und Bestandsänderung
+        ':stock_change' => (int)$stock, // Bestandsänderung
+        ':editor_name' => $editor_name
+    ]);
+
+    // Alle Änderungen abschließen
     $conn->commit();
 
-    // Log-Eintrag für die Änderungen
-    logAction('UPDATE', 'ausruestungstypen', 'id: ' . $id . ', bearbeitet von: ' . $editor_name);
-
-    echo json_encode(['success' => true, 'message' => 'Ausrüstungstyp erfolgreich bearbeitet']);
-} catch (PDOException $e) {
-    // Rollback der Transaktion bei Fehler
+    // Erfolgreiche Antwort zurückgeben
+    echo json_encode(['success' => true, 'message' => 'Änderungen wurden erfolgreich gespeichert!']);
+} catch (Exception $e) {
+    // Im Fehlerfall die Transaktion zurückrollen
     $conn->rollBack();
-    error_log('Fehler beim Bearbeiten des Ausrüstungstyps: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Fehler beim Bearbeiten des Ausrüstungstyps: ' . $e->getMessage()]);
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
+    echo json_encode(['success' => false, 'message' => 'Fehler: ' . $e->getMessage()]);
 }
 ?>

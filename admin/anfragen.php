@@ -1,14 +1,8 @@
-<?php
-session_start(); // Ensure session is started
-
-// CSRF-Token generieren und in der Session speichern
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-$csrf_token = $_SESSION['csrf_token'];
-?>
-
 <!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
 <html lang="en">
 <?php include 'include/header.php'; ?>
 
@@ -25,12 +19,12 @@ $csrf_token = $_SESSION['csrf_token'];
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Anfragen</h1>
+            <h1 class="m-0">Starter Page</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Anfragen</li>
+              <li class="breadcrumb-item active">Starter Page</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -52,8 +46,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="row">
   <div class="col-12">
-    <!-- CSRF-Token in einem versteckten Feld einfügen -->
-    <input type="hidden" id="csrf_token" value="<?php echo $csrf_token; ?>">
     <div class="card">
       <div class="card-header">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-anfrage-create">
@@ -90,8 +82,6 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                       <!-- Hidden Field für 'erstellt_von' -->
                      <input type="hidden" id="erstellt_von" name="erstellt_von" value="<?php echo $_SESSION['username']; ?>">
-                     <!-- Hidden Field für CSRF-Token -->
-                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
 
                     </div>
                 </form>

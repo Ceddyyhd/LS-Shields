@@ -1,47 +1,23 @@
 <?php
-include 'db.php'; // Datenbankverbindung
+// Verbindung zur Datenbank herstellen
+require_once 'db.php'; // Deine DB-Verbindungsdatei
 
-session_start(); // Ensure session is started
-header('Content-Type: application/json');
+try {
+    // SQL-Abfrage, um alle Ausbildungstypen abzurufen
+    $sql = "SELECT id, key_name, display_name, description FROM ausbildungstypen";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
 
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
+    // Alle Ergebnisse in einem Array speichern
+    $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_POST['id'])) {
-    // Einzelnen Ausbildungstyp abrufen
-    $id = $_POST['id'];
-    try {
-        $stmt = $conn->prepare("SELECT * FROM ausbildungstypen WHERE id = :id");
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        $ausbildung = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Header setzen, um die Antwort als JSON zurückzugeben
+    header('Content-Type: application/json');
+    echo json_encode($ausbildungstypen);
 
-        if ($ausbildung) {
-            echo json_encode(['success' => true, 'ausbildung' => $ausbildung]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Ausbildungstyp nicht gefunden.']);
-        }
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
-    }
-} else {
-    // Alle Ausbildungstypen abrufen
-    try {
-        $stmt = $conn->prepare("SELECT * FROM ausbildungstypen");
-        $stmt->execute();
-        $ausbildungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($ausbildungstypen) {
-            echo json_encode(['success' => true, 'ausbildungstypen' => $ausbildungstypen]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Keine Ausbildungstypen gefunden.']);
-        }
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
-    }
+} catch (PDOException $e) {
+    // Fehlerbehandlung
+    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 
 // Verbindung schließen

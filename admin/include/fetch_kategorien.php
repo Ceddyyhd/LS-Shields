@@ -1,7 +1,5 @@
 <?php
 require_once 'db.php';
-session_start();
-header('Content-Type: application/json');
 
 try {
     // SQL-Abfrage, um alle Kategorien abzurufen
@@ -13,10 +11,10 @@ try {
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Header setzen, um die Antwort als JSON zurückzugeben
+    header('Content-Type: application/json');
     echo json_encode($categories);
 
 } catch (PDOException $e) {
-    error_log('Datenbankfehler: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
 }
 

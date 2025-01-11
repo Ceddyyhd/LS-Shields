@@ -6,14 +6,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
 header('Content-Type: application/json');
-
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
-    exit;
-}
 
 try {
     // Dein SQL-Statement für die Benutzerabfrage
@@ -39,7 +32,6 @@ try {
 
 } catch (PDOException $e) {
     // Fehlerausgabe bei SQL-Problemen
-    error_log('SQL-Fehler: ' . $e->getMessage());
     echo json_encode(['error' => 'SQL-Fehler: ' . $e->getMessage()]);
     exit;
 }

@@ -1,6 +1,1 @@
 DirectoryIndex index.php index.html
-
-<Files "db.php">
-    Order allow,deny
-    Deny from all
-</Files>

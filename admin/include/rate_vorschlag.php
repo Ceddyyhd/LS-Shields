@@ -4,12 +4,6 @@ include 'db.php'; // Datenbankverbindung
 session_start(); // Sitzung starten
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-        exit;
-    }
-
     $vorschlagId = (int) $_POST['id']; // Vorschlag ID
     $zustimmung = ($_POST['zustimmung'] === 'true') ? 1 : 0;  // Umwandeln von 'true'/'false' in 1/0
     $userId = $_SESSION['user_id'];  // Benutzer-ID aus der Session holen
@@ -50,27 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([':id' => $vorschlagId]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Log-Eintrag für die Abstimmung
-    logAction('VOTE', 'vorschlag_zustimmungen', 'vorschlag_id: ' . $vorschlagId . ', user_id: ' . $userId . ', zustimmung: ' . $zustimmung);
-
     // Rückgabe der neuen Werte für Zustimmungen und Ablehnungen
     echo json_encode([
         'success' => true,
         'zustimmungen' => (int) $result['zustimmungen'],  // Stellen sicher, dass es eine Zahl ist
         'ablehnungen' => (int) $result['ablehnungen']
     ]);
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
 }
 ?>

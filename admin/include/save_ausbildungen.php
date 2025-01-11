@@ -3,12 +3,6 @@ include 'db.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Überprüfen, ob das CSRF-Token gültig ist
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-        exit;
-    }
-
     $user_id = $_POST['user_id'] ?? null;
     $ausbildungen = $_POST['ausbildungen'] ?? [];
 
@@ -53,46 +47,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentStatus = $existingData[$key_name]['status'] ?? 0;
             $currentRating = $existingData[$key_name]['bewertung'] ?? 0;
 
-            // Nur aktualisieren, wenn sich der Status oder die Bewertung geändert hat
+            // Prüfen, ob der Status oder die Bewertung geändert wurde
             if ($newStatus !== $currentStatus || $newRating !== $currentRating) {
-                $stmt = $conn->prepare("REPLACE INTO ausbildungen (user_id, ausbildung, status, bewertung) VALUES (:user_id, :ausbildung, :status, :bewertung)");
-                $stmt->execute([
-                    ':user_id' => $user_id,
-                    ':ausbildung' => $key_name,
-                    ':status' => $newStatus,
-                    ':bewertung' => $newRating
-                ]);
+                $action = '';
+                if ($newStatus !== $currentStatus) {
+                    $action = $newStatus ? 'hinzugefügt' : 'entfernt';
+                } elseif ($newRating !== $currentRating) {
+                    $action = 'geändert';
+                }
 
-                $logData[] = [
-                    'ausbildung' => $key_name,
-                    'old_status' => $currentStatus,
-                    'new_status' => $newStatus,
-                    'old_rating' => $currentRating,
-                    'new_rating' => $newRating
-                ];
+                // Loggen der Änderung
+                if ($action) {
+                    $logData[] = [
+                        'user_id' => $user_id,
+                        'editor_name' => $editor_name,
+                        'ausbildung' => $key_name,
+                        'action' => $action,
+                        'rating' => $newRating
+                    ];
+                }
+
+                // Datenbank aktualisieren
+                if ($newStatus || $newRating > 0) {
+                    // Hinzufügen oder Aktualisieren
+                    $stmt = $conn->prepare("INSERT INTO ausbildungen (user_id, ausbildung, status, bewertung) 
+                                            VALUES (:user_id, :ausbildung, :status, :bewertung)
+                                            ON DUPLICATE KEY UPDATE status = :status, bewertung = :bewertung");
+                    $stmt->execute([
+                        ':user_id' => $user_id,
+                        ':ausbildung' => $key_name,
+                        ':status' => $newStatus,
+                        ':bewertung' => $newRating
+                    ]);
+                } else {
+                    // Entfernen, wenn Status 0 und keine Bewertung vorhanden
+                    $stmt = $conn->prepare("DELETE FROM ausbildungen WHERE user_id = :user_id AND ausbildung = :ausbildung");
+                    $stmt->execute([
+                        ':user_id' => $user_id,
+                        ':ausbildung' => $key_name
+                    ]);
+                }
             }
         }
 
-        // Log-Eintrag für die Änderungen
-        logAction('UPDATE', 'ausbildungen', 'user_id: ' . $user_id . ', changes: ' . json_encode($logData) . ', edited_by: ' . $editor_name);
+        // Logs in die Datenbank schreiben
+        foreach ($logData as $log) {
+            $stmt = $conn->prepare("INSERT INTO ausbildung_logs (user_id, editor_name, ausbildung, action, rating) 
+                                    VALUES (:user_id, :editor_name, :ausbildung, :action, :rating)");
+            $stmt->execute($log);
+        }
 
-        echo json_encode(['success' => true, 'message' => 'Ausbildungen erfolgreich aktualisiert.']);
-    } catch (PDOException $e) {
-        error_log('Fehler beim Aktualisieren der Ausbildungen: ' . $e->getMessage());
-        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren der Ausbildungen: ' . $e->getMessage()]);
+        echo json_encode(['success' => true, 'message' => 'Änderungen gespeichert.']);
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Speichern: ' . $e->getMessage()]);
     }
-}
-
-// Funktion zum Loggen von Aktionen
-function logAction($action, $table, $details) {
-    global $conn;
-
-    // SQL-Abfrage zum Einfügen des Log-Eintrags
-    $stmt = $conn->prepare("INSERT INTO logs (action, table_name, details, user_id, timestamp) VALUES (:action, :table_name, :details, :user_id, NOW())");
-    $stmt->bindParam(':action', $action, PDO::PARAM_STR);
-    $stmt->bindParam(':table_name', $table, PDO::PARAM_STR);
-    $stmt->bindParam(':details', $details, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
+    exit;
 }
 ?>

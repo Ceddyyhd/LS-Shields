@@ -1,13 +1,5 @@
 <?php
 include 'db.php';
-session_start();
-header('Content-Type: application/json');
-
-// Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
-    exit;
-}
 
 // Überprüfen, ob die user_id übergeben wurde
 if (isset($_POST['user_id'])) {

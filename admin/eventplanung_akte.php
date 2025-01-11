@@ -66,8 +66,6 @@
     } catch (PDOException $e) {
         die("Fehler beim Abrufen der Daten: " . $e->getMessage());
     }
-
-    $CSRFToken == $_SESSION['csrf_token'];  // ID des aktuellen Benutzers
     ?>
 
     <script>
@@ -875,8 +873,7 @@ error: function(xhr, status, error) {
                 method: 'POST',
                 data: {
                     event_id: eventId,
-                    employee_id: employeeId,
-                    csrf_token: '<?php echo $_SESSION['csrf_token']; ?>'  // CSRF-Token senden
+                    employee_id: employeeId
                 },
                 success: function(response) {
                     // Falls erfolgreich, den Eintrag aus der Anzeige entfernen oder neu laden

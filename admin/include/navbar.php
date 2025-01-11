@@ -39,11 +39,6 @@ if (!isset($_SESSION['user_id'])) {
     }
 }
 
-// CSRF-Token generieren
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
@@ -51,8 +46,19 @@ $stmt->execute([':id' => $_SESSION['user_id']]);
 $userRole = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($userRole) {
-    // Berechtigungen setzen
-    $_SESSION['role_id'] = $userRole['role_id'];
+    $roleId = $userRole['role_id'];
+    $stmt = $conn->prepare("SELECT permissions FROM roles WHERE id = :role_id");
+    $stmt->execute([':role_id' => $roleId]);
+    $role = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($role) {
+        $permissionsArray = json_decode($role['permissions'], true);
+        if (is_array($permissionsArray)) {
+            $_SESSION['permissions'] = array_fill_keys($permissionsArray, true);
+        } else {
+            $_SESSION['permissions'] = [];
+        }
+    }
 }
 
 $query = "SELECT setting_value FROM admin_settings WHERE setting_key = 'maintenance_mode'";

@@ -3,12 +3,14 @@ session_start();
 
 // Überprüfen, ob die Anfrage von einem AJAX-Request kommt
 if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') {
-    die(json_encode(['success' => false, 'error' => 'Unauthorized access']));
+    header('Location: ../error.php');
+    exit;
 }
 
 // Überprüfen, ob das CSRF-Token gültig ist
 if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die(json_encode(['success' => false, 'error' => 'Invalid CSRF token']));
+    header('Location: ../error.php');
+    exit;
 }
 
 include('db.php');
@@ -41,7 +43,8 @@ if (isset($_POST['event_id']) && isset($_POST['employee_id'])) {
         echo json_encode(['success' => false, 'error' => 'Database error']);
     }
 } else {
-    echo json_encode(['success' => false, 'error' => 'Missing parameters']);
+    header('Location: ../error.php');
+    exit;
 }
 
 // Funktion zum Loggen von Aktionen

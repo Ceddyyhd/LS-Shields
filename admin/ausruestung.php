@@ -79,8 +79,18 @@ $csrf_token = $_SESSION['csrf_token'];
                     <form id="createAusruestungForm">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="title">Titel</label>
-                                <input type="text" class="form-control" id="title" name="title" placeholder="Titel eingeben" required>
+                                <label for="key_name">Key Name</label>
+                                <input type="text" class="form-control" id="key_name" name="key_name" placeholder="Key Name eingeben" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="display_name">Display Name</label>
+                                <input type="text" class="form-control" id="display_name" name="display_name" placeholder="Display Name eingeben" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="category">Kategorie</label>
+                                <select class="form-control" id="category" name="category" required>
+                                    <!-- Kategorien werden hier dynamisch geladen -->
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="description">Beschreibung</label>
@@ -381,6 +391,7 @@ function editAusruestung(id) {
                 document.getElementById('edit_display_name').value = item.display_name;
                 document.getElementById('edit_description').value = item.description;
                 document.getElementById('edit_stock').value = item.stock;
+                document.getElementById('edit_category').value = item.category;
                 $('#modal-ausruestung-edit').modal('show');
             } else {
                 alert('Fehler: Ausruestung nicht gefunden.');

@@ -112,6 +112,10 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     exit;
 }
 
+// CSRF Token generieren, falls noch nicht vorhanden
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge einen zufälligen Token
+}
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
             FROM users 
@@ -121,6 +125,11 @@ $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
+
+<script>
+// Den CSRF-Token als globale Variable in JavaScript setzen
+const csrfToken = '<?php echo $_SESSION['csrf_token']; ?>';
+</script>
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
     <!-- Left navbar links -->

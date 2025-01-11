@@ -82,6 +82,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                       <!-- Hidden Field für 'erstellt_von' -->
                      <input type="hidden" id="erstellt_von" name="erstellt_von" value="<?php echo $_SESSION['username']; ?>">
+                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
                     </div>
                 </form>

@@ -58,7 +58,7 @@ $csrf_token = $_SESSION['csrf_token'];
     <?php if (isset($_SESSION['permissions']['ausruestung_create']) && $_SESSION['permissions']['ausruestung_create']): ?>
     <div class="card-header">
         <h3 class="card-title">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-ausruestung-create">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-kategorie-create">
                 Ausrüstungs Kategorie erstellen
             </button>
         </h3>

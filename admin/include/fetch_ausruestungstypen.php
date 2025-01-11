@@ -1,13 +1,12 @@
 <?php
-require_once 'db.php'; // Deine DB-Verbindungsdatei
+include 'db.php'; // Datenbankverbindung
 
-// Beispiel für die Berechtigung des Benutzers
-session_start();
+session_start(); // Ensure session is started
 header('Content-Type: application/json');
 
 // Überprüfen, ob das CSRF-Token gültig ist
-if (!isset($_GET['csrf_token']) || $_GET['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo json_encode(['success' => false, 'error' => 'Ungültiges CSRF-Token']);
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Ungültiges CSRF-Token']);
     exit;
 }
 
@@ -16,34 +15,40 @@ function has_permission($permission) {
     return isset($_SESSION['permissions'][$permission]) && $_SESSION['permissions'][$permission];
 }
 
-try {
-    // SQL-Abfrage, um alle Ausrüstungstypen abzurufen
-    $sql = "SELECT id, key_name, display_name, description, stock, category FROM ausruestungstypen ORDER BY category";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
+if (isset($_POST['id'])) {
+    // Einzelne Ausruestung abrufen
+    $id = $_POST['id'];
+    try {
+        $stmt = $conn->prepare("SELECT * FROM ausruestung WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $ausruestung = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Alle Ergebnisse in einem Array speichern
-    $ausruestungstypen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Überprüfen, ob Daten vorhanden sind
-    if ($ausruestungstypen) {
-        // Füge Berechtigungen hinzu
-        foreach ($ausruestungstypen as &$ausruestung) {
-            $ausruestung['can_edit'] = has_permission('ausruestungstyp_update');
-            $ausruestung['can_delete'] = has_permission('ausruestungstyp_remove');
+        if ($ausruestung) {
+            echo json_encode(['success' => true, 'ausruestung' => $ausruestung]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Ausruestung nicht gefunden.']);
         }
-
-        // Header setzen, um die Antwort als JSON zurückzugeben
-        echo json_encode($ausruestungstypen);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Keine Ausrüstungstypen gefunden.']);
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
     }
+} else {
+    // Alle Ausruestung abrufen
+    try {
+        $stmt = $conn->prepare("SELECT * FROM ausruestung");
+        $stmt->execute();
+        $ausruestung = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
-    // Fehlerbehandlung
-    error_log('Datenbankfehler: ' . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+        if ($ausruestung) {
+            echo json_encode(['success' => true, 'ausruestung' => $ausruestung]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Keine Ausruestung gefunden.']);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+    }
 }
 
-$conn = null; // Verbindung schließen
+// Verbindung schließen
+$conn = null;
 ?>

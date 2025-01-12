@@ -61,6 +61,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
           <!-- Urlaub Formular für Admin -->
           <div class="col-md-3">
     <div class="sticky-top mb-3">
+    <?php if ($_SESSION['permissions']['add_urlaub_for_users'] ?? false): ?>
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Urlaub einreichen</h3>
@@ -105,6 +106,7 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                 </form>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -136,8 +138,10 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                           <td><?php echo $vacation['end_date']; ?></td>
                           <td><span class="badge bg-warning"><?php echo ucfirst($vacation['status']); ?></span></td>
                           <td>
+                          <?php if ($_SESSION['permissions']['edit_urlaub_users'] ?? false): ?>
                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">Bearbeiten</button>
-                          </td>
+                          <?php endif; ?>
+                        </td>
                         </tr>
                     <?php endforeach; ?>
                   </tbody>
@@ -172,9 +176,11 @@ $approved_vacations = $stmt_approved->fetchAll(PDO::FETCH_ASSOC);
                         <td><span class="badge bg-success"><?php echo ucfirst($vacation['status']); ?></span></td>
                         <!-- Bearbeiten-Button hinzufügen -->
                         <td>
+                        <?php if ($_SESSION['permissions']['edit_urlaub_users'] ?? false): ?>
                             <button type="button" class="btn btn-primary edit-button" data-toggle="modal" data-target="#vacation-bearbeiten" data-id="<?php echo $vacation['id']; ?>">
                                 Bearbeiten
                             </button>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

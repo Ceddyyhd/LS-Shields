@@ -1,6 +1,6 @@
 <?php
-// Sicherheitsschutz - Verhindert den direkten Zugriff auf die Datei
-if (!defined('INCLUDE_SCRIPT')) {
+// Überprüfen, ob die Datei über ein 'include' oder 'require' eingebunden wurde
+if (basename($_SERVER['SCRIPT_NAME']) == basename(__FILE__)) {
     die('Zugriff verweigert');
 }
 ?>

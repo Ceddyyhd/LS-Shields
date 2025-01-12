@@ -103,9 +103,11 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
           <div class="info-box shadow-sm">
             <span class="info-box-icon bg-warning"><i class="far fa-flag"></i></span>
             <div class="info-box-content">
+            <?php if ($_SESSION['permissions']['finanzverwaltung_add_entry'] ?? false): ?>
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#neuen-kassen-eintrag">
                 Neuen Kassen Eintrag
               </button>
+              <?php endif; ?>
 
 
               <!-- Modal -->

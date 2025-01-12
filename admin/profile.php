@@ -973,9 +973,9 @@ $("#noteForm").on("submit", function (e) {
                         <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>">
                             <?= htmlspecialchars($displayName); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>" disabled>
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
+                                <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" disabled
                                    data-value="<?= $i; ?>" 
                                    data-ausbildung="<?= htmlspecialchars($keyName); ?>"></i>
                             <?php endfor; ?>

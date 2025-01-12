@@ -1,10 +1,8 @@
 <?php
-// Sicherstellen, dass die Datei nicht direkt über die URL aufgerufen wird
-if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
-    die('Zugriff verweigert'); // Blockiere den Zugriff, wenn die Datei direkt aufgerufen wird
+// Prüfen, ob die Datei direkt aufgerufen wurde
+if (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '/admin/') === false) {
+    // Wenn die Datei ohne die korrekte Referenz aufgerufen wurde, Weiterleitung zu error.php
+    header('Location: ../error.php');
+    exit();
 }
-
-// Alternativ könnte man hier auch eine Prüfung auf Referer oder Session machen
-
-// Der eigentliche Code folgt hier
 ?>

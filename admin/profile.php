@@ -485,16 +485,15 @@ if ($attendanceStatusRow) {
                 type: "POST",
                 data: formData,
                 success: function(response) {
+                    console.log(response);  // Ausgabe der Antwort zur Fehlersuche
                     try {
-                        // Versuche, die Antwort als JSON zu parsen
-                        response = JSON.parse(response);  // Hier die Antwort als JSON parsen
-
+                        response = JSON.parse(response);
                         if (response.success) {
                             alert('Daten erfolgreich gespeichert');
-                            $('#user-bearbeiten').modal('hide'); // Schließt das Modal
-                            location.reload();  // Lädt die Seite neu
+                            $('#user-bearbeiten').modal('hide');
+                            location.reload();
                         } else {
-                            alert('Fehler: ' + response.message);  // Fehlernachricht anzeigen
+                            alert('Fehler: ' + response.message);
                         }
                     } catch (error) {
                         console.error("Fehler beim Parsen der Antwort:", error);

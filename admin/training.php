@@ -200,7 +200,7 @@ $(document).ready(function() {
                     // Anmelde- und Abmelde-Buttons erstellen
                     var anmeldenBtn = '';
                     var abmeldenBtn = '';
-
+                    
                     <?php if (isset($_SESSION['permissions']['training_an_abmelden']) && $_SESSION['permissions']['training_an_abmelden']): ?>
                         anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
                         abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';

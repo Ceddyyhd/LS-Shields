@@ -1,26 +1,16 @@
 <?php
 session_start();
 
-// Überprüfen, ob es eine POST- oder GET-Anfrage ist
-$allowed_methods = ['GET', 'POST'];  // Nur GET und POST erlauben
-$request_method = strtoupper($_SERVER['REQUEST_METHOD']); // Methode der Anfrage in Großbuchstaben
+// URL überprüfen
+$current_url = $_SERVER['REQUEST_URI']; // Holt die aktuelle URL
+$allowed_admin_prefix = '/admin/';  // Erlaubte URL-Präfix für Admin
 
-// Nur POST oder GET werden akzeptiert
-if (!in_array($request_method, $allowed_methods)) {
+// Überprüfen, ob die Anfrage vom richtigen Verzeichnis kommt
+if (strpos($current_url, $allowed_admin_prefix) !== 0) {
+    // Falls nicht, blockiere die Anfrage und leite auf eine Fehlerseite weiter
     header('Location: /error.php');
     exit;
 }
 
-// Sicherstellen, dass die Anfrage von /admin/ kommt (einschließlich Unterverzeichnissen wie /admin/include/)
-$current_url = $_SERVER['REQUEST_URI'];
-
-// Wenn die URL nicht mit /admin/ beginnt, leite zur Fehlerseite weiter
-if (strpos($current_url, '/admin/') !== 0) {
-    header('Location: /error.php');
-    exit;
-}
-
-// CSRF-Token-Überprüfung und andere Sicherheitsprüfungen
-// Weitere Logik für Sicherheit
-
+// Weitere Sicherheitslogik (wie Authentifizierung) hier, falls notwendig
 ?>

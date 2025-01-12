@@ -4,7 +4,7 @@ ob_start(); // Begin output buffering
 session_start();
 
 // Ensure only GET or POST requests are accepted
-$allowed_methods = ['GET', 'POST'];
+$allowed_methods = ['POST'];
 $request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
 if (!in_array($request_method, $allowed_methods)) {

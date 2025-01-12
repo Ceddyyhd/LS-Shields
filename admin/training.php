@@ -222,7 +222,9 @@ $(document).ready(function() {
                         '<td>' + training.grund + '</td>' +
                         '<td>' + training.leitung + '</td>' +
                         '<td>' + training.info + '</td>' +
+                        <?php if (isset($_SESSION['permissions']['training_an_abmelden']) && $_SESSION['permissions']['training_an_abmelden']): ?>
                         '<td>' + actionButtons + '</td>' +
+                        <?php endif; ?>
                         '<td>' + deleteButton + '</td>' +
                         '</tr>';
 

@@ -132,6 +132,18 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 </p>
 
+<?php
+// Hole die aktuelle Benutzer-Rolle (angenommen, der Benutzer ist eingeloggt und wir haben eine Session oder ähnliches)
+$currentUserRole = $_SESSION['user_role']; // Beispiel für eine Session, die den aktuellen Benutzer-Rang speichert
+
+// Hole die verfügbaren Ränge, die unter dem aktuellen Rang liegen
+$query = "SELECT id, name FROM roles WHERE id < :currentRole";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':currentRole', $currentUserRole, PDO::PARAM_INT);
+$stmt->execute();
+$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <div class="modal fade" id="rang-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -148,7 +160,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         <label for="roleSelect">Neuer Rang</label>
                         <select class="custom-select" name="role_id" id="roleSelect" required>
                             <?php
-                            $roles = $conn->query("SELECT id, name FROM roles")->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($roles as $role) {
                                 echo '<option value="' . $role['id'] . '">' . htmlspecialchars($role['name']) . '</option>';
                             }

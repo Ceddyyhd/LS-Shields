@@ -5,7 +5,7 @@ session_start();
 define('SECRET_KEY', 'my_very_secret_key');
 
 // Datenbankverbindung einbinden
-require_once 'include/db.php'; // Deine DB-Verbindung hier
+require_once 'include/db.php'; // Stelle sicher, dass der Pfad zur db.php korrekt ist
 
 // CSRF-Token generieren, falls noch nicht vorhanden
 if (!isset($_SESSION['csrf_token_public'])) {
@@ -18,9 +18,9 @@ $private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY)
 // Speichern des privaten Tokens in der Datenbank (nur sicher auf dem Server)
 try {
     // Update des privaten Tokens in der Datenbank für den aktuellen Benutzer
-    $stmt = $pdo->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE user_id = :user_id");
+    $stmt = $conn->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE user_id = :user_id");
     $stmt->execute([
-        ':csrf_token' => $private_token,  // Speichere den private Token
+        ':csrf_token' => $private_token,  // Speichere den privaten Token
         ':user_id' => $_SESSION['user_id']  // Die User-ID
     ]);
 } catch (PDOException $e) {
@@ -31,13 +31,17 @@ try {
 // Setzen des öffentlichen Tokens im Cookie
 setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
     'expires' => time() + 3600, // Cookie läuft in einer Stunde ab
-    'path' => '/',
-    'secure' => true,
-    'httponly' => false,
-    'samesite' => 'Strict'
+    'path' => '/',              // Cookie für die gesamte Domain verfügbar
+    'secure' => true,           // Nur über HTTPS verfügbar
+    'httponly' => false,        // JavaScript kann auf das Cookie zugreifen
+    'samesite' => 'Strict'      // Schützt vor CSRF-Angriffen
 ]);
 
+// Optional: Bestätigung oder Debugging
+// echo "CSRF-Tokens wurden erfolgreich generiert und gespeichert.";
 ?>
+
+
 
 
 

@@ -11,16 +11,5 @@ if (!in_array($request_method, $allowed_methods)) {
     exit;
 }
 
-// Deine weiterführende Logik für CSRF-Überprüfung oder andere Sicherheitschecks
-// CSRF-Token Beispiel:
-$csrf_token_from_cookie = isset($_COOKIE['csrf_token_public']) ? $_COOKIE['csrf_token_public'] : '';
-$csrf_token_from_post = isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '';
-
-if (empty($csrf_token_from_post) || $csrf_token_from_post !== $csrf_token_from_cookie) {
-    // CSRF-Token ist ungültig
-    echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
-    exit;
-}
-
 // Weitere Sicherheitslogik (wie Authentifizierung) hier
 ?>

@@ -25,17 +25,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-if (!function_exists('sanitize_input')) {
-    function sanitize_input($data) {
-        return filter_var($data, FILTER_SANITIZE_STRING); // Für Texte
-    }
-}
-
-foreach ($_POST as $key => $value) {
-    if (is_string($value)) {
-        $_POST[$key] = sanitize_input($value);
-    }
-}
-
 ?>

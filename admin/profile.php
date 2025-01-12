@@ -147,7 +147,25 @@ $currentUserRoleValue = intval($currentUserRoleValue);
 <?php echo htmlspecialchars($roleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
 <?php echo htmlspecialchars($currentUserRoleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
 
-<?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $roleValue < $currentUserRoleValue): ?>
+<?php
+// Debugging-Ausgabe für die Berechtigung
+echo "Permission edit_employee_rank: " . ($_SESSION['permissions']['edit_employee_rank'] ?? 'Nicht gesetzt') . "<br>";
+
+// Überprüfen, ob der Benutzer die Berechtigung hat und ob der Vergleich der 'role_value' korrekt ist
+if ($_SESSION['permissions']['edit_employee_rank'] ?? false) {
+    echo "Berechtigung zum Bearbeiten vorhanden.<br>";
+} else {
+    echo "Keine Berechtigung zum Bearbeiten.<br>";
+}
+
+if ($roleValue < $currentUserRoleValue) {
+    echo "Die Rolle des Zielbenutzers ist kleiner als die des aktuellen Benutzers.<br>";
+} else {
+    echo "Die Rolle des Zielbenutzers ist nicht kleiner als die des aktuellen Benutzers.<br>";
+}
+
+// Hier die eigentliche Bedingung für den Button
+if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $roleValue < $currentUserRoleValue): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>

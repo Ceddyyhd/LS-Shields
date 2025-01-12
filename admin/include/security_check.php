@@ -3,9 +3,13 @@
 
 session_start(); // Sitzung starten
 
-// CSRF Token Schutz: Token aus der Session holen
+// CSRF Token Schutz: Token aus dem Header holen
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    $headers = getallheaders();
+    $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
+
+    // Überprüfe, ob der Token im Header vorhanden und gültig ist
+    if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
         echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
         exit;
     }

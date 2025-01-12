@@ -1,14 +1,24 @@
-<?php 
+<?php
+session_start();
+
 // CSRF-Token generieren, falls noch nicht vorhanden
 if (!isset($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge zufälligen Token
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge zufälligen Token
 }
+
+// Setze den CSRF-Token als HTTP-Only Cookie
+setcookie('csrf_token', $_SESSION['csrf_token'], [
+    'expires' => time() + 3600,  // Gültigkeit des Cookies, z. B. 1 Stunde
+    'path' => '/',               // Cookie ist für die gesamte Domain verfügbar
+    'secure' => true,            // Nur über HTTPS verfügbar
+    'httponly' => true,          // JavaScript kann den Cookie nicht lesen
+    'samesite' => 'Strict'       // Schützt vor Cross-Site Request Forgery (CSRF)
+]);
 ?>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>"> <!-- CSRF-Token im Meta-Tag -->
   <title>LS-Shields | Mitarbeiterverwaltung</title>
 
   <!-- Google Font: Source Sans Pro -->

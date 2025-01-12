@@ -1,5 +1,5 @@
 <?php
-include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+require_once 'include/security_check.php';
 
 require_once 'db.php';
 

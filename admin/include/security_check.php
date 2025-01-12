@@ -1,19 +1,19 @@
 <?php
-ob_start(); // Beginnt die Ausgabe-Pufferung, sodass keine Ausgabe vor der Weiterleitung erfolgt.
+ob_start(); // Begin output buffering
 
 session_start();
 
-// Sicherstellen, dass nur GET oder POST Anfragen akzeptiert werden
-$allowed_methods = ['GET', 'POST'];  // Nur GET und POST erlauben
-$request_method = strtoupper($_SERVER['REQUEST_METHOD']); // Holt die Methode der Anfrage und konvertiert sie zu Großbuchstaben
+// Ensure only GET or POST requests are accepted
+$allowed_methods = ['GET', 'POST'];
+$request_method = strtoupper($_SERVER['REQUEST_METHOD']);
 
 if (!in_array($request_method, $allowed_methods)) {
-    // Falls die Anfrage nicht GET oder POST ist, Weiterleitung zur Fehlerseite
+    // Redirect to error page if the request is not GET or POST
     header('Location: /error.php');
-    exit;  // Wichtig, dass kein weiterer Code ausgeführt wird!
+    exit; // Ensure no further code is executed
 }
 
-// Weitere Sicherheitslogik (wie Authentifizierung) hier
+// Additional security logic (e.g., authentication) here
 
-ob_end_flush(); // Gibt die Pufferung aus, falls keine Weiterleitung durchgeführt wird.
+ob_end_flush(); // Flush the output buffer if no redirection occurs
 ?>

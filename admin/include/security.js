@@ -31,22 +31,3 @@ window.fetch = function(url, options = {}) {
     }
     return originalFetch(url, options);
 };
-
-window.fetch = function(url, options = {}) {
-    if (options.method === 'GET') {
-        const csrfToken = getCsrfTokenFromCookie();  // Hol den Token direkt aus dem Cookie
-        if (!csrfToken) {
-            console.error('CSRF Token fehlt!');
-            return Promise.reject(new Error('CSRF Token fehlt!'));  // Beende die Anfrage, falls kein Token vorhanden ist
-        }
-
-        // Token als POST-Parameter hinzufügen
-        options.body = options.body || new FormData();
-        if (options.body instanceof FormData) {
-            options.body.append('csrf_token', csrfToken);
-        } else {
-            options.body['csrf_token'] = csrfToken;
-        }
-    }
-    return originalFetch(url, options);
-};

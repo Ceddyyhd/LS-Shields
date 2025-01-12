@@ -191,7 +191,7 @@ $routes = [
         'label' => 'Mitarbeiter Bereich',
         'path' => '#',
         'subroutes' => [
-            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'],
+            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'], // Keine Berechtigung hier
             'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
             'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php', 'permission' => 'view_training'],
             'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],
@@ -231,49 +231,40 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Dynamische Links basierend auf der Routing-Tabelle -->
         <?php foreach ($routes as $route_key => $route): ?>
-            <?php 
-                // Überprüfen, ob das Menü angezeigt werden soll, indem wir prüfen, ob mindestens ein Untermenü angezeigt werden kann
-                $has_visible_subroutes = false;
-
-                // Prüfen, ob mindestens ein Untermenü sichtbar ist
-                foreach ($route['subroutes'] as $subroute) {
-                    if ($_SESSION['permissions'][$subroute['permission']] ?? false) {
-                        $has_visible_subroutes = true;
-                        break;
-                    }
-                }
-
-                // Menü ausblenden, wenn keine sichtbaren Untermenüpunkte vorhanden sind
-                if (!$has_visible_subroutes) {
-                    continue;
-                }
-            ?>
-            <li class="nav-item <?= isset($route['subroutes']) ? 'menu-open' : '' ?>">
-                <a href="<?= $route['path'] ?>" class="nav-link <?= ($current_page == basename($route['path'])) ? 'active' : '' ?>">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        <?= $route['label'] ?>
-                        <?= isset($route['subroutes']) ? '<i class="right fas fa-angle-left"></i>' : '' ?>
-                    </p>
-                </a>
-                <!-- Untermenü -->
-                <?php if (isset($route['subroutes'])): ?>
-                    <ul class="nav nav-treeview">
-                        <?php foreach ($route['subroutes'] as $subroute): ?>
-                            <!-- Berechtigungsprüfung hinzufügen -->
-                            <?php if ($_SESSION['permissions'][$subroute['permission']] ?? false): ?>
-                                <li class="nav-item">
-                                    <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p><?= $subroute['label'] ?></p>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </li>
-        <?php endforeach; ?>
+    <li class="nav-item <?= isset($route['subroutes']) ? 'menu-open' : '' ?>">
+        <a href="<?= $route['path'] ?>" class="nav-link <?= ($current_page == basename($route['path'])) ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                <?= $route['label'] ?>
+                <?= isset($route['subroutes']) ? '<i class="right fas fa-angle-left"></i>' : '' ?>
+            </p>
+        </a>
+        <!-- Untermenü -->
+        <?php if (isset($route['subroutes'])): ?>
+            <ul class="nav nav-treeview">
+                <?php foreach ($route['subroutes'] as $subroute): ?>
+                    <!-- Berechtigungsprüfung für andere Links -->
+                    <?php if (isset($subroute['permission']) && $_SESSION['permissions'][$subroute['permission']] ?? false): ?>
+                        <li class="nav-item">
+                            <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p><?= $subroute['label'] ?></p>
+                            </a>
+                        </li>
+                    <?php elseif (!isset($subroute['permission'])): ?>
+                        <!-- Immer anzeigen, wenn keine Berechtigung definiert ist -->
+                        <li class="nav-item">
+                            <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p><?= $subroute['label'] ?></p>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        <?php endif; ?>
+    </li>
+<?php endforeach; ?>
     </ul>
 </nav>
 

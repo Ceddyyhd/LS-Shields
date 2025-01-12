@@ -184,141 +184,78 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </div>
+        <?php
+// Routing-Tabelle mit Unterbereichen
+$routes = [
+    'dashboard' => [
+        'label' => 'Mitarbeiter Bereich',
+        'path' => 'index.php',
+        'subroutes' => [
+            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'],
+            'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php'],
+            'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php'],
+            'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php'],
+            'calendar' => ['label' => 'Kalender', 'path' => 'calendar.php'],
+            'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php'],
+            'verbesserungen' => ['label' => 'Verbesserungsvorschläge', 'path' => 'verbesserungen.php'],
+            'fahrzeugverwaltung' => ['label' => 'Fahrzeugverwaltung', 'path' => 'fahrzeugverwaltung.php'],
+        ]
+    ],
+    'admin_area' => [
+        'label' => 'Leitungs Bereich',
+        'path' => '#', // Kein Direktlink, da Unterbereiche vorhanden sind
+        'subroutes' => [
+            'mitarbeiterverwaltung' => ['label' => 'Mitarbeiter Verwaltung', 'path' => 'mitarbeiterverwaltung.php'],
+            'rangverwaltung' => ['label' => 'Rang Verwaltung', 'path' => 'rangverwaltung.php'],
+            'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php'],
+            'urlaubsverwaltung' => ['label' => 'Urlaubsverwaltung', 'path' => 'urlaubsverwaltung.php'],
+        ]
+    ],
+    'settings' => [
+        'label' => 'Settings',
+        'path' => '#', // Kein Direktlink, da Unterbereiche vorhanden sind
+        'subroutes' => [
+            'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php'],
+            'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php'],
+            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php'],
+        ]
+    ]
+];
 
+// Aktuelle Seite ermitteln
+$current_page = basename($_SERVER['SCRIPT_NAME']);
+?>
         <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Mitarbeiter Bereich -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'index.php' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Mitarbeiter Bereich
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
+        <!-- Navbar -->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
+    <ul class="navbar-nav">
+        <!-- Dynamische Links basierend auf der Routing-Tabelle -->
+        <?php foreach ($routes as $route_key => $route): ?>
+            <li class="nav-item <?= isset($route['subroutes']) ? 'menu-open' : '' ?>">
+                <a href="<?= $route['path'] ?>" class="nav-link <?= ($current_page == basename($route['path'])) ? 'active' : '' ?>">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>
+                        <?= $route['label'] ?>
+                        <?= isset($route['subroutes']) ? '<i class="right fas fa-angle-left"></i>' : '' ?>
+                    </p>
+                </a>
+                <!-- Untermenü -->
+                <?php if (isset($route['subroutes'])): ?>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="index.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'index.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="eventplanung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'eventplanung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Eventplanung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="training.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'training.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Trainings Kalender</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a href="anfragen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'anfragen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Anfragen</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="calendar.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'calendar.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Kalender</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="kundenverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'kundenverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Kunden Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="verbesserungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'verbesserungen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Verbesserungsvorschlag</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="fahrzeugverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'fahrzeugverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Fahrzeugverwaltung</p>
-                            </a>
-                        </li>
+                        <?php foreach ($route['subroutes'] as $subroute_key => $subroute): ?>
+                            <li class="nav-item">
+                                <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p><?= $subroute['label'] ?></p>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
-                </li>
-
-                <!-- Leitungs Bereich -->
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'leitungsbereich.php' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Leitungs Bereich
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="mitarbeiterverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'mitarbeiterverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Mitarbeiter Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="rangverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'rangverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Rang Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="finanzverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'finanzverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Finanzverwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="urlaubsverwaltung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'urlaubsverwaltung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Urlaubsverwaltung</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'leitungsbereich.php' ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                            Settings
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="ausbildungen.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausbildungen.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ausbildung Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ausruestung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ausruestung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ausrüstung Verwaltung</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="ankündigung.php" class="nav-link <?= basename($_SERVER['SCRIPT_NAME']) == 'ankündigung.php' ? 'active' : '' ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Ankündigungen</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</nav>
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->

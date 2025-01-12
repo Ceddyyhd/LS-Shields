@@ -3,7 +3,8 @@ function getCsrfTokenFromCookie() {
     const cookies = document.cookie.split(';');
     console.log('Cookies:', cookies);  // Logge alle Cookies zur Überprüfung
     for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
+        const cookie = cookies[i].trim();  // Entferne führende und nachfolgende Leerzeichen
+        console.log('Cookie:', cookie);    // Logge jedes Cookie einzeln zur Überprüfung
         if (cookie.startsWith('csrf_token=')) {
             const token = cookie.substring('csrf_token='.length);
             console.log('CSRF Token aus Cookie:', token); // Logge den Token aus dem Cookie

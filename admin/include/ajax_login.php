@@ -22,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Benutzer anhand der E-Mail-Adresse suchen
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+        // Benutzer anhand der E-Mail-Adresse suchen und die Rolle über einen JOIN abfragen
+        $stmt = $conn->prepare("SELECT u.*, r.level, r.value FROM users u LEFT JOIN roles r ON u.role_id = r.id WHERE u.email = :email");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -39,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['username'] = $user['name'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['profile_image'] = $user['profile_image']; // Profilbild speichern
+            $_SESSION['user_role'] = $user['level']; // Benutzerrolle (level) in der Session speichern
+            $_SESSION['user_role_value'] = $user['value']; // Benutzerrolle (value) in der Session speichern
 
             // Sitzungsinformationen in der user_sessions-Tabelle speichern
             $session_id = session_id();       // Die aktuelle Session-ID
@@ -66,7 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'session_data' => [
                     'user_id' => $_SESSION['user_id'],
                     'username' => $_SESSION['username'],
-                    'email' => $_SESSION['email']
+                    'email' => $_SESSION['email'],
+                    'user_role' => $_SESSION['user_role'],
+                    'user_role_value' => $_SESSION['user_role_value'] // Rolle in den Sitzungsdaten zurückgeben
                 ]
             ]);
         } else {

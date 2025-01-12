@@ -133,13 +133,13 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 </p>
 
 <?php
-// Hole die aktuelle Benutzer-Rolle (angenommen, der Benutzer ist eingeloggt und wir haben eine Session oder ähnliches)
-$currentUserRole = $_SESSION['user_role']; // Beispiel für eine Session, die den aktuellen Benutzer-Rang speichert
+// Hole den aktuellen Benutzer (angenommen, du hast die Benutzerrolle in der Session gespeichert)
+$currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwert aus der Session
 
-// Hole die verfügbaren Ränge, die unter dem aktuellen Rang liegen
-$query = "SELECT id, name FROM roles WHERE id < :currentRole";
+// Hole alle Rollen, deren 'value' kleiner ist als der des aktuellen Benutzers
+$query = "SELECT id, name FROM roles WHERE value < :currentRoleValue";
 $stmt = $conn->prepare($query);
-$stmt->bindParam(':currentRole', $currentUserRole, PDO::PARAM_INT);
+$stmt->bindParam(':currentRoleValue', $currentUserRoleValue, PDO::PARAM_INT);
 $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -160,6 +160,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <label for="roleSelect">Neuer Rang</label>
                         <select class="custom-select" name="role_id" id="roleSelect" required>
                             <?php
+                            // Durchlaufe die gefilterten Rollen und gebe sie als Optionen aus
                             foreach ($roles as $role) {
                                 echo '<option value="' . $role['id'] . '">' . htmlspecialchars($role['name']) . '</option>';
                             }
@@ -175,6 +176,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
 
 <script>$(document).ready(function () {
     $("#saveRankButton").on("click", function () {

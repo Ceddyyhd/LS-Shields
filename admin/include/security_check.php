@@ -13,18 +13,12 @@ if (!in_array($request_method, $allowed_methods)) {
     exit;
 }
 
-// Wenn es eine GET-Anfrage ist, prüfen, ob sie aus einer erlaubten Quelle kommt
-if ($request_method === 'GET') {
-    $allowed_get_urls = [
-        '/admin/', // Hier fügst du URLs hinzu, die von GET-Anfragen zugelassen werden sollen
-    ];
-    $current_url = $_SERVER['REQUEST_URI'];
+// Überprüfen, ob die Anfrage von /admin/ kommt (einschließlich Unterverzeichnissen wie /admin/include/)
+$current_url = $_SERVER['REQUEST_URI'];
 
-    // Wenn die URL nicht in den erlaubten URLs enthalten ist, zeige eine Fehlerseite
-    if (!in_array($current_url, $allowed_get_urls)) {
-        header('Location: /error.php');
-        exit;
-    }
+if (strpos($current_url, '/admin/') !== 0) {  // Wenn die URL nicht mit /admin/ beginnt
+    header('Location: /error.php');
+    exit;
 }
 
 // CSRF-Token-Überprüfung und andere Sicherheitsprüfungen

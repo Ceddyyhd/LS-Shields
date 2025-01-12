@@ -48,8 +48,12 @@
                     <th>Kennzeichen</th>
                     <th>Standort</th>
                     <th>Nächste Inspektion</th>
+                    <?php if ($_SESSION['permissions']['vehicle_edit'] ?? false): ?>
                     <th>Button</th>
+                    <?php endif; ?>
+                    <?php if ($_SESSION['permissions']['vehicle_tanken'] ?? false): ?>
                     <th>Tanken</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>

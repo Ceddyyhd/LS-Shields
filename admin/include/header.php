@@ -4,7 +4,17 @@
 
 
 
+<?php
+session_start();
 
+// Generiere ein Token, wenn es nicht schon existiert
+if (!isset($_SESSION['ajax_token'])) {
+    $_SESSION['ajax_token'] = bin2hex(random_bytes(32));  // Beispiel: Ein 32-Byte zufälliges Token
+}
+
+// Gib das Token an JavaScript aus
+echo "<script>var ajaxToken = '" . $_SESSION['ajax_token'] . "';</script>";
+?>
 
 
 

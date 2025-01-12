@@ -52,9 +52,11 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div class="col-12">
     <div class="card">
       <div class="card-header">
+      <?php if ($_SESSION['permissions']['edit_name'] ?? false): ?>
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-vorschlag-create">
-                Anfrage erstellen
+                Vorschlag erstellen
             </button>      
+            <?php endif; ?>
           </div>
 
 

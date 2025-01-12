@@ -44,7 +44,7 @@
 
   <?php
 // Beispiel-PHP-Code zum Abrufen der Mitarbeiterdaten (hier wurde bereits das Profilbild angepasst)
-include 'include/db.php';
+include 'db.php';
 
 $stmtEmployees = $conn->prepare("SELECT u.id, u.name, u.profile_image, u.role_id, r.name as role_name, r.level
                                  FROM users u

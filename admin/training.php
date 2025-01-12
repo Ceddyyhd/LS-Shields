@@ -198,8 +198,13 @@ $(document).ready(function() {
 
                 trainings.forEach(function(training) {
                     // Anmelde- und Abmelde-Buttons erstellen
-                    var anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
-                    var abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+                    var anmeldenBtn = '';
+                    var abmeldenBtn = '';
+
+                    <?php if (isset($_SESSION['permissions']['training_an_abmelden']) && $_SESSION['permissions']['training_an_abmelden']): ?>
+                        anmeldenBtn = '<button type="button" class="btn btn-block btn-primary" onclick="toggleAnmeldung(' + training.id + ')">Anmelden</button>';
+                        abmeldenBtn = '<button type="button" class="btn btn-block btn-danger" onclick="toggleAbmeldung(' + training.id + ')">Abmelden</button>';
+                    <?php endif; ?>
 
                     // Überprüfen, ob der Benutzer für das Training angemeldet ist
                     var actionButtons = '';
@@ -222,9 +227,7 @@ $(document).ready(function() {
                         '<td>' + training.grund + '</td>' +
                         '<td>' + training.leitung + '</td>' +
                         '<td>' + training.info + '</td>' +
-                        <?php if (isset($_SESSION['permissions']['training_an_abmelden']) && $_SESSION['permissions']['training_an_abmelden']): ?>
                         '<td>' + actionButtons + '</td>' +
-                        <?php endif; ?>
                         '<td>' + deleteButton + '</td>' +
                         '</tr>';
 

@@ -20,10 +20,10 @@ if ($user_id != $_SESSION['user_id'] && !isset($_SESSION['permissions']['access_
     die("Zugriff verweigert. Du hast keine Berechtigung, diese Seite zu sehen.");
 }
 
-// Benutzerinformationen abrufen
-$sql = "SELECT users.*, roles.name AS role_name 
-        FROM users 
-        LEFT JOIN roles ON users.role_id = roles.id 
+// Benutzerinformationen und Rolle (einschließlich role_value) abfragen
+$sql = "SELECT users.*, roles.name AS role_name, roles.value AS role_value
+        FROM users
+        LEFT JOIN roles ON users.role_id = roles.id
         WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
@@ -132,6 +132,7 @@ $currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwe
 $targetUserRoleValue = $user['role_value']; // Angenommen, der Benutzer, den du bearbeiten möchtest, hat das Feld 'role_value'
 ?>
 
+<?php echo htmlspecialchars($user['role_name']); ?>
 <?php echo htmlspecialchars($user['role_name']); ?>
 
 <?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $targetUserRoleValue < $currentUserRoleValue): ?>

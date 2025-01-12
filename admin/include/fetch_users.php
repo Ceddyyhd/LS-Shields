@@ -1,5 +1,5 @@
 <?php
-require_once 'include/security_check.php';
+require_once 'security_check.php';
 
 require_once 'db.php';
 

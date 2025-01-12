@@ -153,15 +153,11 @@ echo "Permission edit_employee_rank: " . ($_SESSION['permissions']['edit_employe
 
 // Überprüfen, ob der Benutzer die Berechtigung hat und ob der Vergleich der 'role_value' korrekt ist
 if ($_SESSION['permissions']['edit_employee_rank'] ?? false) {
-    echo "Berechtigung zum Bearbeiten vorhanden.<br>";
 } else {
-    echo "Keine Berechtigung zum Bearbeiten.<br>";
 }
 
 if ($roleValue < $currentUserRoleValue) {
-    echo "Die Rolle des Zielbenutzers ist kleiner als die des aktuellen Benutzers.<br>";
 } else {
-    echo "Die Rolle des Zielbenutzers ist nicht kleiner als die des aktuellen Benutzers.<br>";
 }
 
 // Sicherstellen, dass die Bedingung korrekt evaluiert

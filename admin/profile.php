@@ -136,7 +136,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Rang Bearbeiten</h4>
+                <h4 class="modal-title"><?php echo htmlspecialchars($_SESSION['user_role_value']); ?></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -148,8 +148,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                         <label for="roleSelect">Neuer Rang</label>
                         <select class="custom-select" name="role_id" id="roleSelect" required>
                             <?php
-                            $currentUserRoleValue = $_SESSION['user_role_value']; // Beispiel: aus der Session holen
-                            $roles = $conn->query("SELECT id, name FROM roles WHERE value < :currentRoleValue")->fetchAll(PDO::FETCH_ASSOC);
+                            $roles = $conn->query("SELECT id, name FROM roles")->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($roles as $role) {
                                 echo '<option value="' . $role['id'] . '">' . htmlspecialchars($role['name']) . '</option>';
                             }

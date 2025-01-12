@@ -18,7 +18,7 @@ $private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY)
 // Speichern des privaten Tokens in der Datenbank (nur sicher auf dem Server)
 try {
     // Update des privaten Tokens in der Datenbank für den aktuellen Benutzer
-    $stmt = $conn->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE user_id = :user_id");
+    $stmt = $conn->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE id = :user_id");
     $stmt->execute([
         ':csrf_token' => $private_token,  // Speichere den privaten Token
         ':user_id' => $_SESSION['user_id']  // Die User-ID

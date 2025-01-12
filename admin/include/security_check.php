@@ -1,8 +1,10 @@
 <?php
-// Prüfen, ob die Datei direkt aufgerufen wurde
-if (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '/admin/') === false) {
-    // Wenn die Datei ohne die korrekte Referenz aufgerufen wurde, Weiterleitung zu error.php
-    header('Location: ../error.php');
-    exit();
+// Sicherstellen, dass die Datei nur durch PHP-Includes oder AJAX aufgerufen wird
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+    // Wenn die Anfrage nicht von AJAX kommt, blockiere den Zugriff
+    die('Zugriff verweigert');
 }
+
+// Dein Code folgt hier
+echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
 ?>

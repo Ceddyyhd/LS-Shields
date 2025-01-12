@@ -130,10 +130,12 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-muted"><?php echo htmlspecialchars($kunden['kontonummer']); ?></p>
           </div>
           
+          <?php if ($_SESSION['permissions']['kunden_bearbeiten'] ?? false): ?>
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">
                   Kunden Bearbeiten
                 </button>
           <button type="button" id="saveButton" class="btn btn-block btn-primary">Speichern</button>
+          <?php endif; ?>
         </div>
       </div>
       <form id="userEditForm">
@@ -568,9 +570,13 @@ $("#noteForm").on("submit", function (e) {
 
 <div class="tab-pane" id="rechnungen">
     <!-- Button für das Modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">
-    Rechnung erstellen
-</button>
+
+    <?php if ($_SESSION['permissions']['create_invoice'] ?? false): ?>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rechnung-erstellen">Rechnung erstellen</button>
+    <?php else: ?>
+        <p class="text-muted">Sie haben keine Berechtigung, Rechnungen zu erstellen.</p>
+    <?php endif; ?>
+
 
 <div class="container mt-5">
     <div class="modal fade" id="rechnung-erstellen">
@@ -778,11 +784,15 @@ $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td>
                         <?php if ($invoice['status'] == 'Offen' || $invoice['status'] == 'Überfällig'): ?>
                             <!-- Button für Bezahlt, wenn die Rechnung offen oder überfällig ist -->
+                                 <?php if ($_SESSION['permissions']['invoice_payed'] ?? false): ?>
                             <button type="button" class="btn btn-block btn-outline-success btn-bezahlt" data-invoice="<?= htmlspecialchars($invoice['invoice_number']); ?>">Bezahlt</button>
-                        <?php elseif ($invoice['status'] == 'Bezahlt'): ?>
+                                <?php endif; ?>
+                            <?php elseif ($invoice['status'] == 'Bezahlt'): ?>
                             <!-- Button für Nicht Bezahlt, wenn die Rechnung bereits bezahlt ist -->
+                            <?php if ($_SESSION['permissions']['invoice_not_payed'] ?? false): ?>
                             <button type="button" class="btn btn-block btn-outline-danger btn-nicht-bezahlt" data-invoice="<?= htmlspecialchars($invoice['invoice_number']); ?>">Nicht Bezahlt</button>
-                        <?php endif; ?>
+                            <?php endif; ?>
+                         <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

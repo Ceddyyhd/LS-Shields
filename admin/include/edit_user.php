@@ -1,5 +1,12 @@
 <?php
-include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+// Sicherstellen, dass die Datei nur durch PHP-Includes oder AJAX aufgerufen wird
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+    // Wenn die Anfrage nicht von AJAX kommt, blockiere den Zugriff
+    die('Zugriff verweigert');
+}
+
+// Dein Code folgt hier
+echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
 
 // Verbindung und Sitzung starten
 include 'db.php';

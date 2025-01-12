@@ -3,16 +3,15 @@ include 'security_check.php'; // Sicherheitsprüfung für diese Datei
 
 session_start();
 
-session_regenerate_id(true); // Session ID regenerieren, um Sicherheitsrisiken zu minimieren
+session_regenerate_id(true);
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-
 include 'include/db.php';
 include 'auth.php'; // Authentifizierungslogik einbinden
 
-// Session-Wiederherstellung prüfen (für "Remember Me"-Funktion)
+// Session-Wiederherstellung prüfen
 restoreSessionIfRememberMe($conn);
 
 // Prüfen, ob der Benutzer eingeloggt ist
@@ -43,9 +42,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
-
-
-
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
 $stmt->execute([':id' => $_SESSION['user_id']]);
@@ -120,14 +116,13 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
-        FROM users 
-        LEFT JOIN roles ON users.role_id = roles.id 
-        WHERE users.id = :id";
+            FROM users 
+            LEFT JOIN roles ON users.role_id = roles.id 
+            WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $_SESSION['user_id']]);
+$stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
-
 
 
 <!-- Navbar -->
@@ -222,7 +217,7 @@ $routes = [
         'subroutes' => [
             'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php', 'permission' => 'view_training_management'],
             'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php', 'permission' => 'view_equipment_management'],
-            'ankuendigung' => ['label' => 'Ankuendigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
+            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
         ]
     ]
 ];

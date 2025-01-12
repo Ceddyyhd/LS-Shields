@@ -1,14 +1,14 @@
 <?php
-if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
-    die('Zugriff verweigert'); // Blockiert den direkten Aufruf
+// Sicherstellen, dass die Datei nur über AJAX oder PHP-Includes aufgerufen wird
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+    // Wenn die Anfrage nicht von AJAX kommt, blockiere den Zugriff
+    echo json_encode(['success' => false, 'message' => 'Zugriff verweigert']);
+    exit; // Verhindert weitere Ausführung
 }
 
 // Dein Code folgt hier
-echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
+echo json_encode(['success' => true, 'message' => 'Daten abgerufen']);
 
-
-// Dein Code folgt hier
-echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
 
 include 'db.php';
 if (session_status() === PHP_SESSION_NONE) {

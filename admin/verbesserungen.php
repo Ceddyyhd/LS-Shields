@@ -194,6 +194,7 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div><?= htmlspecialchars($vorschlag['datum_uhrzeit']) ?></div>
                             </div>
 
+                            
                             <div class="mb-3">
                               <strong>Zustimmungen:</strong> <span id="zustimmungen-<?= $vorschlag['id'] ?>"><?= $vorschlag['zustimmungen'] ?></span>
                           </div>
@@ -203,12 +204,14 @@ $vorschlaege = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             <!-- Buttons für Zustimmen / Ablehnen -->
                             <div class="mb-3">
+                            <?php if ($_SESSION['permissions']['vorschlag_abstimmen'] ?? false): ?>
                             <button class="btn btn-success" id="btn-accept-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, true)">
                               Zustimmen 
                           </button>
                           <button class="btn btn-danger" id="btn-reject-<?= $vorschlag['id'] ?>" onclick="rateSuggestion(<?= $vorschlag['id'] ?>, false)">
                               Ablehnen 
-                          </button>      
+                          </button> 
+                          <?php endif; ?>     
                           <!-- Button zum Öffnen des Modals -->
                           <?php if (isset($_SESSION['permissions']['edit_vorschlaege']) && $_SESSION['permissions']['edit_vorschlaege']): ?>
                           <button type="button" class="btn btn-primary" 

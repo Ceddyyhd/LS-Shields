@@ -152,7 +152,7 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                             $currentUserRoleValue = $_SESSION['user_role_value']; // Beispiel: aus der Session holen
 
                             // Hole alle Rollen, deren 'value' kleiner ist als der des aktuellen Benutzers
-                            $query = "SELECT id, name FROM roles WHERE value < :currentRoleValue ORDER BY value ASC";
+                            $query = "SELECT id, name FROM roles WHERE value < :currentRoleValue ORDER BY value DESC";
                             $stmt = $conn->prepare($query);
                             $stmt->bindParam(':currentRoleValue', $currentUserRoleValue, PDO::PARAM_INT);
                             $stmt->execute();

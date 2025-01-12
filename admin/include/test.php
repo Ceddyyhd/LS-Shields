@@ -18,6 +18,6 @@ if (strpos($user_agent, 'Chrome') !== false) {
 }
 
 // Ausgabe des Browsers
-echo "Der Benutzer verwendet den Browser: " . $browser;
+echo "Der Benutzer verwendet den Browser: " . $browser ." ";
 echo $user_agent;
 ?>

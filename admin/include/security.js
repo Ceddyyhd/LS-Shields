@@ -1,19 +1,20 @@
 // Funktion, um den CSRF-Token direkt aus dem Cookie zu holen
 function getCsrfTokenFromCookie() {
     const cookies = document.cookie.split(';');
-    console.log('Cookies:', cookies);  // Logge alle Cookies zur Überprüfung
+    console.log('Cookies:', cookies);  // Debugging: Alle Cookies loggen
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();  // Entferne führende und nachfolgende Leerzeichen
-        console.log('Cookie:', cookie);    // Logge jedes Cookie einzeln zur Überprüfung
+        console.log('Cookie:', cookie);    // Logge jeden Cookie
         if (cookie.startsWith('csrf_token=')) {
-            const token = cookie.substring('csrf_token='.length);
-            console.log('Gefundener CSRF-Token:', token); // Logge den Token aus dem Cookie
+            const token = cookie.substring('csrf_token='.length);  // Token extrahieren
+            console.log('Gefundener CSRF-Token:', token); // Debugging: Gefundenen Token loggen
             return token;  // Gib den Token zurück
         }
     }
     console.log('CSRF Token nicht gefunden');
     return null;  // Rückgabe null, falls der Token nicht gefunden wurde
 }
+
 
 // Interceptor für alle fetch-Anfragen, um den CSRF-Token hinzuzufügen
 const originalFetch = window.fetch;

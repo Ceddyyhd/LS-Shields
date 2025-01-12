@@ -191,7 +191,7 @@ $routes = [
         'label' => 'Mitarbeiter Bereich',
         'path' => '#',
         'subroutes' => [
-            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php', 'permission' => 'view_dashboard'],
+            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'],
             'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
             'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php', 'permission' => 'view_training'],
             'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],

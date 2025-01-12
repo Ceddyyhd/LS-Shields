@@ -340,7 +340,7 @@ if ($attendanceStatusRow) {
             </p>
           </div>
           
-          <?php if ($_SESSION['permissions']['edit_employee'] ?? false): ?>
+          <?php if ($_SESSION['permissions']['edit_employee_akte'] ?? false): ?>
 
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#user-bearbeiten">
                   User Bearbeiten
@@ -966,14 +966,14 @@ $("#noteForm").on("submit", function (e) {
                     $rating = $dbAusbildungen[$keyName]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" 
+                        <input class="form-check-input" type="checkbox" disabled 
                                id="<?= htmlspecialchars($keyName); ?>" 
                                name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>">
                             <?= htmlspecialchars($displayName); ?>
                         </label>
-                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">
+                        <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>" disabled>
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" 
                                    data-value="<?= $i; ?>" 

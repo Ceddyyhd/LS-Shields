@@ -1,8 +1,11 @@
 <?php
-session_start(); // Sitzung starten
+session_start();
 
 // CSRF-Token aus dem Cookie holen
 $csrf_token_from_cookie = isset($_COOKIE['csrf_token_public']) ? $_COOKIE['csrf_token_public'] : '';
+
+// Debugging-Ausgabe
+error_log("CSRF Token aus Cookie: " . $csrf_token_from_cookie);
 
 // Sicherstellen, dass es eine POST-Anfrage ist
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -13,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Überprüfen, ob der Token aus dem Header der Anfrage kommt
 $headers = getallheaders();
 $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
+
+// Debugging-Ausgabe
+error_log("CSRF Token aus Header: " . $csrf_token_from_header);
 
 // Überprüfen, ob der Token im Header und im Cookie übereinstimmt
 if (empty($csrf_token_from_header) || $csrf_token_from_header !== $csrf_token_from_cookie) {
@@ -40,14 +46,4 @@ foreach ($_POST as $key => $value) {
     }
 }
 
-// Cross-Origin Resource Sharing (CORS) Header für sicheren Zugriff
-header('Access-Control-Allow-Origin: https://deine-website.com');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Füge 'Authorization' hinzu, um den CSRF-Token zu akzeptieren
-
-// Referer-Header-Überprüfung für zusätzliche Sicherheit
-if (empty($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'deine-website.com') === false) {
-    echo json_encode(['success' => false, 'message' => 'Zugang verweigert.']);
-    exit;
-}
 ?>

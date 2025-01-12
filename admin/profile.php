@@ -1102,7 +1102,8 @@ $("#noteForm").on("submit", function (e) {
         <div class="form-group">
             <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
             <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
-                   value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>">
+            <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
+                   value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>" >
         </div>
 
         <div class="form-group">

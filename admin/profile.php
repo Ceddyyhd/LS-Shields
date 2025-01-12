@@ -1082,12 +1082,13 @@ $("#noteForm").on("submit", function (e) {
                     ?>
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="checkbox" 
-                                   id="<?= $item['key_name']; ?>" 
-                                   name="ausruestung[<?= $item['key_name']; ?>]" 
-                                   value="1" <?= $status ? 'checked' : ''; ?>
-                                   <?= $canEdit ? '' : 'disabled'; ?>>
-                                   <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
-                            <label class="form-check-label" for="<?= $item['key_name']; ?>">
+                                id="<?= $item['key_name']; ?>" 
+                                name="ausruestung[<?= $item['key_name']; ?>]" 
+                                value="1" <?= $status ? 'checked' : ''; ?>
+                                <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
+
+                            <label class="form-check-label" for="<?= $item['key_name']; ?>"
+                                <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'style="pointer-events: none;"'; ?>>
                                 <?= htmlspecialchars($item['display_name']); ?>
                             </label>
                         </div>

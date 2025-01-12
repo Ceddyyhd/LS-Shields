@@ -144,8 +144,6 @@ $currentUserRoleValue = intval($currentUserRoleValue);
 ?>
 
 <?php echo htmlspecialchars($user['role_name']); ?>
-<?php echo htmlspecialchars($roleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
-<?php echo htmlspecialchars($currentUserRoleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
 
 <?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $roleValue < $currentUserRoleValue): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">

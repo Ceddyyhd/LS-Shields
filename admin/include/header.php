@@ -12,7 +12,6 @@ setcookie('csrf_token', $_SESSION['csrf_token'], [
   'path' => '/',
   'secure' => true,
   'httponly' => true,
-  'samesite' => 'None'  // Erlaubt den Cookie, bei Cross-Domain-Anfragen gesendet zu werden
 ]);
 ?>
 

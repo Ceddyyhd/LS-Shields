@@ -1,5 +1,12 @@
 <?php
-include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
+// Definiere die Konstante, um den Zugriff auf die "include" Dateien zu erlauben
+define('INCLUDE_SCRIPT', true);
+
+// Die Datei im "include"-Ordner wird jetzt sicher eingebunden
+include 'security_check.php';
+
+// Der Code in der Datei wird jetzt sicher ausgeführt
 
 // get_users.php
 require 'db.php'; // Deine DB-Verbindung

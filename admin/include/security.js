@@ -21,7 +21,7 @@ window.fetch = function(url, options = {}) {
             return Promise.reject(new Error('CSRF Token fehlt!'));  // Beende die Anfrage, falls kein Token vorhanden ist
         }
 
-        // Token als POST-Parameter hinzuzufügen
+        // Token als POST-Parameter hinzufügen
         options.body = options.body || new FormData();
         if (options.body instanceof FormData) {
             options.body.append('csrf_token', csrfToken);

@@ -12,12 +12,6 @@ if (!isset($_SESSION['csrf_token_public'])) {
     $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Öffentlicher Token
 }
 
-// Berechne den privaten Token (dieser wird NUR in der Session gespeichert)
-$private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY);
-
-// Speichern des privaten Tokens in der Session für den aktuellen Benutzer
-$_SESSION['csrf_token_private'] = $private_token;
-
 // Setzen des öffentlichen Tokens im Cookie für das Frontend
 setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
     'expires' => time() + 3600, // Gültigkeit des Cookies (1 Stunde)

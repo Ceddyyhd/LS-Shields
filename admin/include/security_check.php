@@ -4,24 +4,17 @@ session_start();
 // CSRF-Token aus dem Cookie holen
 $csrf_token_from_cookie = isset($_COOKIE['csrf_token_public']) ? $_COOKIE['csrf_token_public'] : '';
 
-// Debugging-Ausgabe
-error_log("CSRF Token aus Cookie: " . $csrf_token_from_cookie);
-
 // Sicherstellen, dass es eine POST-Anfrage ist
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage-Methode.']);
     exit;
 }
 
-// Überprüfen, ob der Token aus dem Header der Anfrage kommt
-$headers = getallheaders();
-$csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
+// CSRF-Token aus den POST-Daten holen
+$csrf_token_from_post = isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '';
 
-// Debugging-Ausgabe für den Header
-error_log("CSRF Token aus Header: " . $csrf_token_from_header);
-
-// Überprüfen, ob der Token im Header und im Cookie übereinstimmt
-if (empty($csrf_token_from_header) || $csrf_token_from_header !== $csrf_token_from_cookie) {
+// Überprüfen, ob der Token im POST und im Cookie übereinstimmen
+if (empty($csrf_token_from_post) || $csrf_token_from_post !== $csrf_token_from_cookie) {
     echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
     exit;
 }
@@ -29,7 +22,7 @@ if (empty($csrf_token_from_header) || $csrf_token_from_header !== $csrf_token_fr
 // Berechne den privaten Token mit der geheimen Prüfziffer (secret key) und dem öffentlichen Token
 $private_token_calculated = hash_hmac('sha256', $csrf_token_from_cookie, 'my_very_secret_key');
 
-// Überprüfen, ob der private Token aus der Session übereinstimmt
+// Hier wird keine DB mehr benötigt, da der private Token im Cookie gespeichert und verglichen wird
 if ($private_token_calculated !== $_SESSION['csrf_token_private']) {
     echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
     exit;

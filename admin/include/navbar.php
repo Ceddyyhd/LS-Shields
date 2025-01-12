@@ -1,17 +1,19 @@
 <?php
-include 'security_check.php'; // Sicherheitsprüfung für diese Datei
 
 session_start();
 
-session_regenerate_id(true);
+session_regenerate_id(true); // Session ID regenerieren, um Sicherheitsrisiken zu minimieren
 
+// Cache-Control Header, um das Caching der Seiten zu verhindern
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+
+// Datenbank und Authentifizierungslogik einbinden
 include 'include/db.php';
 include 'auth.php'; // Authentifizierungslogik einbinden
 
-// Session-Wiederherstellung prüfen
+// Session-Wiederherstellung prüfen (für "Remember Me"-Funktion)
 restoreSessionIfRememberMe($conn);
 
 // Prüfen, ob der Benutzer eingeloggt ist
@@ -42,6 +44,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Session gesetzt ist
+
 // Berechtigungen bei jedem Seitenaufruf neu laden
 $stmt = $conn->prepare("SELECT role_id FROM users WHERE id = :id");
 $stmt->execute([':id' => $_SESSION['user_id']]);
@@ -116,14 +119,15 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
 
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
-            FROM users 
-            LEFT JOIN roles ON users.role_id = roles.id 
-            WHERE users.id = :id";
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id 
+        WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
-$stmt->execute(['id' => $user_id]);
+$stmt->execute(['id' => $_SESSION['user_id']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-?>
 
+// Hier können die Benutzerinformationen wie $user['name'], $user['profile_image'] genutzt werden
+?>
 
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">

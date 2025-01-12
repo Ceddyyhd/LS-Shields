@@ -1086,6 +1086,7 @@ $("#noteForm").on("submit", function (e) {
                                    name="ausruestung[<?= $item['key_name']; ?>]" 
                                    value="1" <?= $status ? 'checked' : ''; ?>
                                    <?= $canEdit ? '' : 'disabled'; ?>>
+                                   <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
                             <label class="form-check-label" for="<?= $item['key_name']; ?>">
                                 <?= htmlspecialchars($item['display_name']); ?>
                             </label>

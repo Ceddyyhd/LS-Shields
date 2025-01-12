@@ -1099,19 +1099,24 @@ $("#noteForm").on("submit", function (e) {
         }
         ?>
 
-        <div class="form-group">
-            <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
-            <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
-            <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
-                   value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>" >
-        </div>
+            <div class="form-group">
+                <label for="letzteSpindKontrolle">Letzte Spind Kontrolle</label>
+                <input type="date" class="form-control" id="letzteSpindKontrolle" name="letzte_spind_kontrolle" 
+                    value="<?= htmlspecialchars($letzte_spind_kontrolle ?? ''); ?>"
+                    <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
+            </div>
 
-        <div class="form-group">
-            <label for="notiz">Notiz</label>
-            <input type="text" class="form-control" id="notiz" name="notiz" value="<?= htmlspecialchars($notizen ?? ''); ?>">
-        </div>
+            <div class="form-group">
+                <label for="notiz">Notiz</label>
+                <input type="text" class="form-control" id="notiz" name="notiz" 
+                    value="<?= htmlspecialchars($notizen ?? ''); ?>"
+                    <?= isset($_SESSION['permissions']['edit_ausruestung']) && $_SESSION['permissions']['edit_ausruestung'] ? '' : 'disabled'; ?>>
+            </div>
 
-        <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
+            <?php if ($_SESSION['permissions']['edit_ausruestung'] ?? false): ?>
+                <button type="button" id="saveAusruestungButton" class="btn btn-primary">Änderungen Speichern</button>
+            <?php endif; ?>
+
     </form>
 </div>
 

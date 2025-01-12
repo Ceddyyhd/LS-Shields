@@ -185,39 +185,39 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
             </div>
         </div>
         <?php
-// Routing-Tabelle mit Unterbereichen
+// Routing-Tabelle mit Unterbereichen und Berechtigungsprüfung
 $routes = [
-    'dashboard' => [
+    'mitarbeiter_bereich' => [
         'label' => 'Mitarbeiter Bereich',
-        'path' => 'index.php',
+        'path' => '#',
         'subroutes' => [
-            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'],
-            'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php'],
-            'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php'],
-            'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php'],
-            'calendar' => ['label' => 'Kalender', 'path' => 'calendar.php'],
-            'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php'],
-            'verbesserungen' => ['label' => 'Verbesserungsvorschläge', 'path' => 'verbesserungen.php'],
-            'fahrzeugverwaltung' => ['label' => 'Fahrzeugverwaltung', 'path' => 'fahrzeugverwaltung.php'],
+            'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php', 'permission' => 'view_dashboard'],
+            'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
+            'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php', 'permission' => 'view_training'],
+            'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],
+            'calendar' => ['label' => 'Kalender', 'path' => 'calendar.php', 'permission' => 'view_calendar'],
+            'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php', 'permission' => 'view_customer_management'],
+            'verbesserungen' => ['label' => 'Verbesserungsvorschläge', 'path' => 'verbesserungen.php', 'permission' => 'view_improvements'],
+            'fahrzeugverwaltung' => ['label' => 'Fahrzeugverwaltung', 'path' => 'fahrzeugverwaltung.php', 'permission' => 'view_vehicle_management']
         ]
     ],
-    'admin_area' => [
+    'leitungs_bereich' => [
         'label' => 'Leitungs Bereich',
-        'path' => '#', // Kein Direktlink, da Unterbereiche vorhanden sind
+        'path' => '#',
         'subroutes' => [
-            'mitarbeiterverwaltung' => ['label' => 'Mitarbeiter Verwaltung', 'path' => 'mitarbeiterverwaltung.php'],
-            'rangverwaltung' => ['label' => 'Rang Verwaltung', 'path' => 'rangverwaltung.php'],
-            'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php'],
-            'urlaubsverwaltung' => ['label' => 'Urlaubsverwaltung', 'path' => 'urlaubsverwaltung.php'],
+            'mitarbeiterverwaltung' => ['label' => 'Mitarbeiter Verwaltung', 'path' => 'mitarbeiterverwaltung.php', 'permission' => 'view_employee_management'],
+            'rangverwaltung' => ['label' => 'Rang Verwaltung', 'path' => 'rangverwaltung.php', 'permission' => 'view_rank_management'],
+            'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php', 'permission' => 'view_financial_management'],
+            'urlaubsverwaltung' => ['label' => 'Urlaubsverwaltung', 'path' => 'urlaubsverwaltung.php', 'permission' => 'view_vacation_management']
         ]
     ],
     'settings' => [
         'label' => 'Settings',
-        'path' => '#', // Kein Direktlink, da Unterbereiche vorhanden sind
+        'path' => '#',
         'subroutes' => [
-            'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php'],
-            'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php'],
-            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php'],
+            'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php', 'permission' => 'view_training_management'],
+            'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php', 'permission' => 'view_equipment_management'],
+            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
         ]
     ]
 ];
@@ -225,8 +225,9 @@ $routes = [
 // Aktuelle Seite ermitteln
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 ?>
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
+
+<!-- Navbar -->
+<nav class="mt-2">
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Dynamische Links basierend auf der Routing-Tabelle -->
         <?php foreach ($routes as $route_key => $route): ?>
@@ -242,12 +243,15 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                 <?php if (isset($route['subroutes'])): ?>
                     <ul class="nav nav-treeview">
                         <?php foreach ($route['subroutes'] as $subroute_key => $subroute): ?>
-                            <li class="nav-item">
-                                <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p><?= $subroute['label'] ?></p>
-                                </a>
-                            </li>
+                            <!-- Berechtigungsprüfung hinzufügen -->
+                            <?php if ($_SESSION['permissions'][$subroute['permission']] ?? false): ?>
+                                <li class="nav-item">
+                                    <a href="<?= $subroute['path'] ?>" class="nav-link <?= ($current_page == basename($subroute['path'])) ? 'active' : '' ?>">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p><?= $subroute['label'] ?></p>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -255,6 +259,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
         <?php endforeach; ?>
     </ul>
 </nav>
+
         <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->

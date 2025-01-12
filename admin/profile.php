@@ -165,7 +165,7 @@ if ($roleValue < $currentUserRoleValue) {
 }
 
 // Hier die eigentliche Bedingung für den Button
-if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $roleValue < $currentUserRoleValue): ?>
+if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $currentUserRoleValue < $roleValue): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>

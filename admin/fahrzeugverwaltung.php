@@ -87,8 +87,12 @@
                     echo '<td>' . $vehicle['license_plate'] . '</td>';
                     echo '<td>' . $vehicle['location'] . '</td>';
                     echo '<td><span class="badge ' . $badge_class . '">' . date('d.m.Y', $inspection_date) . '</span></td>';
+                    if ($_SESSION['permissions']['vehicle_edit'] ?? false): 
                     echo '<td><button type="button" class="btn btn-primary bearbeiten-button" data-toggle="modal" data-target="#vehicle-bearbeiten" data-vehicle-id="' . $vehicle['id'] . '">Fahrzeug Bearbeiten</button></td>';
+                    endif;
+                    if ($_SESSION['permissions']['vehicle_tanken'] ?? false): 
                     echo '<td><button type="button" class="btn btn-primary tanken-button" data-toggle="modal" data-target="#vehicle-tanken" data-vehicle-id="' . $vehicle['id'] . '">Tanken</button></td>';
+                    endif;
                     echo '</tr>';
                 }
                 ?>

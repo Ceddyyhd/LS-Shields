@@ -1,26 +1,4 @@
-<?php
-session_start();
 
-// Geheimer Schlüssel zum Berechnen des privaten Tokens
-define('SECRET_KEY', 'my_very_secret_key');
-
-// Verbindung zur Datenbank herstellen
-require_once 'include/db.php'; // Deine DB-Verbindung
-
-// CSRF-Token generieren, falls noch nicht vorhanden
-if (!isset($_SESSION['csrf_token_public'])) {
-    $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Öffentlicher Token
-}
-
-// Setzen des öffentlichen Tokens im Cookie für das Frontend
-setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
-    'expires' => time() + 3600, // Gültigkeit des Cookies (1 Stunde)
-    'path' => '/',              // Cookie für die gesamte Domain verfügbar
-    'secure' => true,           // Nur über HTTPS verfügbar
-    'httponly' => false,        // JavaScript kann auf das Cookie zugreifen
-    'samesite' => 'Strict'      // Schützt vor CSRF-Angriffen
-]);
-?>
 
 
 

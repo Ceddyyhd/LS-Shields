@@ -26,7 +26,7 @@ $private_token_calculated = hash_hmac('sha256', $csrf_token_from_cookie, 'my_ver
 // Hole den privaten Token aus der Datenbank
 require_once 'db.php'; // Deine DB-Verbindung hier
 try {
-    $stmt = $pdo->prepare("SELECT csrf_token_private FROM users WHERE user_id = :user_id");
+    $stmt = $conn->prepare("SELECT csrf_token_private FROM users WHERE id = :user_id");
     $stmt->execute([':user_id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

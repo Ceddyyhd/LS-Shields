@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Geheimer Schlüssel (geheim auf dem Server gespeichert)
+// Geheimer Schlüssel für den privaten Token
 define('SECRET_KEY', 'my_very_secret_key');
 
 // Datenbankverbindung einbinden
@@ -17,7 +17,6 @@ $private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY)
 
 // Speichern des privaten Tokens in der Datenbank (nur sicher auf dem Server)
 try {
-    // Update des privaten Tokens in der Datenbank für den aktuellen Benutzer
     $stmt = $conn->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE id = :user_id");
     $stmt->execute([
         ':csrf_token' => $private_token,  // Speichere den privaten Token
@@ -36,10 +35,8 @@ setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
     'httponly' => false,        // JavaScript kann auf das Cookie zugreifen
     'samesite' => 'Strict'      // Schützt vor CSRF-Angriffen
 ]);
-
-// Optional: Bestätigung oder Debugging
-// echo "CSRF-Tokens wurden erfolgreich generiert und gespeichert.";
 ?>
+
 
 
 

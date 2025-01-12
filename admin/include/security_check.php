@@ -1,9 +1,8 @@
 <?php
-// Sicherstellen, dass die Datei nicht direkt aufgerufen wird
-if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
-    die('Zugriff verweigert'); // Blockiert den direkten Aufruf
+// Prüfen, ob die Datei direkt aufgerufen wurde
+if (!isset($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], '/admin/') === false) {
+    // Wenn die Datei ohne die korrekte Referenz aufgerufen wurde, Weiterleitung zu error.php
+    header('Location: ../error.php');
+    exit();
 }
-
-// Der Code folgt hier
-echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
 ?>

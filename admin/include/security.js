@@ -1,27 +1,22 @@
-// Funktion, um den CSRF-Token direkt aus dem Cookie zu holen
+// Funktion, um den CSRF-Token direkt aus dem HTTP-only Cookie zu holen
 function getCsrfTokenFromCookie() {
     const cookies = document.cookie.split(';');
-    console.log('Cookies:', cookies);  // Debugging: Alle Cookies loggen
     for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();  // Entferne führende und nachfolgende Leerzeichen
-        console.log('Cookie:', cookie);    // Logge jeden Cookie
+        const cookie = cookies[i].trim();
         if (cookie.startsWith('csrf_token=')) {
-            const token = cookie.substring('csrf_token='.length);  // Token extrahieren
-            console.log('Gefundener CSRF-Token:', token); // Debugging: Gefundenen Token loggen
-            return token;  // Gib den Token zurück
+            return cookie.substring('csrf_token='.length);
         }
     }
-    console.log('CSRF Token nicht gefunden');
-    return null;  // Rückgabe null, falls der Token nicht gefunden wurde
+    return null;
 }
-
 
 // Interceptor für alle fetch-Anfragen, um den CSRF-Token hinzuzufügen
 const originalFetch = window.fetch;
 
 window.fetch = function(url, options = {}) {
+    // Füge den CSRF-Token zu allen POST-Anfragen hinzu
     if (options.method === 'POST') {
-        const csrfToken = getCsrfTokenFromCookie();  // Hol den Token direkt aus dem Cookie
+        const csrfToken = getCsrfTokenFromCookie();  // Hole den Token aus dem Cookie
 
         if (!csrfToken) {
             console.error('CSRF Token fehlt!');
@@ -30,10 +25,8 @@ window.fetch = function(url, options = {}) {
 
         options.headers = options.headers || {};
         options.headers['Authorization'] = 'Bearer ' + csrfToken;  // CSRF-Token im Header hinzufügen
-        console.log('Token im Header:', options.headers['Authorization']);  // Logge den Token, der im Header gesendet wird
-
-        return originalFetch(url, options);  // Sende die Anfrage mit dem Token im Header
-    } else {
-        return originalFetch(url, options);  // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
     }
+
+    // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
+    return originalFetch(url, options);
 };

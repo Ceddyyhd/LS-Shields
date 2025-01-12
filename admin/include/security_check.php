@@ -1,6 +1,9 @@
 <?php
 session_start(); // Sitzung starten
 
+// CSRF-Token aus dem Cookie holen
+$csrf_token_from_cookie = isset($_COOKIE['csrf_token']) ? $_COOKIE['csrf_token'] : '';
+
 // Sicherstellen, dass es eine POST-Anfrage ist
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage-Methode.']);
@@ -11,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $headers = getallheaders();
 $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
 
-// Überprüfe, ob der Token im Header vorhanden und gültig ist
-if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
+// Überprüfen, ob der Token im Header und im Cookie übereinstimmt
+if (empty($csrf_token_from_header) || $csrf_token_from_header !== $csrf_token_from_cookie) {
     echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
     exit;
 }

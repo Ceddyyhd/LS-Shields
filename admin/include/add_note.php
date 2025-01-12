@@ -1,9 +1,11 @@
 <?php
-// Sicherstellen, dass die Datei nur durch PHP-Includes oder AJAX aufgerufen wird
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
-    // Wenn die Anfrage nicht von AJAX kommt, blockiere den Zugriff
-    die('Zugriff verweigert');
+if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
+    die('Zugriff verweigert'); // Blockiert den direkten Aufruf
 }
+
+// Dein Code folgt hier
+echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);
+
 
 // Dein Code folgt hier
 echo json_encode(['status' => 'success', 'message' => 'Daten abgerufen']);

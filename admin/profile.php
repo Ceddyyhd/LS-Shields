@@ -164,12 +164,15 @@ if ($roleValue < $currentUserRoleValue) {
     echo "Die Rolle des Zielbenutzers ist nicht kleiner als die des aktuellen Benutzers.<br>";
 }
 
-// Hier die eigentliche Bedingung für den Button
-if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $currentUserRoleValue < $roleValue): ?>
+// Sicherstellen, dass die Bedingung korrekt evaluiert
+if (($roleValue < $currentUserRoleValue) && ($_SESSION['permissions']['edit_employee_rank'] ?? false)): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>
+<?php else: ?>
+    <p>Button wird nicht angezeigt, da die Bedingung nicht erfüllt ist.</p>
 <?php endif; ?>
+
 
 <div class="modal fade" id="rang-bearbeiten">
     <div class="modal-dialog">

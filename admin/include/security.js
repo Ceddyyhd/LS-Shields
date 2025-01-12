@@ -20,12 +20,13 @@ const originalFetch = window.fetch;
 window.fetch = function(url, options = {}) {
     // Füge den CSRF-Token zu allen POST-Anfragen hinzu
     if (options.method === 'POST') {
-        getCsrfToken().then(csrfToken => {
+        return getCsrfToken().then(csrfToken => {
             options.headers = options.headers || {};
             options.headers['Authorization'] = 'Bearer ' + csrfToken;  // CSRF-Token im Header hinzufügen
-            originalFetch(url, options);  // Sende die Anfrage mit dem Token im Header
+            return originalFetch(url, options);  // Sende die Anfrage mit dem Token im Header
         }).catch(error => {
             console.error('Fehler beim Abrufen des CSRF-Tokens:', error);
+            // Optional: Fehlerbehandlung, z.B. Fehlermeldung anzeigen oder alternative Logik
         });
     } else {
         // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage

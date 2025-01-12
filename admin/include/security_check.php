@@ -1,6 +1,6 @@
 <?php
-// Überprüfen, ob die Datei über ein 'include' oder 'require' eingebunden wurde
-if (basename($_SERVER['SCRIPT_NAME']) == basename(__FILE__)) {
+// Überprüfen, ob die Datei direkt über eine URL aufgerufen wurde (nicht eingebunden)
+if (!defined('ALLOW_ACCESS')) {
     die('Zugriff verweigert');
 }
 ?>

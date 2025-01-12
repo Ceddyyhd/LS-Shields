@@ -8,11 +8,11 @@ if (!isset($_SESSION['csrf_token'])) {
 
 // Setze den CSRF-Token als HTTP-Only Cookie
 setcookie('csrf_token', $_SESSION['csrf_token'], [
-    'expires' => time() + 3600,  // Gültigkeit des Cookies, z. B. 1 Stunde
-    'path' => '/',               // Cookie ist für die gesamte Domain verfügbar
+    'expires' => time() + 3600,  // Cookie gültig für 1 Stunde
+    'path' => '/',               // Cookie für die gesamte Domain verfügbar
     'secure' => true,            // Nur über HTTPS verfügbar
     'httponly' => true,          // JavaScript kann den Cookie nicht lesen
-    'samesite' => 'Strict'       // Schützt vor Cross-Site Request Forgery (CSRF)
+    'samesite' => 'Strict'       // Schützt vor CSRF-Angriffen
 ]);
 ?>
 

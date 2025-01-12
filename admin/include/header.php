@@ -1,6 +1,14 @@
+<?php 
+// CSRF-Token generieren, falls noch nicht vorhanden
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge zufälligen Token
+}
+?>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="<?php echo $_SESSION['csrf_token']; ?>"> <!-- CSRF-Token im Meta-Tag -->
   <title>LS-Shields | Mitarbeiterverwaltung</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -10,3 +18,4 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css?v=<?= time(); ?>">
 </head>
+<script src="security.js"></script>

@@ -112,10 +112,6 @@ if (isset($_GET['force_logout_user_id']) && $_SESSION['role'] === 'admin') {
     exit;
 }
 
-// CSRF-Token generieren, falls noch nicht vorhanden
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge einen zufälligen Token
-}
 // Benutzerinformationen abrufen
 $sql = "SELECT users.*, roles.name AS role_name, users.profile_image 
             FROM users 

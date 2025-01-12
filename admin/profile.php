@@ -966,12 +966,11 @@ $("#noteForm").on("submit", function (e) {
                     $rating = $dbAusbildungen[$keyName]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" 
-                        <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_fuehrerscheine'] ? '' : 'disabled'; ?>> 
+                        <input class="form-check-input" type="checkbox"  
                                id="<?= htmlspecialchars($keyName); ?>" 
                                name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>">
+                        <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>" <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_ausbildung'] ? '' : 'disabled'; ?>>>
                             <?= htmlspecialchars($displayName); ?>
                         </label>
                         <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">

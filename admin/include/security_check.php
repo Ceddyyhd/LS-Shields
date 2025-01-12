@@ -26,9 +26,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Eingabewerte validieren: Alle Eingabewerte aus dem POST-Array werden validiert und saniert
-function sanitize_input($data) {
-    return filter_var($data, FILTER_SANITIZE_STRING); // Für Texte
+if (!function_exists('sanitize_input')) {
+    function sanitize_input($data) {
+        return filter_var($data, FILTER_SANITIZE_STRING); // Für Texte
+    }
 }
 
 foreach ($_POST as $key => $value) {

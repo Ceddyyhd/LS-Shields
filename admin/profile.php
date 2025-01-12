@@ -132,18 +132,6 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 </p>
 
-<?php
-// Hole den aktuellen Benutzer (angenommen, du hast die Benutzerrolle in der Session gespeichert)
-$currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwert aus der Session
-
-// Hole alle Rollen, deren 'value' kleiner ist als der des aktuellen Benutzers
-$query = "SELECT id, name FROM roles WHERE value < :currentRoleValue";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':currentRoleValue', $currentUserRoleValue, PDO::PARAM_INT);
-$stmt->execute();
-$roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 <div class="modal fade" id="rang-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -160,6 +148,16 @@ $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <label for="roleSelect">Neuer Rang</label>
                         <select class="custom-select" name="role_id" id="roleSelect" required>
                             <?php
+                            // Hole den aktuellen Benutzer-Rollenwert aus der Session
+                            $currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwert aus der Session
+
+                            // Hole alle Rollen, deren 'value' kleiner ist als der des aktuellen Benutzers
+                            $query = "SELECT id, name FROM roles WHERE value < :currentRoleValue";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bindParam(':currentRoleValue', $currentUserRoleValue, PDO::PARAM_INT);
+                            $stmt->execute();
+                            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
                             // Durchlaufe die gefilterten Rollen und gebe sie als Optionen aus
                             foreach ($roles as $role) {
                                 echo '<option value="' . $role['id'] . '">' . htmlspecialchars($role['name']) . '</option>';

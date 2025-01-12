@@ -1,8 +1,5 @@
 <?php
-define('ALLOW_ACCESS', true);
 
-// Sicherheitsskript einbinden, um den Zugriff zu überprüfen
-include 'security_check.php';
 
 // get_users.php
 require 'db.php'; // Deine DB-Verbindung

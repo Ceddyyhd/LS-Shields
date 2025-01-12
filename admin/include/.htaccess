@@ -1,0 +1,5 @@
+# Verweigert den Zugriff auf alle Dateien im include-Ordner über den Browser
+<Files "*">
+    Order Deny,Allow
+    Deny from all
+</Files>

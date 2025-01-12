@@ -144,12 +144,9 @@ $currentUserRoleValue = intval($currentUserRoleValue);
 ?>
 
 <?php echo htmlspecialchars($user['role_name']); ?>
-<?php echo htmlspecialchars($roleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
-<?php echo htmlspecialchars($currentUserRoleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
 
 <?php
 // Debugging-Ausgabe für die Berechtigung
-echo "Permission edit_employee_rank: " . ($_SESSION['permissions']['edit_employee_rank'] ?? 'Nicht gesetzt') . "<br>";
 
 // Überprüfen, ob der Benutzer die Berechtigung hat und ob der Vergleich der 'role_value' korrekt ist
 if ($_SESSION['permissions']['edit_employee_rank'] ?? false) {
@@ -166,7 +163,6 @@ if (($roleValue < $currentUserRoleValue) && ($_SESSION['permissions']['edit_empl
         <i class="fa-solid fa-pen"></i>
     </button>
 <?php else: ?>
-    <p>Button wird nicht angezeigt, da die Bedingung nicht erfüllt ist.</p>
 <?php endif; ?>
 
 

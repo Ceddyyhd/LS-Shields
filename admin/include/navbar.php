@@ -226,9 +226,8 @@ $routes = [
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 ?>
         <!-- Sidebar Menu -->
-        <!-- Navbar -->
-<nav class="main-header navbar navbar-expand navbar-white navbar-light dark-mode">
-    <ul class="navbar-nav">
+        <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Dynamische Links basierend auf der Routing-Tabelle -->
         <?php foreach ($routes as $route_key => $route): ?>
             <li class="nav-item <?= isset($route['subroutes']) ? 'menu-open' : '' ?>">

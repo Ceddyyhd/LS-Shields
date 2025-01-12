@@ -137,6 +137,10 @@ $roleValue = $stmt2->fetchColumn(); // Gibt den value zurück, wenn gefunden
 if (!$roleValue) {
     die("Fehler: Rolle nicht gefunden.");
 }
+
+// Wandelt die Werte in Integer um, um sicherzustellen, dass sie als Zahlen verglichen werden
+$roleValue = intval($roleValue);
+$currentUserRoleValue = intval($currentUserRoleValue);
 ?>
 
 <?php echo htmlspecialchars($user['role_name']); ?>

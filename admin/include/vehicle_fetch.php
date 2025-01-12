@@ -1,5 +1,4 @@
 <?php
-include 'security_check.php'; // Sicherheitsprüfung für diese Datei
 
 include 'db.php';  // Datenbankverbindung einbinden
 $vehicle_id = isset($_GET['vehicle_id']) ? $_GET['vehicle_id'] : null;

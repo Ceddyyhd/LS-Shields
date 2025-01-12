@@ -20,10 +20,10 @@ if ($user_id != $_SESSION['user_id'] && !isset($_SESSION['permissions']['access_
     die("Zugriff verweigert. Du hast keine Berechtigung, diese Seite zu sehen.");
 }
 
-// Benutzerinformationen und Rolle (einschließlich role_value) abfragen
-$sql = "SELECT users.*, roles.name AS role_name, roles.value AS role_value
-        FROM users
-        LEFT JOIN roles ON users.role_id = roles.id
+// Benutzerinformationen abrufen
+$sql = "SELECT users.*, roles.name AS role_name 
+        FROM users 
+        LEFT JOIN roles ON users.role_id = roles.id 
         WHERE users.id = :id";
 $stmt = $conn->prepare($sql);
 $stmt->execute(['id' => $user_id]);
@@ -128,14 +128,21 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
 // Hole den 'role_value' des aktuell eingeloggten Benutzers aus der Session
 $currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwert aus der Session
 
-// Hole den 'role_value' des Benutzers, den du bearbeiten möchtest
-$targetUserRoleValue = $user['role_value']; // Angenommen, der Benutzer, den du bearbeiten möchtest, hat das Feld 'role_value'
+// Hole den 'role_value' des Benutzers, den du bearbeiten möchtest, basierend auf dem 'role_name'
+$sql2 = "SELECT value FROM roles WHERE name = :role_name";
+$stmt2 = $conn->prepare($sql2);
+$stmt2->execute(['role_name' => $user['role_name']]);
+$roleValue = $stmt2->fetchColumn(); // Gibt den value zurück, wenn gefunden
+
+if (!$roleValue) {
+    die("Fehler: Rolle nicht gefunden.");
+}
 ?>
 
 <?php echo htmlspecialchars($user['role_name']); ?>
-<?php echo htmlspecialchars($user['role_value']); ?>
+<?php echo htmlspecialchars($roleValue); ?> <!-- Gibt den role_value des Benutzers aus -->
 
-<?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $targetUserRoleValue < $currentUserRoleValue): ?>
+<?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $roleValue < $currentUserRoleValue): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>

@@ -1,38 +1,33 @@
-// Funktion, um den CSRF-Token aus den Cookies zu holen (dies ist der private Token)
-// Der private Token wird hier nicht verwendet, aber du kannst ihn speichern, wenn notwendig.
+// Funktion, um den öffentlichen CSRF-Token aus dem Cookie zu holen
 function getCsrfTokenFromCookie() {
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
-        if (cookie.startsWith('csrf_token=')) {
-            return cookie.substring('csrf_token='.length);  // Gib den Token zurück
+        if (cookie.startsWith('csrf_token_public=')) {
+            return cookie.substring('csrf_token_public='.length);  // Gib den öffentlichen Token zurück
         }
     }
-    return null;  // Rückgabe null, wenn der Token nicht gefunden wurde
-}
-
-// Funktion, um den öffentlichen Token zu holen (kann vom Server oder lokal gespeichert werden)
-function getPublicToken() {
-    return document.cookie.replace(/(?:(?:^|.*;\s*)public_token\s*\=\s*([^;]*).*$)|^.*$/, "$1");  // Token aus den Cookies holen
+    return null;  // Rückgabe null, falls der Token nicht gefunden wurde
 }
 
 // Interceptor für alle fetch-Anfragen, um den CSRF-Token hinzuzufügen
 const originalFetch = window.fetch;
 
 window.fetch = function(url, options = {}) {
-    // Füge den öffentlichen Token zu allen POST-Anfragen hinzu
     if (options.method === 'POST') {
-        const publicToken = getPublicToken();  // Hole den öffentlichen Token
+        // Hole den öffentlichen CSRF-Token aus dem Cookie
+        const csrfToken = getCsrfTokenFromCookie(); 
 
-        if (!publicToken) {
-            console.error('Öffentlicher Token fehlt!');
-            return Promise.reject(new Error('Öffentlicher Token fehlt!'));  // Beende die Anfrage, falls kein öffentlicher Token vorhanden ist
+        if (!csrfToken) {
+            console.error('CSRF Token fehlt!');
+            return Promise.reject(new Error('CSRF Token fehlt!'));  // Beende die Anfrage, falls kein Token vorhanden ist
         }
 
         options.headers = options.headers || {};
-        options.headers['Authorization'] = 'Bearer ' + publicToken;  // Füge den öffentlichen Token als Authorization Header hinzu
-    }
+        options.headers['Authorization'] = 'Bearer ' + csrfToken;  // Füge den öffentlichen CSRF-Token in den Header ein
 
-    // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
-    return originalFetch(url, options);
+        return originalFetch(url, options);  // Sende die Anfrage mit dem Token im Header
+    } else {
+        return originalFetch(url, options);  // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
+    }
 };

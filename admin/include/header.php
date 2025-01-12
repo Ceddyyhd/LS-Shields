@@ -1,20 +1,45 @@
 <?php
 session_start();
 
-// CSRF-Token generieren, wenn er noch nicht vorhanden ist
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generiere sicheren CSRF-Token
+// Geheimer Schlüssel (geheim auf dem Server gespeichert)
+define('SECRET_KEY', 'my_very_secret_key');
+
+// Datenbankverbindung einbinden
+include 'db.php';  // Hier wird die db.php eingebunden, die die Verbindung zur Datenbank herstellt
+
+// CSRF-Token generieren, falls noch nicht vorhanden
+if (!isset($_SESSION['csrf_token_public'])) {
+    $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Erzeuge sicheren öffentlichen Token
 }
 
-// Setze den Token als HTTP-only Cookie
-setcookie('csrf_token', $_SESSION['csrf_token'], [
-    'expires' => time() + 3600,  // Gültigkeit des Cookies (1 Stunde)
-    'path' => '/',               // Cookie für die gesamte Domain verfügbar
-    'secure' => true,            // Nur über HTTPS verfügbar
-    'httponly' => true,          // JavaScript kann den Cookie nicht lesen
-    'samesite' => 'Strict'       // Schützt vor CSRF-Angriffen
+// Berechne den privaten Token (dieser wird nicht im Cookie gespeichert, nur auf dem Server)
+$private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY);
+
+// Speichern des privaten Tokens in der Datenbank (nur sicher auf dem Server)
+try {
+    // Update des privaten Tokens in der Datenbank für den aktuellen Benutzer
+    $stmt = $pdo->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE user_id = :user_id");
+    $stmt->execute([
+        ':csrf_token' => $private_token,  // Speichere den private Token
+        ':user_id' => $_SESSION['user_id']  // Die User-ID
+    ]);
+} catch (PDOException $e) {
+    echo "Datenbankfehler: " . $e->getMessage();
+    exit;
+}
+
+// Setzen des öffentlichen Tokens im Cookie
+setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
+    'expires' => time() + 3600, // Cookie läuft in einer Stunde ab
+    'path' => '/',
+    'secure' => true,
+    'httponly' => false,
+    'samesite' => 'Strict'
 ]);
+
 ?>
+
+
 
 <head>
   <meta charset="utf-8">

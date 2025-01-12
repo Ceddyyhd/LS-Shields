@@ -152,9 +152,12 @@ $('[data-toggle="tooltip"]').tooltip();
 });
         </script>
     </ul>
+    <?php if ($_SESSION['permissions']['event_planung_bearbeiten'] ?? false): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ansprechpartner-bearbeiten">
       Bearbeiten
     </button>
+    <?php endif; ?>
+
 
     <div class="modal fade" id="ansprechpartner-bearbeiten">
 <div class="modal-dialog">
@@ -391,9 +394,11 @@ console.log('Antwort des Servers: ', xhr.responseText); // Gibt die vollständig
 <dl class="row" id="teams-page-container">
 <!-- Dynamisch generierte Inhalte erscheinen hier -->
 </dl>
+<?php if ($_SESSION['permissions']['event_teams_bearbeiten'] ?? false): ?>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#teams-bearbeiten">
 Teams Bearbeiten
     </button>
+    <?php endif; ?>
 
 <!-- Modal für Team-Erstellung -->
 <div class="modal fade" id="teams-bearbeiten">
@@ -643,7 +648,9 @@ error: function(xhr, status, error) {
                                 <div class="card-header p-2">
                                     <ul class="nav nav-pills">
                                         <li class="nav-item"><a class="nav-link active" href="#plan" data-toggle="tab">Plan</a></li>
+                                        <?php if ($_SESSION['permissions']['event_plan_bearbeiten'] ?? false): ?>
                                         <li class="nav-item"><a class="nav-link" href="#plan-bearbeiten" data-toggle="tab">Plan Bearbeiten</a></li>
+                                        <?php endif; ?>
                                         <li class="nav-item"><a class="nav-link" href="#anmeldung" data-toggle="tab">Anmeldung</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#dienstplan" data-toggle="tab">Dienstplan</a></li>
                                     </ul>
@@ -735,7 +742,10 @@ error: function(xhr, status, error) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <?php if ($_SESSION['permissions']['event_anmelden'] ?? false): ?>
                                             <button type="button" id="submitFormAnmeldung" class="btn btn-danger">Anmelden</button>
+                                            <?php endif; ?>
+
                                         </div>
 
                                         <script>
@@ -853,7 +863,9 @@ error: function(xhr, status, error) {
 
                                                 <div class="form-group row">
                                                     <div class="offset-sm-2 col-sm-10">
+                                                    <?php if ($_SESSION['permissions']['event_dienstplan_save'] ?? false): ?>
                                                         <button type="button" id="submitFormDienstplanung" class="btn btn-danger">Speichern</button>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </form>

@@ -1,19 +1,41 @@
 <?php
 session_start();
 
-// CSRF-Token generieren, wenn er noch nicht vorhanden ist
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Generiere sicheren CSRF-Token
+// CSRF-Token generieren, falls noch nicht vorhanden
+if (!isset($_SESSION['csrf_token_private'])) {
+    $_SESSION['csrf_token_private'] = bin2hex(random_bytes(32)); // Generiere sicheren privaten CSRF-Token
 }
 
-// Setze den Token als HTTP-only Cookie
-setcookie('csrf_token', $_SESSION['csrf_token'], [
-    'expires' => time() + 3600,  // Gültigkeit des Cookies (1 Stunde)
+if (!isset($_SESSION['csrf_token_public'])) {
+    $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Generiere sicheren öffentlichen CSRF-Token
+}
+
+// Verbinde dich mit der Datenbank, um den privaten Token zu speichern
+// Einbinden der DB-Verbindung
+require_once 'db.php';  // Hier wird die DB-Verbindung aus der db.php geladen
+
+try {
+    // Speichere den privaten CSRF-Token in der Datenbank (dieser wird sicher und nur dort gespeichert)
+    $stmt = $pdo->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE user_id = :user_id");
+    $stmt->execute([
+        ':csrf_token' => $_SESSION['csrf_token_private'],
+        ':user_id' => $_SESSION['user_id'] // Achte darauf, dass die User-ID korrekt ist
+    ]);
+
+} catch (PDOException $e) {
+    echo "Datenbankfehler: " . $e->getMessage();
+    exit;
+}
+
+// Setze den öffentlichen Token als Cookie (für die Verwendung im Frontend)
+setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
+    'expires' => time() + 3600,  // Cookie gültig für 1 Stunde
     'path' => '/',               // Cookie für die gesamte Domain verfügbar
     'secure' => true,            // Nur über HTTPS verfügbar
-    'httponly' => true,          // JavaScript kann den Cookie nicht lesen
+    'httponly' => false,         // JavaScript kann auf das Cookie zugreifen
     'samesite' => 'Strict'       // Schützt vor CSRF-Angriffen
 ]);
+
 ?>
 
 <head>

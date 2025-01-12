@@ -1,16 +1,5 @@
 <?php
-// Sicherstellen, dass keine unerwünschte Ausgabe erfolgt
-ob_clean(); // Bereinigt den Output-Puffer
-header('Content-Type: application/json'); // Setzt den Content-Type auf JSON
 
-// Sicherstellen, dass die Datei nur durch AJAX oder PHP-Includes aufgerufen wird
-if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
-    echo json_encode(['success' => false, 'message' => 'Zugriff verweigert']);
-    exit; // Verhindert weitere Ausführung
-}
-
-// Dein Code folgt hier
-echo json_encode(['success' => true, 'message' => 'Daten abgerufen']);
 
 include 'db.php';
 if (session_status() === PHP_SESSION_NONE) {

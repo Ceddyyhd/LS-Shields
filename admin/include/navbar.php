@@ -217,7 +217,7 @@ $routes = [
         'subroutes' => [
             'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php', 'permission' => 'view_training_management'],
             'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php', 'permission' => 'view_equipment_management'],
-            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
+            'ankuendigung' => ['label' => 'Ankuendigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
         ]
     ]
 ];

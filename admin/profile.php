@@ -966,7 +966,8 @@ $("#noteForm").on("submit", function (e) {
                     $rating = $dbAusbildungen[$keyName]['bewertung'] ?? 0;
                     ?>
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" disabled 
+                        <input class="form-check-input" type="checkbox" 
+                        <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_fuehrerscheine'] ? '' : 'disabled'; ?>> 
                                id="<?= htmlspecialchars($keyName); ?>" 
                                name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
                                value="1" <?= $status ? 'checked' : ''; ?>>
@@ -975,7 +976,7 @@ $("#noteForm").on("submit", function (e) {
                         </label>
                         <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star" disabled
+                                <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star"
                                    data-value="<?= $i; ?>" 
                                    data-ausbildung="<?= htmlspecialchars($keyName); ?>"></i>
                             <?php endfor; ?>

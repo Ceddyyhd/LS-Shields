@@ -1,6 +1,4 @@
 <?php
-ob_start(); // Ausgabe-Pufferung starten
-
 session_start();
 
 // Überprüfen, ob es eine POST- oder GET-Anfrage ist
@@ -13,16 +11,16 @@ if (!in_array($request_method, $allowed_methods)) {
     exit;
 }
 
-// Überprüfen, ob die Anfrage von /admin/ kommt (einschließlich Unterverzeichnissen wie /admin/include/)
+// Sicherstellen, dass die Anfrage von /admin/ kommt (einschließlich Unterverzeichnissen wie /admin/include/)
 $current_url = $_SERVER['REQUEST_URI'];
 
-if (strpos($current_url, '/admin/') !== 0) {  // Wenn die URL nicht mit /admin/ beginnt
+// Wenn die URL nicht mit /admin/ beginnt, leite zur Fehlerseite weiter
+if (strpos($current_url, '/admin/') !== 0) {
     header('Location: /error.php');
     exit;
 }
 
 // CSRF-Token-Überprüfung und andere Sicherheitsprüfungen
-// Weiterer Code, wie du es benötigst...
+// Weitere Logik für Sicherheit
 
-ob_end_flush(); // Pufferung ausgeben, wenn keine Weiterleitung erfolgt
 ?>

@@ -7,18 +7,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// CSRF Token Schutz: Token aus dem Header holen
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $headers = getallheaders();
-    $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
+// Überprüfen, ob der Token aus dem Header der Anfrage kommt
+$headers = getallheaders();
+$csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
 
-    // Überprüfe, ob der Token im Header vorhanden und gültig ist
-    if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
-        // Fehlerbehandlung
-        error_log('CSRF Token ungültig oder fehlt.'); // Logge den Fehler auf dem Server
-        echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
-        exit;
-    }
+// Überprüfe, ob der Token im Header vorhanden und gültig ist
+if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
+    exit;
 }
 
 // Eingabewerte validieren: Alle Eingabewerte aus dem POST-Array werden validiert und saniert

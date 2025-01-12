@@ -1,19 +1,10 @@
 <?php
 session_start();
 
-// CSRF-Token generieren, falls noch nicht vorhanden
+// Generiere den CSRF-Token, wenn er noch nicht existiert
 if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Erzeuge zufälligen Token
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));  // Generiere einen sicheren CSRF-Token
 }
-
-// Setze den CSRF-Token als HTTP-Only Cookie
-setcookie('csrf_token', $_SESSION['csrf_token'], [
-    'expires' => time() + 3600,  // Cookie gültig für 1 Stunde
-    'path' => '/',               // Cookie für die gesamte Domain verfügbar
-    'secure' => true,            // Nur über HTTPS verfügbar
-    'httponly' => true,          // JavaScript kann den Cookie nicht lesen
-    'samesite' => 'Strict'       // Schützt vor CSRF-Angriffen
-]);
 ?>
 
 <head>

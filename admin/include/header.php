@@ -5,7 +5,7 @@ session_start();
 define('SECRET_KEY', 'my_very_secret_key');
 
 // Datenbankverbindung einbinden
-include 'db.php';  // Hier wird die db.php eingebunden, die die Verbindung zur Datenbank herstellt
+require_once 'db.php'; // Deine DB-Verbindung hier
 
 // CSRF-Token generieren, falls noch nicht vorhanden
 if (!isset($_SESSION['csrf_token_public'])) {

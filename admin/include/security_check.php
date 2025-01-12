@@ -1,7 +1,11 @@
 <?php
-// security_check.php
-
 session_start(); // Sitzung starten
+
+// Sicherstellen, dass es eine POST-Anfrage ist
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage-Methode.']);
+    exit;
+}
 
 // CSRF Token Schutz: Token aus dem Header holen
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,15 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Überprüfe, ob der Token im Header vorhanden und gültig ist
     if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
+        // Fehlerbehandlung
+        error_log('CSRF Token ungültig oder fehlt.'); // Logge den Fehler auf dem Server
         echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
         exit;
     }
-}
-
-// Sicherstellen, dass es eine POST-Anfrage ist
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Ungültige Anfrage-Methode.']);
-    exit;
 }
 
 // Eingabewerte validieren: Alle Eingabewerte aus dem POST-Array werden validiert und saniert
@@ -33,12 +33,12 @@ foreach ($_POST as $key => $value) {
 }
 
 // Cross-Origin Resource Sharing (CORS) Header für sicheren Zugriff
-header('Access-Control-Allow-Origin: https://deine-website.com');
+header('Access-Control-Allow-Origin: https://ls-shields.ceddyyhd2.eu');
 header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization'); // Füge 'Authorization' hinzu, um den CSRF-Token zu akzeptieren
 
 // Referer-Header-Überprüfung für zusätzliche Sicherheit
-if (empty($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'deine-website.com') === false) {
+if (empty($_SERVER['HTTP_REFERER']) || strpos($_SERVER['HTTP_REFERER'], 'ls-shields.ceddyyhd2.eu') === false) {
     echo json_encode(['success' => false, 'message' => 'Zugang verweigert.']);
     exit;
 }

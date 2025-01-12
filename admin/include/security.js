@@ -1,11 +1,13 @@
 // Funktion, um den CSRF-Token direkt aus dem Cookie zu holen
 function getCsrfTokenFromCookie() {
-    // Hole den CSRF-Token aus den Cookies
     const cookies = document.cookie.split(';');
+    console.log('Cookies:', cookies);  // Logge alle Cookies zur Überprüfung
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         if (cookie.startsWith('csrf_token=')) {
-            return cookie.substring('csrf_token='.length);  // Gib den Token zurück
+            const token = cookie.substring('csrf_token='.length);
+            console.log('CSRF Token aus Cookie:', token); // Logge den Token aus dem Cookie
+            return token;  // Gib den Token zurück
         }
     }
     return null;  // Rückgabe null, falls der Token nicht gefunden wurde
@@ -15,7 +17,6 @@ function getCsrfTokenFromCookie() {
 const originalFetch = window.fetch;
 
 window.fetch = function(url, options = {}) {
-    // Füge den CSRF-Token zu allen POST-Anfragen hinzu
     if (options.method === 'POST') {
         const csrfToken = getCsrfTokenFromCookie();  // Hol den Token direkt aus dem Cookie
 
@@ -26,8 +27,10 @@ window.fetch = function(url, options = {}) {
 
         options.headers = options.headers || {};
         options.headers['Authorization'] = 'Bearer ' + csrfToken;  // CSRF-Token im Header hinzufügen
-    }
+        console.log('Token im Header:', options.headers['Authorization']);  // Logge den Token, der im Header gesendet wird
 
-    // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
-    return originalFetch(url, options);
+        return originalFetch(url, options);  // Sende die Anfrage mit dem Token im Header
+    } else {
+        return originalFetch(url, options);  // Rufe die Original-`fetch`-Methode auf, wenn keine POST-Anfrage
+    }
 };

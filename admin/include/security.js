@@ -4,7 +4,7 @@ function getCsrfTokenFromCookie() {
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         if (cookie.startsWith('csrf_token_public=')) {
-            return cookie.substring('csrf_token_public='.length);
+            return cookie.substring('csrf_token_public='.length); // Den öffentlichen Token zurückgeben
         }
     }
     return null;  // Rückgabe null, falls der Token nicht gefunden wurde
@@ -18,7 +18,7 @@ window.fetch = function(url, options = {}) {
         const csrfToken = getCsrfTokenFromCookie();  // Hol den Token direkt aus dem Cookie
         if (!csrfToken) {
             console.error('CSRF Token fehlt!');
-            return Promise.reject(new Error('CSRF Token fehlt!'));
+            return Promise.reject(new Error('CSRF Token fehlt!'));  // Beende die Anfrage, falls kein Token vorhanden ist
         }
         options.headers = options.headers || {};
         options.headers['Authorization'] = 'Bearer ' + csrfToken;  // CSRF-Token im Header hinzufügen

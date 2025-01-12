@@ -1,41 +1,35 @@
 <?php
 session_start();
 
-// Geheimer Schlüssel für den privaten Token
+// Geheimer Schlüssel zum Berechnen des privaten Tokens
 define('SECRET_KEY', 'my_very_secret_key');
 
-// Datenbankverbindung einbinden
-require_once 'include/db.php'; // Stelle sicher, dass der Pfad zur db.php korrekt ist
+// Verbindung zur Datenbank herstellen
+require_once 'include/db.php'; // Deine DB-Verbindung
 
 // CSRF-Token generieren, falls noch nicht vorhanden
 if (!isset($_SESSION['csrf_token_public'])) {
-    $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Erzeuge sicheren öffentlichen Token
+    $_SESSION['csrf_token_public'] = bin2hex(random_bytes(32)); // Öffentlicher Token
 }
 
-// Berechne den privaten Token (dieser wird nicht im Cookie gespeichert, nur auf dem Server)
+// Berechne den privaten Token (dieser wird NUR in der Session gespeichert)
 $private_token = hash_hmac('sha256', $_SESSION['csrf_token_public'], SECRET_KEY);
 
-// Speichern des privaten Tokens in der Datenbank (nur sicher auf dem Server)
-try {
-    $stmt = $conn->prepare("UPDATE users SET csrf_token_private = :csrf_token WHERE id = :user_id");
-    $stmt->execute([
-        ':csrf_token' => $private_token,  // Speichere den privaten Token
-        ':user_id' => $_SESSION['user_id']  // Die User-ID
-    ]);
-} catch (PDOException $e) {
-    echo "Datenbankfehler: " . $e->getMessage();
-    exit;
-}
+// Speichern des privaten Tokens in der Session für den aktuellen Benutzer
+$_SESSION['csrf_token_private'] = $private_token;
 
-// Setzen des öffentlichen Tokens im Cookie
+// Setzen des öffentlichen Tokens im Cookie für das Frontend
 setcookie('csrf_token_public', $_SESSION['csrf_token_public'], [
-    'expires' => time() + 3600, // Cookie läuft in einer Stunde ab
+    'expires' => time() + 3600, // Gültigkeit des Cookies (1 Stunde)
     'path' => '/',              // Cookie für die gesamte Domain verfügbar
     'secure' => true,           // Nur über HTTPS verfügbar
     'httponly' => false,        // JavaScript kann auf das Cookie zugreifen
     'samesite' => 'Strict'      // Schützt vor CSRF-Angriffen
 ]);
 ?>
+
+
+
 
 
 

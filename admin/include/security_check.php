@@ -23,20 +23,9 @@ if (empty($csrf_token_from_header) || $csrf_token_from_header !== $csrf_token_fr
 // Berechne den privaten Token mit der geheimen Prüfziffer (secret key) und dem öffentlichen Token
 $private_token_calculated = hash_hmac('sha256', $csrf_token_from_cookie, 'my_very_secret_key');
 
-// Hole den privaten Token aus der Datenbank
-require_once 'db.php'; // Deine DB-Verbindung hier
-try {
-    $stmt = $conn->prepare("SELECT csrf_token_private FROM users WHERE id = :user_id");
-    $stmt->execute([':user_id' => $_SESSION['user_id']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Überprüfen, ob der private Token korrekt ist
-    if ($private_token_calculated !== $user['csrf_token_private']) {
-        echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
-        exit;
-    }
-} catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Datenbankfehler: ' . $e->getMessage()]);
+// Überprüfen, ob der private Token aus der Session übereinstimmt
+if ($private_token_calculated !== $_SESSION['csrf_token_private']) {
+    echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
     exit;
 }
 

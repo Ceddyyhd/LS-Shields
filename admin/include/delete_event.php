@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 require 'db.php';  // Deine DB-Verbindung
 
 // Überprüfen, ob die Berechtigung vorhanden ist

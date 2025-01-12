@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include 'db.php';  // Datenbankverbindung einbinden
 session_start();   // Session starten, um auf $_SESSION zuzugreifen
 

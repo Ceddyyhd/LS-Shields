@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include('db.php');
 
 // Kunden-ID und neuer Status (geloescht) aus dem Formular erhalten

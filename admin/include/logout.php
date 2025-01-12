@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 session_start(); // Session starten
 
 // Alle Session-Daten löschen

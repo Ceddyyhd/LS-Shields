@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 // get_users.php
 require 'db.php'; // Deine DB-Verbindung
 

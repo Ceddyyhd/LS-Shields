@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include('db.php');
 
 // Überprüfen, ob die Daten über POST gesendet wurden

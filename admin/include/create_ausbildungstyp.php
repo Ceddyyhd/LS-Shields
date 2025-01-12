@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 require_once 'db.php'; // Deine DB-Verbindungsdatei
 
 // Sicherstellen, dass alle erforderlichen Felder vorhanden sind

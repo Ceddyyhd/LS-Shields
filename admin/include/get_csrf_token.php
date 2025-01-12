@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 session_start();
 
 // Stelle sicher, dass der Benutzer authentifiziert ist, bevor du den CSRF-Token zurückgibst

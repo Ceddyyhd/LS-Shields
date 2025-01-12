@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 require_once 'db.php';
 
 // Fehleranzeige für Debugging aktivieren

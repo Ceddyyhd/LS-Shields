@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include('db.php');
 
 // Überprüfen, ob eine Event-ID übergeben wurde

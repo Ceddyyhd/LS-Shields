@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 // Debugging: Alle Fehler anzeigen
 ini_set('display_errors', 1);
 error_reporting(E_ALL);

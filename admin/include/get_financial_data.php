@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include 'db.php'; // Deine PDO-Datenbankverbindung
 
 // SQL-Abfragen zum Berechnen der Einnahmen und Ausgaben

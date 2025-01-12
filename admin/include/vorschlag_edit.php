@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include 'db.php'; // Datenbankverbindung
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

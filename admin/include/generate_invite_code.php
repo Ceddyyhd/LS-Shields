@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include 'db.php';  // Stellen Sie sicher, dass die Datenbankverbindung korrekt ist
 
 // Funktion zum Generieren eines zufälligen Einladungscodes

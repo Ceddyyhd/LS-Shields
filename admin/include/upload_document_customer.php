@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 // Fehlerprotokollierung aktivieren
 ini_set('display_errors', 1);  // Fehlerprotokollierung aktivieren
 error_reporting(E_ALL);  // Alle Fehler anzeigen

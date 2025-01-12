@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 include 'db.php'; // Deine PDO-Datenbankverbindung
 
 // SQL-Abfragen zum Abrufen der Finanzdaten (z. B. Typ, Kategorie, Notiz, Betrag, erstellt_von)

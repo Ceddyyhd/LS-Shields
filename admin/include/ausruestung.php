@@ -1,4 +1,6 @@
 <?php
+include 'security_check.php'; // Sicherheitsprüfung für diese Datei
+
 // Berechtigungsprüfung
 $canEdit = $_SESSION['permissions']['edit_employee'] ?? false;
 $editor_name = $_SESSION['user_name'] ?? 'Unbekannt'; // Fallback-Wert, falls 'user_name' nicht existiert

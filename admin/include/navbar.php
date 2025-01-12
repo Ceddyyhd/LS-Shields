@@ -47,15 +47,16 @@ $user_name = $_SESSION['username'] ?? 'Gast'; // Standardwert, falls keine Sessi
 // Nur die spezifischen Session-Daten neu laden (profile_image, user_role, user_role_value)
 if (isset($_SESSION['user_id'])) {
     // Benutzerinformationen für die Session-Daten laden
-    $stmt = $conn->prepare("SELECT profile_image, level, value FROM users WHERE id = :id");
+    $stmt = $conn->prepare("SELECT roles.name AS role_name, roles.level, roles.value, users.profile_image FROM users 
+                            LEFT JOIN roles ON users.role_id = roles.id WHERE users.id = :id");
     $stmt->execute([':id' => $_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Wenn der Benutzer existiert, spezifische Session-Daten aktualisieren
     if ($user) {
         $_SESSION['profile_image'] = $user['profile_image']; // Profilbild aktualisieren
-        $_SESSION['user_role'] = $user['level'];            // Benutzerrolle (level) aktualisieren
-        $_SESSION['user_role_value'] = $user['value'];      // Benutzerrolle (value) aktualisieren
+        $_SESSION['user_role'] = $user['role_name'];         // Benutzerrolle (role_name) aktualisieren
+        $_SESSION['user_role_value'] = $user['value'];       // Benutzerrolle (value) aktualisieren
     }
 }
 

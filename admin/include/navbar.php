@@ -208,13 +208,26 @@ $routes = [
         'path' => '#',
         'subroutes' => [
             'dashboard' => ['label' => 'Dashboard', 'path' => 'index.php'], // Keine Berechtigung hier
-            'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
             'training' => ['label' => 'Trainings Kalender', 'path' => 'training.php', 'permission' => 'view_training'],
-            'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],
             'calendar' => ['label' => 'Kalender', 'path' => 'calendar.php', 'permission' => 'view_calendar'],
-            'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php', 'permission' => 'view_customer_management'],
             'verbesserungen' => ['label' => 'Verbesserungsvorschläge', 'path' => 'verbesserungen.php', 'permission' => 'view_improvements'],
-            'fahrzeugverwaltung' => ['label' => 'Fahrzeugverwaltung', 'path' => 'fahrzeugverwaltung.php', 'permission' => 'view_vehicle_management']
+        ]
+    ],
+    'event_planung' => [
+        'label' => 'Event Planung',
+        'path' => '#',
+        'subroutes' => [
+            'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
+            'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],
+            'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php', 'permission' => 'view_customer_management'],
+        ]
+    ],
+    'finanz_verwaltung' => [
+        'label' => 'Finanz Verwaltung',
+        'path' => '#',
+        'subroutes' => [
+            'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php', 'permission' => 'view_financial_management'],
+            'mitarbeitergehaelter' => ['label' => 'Mitarbeiter Gehälter', 'path' => 'gehaelter.php', 'permission' => 'view_gehaelter'],
         ]
     ],
     'leitungs_bereich' => [
@@ -223,17 +236,17 @@ $routes = [
         'subroutes' => [
             'mitarbeiterverwaltung' => ['label' => 'Mitarbeiter Verwaltung', 'path' => 'mitarbeiterverwaltung.php', 'permission' => 'view_employee_management'],
             'rangverwaltung' => ['label' => 'Rang Verwaltung', 'path' => 'rangverwaltung.php', 'permission' => 'view_rank_management'],
-            'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php', 'permission' => 'view_financial_management'],
-            'urlaubsverwaltung' => ['label' => 'Urlaubsverwaltung', 'path' => 'urlaubsverwaltung.php', 'permission' => 'view_vacation_management']
+            'urlaubsverwaltung' => ['label' => 'Urlaubsverwaltung', 'path' => 'urlaubsverwaltung.php', 'permission' => 'view_vacation_management'],
+            'fahrzeugverwaltung' => ['label' => 'Fahrzeugverwaltung', 'path' => 'fahrzeugverwaltung.php', 'permission' => 'view_vehicle_management'],
+            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
         ]
     ],
-    'settings' => [
-        'label' => 'Settings',
+    'sonstiges' => [
+        'label' => 'Sonstiges',
         'path' => '#',
         'subroutes' => [
             'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php', 'permission' => 'view_training_management'],
             'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php', 'permission' => 'view_equipment_management'],
-            'ankuendigung' => ['label' => 'Ankündigungen', 'path' => 'ankuendigung.php', 'permission' => 'view_announcements']
         ]
     ]
 ];

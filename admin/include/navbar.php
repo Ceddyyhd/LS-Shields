@@ -219,7 +219,14 @@ $routes = [
         'subroutes' => [
             'eventplanung' => ['label' => 'Eventplanung', 'path' => 'eventplanung.php', 'permission' => 'view_eventplanning'],
             'anfragen' => ['label' => 'Anfragen', 'path' => 'anfragen.php', 'permission' => 'view_requests'],
+        ]
+    ],
+    'kunden_verwaltung' => [
+        'label' => 'Kunden Verwaltung',
+        'path' => '#',
+        'subroutes' => [
             'kundenverwaltung' => ['label' => 'Kunden Verwaltung', 'path' => 'kundenverwaltung.php', 'permission' => 'view_customer_management'],
+            'invites' => ['label' => 'Kunden Einladungen', 'path' => 'invites.php', 'permission' => 'view_invites']
         ]
     ],
     'finanz_verwaltung' => [
@@ -228,6 +235,7 @@ $routes = [
         'subroutes' => [
             'finanzverwaltung' => ['label' => 'Finanzverwaltung', 'path' => 'finanzverwaltung.php', 'permission' => 'view_financial_management'],
             'mitarbeitergehaelter' => ['label' => 'Mitarbeiter Gehälter', 'path' => 'gehaelter.php', 'permission' => 'view_gehaelter'],
+            'deckel' => ['label' => 'Deckel', 'path' => 'deckel.php', 'permission' => 'view_deckel'],
         ]
     ],
     'leitungs_bereich' => [
@@ -247,6 +255,9 @@ $routes = [
         'subroutes' => [
             'ausbildungen' => ['label' => 'Ausbildung Verwaltung', 'path' => 'ausbildungen.php', 'permission' => 'view_training_management'],
             'ausruestung' => ['label' => 'Ausrüstung Verwaltung', 'path' => 'ausruestung.php', 'permission' => 'view_equipment_management'],
+            'rabatte' => ['label' => 'Firmen Rabatte', 'path' => 'rabatt.php', 'permission' => 'view_rabatte'],
+            'logs' => ['label' => 'Logs', 'path' => 'logs.php', 'permission' => 'view_logs'],
+            'forcelogout' => ['label' => 'Force Logout', 'path' => 'force_logout.php', 'permission' => 'view_force_logout']
         ]
     ]
 ];

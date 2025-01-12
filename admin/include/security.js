@@ -7,10 +7,11 @@ function getCsrfTokenFromCookie() {
         console.log('Cookie:', cookie);    // Logge jedes Cookie einzeln zur Überprüfung
         if (cookie.startsWith('csrf_token=')) {
             const token = cookie.substring('csrf_token='.length);
-            console.log('CSRF Token aus Cookie:', token); // Logge den Token aus dem Cookie
+            console.log('Gefundener CSRF-Token:', token); // Logge den Token aus dem Cookie
             return token;  // Gib den Token zurück
         }
     }
+    console.log('CSRF Token nicht gefunden');
     return null;  // Rückgabe null, falls der Token nicht gefunden wurde
 }
 

@@ -6,7 +6,7 @@ if (!isset($_SESSION['csrf_token'])) {
   $_SESSION['csrf_token'] = bin2hex(random_bytes(32));  // Generiere einen sicheren CSRF-Token
 }
 
-// CSRF-Token in das Cookie setzen (mit HttpOnly-Attribut für zusätzliche Sicherheit)
+// In header.php: CSRF-Token im Cookie setzen
 setcookie('csrf_token', $_SESSION['csrf_token'], [
   'expires' => time() + 3600,  // Cookie gültig für 1 Stunde
   'path' => '/',               // Cookie für die gesamte Domain verfügbar

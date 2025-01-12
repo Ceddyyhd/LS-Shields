@@ -124,19 +124,27 @@ $permissions = $stmt_permissions->fetchAll(PDO::FETCH_ASSOC);
                 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
                 <p class="text-muted text-center">
-    <?php echo htmlspecialchars($user['role_name']); ?>
-    <?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false): ?>
+                <?php
+// Hole den 'role_value' des aktuell eingeloggten Benutzers aus der Session
+$currentUserRoleValue = $_SESSION['user_role_value']; // Der aktuelle Benutzerwert aus der Session
+
+// Hole den 'role_value' des Benutzers, den du bearbeiten möchtest
+$targetUserRoleValue = $user['role_value']; // Angenommen, der Benutzer, den du bearbeiten möchtest, hat das Feld 'role_value'
+?>
+
+<?php echo htmlspecialchars($user['role_name']); ?>
+
+<?php if ($_SESSION['permissions']['edit_employee_rank'] ?? false && $targetUserRoleValue < $currentUserRoleValue): ?>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#rang-bearbeiten" style="width: 50px; height: 30px; margin-left: 10px;">
         <i class="fa-solid fa-pen"></i>
     </button>
-    <?php endif; ?>
-</p>
+<?php endif; ?>
 
 <div class="modal fade" id="rang-bearbeiten">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><?php echo htmlspecialchars($_SESSION['user_role_value']); ?></h4>
+                <h4 class="modal-title">Rang ändern</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

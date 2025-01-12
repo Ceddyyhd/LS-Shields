@@ -20,8 +20,14 @@ window.fetch = function(url, options = {}) {
             console.error('CSRF Token fehlt!');
             return Promise.reject(new Error('CSRF Token fehlt!'));  // Beende die Anfrage, falls kein Token vorhanden ist
         }
-        options.headers = options.headers || {};
-        options.headers['Authorization'] = 'Bearer ' + csrfToken;  // CSRF-Token im Header hinzufügen
+
+        // Token als POST-Parameter hinzuzufügen
+        options.body = options.body || new FormData();
+        if (options.body instanceof FormData) {
+            options.body.append('csrf_token', csrfToken);
+        } else {
+            options.body['csrf_token'] = csrfToken;
+        }
     }
     return originalFetch(url, options);
 };

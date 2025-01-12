@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $headers = getallheaders();
 $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
 
-// Debugging-Ausgabe
+// Debugging-Ausgabe für den Header
 error_log("CSRF Token aus Header: " . $csrf_token_from_header);
 
 // Überprüfen, ob der Token im Header und im Cookie übereinstimmt
@@ -45,5 +45,3 @@ foreach ($_POST as $key => $value) {
         $_POST[$key] = sanitize_input($value);
     }
 }
-
-?>

@@ -1,5 +1,8 @@
-# Verweigert den Zugriff auf alle Dateien im include-Ordner über den Browser
-<Files "*">
-    Order Deny,Allow
-    Deny from all
-</Files>
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Verhindert den Zugriff über den Browser (HTTP)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{HTTP_USER_AGENT} !^$
+    RewriteRule ^ - [F]
+</IfModule>

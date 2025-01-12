@@ -173,8 +173,12 @@ $(document).ready(function() {
                             <td>${ankuendigung.description}</td>
                             <td>${ankuendigung.prioritaet}</td>
                             <td>
+                            <?php if ($_SESSION['permissions']['edit_ankuendigung'] ?? false): ?>
                                 <button class="btn btn-outline-secondary" data-id="${ankuendigung.id}">Bearbeiten</button>
+                               <?php endif; ?>
+                                <?php if ($_SESSION['permissions']['remove_ankuendigung'] ?? false): ?>
                                 <button class="btn btn-outline-danger" onclick="deleteAnkuendigung(${ankuendigung.id})">Löschen</button>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     `);

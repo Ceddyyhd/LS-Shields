@@ -1,7 +1,8 @@
 <?php
-// Sicherstellen, dass die Anfrage aus der richtigen Quelle kommt (z. B. der eigenen Domain)
-if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'ls-shields.ceddyyhd2.eu') === false) {
-    die('Zugriff verweigert');  // Verhindert den Zugriff, wenn der Referer nicht korrekt ist
+// Sicherstellen, dass die Datei nicht direkt über den Browser aufgerufen wird
+if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+    // Wenn die Anfrage nicht von AJAX kommt, blockiere den Zugriff
+    die('Zugriff verweigert');
 }
 
 // Dein Code folgt hier

@@ -967,17 +967,19 @@ $("#noteForm").on("submit", function (e) {
                     ?>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox"  
-                               id="<?= htmlspecialchars($keyName); ?>" 
-                               name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
-                               value="1" <?= $status ? 'checked' : ''; ?>>
-                        <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>" <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_ausbildung'] ? '' : 'disabled'; ?>>>
+                            id="<?= htmlspecialchars($keyName); ?>" 
+                            name="ausbildungen[<?= htmlspecialchars($keyName); ?>][status]" 
+                            value="1" <?= $status ? 'checked' : ''; ?> 
+                            <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_ausbildung'] ? '' : 'disabled'; ?>>
+                        <label class="form-check-label" for="<?= htmlspecialchars($keyName); ?>" 
+                            <?= isset($_SESSION['permissions']['edit_ausbildung']) && $_SESSION['permissions']['edit_ausbildung'] ? '' : 'style="pointer-events: none;"'; ?>>
                             <?= htmlspecialchars($displayName); ?>
                         </label>
                         <div class="stars ml-3" data-rating="<?= $rating; ?>" data-id="<?= htmlspecialchars($keyName); ?>">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <i class="<?= $i <= $rating ? 'fas' : 'far'; ?> fa-star"
-                                   data-value="<?= $i; ?>" 
-                                   data-ausbildung="<?= htmlspecialchars($keyName); ?>"></i>
+                                data-value="<?= $i; ?>" 
+                                data-ausbildung="<?= htmlspecialchars($keyName); ?>"></i>
                             <?php endfor; ?>
                             <input type="hidden" name="ausbildungen[<?= htmlspecialchars($keyName); ?>][rating]" value="<?= $rating; ?>">
                         </div>

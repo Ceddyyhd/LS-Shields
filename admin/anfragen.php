@@ -9,7 +9,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
-<?php include 'include/navbar.php'; ?>
+<?php include 'include/navbar.php'; 
+
+// CSRF Token Schutz: Token aus der Session holen
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Holen des Tokens aus dem Header
+  $headers = getallheaders();
+  $csrf_token_from_header = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : '';
+
+  if (empty($csrf_token_from_header) || $csrf_token_from_header !== $_SESSION['csrf_token']) {
+      echo json_encode(['success' => false, 'message' => 'CSRF Token ungültig.']);
+      exit;
+  }
+}
+?>
 
 
   <!-- Content Wrapper. Contains page content -->
@@ -99,6 +112,7 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script>
     document.getElementById('saveRequestBtn').addEventListener('click', function() {
     const formData = new FormData(document.getElementById('createRequestForm'));
+    formData.append('csrf_token', csrfToken);  // Füge den CSRF-Token hinzu
 
     // Überprüfe, ob alle Felder ausgefüllt sind
     if (!formData.get('name') || !formData.get('nummer') || !formData.get('anfrage')) {
@@ -113,6 +127,10 @@ $anfragen = $stmt->fetchAll(PDO::FETCH_ASSOC);
     fetch('include/anfrage_create.php', {
         method: 'POST',
         body: formData,
+        headers: {
+      'Authorization': 'Bearer ' + csrfToken, // CSRF-Token im Header hinzufügen
+      'Content-Type': 'application/x-www-form-urlencoded' // Setze den Content-Type Header
+    },
     })
     .then(response => response.json())
     .then(data => {

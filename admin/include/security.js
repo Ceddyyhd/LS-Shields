@@ -1,6 +1,6 @@
 // Funktion, um den CSRF-Token vom Server zu holen
 function getCsrfToken() {
-    return fetch('get_csrf_token.php', {
+    return fetch('include/get_csrf_token.php', {
         method: 'GET',  // Hole den Token über eine GET-Anfrage
         credentials: 'same-origin',  // Cookie wird mitgesendet
     })

@@ -231,6 +231,23 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Dynamische Links basierend auf der Routing-Tabelle -->
         <?php foreach ($routes as $route_key => $route): ?>
+            <?php 
+                // Überprüfen, ob das Menü angezeigt werden soll, indem wir prüfen, ob mindestens ein Untermenü angezeigt werden kann
+                $has_visible_subroutes = false;
+
+                // Prüfen, ob mindestens ein Untermenü sichtbar ist
+                foreach ($route['subroutes'] as $subroute) {
+                    if ($_SESSION['permissions'][$subroute['permission']] ?? false) {
+                        $has_visible_subroutes = true;
+                        break;
+                    }
+                }
+
+                // Menü ausblenden, wenn keine sichtbaren Untermenüpunkte vorhanden sind
+                if (!$has_visible_subroutes) {
+                    continue;
+                }
+            ?>
             <li class="nav-item <?= isset($route['subroutes']) ? 'menu-open' : '' ?>">
                 <a href="<?= $route['path'] ?>" class="nav-link <?= ($current_page == basename($route['path'])) ? 'active' : '' ?>">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -242,7 +259,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                 <!-- Untermenü -->
                 <?php if (isset($route['subroutes'])): ?>
                     <ul class="nav nav-treeview">
-                        <?php foreach ($route['subroutes'] as $subroute_key => $subroute): ?>
+                        <?php foreach ($route['subroutes'] as $subroute): ?>
                             <!-- Berechtigungsprüfung hinzufügen -->
                             <?php if ($_SESSION['permissions'][$subroute['permission']] ?? false): ?>
                                 <li class="nav-item">
@@ -259,6 +276,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
         <?php endforeach; ?>
     </ul>
 </nav>
+
 
         <!-- /.sidebar-menu -->
     </div>

@@ -115,7 +115,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </div>
     <!-- /.content-header -->
      
-
+    <?php if ($_SESSION['permissions']['urlaub_einreichen_zurueckziehen'] ?? false): ?>
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
@@ -257,6 +257,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         </div>
       </div><!-- /.container-fluid -->
     </section>
+    <?php endif; ?>
+
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
